@@ -2,26 +2,692 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Design tokens — refined Railway-inspired universal LIGHT theme ────────────
+   ALL colors flow from here. Components reference var(--token) or the Tailwind
+   utility classes mapped in tailwind.config.ts. Re-theming = change these values
+   in this one file. No hardcoded colors anywhere else.
+   No prefers-color-scheme block — this app is universal light.
+──────────────────────────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces — soft, layered off-white for calm depth (not stark white) */
+  --bg:             #fafbfc;   /* page/layout base — faint cool off-white */
+  --surface:        #ffffff;   /* cards, panels */
+  --surface-hover:  #f3f5f8;   /* hover state on surfaces */
+  --surface-alt:    #f5f7fa;   /* alternate tinted surface — section banding */
+  /* (--surface-glass, the old LIGHT nav glass, was retired in Stage 6.1 — the nav is now a SINGLE
+     dark register, see --nav-glass below.) */
+  --input-bg:       #f7f9fb;   /* form inputs */
+
+  /* Borders — soft, low-contrast (Railway uses very subtle borders) */
+  --border:         #ebedf1;   /* standard divider / card border */
+  --border-strong:  #dcdfe4;   /* stronger border / hover emphasis */
+  /* Control edge — a jade-cast gray that clears the WCAG 1.4.11 3:1 floor for a
+     boundary-dependent control on its real fields: vs white fill 3.48, vs tint 3.27,
+     vs bg 3.36. Used by the light secondary button (its old #dcdfe4 was 1.34:1). */
+  --border-control: #7e8d86;
+
+  /* Text — JADE-CAST ramp (Stage 4.8). The neutral/blue-cast grays are gone; every tier now
+     carries the ink hue family (#0b1512, a deep teal-jade: G>B>R) so body copy reads warm and
+     on-brand instead of generic. Ratios preserved or improved vs the old neutral values:
+       --text    #0d1117 -> #0c1512 : bg 18.27->17.91 (both ~18:1, blue cast removed)
+       --muted   #4b5563 -> #42544c : bg 7.29 -> 7.78  (improved)
+       --subtle  #545e6d -> #4b5c53 : bg 6.34 -> 6.86  (improved)
+     (bg #fafbfc / surface #ffffff / tint #f4f9f7 all AA; see stage report for the full table.) */
+  --text:           #0c1512;   /* primary — jade near-black (= the ink hue) */
+  --text-muted:     #42544c;   /* secondary / body — jade-gray, 7.78:1 on bg */
+  --text-subtle:    #4b5c53;   /* tertiary / labels — jade-gray, 6.86:1 on bg */
+  --text-disabled:  #b6c2ba;   /* jade-cast disabled (was #c2c9d2) */
+
+  /* Accent — deep jade-emerald, used sparingly. Tuned for WCAG AA (>=4.5:1) both
+     as text on light surfaces AND as white-on-accent fills. */
+  --accent:         #0b7d56;   /* 5.1:1 on white, 4.7:1 on accent-subtle */
+  --accent-hover:   #0a6b49;
+  --accent-text:    #ffffff;   /* text/icon ON accent fills (5.1:1 on --accent) */
+  --accent-subtle:  #e8f8f1;   /* tinted accent bg */
+
+  /* Semantic — base values tuned so text-{danger,warning,success} on light AND
+     white-on-{...} fills both clear WCAG AA (>=4.5:1). Each has a light tinted bg
+     (-subtle) for chips/buttons and a darker -hover for solid-button hover. */
+  --danger:          #c81e2c;   /* 5.7:1 on white */
+  --danger-hover:    #a81824;
+  --danger-subtle:   #fef2f2;   /* tinted danger bg (text-danger on it = 5.2:1) */
+  --warning:         #b45309;   /* 5.0:1 on white */
+  --warning-hover:   #854d0e;
+  --warning-subtle:  #fffbeb;   /* text-warning on it = 4.8:1 */
+  --success:         #0b7d56;   /* = accent green, 5.1:1 on white */
+  --success-hover:   #0a6b49;
+  --success-subtle:  #e9f9f1;   /* text-success on it = 4.7:1 */
+  --info:            #2563eb;   /* blue — active/assigned/in-progress/submitted status chips; 5.2:1 on white */
+  --info-hover:      #1e54c0;
+  --info-subtle:     #eef4ff;   /* text-info on it = 4.7:1 */
+
+  /* Service level (trip_type) — a DEDICATED palette, deliberately outside the
+     status hues (green/blue/amber/red) so a member's mobility level reads as its
+     own thing and never gets confused with trip status. Each level is instantly
+     identifiable by color; always paired with an icon + label (never color-alone).
+     text-{svc} clears AA (>=4.5:1) on white AND on its -subtle bg. */
+  --svc-amb:         #0f766e;   /* ambulatory — teal;   5.5:1 white / 5.1:1 subtle */
+  --svc-amb-subtle:  #eafaf7;
+  --svc-wheel:       #6d28d9;   /* wheelchair — violet; 7.1:1 white / 6.2:1 subtle */
+  --svc-wheel-subtle:#f2edfd;
+  --svc-str:         #a21caf;   /* stretcher  — fuchsia;6.3:1 white / 5.6:1 subtle */
+  --svc-str-subtle:  #fbedfc;
+
+  /* Soft depth — gentle elevation, not heavy (Railway uses subtle shadows) */
+  --shadow-sm:  0 1px 2px 0 rgb(13 17 23 / 0.04), 0 1px 3px 0 rgb(13 17 23 / 0.05);
+  --shadow-md:  0 4px 14px -3px rgb(13 17 23 / 0.08), 0 2px 6px -2px rgb(13 17 23 / 0.05);
+  --shadow-lg:  0 18px 40px -12px rgb(13 17 23 / 0.14), 0 6px 16px -8px rgb(13 17 23 / 0.08);
+
+  /* ── Marketing color (Stage 2.5R) — structural + meaningful color on the flat
+     base. Derived from the jade accent hue; every pairing AA-verified (see the
+     stage report). No gradients/glow — flat fills + hairlines only. */
+  /* Ink — a near-black deep jade for dark sections (the footer). */
+  --ink:             #0b1512;   /* section bg; on-ink text = 16:1 */
+  --ink-surface:     #12201b;   /* faintly raised ink surface */
+  --on-ink:          #e9f1ee;   /* primary text on ink (16.4:1) */
+  /* Secondary/link text on ink. Lifted one step in Stage 6.1 (readability sweep): #a0b3ac → #adbfb8
+     so small on-ink reading text (assist proofs, hero body, console captions) has more PRESENCE and
+     keeps a comfortable margin above AA even over the ambient map (9.7:1 on ink · 7.4:1 over an ink
+     map stroke), while still reading clearly SECONDARY below on-ink (16:1). */
+  --on-ink-muted:    #adbfb8;   /* secondary/link text on ink (9.7:1) */
+  /* On-ink borders — a TWO-TIER system (Stage 4.6). The old single #24332e was 1.41:1
+     vs ink: a dead, invisible edge. Now derived from the ink's own hue (not flat gray):
+       -border       = faint DIVIDER/track tier, lifted to 2.12:1 (visible-but-quiet).
+       -border-strong = CARD-EDGE tier, 3.15:1 (a clearly present edge; brief floor >=3). */
+  --on-ink-border:        #35504a;   /* dividers / tracks / connectors — 2.12:1 vs ink */
+  --on-ink-border-strong: #4a6b60;   /* card & panel edges on ink — 3.15:1 vs ink */
+  --accent-on-ink:   #46d6a0;   /* jade that reads on ink — links (10.1:1) */
+  --accent-on-ink-hover: #74e2b8;
+  /* Nav item hover fill on ink (Stage 6) — the old hover used --ink-surface, which is ~1.04:1
+     vs the ink-glass panel => the hover was INVISIBLE (owner couldn't see it). This is lifted a
+     step (1.44:1 vs the panel) so the row visibly lightens; description text (on-ink-muted) still
+     clears AA on it at 5.11:1. */
+  --ink-hover:       #264035;
+
+  /* Soft jade tint (~4% toward jade from white) — section bands, eyebrow pill,
+     chip fills. text-muted = 5.5:1, text-accent = 4.7:1 on it. */
+  --surface-tint:        #f4f9f7;
+  --surface-tint-border: #dbeae3;
+
+  /* ── On-ink graphical + status variants (Stage 4.5) — for strokes / fills / status
+     text on the INK stages; each AA-verified against --ink (see stage report). Raw
+     svc/danger tokens are too dark on ink; these brightened variants clear the bar. */
+  --danger-on-ink:    #f87171;   /* Blocked text/icon on ink — 6.7:1 (text) */
+  --svc-amb-on-ink:   #2dd4bf;   /* ambulatory graphic on ink — 10.0:1 */
+  --svc-wheel-on-ink: #a78bfa;   /* wheelchair graphic on ink — 6.8:1 (service-level chips/cards) */
+  --svc-str-on-ink:   #e879f9;   /* stretcher graphic on ink — 7.6:1 */
+  /* Further-brightened apparatus for the Stage-4-morph FIGURE (M-B, chosen in the lab): the
+     heavy filled figure spends more contrast than the cards. As graphics vs ink: 10.1 / 10.6. */
+  --svc-wheel-fig:    #c4b5fd;   /* wheelchair apparatus, heavy figure */
+  --svc-str-fig:      #f0abfc;   /* stretcher apparatus, heavy figure */
+
+  /* Glass surface — INK STAGES ONLY. Translucent + backdrop-blur + hairline; the .ink-glass
+     class falls back to a SOLID ink-surface where backdrop-filter is unsupported. Never on light
+     bg. Stage 6: COLORED liquid glass — tinted toward the brand green (22 42 34, G>B>R) instead of
+     neutral black; over ink the composite ≈#13241d keeps on-ink 14.1 / on-ink-muted 7.4 /
+     accent-on-ink 8.8 (all AA). */
+  --ink-glass:        rgb(22 42 34 / 0.70);
+
+  /* Nav glass — the SINGLE nav register (Stage 6.1). One dark, jade-cast liquid glass for the nav
+     bar in every state on every page (the light nav glass is GONE). Deep-jade base (G>B>R) at a
+     high 0.90 alpha, calibrated for the NEW worst case: this dark glass floating over PURE WHITE
+     sections. Over white it composites to ≈rgb(39 51 46) → on-ink 11.0 / on-ink-muted 5.7 /
+     accent-on-ink 6.9 (all AA with margin); over the ink hero ≈rgb(16 30 24) → 14.8 / 7.7 / 9.2.
+     Dropdown panels + the mobile overlay use a SOLID dark surface (ink / ink-surface), not this
+     translucent glass — over white a translucent panel would wash out AND collapse the hover-fill
+     contrast (--ink-hover vs a white-lightened panel ≈1.1:1 = invisible; vs the solid ink panel
+     ≈1.9:1 = clearly visible). Base hue sits a hair above --ink so the bar is near-seamless over the
+     ink hero (≈1.1:1) yet clearly jade-green-cast over white. */
+  --nav-glass:        rgb(12 23 19 / 0.90);
+
+  /* Legacy aliases — used by old body{} rule; kept so nothing breaks */
+  --background:     var(--bg);
+  --foreground:     var(--text);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  /* --font-body is set by next/font on <html>; clean system sans as fallback */
+  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* Glass surface for INK stages only (Stage 4.5 doctrine amendment). Default is a
+   SOLID ink-surface (the fallback); only where backdrop-filter is supported does it
+   become translucent + blurred. Pair with `border border-on-ink-border` in markup.
+   Blur regions are panel/card-scale (never full-bleed) to keep it cheap. */
+.ink-glass { background-color: var(--ink-surface); }
+@supports ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  .ink-glass {
+    background-color: var(--ink-glass);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* GLASS DOCTRINE (amended Stage 6.1 — SINGLE nav register). Glass lives in exactly TWO places:
+   (1) the sticky nav bar — ONE dark jade glass (translucent --nav-glass + blur), this class, in
+       every state on every page (the light nav glass is deleted; there is no theme flip);
+   (2) cards floating on the INK stages — .ink-glass above.
+   The nav DROPDOWN panels + mobile overlay are NOT glass — they are a solid dark surface (see
+   Navbar: bg-ink-surface / bg-ink), because a translucent panel over white content both washes out
+   and collapses the hover-fill contrast. Still FORBIDDEN: glass cards on the light surfaces. The
+   bar falls back to a SOLID dark bg where backdrop-filter is unsupported. Blur is chrome-scale. */
+.nav-glass { background-color: var(--ink-surface); }
+@supports ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  .nav-glass {
+    background-color: var(--nav-glass);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* ── Motion — Railway-informed micro-interactions ────────────────────────────
+   Every interactive control gives smooth, tactile FEEDBACK: hover color/border
+   shifts glide instead of snapping, and pressable controls dip slightly on press.
+   Calm ease-out (~150ms), state-feedback not decoration. Railway animates
+   transform+color together at ~0.15-0.2s ease-out; this mirrors that. */
+button, [role="button"], a, select, summary, [role="tab"] {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity, fill, stroke;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Press feedback — the control dips when actively pressed (Railway-style tactility).
+   Not applied to selects/inputs (native controls) or disabled buttons. */
+button:not(:disabled):active,
+[role="button"]:not([aria-disabled="true"]):active,
+[role="tab"]:active,
+a:active {
+  transform: scale(0.97);
+}
+
+/* Modal / overlay entrance — backdrop fades, panel eases up + in (never snaps open) */
+@keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Subtle step-change transition for the onboarding flow content */
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Navigation-menu dropdown panels — grow from the trigger, open fast (<=150ms),
+   close a touch faster. Anchored transform-origin so the panel scales out of its
+   trigger, not the viewport centre. Driven by Radix's data-state. Reduced-motion
+   block below collapses these to instant. */
+/* Panel — origin-aware entrance: grows from its trigger's top-left corner, scale(0.96->1)
+   + 8px rise + fade. Open <=200ms, close faster. Decelerate ease. */
+.nav-panel { transform-origin: top left; }
+.nav-panel[data-state="open"]   { animation: navPanelIn 200ms cubic-bezier(0.22, 1, 0.36, 1); }
+.nav-panel[data-state="closed"] { animation: navPanelOut 130ms cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes navPanelIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes navPanelOut {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(6px) scale(0.97); }
+}
+
+/* ── Nav CHOREOGRAPHY (Stage 4.8) — nav is chrome, a higher motion ceiling than page
+   content but still <=250ms, decelerate-eased, transform/opacity only, interruptible (Radix
+   data-state), reduced-motion = instant (global block above). Every hover has a focus twin. */
+
+/* Magic line — Radix Indicator; slides between triggers following the open/focused item. */
+.nav-indicator {
+  top: 100%;
+  z-index: 40;
+  display: flex;
+  height: 10px;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  /* transform-only (nav law): the visible bar is a fixed 22px centred child, so Radix can
+     snap the indicator's width while only the compositor-friendly transform animates. */
+  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-indicator[data-state="visible"] { animation: navIndFade 160ms ease; }
+.nav-indicator[data-state="hidden"]  { animation: navIndFade 160ms ease reverse; opacity: 0; }
+@keyframes navIndFade { from { opacity: 0; } to { opacity: 1; } }
+/* Magic line — full accent (accent-on-ink on ink), wide + 2.5px so it clearly reads (Stage 6). */
+.nav-indicator-bar { margin-top: 1px; height: 2.5px; width: 62%; border-radius: 9999px; }
+
+/* Dropdown items — cascade in on open (opacity + 6px rise, ~45ms steps). Shared by the
+   mobile accordion sub-links + groups (--i set inline). */
+.nav-cascade {
+  animation: navCascade 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms + 40ms);
+}
+@keyframes navCascade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Dropdown item arrow — nudges in from the left on hover/focus of its item (.group). */
+.nav-arrow {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 180ms ease, transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.group:hover .nav-arrow,
+.group:focus-visible .nav-arrow { opacity: 1; transform: none; }
+
+/* "Apply as provider" — lift + arrow nudge on hover/focus. (Single register 6.1: the CTA is always
+   primaryOnInk, so only its background eases on hover — the old color-flip transition was dropped.) */
+.nav-apply {
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 150ms ease, box-shadow 200ms ease;
+}
+.nav-apply:hover, .nav-apply:focus-visible { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.nav-apply-arrow { transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1); }
+.nav-apply:hover .nav-apply-arrow, .nav-apply:focus-visible .nav-apply-arrow { transform: translateX(3px); }
+
+/* "Sign in" — underline slides in from the left on hover/focus. */
+.nav-signin-label { position: relative; }
+.nav-signin-label::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1.5px;
+  border-radius: 9999px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-signin:hover .nav-signin-label::after,
+.nav-signin:focus-visible .nav-signin-label::after { transform: scaleX(1); }
+
+/* ── THE PREMIUM TERMINUS (Stage 6.8). (a) Footer-link underline-slide — the nav item grammar on the
+   footer's column links + Sign in (every hover has a focus twin). (b) The PLAY-ONCE arrival
+   choreography: TerminusReveal arms [data-terminus-live] (the hidden initial state) ONLY when motion
+   is allowed, then [data-terminus-in] on IO enter runs a staggered settle — the route segment draws
+   in, the node scale-settles, the buffer tick lands, the wordmark + mission rise, the columns follow.
+   Transform/opacity ONLY, perceived ≤600ms, decelerate. SSR / reduced-motion never arm it → the
+   COMPLETE static composition, zero CLS (every element already holds its final space). */
+.footer-link { position: relative; }
+.footer-link::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1.5px;
+  border-radius: 9999px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.footer-link:hover::after,
+.footer-link:focus-visible::after { transform: scaleX(1); }
+
+/* Arrival — hidden initial states (armed only when motion is allowed). */
+[data-terminus-live] .terminus-line { opacity: 0; transform: scaleX(0); transform-box: fill-box; transform-origin: left center; }
+[data-terminus-live] .terminus-node { opacity: 0; transform: scale(0.4); transform-box: fill-box; transform-origin: center; }
+[data-terminus-live] .terminus-buffer { opacity: 0; transform: scaleY(0.3); transform-box: fill-box; transform-origin: center; }
+[data-terminus-live] .terminus-wordmark { opacity: 0; transform: translateY(12px); }
+[data-terminus-live] .terminus-mission { opacity: 0; transform: translateY(10px); }
+[data-terminus-live] .terminus-cols { opacity: 0; transform: translateY(10px); }
+
+/* Revealed — staggered decelerate settle (perceived total ≤600ms). */
+[data-terminus-live][data-terminus-in] .terminus-line {
+  opacity: 1; transform: none;
+  transition: opacity 80ms linear, transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-terminus-live][data-terminus-in] .terminus-wordmark {
+  opacity: 1; transform: none;
+  transition: opacity 340ms ease, transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 60ms;
+}
+[data-terminus-live][data-terminus-in] .terminus-mission {
+  opacity: 1; transform: none;
+  transition: opacity 340ms ease, transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 140ms;
+}
+[data-terminus-live][data-terminus-in] .terminus-node {
+  opacity: 1; transform: none;
+  transition: opacity 200ms ease, transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1);
+  transition-delay: 180ms;
+}
+[data-terminus-live][data-terminus-in] .terminus-cols {
+  opacity: 1; transform: none;
+  transition: opacity 340ms ease, transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 260ms; /* both channels end at 260+340 = 600ms — literally within budget */
+}
+[data-terminus-live][data-terminus-in] .terminus-buffer {
+  opacity: 1; transform: none;
+  transition: opacity 160ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 340ms;
+}
+
+/* ── The living map (Stage 6) — edge-fade so each section's AmbientMap blends at its seams,
+   reading as one continuous map seen through section windows (never a hard-cut tile). Mask only,
+   no other filters (flat). */
+.ambient-map {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 9%, #000 91%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, #000 9%, #000 91%, transparent 100%);
+}
+
+/* FEATURES layer clearance (Stage 6.6) — the region's landmarks + geography are PINNED to the page
+   gutters (never over a text column), so clearance is AUTHORED by composition, not masked. Each
+   gutter column only needs a top/bottom edge fade to blend into the section seams. */
+.ambient-gutter {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+}
+
+/* Landmark layer reveal (Stage 6.5) — default VISIBLE (no-JS / reduced-motion). MapObserver arms
+   `data-map-live` (→ hidden) then sets `data-map-in` play-once as the section enters (→ gentle
+   fade + settle). Transform/opacity only; the map is decorative so this never affects layout. */
+[data-map-live] .map-landmark { opacity: 0; transform: translateY(6px); }
+[data-map-live][data-map-in] .map-landmark {
+  opacity: 1;
+  transform: none;
+  transition: opacity 620ms ease, transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Proof band (Section A) — staged reveal, IO play-once. Default is VISIBLE (no-JS /
+   reduced-motion safe); the client arms [data-proof-live] only when motion is allowed, then
+   flips [data-proof-in] on scroll-in. Opacity/transform only → zero CLS. The global
+   reduced-motion block also collapses these to instant. */
+[data-proof-live] .proof-stat {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-proof-live][data-proof-in] .proof-stat { opacity: 1; transform: none; }
+[data-proof-live][data-proof-in] .proof-stat:nth-child(2) { transition-delay: 70ms; }
+[data-proof-live][data-proof-in] .proof-stat:nth-child(3) { transition-delay: 140ms; }
+[data-proof-live][data-proof-in] .proof-stat:nth-child(4) { transition-delay: 210ms; }
+
+/* ── Product demo (homepage hero) ─────────────────────────────────────────────
+   ALL predetermined motion here is CSS so it runs off the main thread and never
+   stutters during hydration. The reduced-motion block below already zeroes every
+   duration; the component additionally gates autoplay in JS so nothing advances
+   and no progress fill is even rendered under reduced motion.
+
+   Scenes stack in ONE grid cell (grid-area 1/1) so the stage reserves the tallest
+   scene's height once — zero layout shift on scene change. Only opacity/transform/
+   filter animate. Enter (to active) is a touch slower than exit. */
+.demo-scene {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(8px);
+  filter: blur(2px);
+  transition-property: opacity, transform, filter;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.demo-scene[data-active="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition-duration: 300ms;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* Within-scene micro-animations — replay each time a scene becomes active (the
+   [data-active] gate re-applies the animation). Per-item stagger comes from an
+   inline animation-delay; each starts from opacity 0 (never scale(0)). */
+.demo-scene[data-active="true"] .demo-in,
+.demo-scene[data-active="true"] .demo-pop {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+.demo-scene[data-active="true"] .demo-in {
+  animation-name: demoIn;
+}
+.demo-scene[data-active="true"] .demo-pop {
+  animation-name: demoPop;
+}
+@keyframes demoIn {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes demoPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Progress-fill tab — a LINEAR, GPU-friendly scaleX timer synced to the dwell.
+   Never width (that would trigger layout every frame). Pause = the component sets
+   animation-play-state: paused inline, freezing the fill in place. */
+.demo-tab-fill {
+  transform-origin: left;
+  animation-name: demoTabProgress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes demoTabProgress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ── Route spine (Stage 3) — the draw-on-scroll signature ─────────────────────
+   DEFAULT STATE is the COMPLETE static composition (line drawn, nodes lit, content
+   visible) so SSR / no-JS / reduced-motion all show a finished section. The client
+   sets [data-spine-live] on the region ONLY when motion is allowed — that flips the
+   line into a scroll-scrubbed draw, nodes into IO-lit, and content into IO-revealed.
+   Per-frame JS writes ONE property (--spine-progress) read only by the path + dot. */
+
+/* (The spine LINE itself moved to the page-level `.route-path` in Stage 6.4 — drawn 1:1 with scroll
+   off --route-progress. The station nodes + reveals below are still used by the RouteOverlay/stops.) */
+
+/* Station nodes — lit by default; unlit → IntersectionObserver-lit when live. */
+.spine-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: fill 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-spine-live] .spine-node { fill: var(--border-strong); transform: scale(0.8); }
+[data-spine-live] .spine-node.is-lit { fill: var(--accent); transform: scale(1); }
+
+/* Traveling dot — hidden by default; visible + riding the line only when live. */
+.spine-dot { opacity: 0; }
+[data-spine-live] .spine-dot { opacity: 1; }
+
+/* Content reveal — visible by default; hidden → IO-revealed when live (text first,
+   mock a beat later; play-once, never re-armed on scroll-up). */
+[data-spine-live] .spine-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 550ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-spine-live] [data-spine-stop].is-revealed .spine-reveal { opacity: 1; transform: none; }
+[data-spine-live] [data-spine-stop].is-revealed .spine-reveal:nth-child(2) { transition-delay: 90ms; }
+
+/* Subtle in-mock loops (task-specified: marching legs, pulsing stepper, re-running
+   scrub). Gated on [data-spine-live] so reduced-motion / no-JS see them static. */
+@keyframes spineMarch { to { stroke-dashoffset: -16; } }
+[data-spine-live] .spine-march { stroke-dasharray: 3 5; animation: spineMarch 1.6s linear infinite; }
+
+@keyframes spinePulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+[data-spine-live] .spine-pulse { animation: spinePulse 2.6s ease-in-out infinite; }
+[data-spine-live] .spine-pulse-2 { animation-delay: 0.35s; }
+[data-spine-live] .spine-pulse-3 { animation-delay: 0.7s; }
+[data-spine-live] .spine-pulse-4 { animation-delay: 1.05s; }
+
+@keyframes spineScrub { 0%, 10% { opacity: 0.3; transform: scale(0.92); } 22%, 100% { opacity: 1; transform: none; } }
+[data-spine-live] .spine-scrub { transform-origin: left center; animation: spineScrub 7s ease-in-out infinite; }
+[data-spine-live] .spine-scrub-2 { animation-delay: 0.16s; }
+[data-spine-live] .spine-scrub-3 { animation-delay: 0.32s; }
+[data-spine-live] .spine-scrub-4 { animation-delay: 0.48s; }
+
+/* ── Service-level morph figure (Stage 4) ─────────────────────────────────────
+   ONE hand-built SVG, three states driven by [data-level] on the client .svc-stage
+   wrapper. Only transform + opacity animate — never geometry attrs and never
+   stroke/fill COLOR: each apparatus statically owns its svc token, so the opacity
+   crossfade itself carries the colour change. The persistent head+torso pivots at
+   the hip and moves upright → seated → reclined; the three apparatus groups (walking
+   legs / wheelchair / stretcher) are premounted and crossfade. Reduced-motion is
+   handled by the global block above (zeroes these durations AND delays → the states
+   switch instantly as a dignified static composition). */
+
+/* One consistent stroke language, harmonised with lucide. */
+.svc-figure line,
+.svc-figure circle,
+.svc-figure rect,
+.svc-figure path {
+  fill: none;
+  stroke-width: 1.75px;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Heavy figure (M-B, the chosen morph): 2.9px lines; fill is left to each element (no blanket
+   fill:none) so key shapes — the wheel hub, the stretcher slab — can be SOLID. Reuses the
+   .svc-stage[data-level] machinery for the per-state pose. */
+.svc-figure-heavy line,
+.svc-figure-heavy circle,
+.svc-figure-heavy rect,
+.svc-figure-heavy path {
+  stroke-width: 2.9px;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fig-wheel { color: var(--svc-wheel-fig); }
+.fig-str   { color: var(--svc-str-fig); }
+
+/* Assist scene SETTLE (Stage 6, contact 6.4) — IO play-once, transform/opacity only, no loop.
+   Default is the COMPLETE static composition (SSR / no-JS / reduced-motion); the client arms
+   [data-assist-live] only when motion is allowed, then [data-assist-in] eases the attendants in from
+   the sides (staggered) so their hands come to REST in contact on the chair — the final contact IS
+   the reassurance (no floating symbols). The global reduced-motion block also zeroes it. */
+.assist-att-l, .assist-att-r { transform-box: fill-box; transform-origin: center; }
+[data-assist-live] .assist-att-l { opacity: 0; transform: translateX(-20px); }
+[data-assist-live] .assist-att-r { opacity: 0; transform: translateX(20px); }
+[data-assist-live][data-assist-in] .assist-att-l,
+[data-assist-live][data-assist-in] .assist-att-r {
+  opacity: 1; transform: none;
+  transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-assist-live][data-assist-in] .assist-att-r { transition-delay: 110ms; }
+
+/* THE PROOF SPOTLIGHT (Stage 6.5) — the RESTING markup is fully readable on its own (readability
+   never depends on motion); this only LIFTS one proof at a time while its list is in view. The
+   ProofSpotlight client toggles .is-active (~3s each, IO-gated, paused on hover/focus); CSS fills the
+   icon chip with accent + a ≤2px settle. Transform/colour only → zero CLS. Reduced-motion never
+   toggles .is-active (the client no-ops) AND the global block zeroes these transitions. */
+.proof-item { transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1); }
+.proof-item.is-active { transform: translateX(2px); }
+.proof-chip { transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease; }
+[data-proof-surface="light"] .proof-item.is-active .proof-chip {
+  background-color: var(--accent);
+  color: var(--accent-text);
+  border-color: transparent;
+}
+[data-proof-surface="ink"] .proof-item.is-active .proof-chip {
+  background-color: var(--accent-on-ink);
+  color: var(--ink);
+  border-color: transparent;
+}
+
+.svc-body,
+.svc-app {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transition: transform 540ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Apparatus: hidden + settled-down by default; the active one fades up and lands a
+   beat (80ms) behind the torso so the change reads as one transformation, not a cut. */
+.svc-app { opacity: 0; transform: translateY(4px); }
+.svc-stage[data-level="amb"] .svc-app-amb,
+.svc-stage[data-level="wheel"] .svc-app-wheel,
+.svc-stage[data-level="str"] .svc-app-str {
+  opacity: 1;
+  transform: none;
+  transition-delay: 80ms;
+}
+
+/* Persistent body pose per state — pivots at the hip (fill-box 50% 100%). */
+.svc-stage[data-level="amb"] .svc-body { transform: none; }
+.svc-stage[data-level="wheel"] .svc-body { transform: translateY(19px) rotate(-4deg); }
+.svc-stage[data-level="str"] .svc-body { transform: translate(24px, 13px) rotate(-80deg); }
+
+/* ── Spine rail — ink-band adaptation (Stage 4.5) ─────────────────────────────
+   The line is stroked with a vertical gradient (accent → accent-on-ink across the
+   ink band → accent); the middle stops' offsets are set from the measured ink-stop
+   bounds. Node 3 and the traveling dot take on-ink colours over the band. */
+.spine-grad-accent { stop-color: var(--accent); }
+.spine-grad-ink { stop-color: var(--accent-on-ink); }
+.spine-node.spine-node-ink { fill: var(--accent-on-ink); }
+[data-spine-live] .spine-node.spine-node-ink { fill: var(--on-ink-border); }
+[data-spine-live] .spine-node.spine-node-ink.is-lit { fill: var(--accent-on-ink); }
+/* (The traveling VAN + its rail-bound offset-path were retired in Stage 6.4 — the van now rides the
+   page-level route via `.route-van`; see the RouteOverlay CSS below. The .spine-grad-* + .spine-node*
+   rules above are still used by that overlay's gradient + station nodes.) */
+
+/* THE FULL-PAGE ROUTE (Stage 6.4) — the page-level RouteOverlay draws ONE line across the whole
+   journey; a livery van rides its full length. Reuses .spine-node / .spine-grad-*; these two are
+   route-specific: the draw is scrubbed by --route-progress (1:1 with scroll), and the van follows
+   the measured curve via an imperatively-set offset-path. */
+.route-path { stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--route-progress, 1)); }
+.route-van {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: none;
+  offset-distance: calc(var(--route-progress, 0) * 100%);
+  offset-rotate: 0deg;
+  offset-anchor: center;
+}
+/* faces travel — nose down by default, up on reverse (glyph nose is at the right → +90deg = down) */
+.route-van svg { transform: rotate(90deg); transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1); }
+[data-direction="up"] .route-van svg { transform: rotate(-90deg); }
+/* LANE by LEG (Stage 6.6 U-turn) — OUTBOUND rides the right lane (+12px), RETURN the left (-12px).
+   The leg flip at the terminus crosses lanes over ~450ms (the U-turn); mid-page scroll reversals keep
+   the lane (only the nose rotation follows direction). On the inner wrapper so `.route-van`'s
+   offset-path + the svg's nose rotation stay untouched. Interruptible (a plain transition). */
+.route-van-lane { display: block; transform: translateX(12px); transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1); }
+[data-leg="return"] .route-van-lane { transform: translateX(-12px); }
+
+/* shown only where offset-path is supported AND the overlay is armed (motion allowed) */
+@supports (offset-path: path("M0 0")) {
+  .route-overlay[data-direction] .route-van { display: block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    /* Negative delay > duration so delayed + fill-mode:both animations (e.g. the
+       demo micro-animations) start already-completed instead of holding their
+       hidden `from` state for the delay window and staggering into view. */
+    animation-delay: -1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+  button:active, [role="button"]:active, [role="tab"]:active, a:active { transform: none !important; }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+  .animate-step-in {
+    animation: stepIn 180ms ease-out;
+  }
+  .animate-overlay-in {
+    animation: overlayIn 140ms ease-out;
+  }
+  .animate-panel-in {
+    animation: panelIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
 }
+

@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens — refined Railway-inspired universal LIGHT theme ────────────
+   ALL colors flow from here. Components reference var(--token) or the Tailwind
+   utility classes mapped in tailwind.config.ts. Re-theming = change these values
+   in this one file. No hardcoded colors anywhere else.
+   No prefers-color-scheme block — this app is universal light.
+──────────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Surfaces — soft, layered off-white for calm depth (not stark white) */
+  --bg:             #fafbfc;   /* page/layout base — faint cool off-white */
+  --surface:        #ffffff;   /* cards, panels */
+  --surface-hover:  #f3f5f8;   /* hover state on surfaces */
+  --surface-alt:    #f5f7fa;   /* alternate tinted surface — section banding */
+  --surface-glass:  rgb(255 255 255 / 0.72); /* translucent sticky nav (with backdrop-blur) */
+  --input-bg:       #f7f9fb;   /* form inputs */
+
+  /* Borders — soft, low-contrast (Railway uses very subtle borders) */
+  --border:         #ebedf1;   /* standard divider / card border */
+  --border-strong:  #dcdfe4;   /* stronger border / hover emphasis */
+
+  /* Text — strong near-black primary + calibrated grays */
+  --text:           #0d1117;   /* primary — high contrast */
+  --text-muted:     #5a6473;   /* secondary / body */
+  --text-subtle:    #66707e;   /* tertiary / labels — AA (>=4.5:1) for small text */
+  --text-disabled:  #c2c9d2;
+
+  /* Accent — deep jade-emerald, used sparingly. Tuned for WCAG AA (>=4.5:1) both
+     as text on light surfaces AND as white-on-accent fills. */
+  --accent:         #0b7d56;   /* 5.1:1 on white, 4.7:1 on accent-subtle */
+  --accent-hover:   #0a6b49;
+  --accent-text:    #ffffff;   /* text/icon ON accent fills (5.1:1 on --accent) */
+  --accent-subtle:  #e8f8f1;   /* tinted accent bg */
+
+  /* Semantic — base values tuned so text-{danger,warning,success} on light AND
+     white-on-{...} fills both clear WCAG AA (>=4.5:1). Each has a light tinted bg
+     (-subtle) for chips/buttons and a darker -hover for solid-button hover. */
+  --danger:          #c81e2c;   /* 5.7:1 on white */
+  --danger-hover:    #a81824;
+  --danger-subtle:   #fef2f2;   /* tinted danger bg (text-danger on it = 5.2:1) */
+  --warning:         #b45309;   /* 5.0:1 on white */
+  --warning-hover:   #854d0e;
+  --warning-subtle:  #fffbeb;   /* text-warning on it = 4.8:1 */
+  --success:         #0b7d56;   /* = accent green, 5.1:1 on white */
+  --success-hover:   #0a6b49;
+  --success-subtle:  #e9f9f1;   /* text-success on it = 4.7:1 */
+  --info:            #2563eb;   /* blue — active/assigned/in-progress/submitted status chips; 5.2:1 on white */
+  --info-hover:      #1e54c0;
+  --info-subtle:     #eef4ff;   /* text-info on it = 4.7:1 */
+
+  /* Service level (trip_type) — a DEDICATED palette, deliberately outside the
+     status hues (green/blue/amber/red) so a member's mobility level reads as its
+     own thing and never gets confused with trip status. Each level is instantly
+     identifiable by color; always paired with an icon + label (never color-alone).
+     text-{svc} clears AA (>=4.5:1) on white AND on its -subtle bg. */
+  --svc-amb:         #0f766e;   /* ambulatory — teal;   5.5:1 white / 5.1:1 subtle */
+  --svc-amb-subtle:  #eafaf7;
+  --svc-wheel:       #6d28d9;   /* wheelchair — violet; 7.1:1 white / 6.2:1 subtle */
+  --svc-wheel-subtle:#f2edfd;
+  --svc-str:         #a21caf;   /* stretcher  — fuchsia;6.3:1 white / 5.6:1 subtle */
+  --svc-str-subtle:  #fbedfc;
+
+  /* Soft depth — gentle elevation, not heavy (Railway uses subtle shadows) */
+  --shadow-sm:  0 1px 2px 0 rgb(13 17 23 / 0.04), 0 1px 3px 0 rgb(13 17 23 / 0.05);
+  --shadow-md:  0 4px 14px -3px rgb(13 17 23 / 0.08), 0 2px 6px -2px rgb(13 17 23 / 0.05);
+  --shadow-lg:  0 18px 40px -12px rgb(13 17 23 / 0.14), 0 6px 16px -8px rgb(13 17 23 / 0.08);
+
+  /* Legacy aliases — used by old body{} rule; kept so nothing breaks */
+  --background:     var(--bg);
+  --foreground:     var(--text);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  /* --font-body is set by next/font on <html>; clean system sans as fallback */
+  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* ── Motion — Railway-informed micro-interactions ────────────────────────────
+   Every interactive control gives smooth, tactile FEEDBACK: hover color/border
+   shifts glide instead of snapping, and pressable controls dip slightly on press.
+   Calm ease-out (~150ms), state-feedback not decoration. Railway animates
+   transform+color together at ~0.15-0.2s ease-out; this mirrors that. */
+button, [role="button"], a, select, summary, [role="tab"] {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity, fill, stroke;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Press feedback — the control dips when actively pressed (Railway-style tactility).
+   Not applied to selects/inputs (native controls) or disabled buttons. */
+button:not(:disabled):active,
+[role="button"]:not([aria-disabled="true"]):active,
+[role="tab"]:active,
+a:active {
+  transform: scale(0.97);
+}
+
+/* Modal / overlay entrance — backdrop fades, panel eases up + in (never snaps open) */
+@keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Subtle step-change transition for the onboarding flow content */
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  button:active, [role="button"]:active, [role="tab"]:active, a:active { transform: none !important; }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .animate-step-in {
+    animation: stepIn 180ms ease-out;
+  }
+  .animate-overlay-in {
+    animation: overlayIn 140ms ease-out;
+  }
+  .animate-panel-in {
+    animation: panelIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
