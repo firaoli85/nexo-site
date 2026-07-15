@@ -225,6 +225,9 @@ a:active {
 /* Panel — origin-aware entrance: grows from its trigger's top-left corner, scale(0.96->1)
    + 8px rise + fade. Open <=200ms, close faster. Decelerate ease. */
 .nav-panel { transform-origin: top left; }
+/* Right-cluster menus (Sign in) anchor to the trigger's RIGHT edge, so the panel must also GROW from
+   its top-right corner — otherwise it would scale out of a corner that isn't pinned to the trigger. */
+.nav-panel-right { transform-origin: top right; }
 .nav-panel[data-state="open"]   { animation: navPanelIn 200ms cubic-bezier(0.22, 1, 0.36, 1); }
 .nav-panel[data-state="closed"] { animation: navPanelOut 130ms cubic-bezier(0.22, 1, 0.36, 1); }
 @keyframes navPanelIn {
@@ -289,21 +292,9 @@ a:active {
 .nav-apply-arrow { transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1); }
 .nav-apply:hover .nav-apply-arrow, .nav-apply:focus-visible .nav-apply-arrow { transform: translateX(3px); }
 
-/* "Sign in" — underline slides in from the left on hover/focus. */
-.nav-signin-label { position: relative; }
-.nav-signin-label::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; bottom: -2px;
-  height: 1.5px;
-  border-radius: 9999px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.nav-signin:hover .nav-signin-label::after,
-.nav-signin:focus-visible .nav-signin-label::after { transform: scaleX(1); }
+/* (Stage 15) The old ghost "Sign in" underline-slide was removed with that link — "Sign in" is now a
+   dropdown menu (trigger + caret + magic line), so it inherits the shared panel/cascade/indicator
+   grammar above and needs no bespoke underline rule. */
 
 /* ── THE PREMIUM TERMINUS (Stage 6.8). (a) Footer-link underline-slide — the nav item grammar on the
    footer's column links + Sign in (every hover has a focus twin). (b) The PLAY-ONCE arrival

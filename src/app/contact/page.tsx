@@ -101,14 +101,11 @@ export default function ContactPage() {
               <p className="mt-2 text-base leading-relaxed text-muted">
                 Need a ride or have a question about one? Sign in to your member portal.
               </p>
-              <Link
-                href={SITE.appUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={routeLink}
-              >
+              {/* Stage 15: the member portal door, SAME-TAB (product handoff, not an external reference —
+                  law §7.4). portalLogin is the single source; the old target=_blank + "(opens in a new
+                  tab)" cue are gone now that portal navigation stays in-tab. */}
+              <Link href={SITE.portalLogin("member")} className={routeLink}>
                 Member sign in
-                <span className="sr-only"> (opens in a new tab)</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>

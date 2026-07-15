@@ -217,26 +217,42 @@ async function checkNav(page, width) {
       const count = await triggers.count();
       if (count === 0) return { pass: false, detail: "no nav trigger" };
       let tested = 0;
+      // Stage 15: "Sign in" is now a dropdown TRIGGER (a fourth menu), not a bare link. Track that the
+      // Sign-in trigger is present AND opens a real panel — otherwise a regression back to a plain link
+      // would silently drop it from this trigger set and I7 would still pass on the other three.
+      let signinOpened = false;
       for (let i = 0; i < count; i++) {
         const t = triggers.nth(i);
         if (!(await t.isVisible())) continue; // skips the lg:hidden mobile hamburger at desktop widths
+        const label = ((await t.textContent()) || "").trim();
+        const handle = await t.elementHandle();
+        // WAIT on actual state (aria-expanded), not a fixed sleep — Radix hover-open is delayDuration
+        // (~100ms) + panel animation, and a fixed timeout races under load (the 4th trigger flaked once).
         await t.hover();
-        await page.waitForTimeout(280);
-        const opened = (await t.getAttribute("aria-expanded")) === "true";
+        const opened = await page
+          .waitForFunction((el) => el.getAttribute("aria-expanded") === "true", handle, { timeout: 2000 })
+          .then(() => true)
+          .catch(() => false);
         const panelOk = await page.evaluate(() => {
           const contents = [...document.querySelectorAll('[data-state="open"]')].filter((el) => el.tagName !== "BUTTON");
           return contents.some((c) => c.getBoundingClientRect().height > 0 && c.querySelectorAll("a").length > 0);
         });
         await page.keyboard.press("Escape");
         await page.mouse.move(3, 320);
-        await page.waitForTimeout(240);
-        const closed = (await t.getAttribute("aria-expanded")) !== "true";
+        const closed = await page
+          .waitForFunction((el) => el.getAttribute("aria-expanded") !== "true", handle, { timeout: 2000 })
+          .then(() => true)
+          .catch(() => false);
+        await handle.dispose().catch(() => {}); // caller-created handles aren't auto-disposed; free it per trigger
         tested++;
+        if (opened && panelOk && /sign\s*in/i.test(label)) signinOpened = true;
         if (!(opened && panelOk && closed)) {
-          return { pass: false, detail: `trigger#${i}: open=${opened} panel=${panelOk} closed=${closed}` };
+          return { pass: false, detail: `trigger#${i}${label ? ` (${label})` : ""}: open=${opened} panel=${panelOk} closed=${closed}` };
         }
       }
-      return { pass: tested > 0, detail: tested > 0 ? "" : "no visible triggers" };
+      if (tested === 0) return { pass: false, detail: "no visible triggers" };
+      if (!signinOpened) return { pass: false, detail: "Sign-in menu trigger missing or did not open (Stage 15 regressed to a link?)" };
+      return { pass: true, detail: "" };
     }
     // mobile: the hamburger is identified by its aria-label ("Open menu") — NOT the desktop
     // aria-expanded triggers, which are display:none at this width and would be unclickable.

@@ -75,6 +75,20 @@ to a friendly "temporarily unavailable", never a crash. See `.env.example` for t
 - [ ] Confirm `robots.txt` + `sitemap.xml` resolve on the live apex and list only apex URLs; re-run
       Lighthouse (SEO + Performance ≥ 90) against the live URL.
 
+## Platform-repo follow-ups (flagged — NOT this repo's launch)
+
+- **Honor the `?portal=` sign-in hint.** The marketing nav's "Sign in" menu deep-links to
+  `https://app.nexoaccess.com/login?portal=<member|provider|care>` (single-sourced from
+  `SITE.portalLogin`). **Today the platform can ignore the param** — an unknown/absent `?portal=` must
+  land gracefully on the existing `/login` picker (the same page the footer "Sign in" →
+  `SITE.loginUrl` points at). The platform-side task is to READ `?portal=` and preselect / route to
+  that audience's door. Until then, everything still works (picker fallback); this is an enhancement,
+  not a blocker.
+- **Admin stays off every public surface.** The three public doors are `member` / `provider` / `care`
+  only. The admin / staff / ops portal is **never** linked, named, or hinted at on the marketing site
+  (security posture, recorded in brand law §7.4). If the platform adds an admin login, it does NOT get
+  a marketing-site link.
+
 ## NAP consistency (permanent rule)
 
 **Name / Phone / Email must be letter-identical everywhere, forever** — the site, JSON-LD, Google Business

@@ -28,8 +28,6 @@ export type SolutionCta = {
   body?: string;
   label: string;
   href: string;
-  /** external app URL (member portal) → real anchor target/rel */
-  external?: boolean;
 };
 
 const eyebrowPill =
@@ -158,13 +156,10 @@ export function SolutionPage({
               <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-muted">{cta.body}</p>
             ) : null}
             <div className="mt-8">
-              <Button
-                href={cta.href}
-                variant="primary"
-                size="md"
-                target={cta.external ? "_blank" : undefined}
-                rel={cta.external ? "noopener noreferrer" : undefined}
-              >
+              {/* Stage 15: the solution-page CTA is now always SAME-TAB. The only external CTA had been
+                  the member portal (target=_blank); portal navigation is a same-tab product handoff
+                  (law §7.4), so the `external` escape hatch was removed rather than left dead. */}
+              <Button href={cta.href} variant="primary" size="md">
                 {cta.label}
               </Button>
             </div>

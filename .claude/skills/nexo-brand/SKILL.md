@@ -386,7 +386,7 @@ optional body + icon proof lines) → ONE closing CTA band.**
   column. DOM order is always TEXT-then-mock (reading order) even when visually flipped (`lg:order`).
 - **ONE primary action per page (the B5 rule):** the page BODY has exactly ONE actionable CTA — mcos =
   Talk to us → /contact · providers = Apply as provider → /apply · facilities = Talk to us → /contact ·
-  members = Member sign in → `SITE.appUrl` (EXTERNAL → `target="_blank"` + `rel="noopener noreferrer"`).
+  members = Member sign in → `SITE.portalLogin("member")` (SAME-TAB portal handoff — see §7.4; NOT `target="_blank"`).
 - **Tonal rhythm:** interior pages stay WHITE/TINT — the terminus footer is the page's ONLY ink (no new
   ink chapters). Hero = tint; proof sections alternate white/tint by parity; the CTA alternates off the
   section count; hairline `border-border` between bands.
@@ -437,8 +437,8 @@ only (the footer is the only ink). Copy gate additions in §7.2.
 - **/contact** — eyebrow → ONE h1 → subline (payers/facilities) → PRIMARY ACTION card: a real
   `mailto:${SITE.email}` button AND the address printed as SELECTABLE text beside it (NEVER mailto-only)
   + ONE soft line ("you'll hear back from the person who built the platform", NO SLA) → two quiet
-  ROUTING cards (providers → /apply; MEMBERS → `SITE.appUrl` external, `target="_blank"` +
-  `rel="noopener noreferrer"` — never route members to email) → `SERVICE_AREA_LINE`. The contact FORM now
+  ROUTING cards (providers → /apply; MEMBERS → `SITE.portalLogin("member")`, SAME-TAB portal handoff (§7.4)
+  — never route members to email) → `SERVICE_AREA_LINE`. The contact FORM now
   lives in the primary action card (§6.6); the `mailto:` path stays below as a quiet "Prefer email?" line
   (link + selectable address). AmbientMap DC bookends.
 
@@ -634,7 +634,7 @@ undecided; copy must NOT commit to one.
   Do not scatter it elsewhere.
 - **NO response-time promise / SLA** — "within 24 hours" (or any hours / business-days pledge) is
   BANNED. Soft framing only ("you'll hear back from the person who built the platform").
-- **MEMBERS are never routed to email for rides** — always to the member portal (`SITE.appUrl`).
+- **MEMBERS are never routed to email for rides** — always to the member portal (`SITE.portalLogin("member")`, same-tab; §7.4).
 - **"certified" is banned in rendered copy** (Stage 8 — unsubstantiated credential on a pre-live
   product; gate it behind a `launch.ts` flag if a real certification ever lands).
 - **PHI MICROCOPY on every lead form (Stage 10S):** "Please don't include any member or health
@@ -653,6 +653,31 @@ CLAIMS stay launch-flag governed — **no "serving" in any title/description/OG 
 `LIVE_OPERATIONS` ("Built for…" / neutral geography only). Visible-copy keyword weaving is MINIMAL and
 surgical (one spelled-out "non-emergency medical transportation (NEMT)" where a human would write it),
 each edit gate-audited. No keyword stuffing; no duplicate descriptions.
+
+### 7.4 THE SIGN-IN / PORTAL DOCTRINE (Stage 15)
+"Sign in" is a THIRD nav menu in the established grammar (Radix trigger + caret + magic-line
+participation + solid-ink panel + item cascade), **not a bare link**. It lists exactly the THREE
+customer-facing portal doors — **Member**, **Provider**, **Care portal** (for case managers &
+facilities). Mobile: a fourth accordion group in the same grammar; the pinned CTA row keeps ONLY
+"Apply as provider" so "Sign in" appears exactly once (no duplicate affordance).
+- **ADMIN IS EXCLUDED FROM EVERY PUBLIC SURFACE — permanently.** The marketing site never links to,
+  names, labels, or hints at an admin / staff / ops portal (nav, footer, sitemap, JSON-LD, visible
+  copy, alt/aria/sr-only). Security posture: the admin door is not advertised. Only the three customer
+  doors + the platform's own `/login` picker appear publicly.
+- **ONE SOURCE for portal URLs — `SITE.portalLogin(portal)`** → `${appUrl}/login?portal=<member|provider|care>`.
+  Never hardcode `/login?portal=…` anywhere. `?portal=` is a HINT the platform honors LATER
+  (platform-repo task, flagged in DEPLOY-NOTES); TODAY an unknown/absent param lands gracefully on
+  `SITE.loginUrl` (the picker), which is also the plain footer "Sign in" fallback.
+- **Portal navigation is a SAME-TAB product handoff, not an external reference.** All OUR portal links
+  open same-tab — **no `target="_blank"`, no `rel="noopener"`, no "(opens in a new tab)" cue.** (This
+  is the amendment that flipped the members-page CTA + the /contact routing card + the footer to
+  same-tab.) It applies ONLY to our portal doors; genuine THIRD-PARTY links — e.g. the HHS OCR
+  complaint page on `/hipaa` — KEEP `target="_blank"` + the new-tab cue.
+- **Portal-door subtitles are gate-clean (§7):** they describe portal CONTENTS ("See your upcoming and
+  past rides.", "Claims, credentials & scheduling.") — **NEVER "track" / "tracking" / live status /
+  ETA / map.** Member-facing language stays launch-flag governed.
+- Harness: **I7 asserts the Sign-in trigger is present AND opens** — a regression back to a plain link
+  drops it from the `aria-expanded` trigger set, which I7 now catches.
 
 ## 8. THE VISUAL VERIFICATION LOOP (mandatory, every visual change)
 Implement → run the production server → Playwright screenshots at **390 / 768 / 1280** (scratchpad

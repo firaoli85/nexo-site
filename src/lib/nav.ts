@@ -8,7 +8,9 @@ import {
   Truck,
   Hospital,
   Users,
+  UserRound,
 } from "lucide-react";
+import { SITE } from "@/lib/site";
 
 // Single source of truth for the site's information architecture. Navbar and
 // Footer both read from here so a route never appears in one place but not the
@@ -87,6 +89,34 @@ export const SOLUTIONS_ITEMS: NavItem[] = [
 export const COMPANY_ITEMS: NavItem[] = [
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+];
+
+// "Sign in" menu (Stage 15) — the three CUSTOMER-facing portal doors, in the nav item grammar
+// (icon + title + one-line desc). hrefs come ONLY from SITE.portalLogin (single source; the `?portal=`
+// hint the platform honors later). Admin is DELIBERATELY absent from every public surface (law §7.4).
+// Icons reuse the established audience vocabulary so a reader recognizes their own door at a glance:
+// Truck = provider world, Hospital = facilities/case-manager world; UserRound (a single account figure,
+// distinct from the Users audience glyph) = the individual member. Descriptions are gate-clean — they
+// describe portal contents (upcoming/past rides, claims/credentials/scheduling), never live "tracking".
+export const SIGNIN_ITEMS: NavItem[] = [
+  {
+    label: "Member",
+    href: SITE.portalLogin("member"),
+    description: "See your upcoming and past rides.",
+    icon: UserRound,
+  },
+  {
+    label: "Provider",
+    href: SITE.portalLogin("provider"),
+    description: "Claims, credentials & scheduling.",
+    icon: Truck,
+  },
+  {
+    label: "Care portal",
+    href: SITE.portalLogin("care"),
+    description: "For case managers & facilities — schedule rides for the people in your care.",
+    icon: Hospital,
+  },
 ];
 
 // Footer columns. Platform reuses the four anchors; Solutions reuses the four

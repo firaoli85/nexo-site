@@ -133,7 +133,10 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-6">
               <BackToTop className={utilityLink} />
-              <Link href={SITE.appUrl} className={signInLink}>
+              {/* The fallback picker door (Stage 15): plain /login, no portal hint, SAME-TAB (a product
+                  handoff, not an external reference — law §7.4). The nav Sign-in menu offers the
+                  audience-specific doors; this footer link lands on the platform's own picker. */}
+              <Link href={SITE.loginUrl} className={signInLink}>
                 Sign in
               </Link>
             </div>

@@ -102,8 +102,9 @@ export default function MembersPage() {
         heading: "Ready for your next ride?",
         body: "Sign in to see your rides.",
         label: "Member sign in",
-        href: SITE.appUrl,
-        external: true,
+        // Stage 15: the member portal door, SAME-TAB (product handoff, not an external reference —
+        // law §7.4). portalLogin is the single source; the old target=_blank + new-tab cue are gone.
+        href: SITE.portalLogin("member"),
       }}
     />
   );

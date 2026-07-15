@@ -9,6 +9,7 @@ import {
   PLATFORM_ITEMS,
   SOLUTIONS_ITEMS,
   COMPANY_ITEMS,
+  SIGNIN_ITEMS,
   type NavItem,
 } from "@/lib/nav";
 import { Button } from "@/components/ui/Button";
@@ -29,7 +30,7 @@ import { cn } from "@/utils/cn";
 //   - a "magic line" (Radix Indicator) slides between triggers on hover/focus;
 //   - the caret rotates 180deg on open; the panel grows origin-aware from its trigger;
 //   - panel items cascade in; each item has a fill sweep + icon-chip fill + arrow nudge;
-//   - the CTAs get a lift/arrow and an underline slide; the mobile items cascade too.
+//   - the Apply CTA gets a lift + arrow nudge; the mobile items cascade too.
 // Every hover state has a focus twin (group-hover + group-focus-within / focus-visible).
 
 // The ONE nav theme bundle — the dark/on-ink register, used in every state. Panel + overlay are
@@ -83,10 +84,14 @@ function DesktopMenu({
   label,
   items,
   panelClass,
+  align = "left",
 }: {
   label: string;
   items: NavItem[];
   panelClass: string;
+  /** Which trigger edge the panel anchors to. Right-seated menus (Sign in) anchor RIGHT so a wide
+   *  panel opens inward instead of off the viewport's right edge; the grow-origin follows (.nav-panel-right). */
+  align?: "left" | "right";
 }) {
   return (
     <NavigationMenu.Item className="relative">
@@ -108,7 +113,8 @@ function DesktopMenu({
       </NavigationMenu.Trigger>
       <NavigationMenu.Content
         className={cn(
-          "nav-panel absolute left-0 top-full z-50 mt-1.5 rounded-xl border p-2 shadow-md",
+          "nav-panel absolute top-full z-50 mt-1.5 rounded-xl border p-2 shadow-md",
+          align === "right" ? "nav-panel-right right-0" : "left-0",
           NT.panel,
           panelClass
         )}
@@ -308,6 +314,8 @@ export function Navbar() {
           <div className="flex h-16 items-center justify-between gap-4">
             <Wordmark />
 
+            {/* The ONE nav landmark (Stage-1 rule: the nav landmark appears exactly once). Platform /
+                Solutions / Company live here with the shared magic line. */}
             <NavigationMenu.Root
               aria-label="Primary"
               delayDuration={100}
@@ -326,15 +334,28 @@ export function Navbar() {
             </NavigationMenu.Root>
 
             <div className="hidden items-center gap-2 lg:flex">
-              {/* Sign in — underline slide on hover/focus. Always the on-ink variant (dark bar). */}
-              <Button
-                href={SITE.appUrl}
-                variant="ghostOnInk"
-                size="sm"
-                className="nav-signin"
-              >
-                <span className="nav-signin-label">Sign in</span>
-              </Button>
+              {/* Sign in — a peer menu in the nav grammar (Stage 15): Radix trigger + caret + magic line
+                  + solid-ink panel + item cascade, same weight/register as the left menus, seated in the
+                  right cluster before Apply. It gets its OWN NavigationMenu.Root so its indicator tracks
+                  its own trigger — but that Root renders `asChild` as a <div>, NOT a second <nav>, so the
+                  site keeps exactly ONE nav landmark (the "Primary" root above; Stage-1 rule). Lists the
+                  three customer portal doors; admin is deliberately excluded (law §7.4). Panel anchors
+                  RIGHT so it opens inward. */}
+              <NavigationMenu.Root asChild delayDuration={100} skipDelayDuration={300}>
+                <div className="relative">
+                  <NavigationMenu.List className="flex items-center">
+                    <DesktopMenu
+                      label="Sign in"
+                      items={SIGNIN_ITEMS}
+                      panelClass="w-[26rem]"
+                      align="right"
+                    />
+                    <NavigationMenu.Indicator className="nav-indicator">
+                      <div className={cn("nav-indicator-bar", NT.indicatorBar)} />
+                    </NavigationMenu.Indicator>
+                  </NavigationMenu.List>
+                </div>
+              </NavigationMenu.Root>
               {/* Apply — lift + arrow nudge; the single bright accent pop on the dark bar. */}
               <Button
                 href="/apply"
@@ -391,15 +412,16 @@ export function Navbar() {
             <MobileAccordion label="Platform" items={PLATFORM_ITEMS} onNavigate={closeMobile} index={0} />
             <MobileAccordion label="Solutions" items={SOLUTIONS_ITEMS} onNavigate={closeMobile} index={1} />
             <MobileAccordion label="Company" items={COMPANY_ITEMS} onNavigate={closeMobile} index={2} />
+            {/* Sign in — a fourth accordion group in the same grammar (Stage 15), holding the three portal
+                doors. The pinned row below keeps ONLY the primary CTA so "Sign in" appears exactly once
+                (no duplicate affordance). */}
+            <MobileAccordion label="Sign in" items={SIGNIN_ITEMS} onNavigate={closeMobile} index={3} />
           </div>
 
           <div
             className="nav-cascade flex shrink-0 flex-col gap-3 border-t border-on-ink-border p-6"
-            style={{ ["--i" as string]: 3 }}
+            style={{ ["--i" as string]: 4 }}
           >
-            <Button href={SITE.appUrl} variant="secondaryOnInk" size="md" className="w-full" onClick={closeMobile}>
-              Sign in
-            </Button>
             <Button href="/apply" variant="primaryOnInk" size="md" className="w-full" onClick={closeMobile}>
               Apply as provider
             </Button>
