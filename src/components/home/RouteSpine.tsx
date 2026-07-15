@@ -41,7 +41,7 @@ const STOPS: { num: string; claim: string; body: string; proofs: Proof[] }[] = [
     claim: "Built around the member.",
     body: "Every trip starts from the member — their mobility level, their care needs, and the places they go again and again.",
     proofs: [
-      { icon: Waypoints, text: "Round trips and multi-stop rides booked as one linked trip." },
+      { icon: Waypoints, text: "Round trips and recurring rides, scheduled around the appointment." },
       { icon: ClipboardList, text: "Mobility and care needs read fresh at every booking." },
       { icon: Bookmark, text: "Saved destinations for recurring care like dialysis." },
     ],
@@ -96,27 +96,9 @@ function MockCard({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-function MarchConnector() {
-  return (
-    <div className="ml-[9px] py-0.5" aria-hidden="true">
-      <svg width="2" height="18" viewBox="0 0 2 18" fill="none">
-        <line
-          x1="1"
-          y1="0"
-          x2="1"
-          y2="18"
-          className="spine-march stroke-border-strong"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-      </svg>
-    </div>
-  );
-}
-
 function ScheduleMock() {
   return (
-    <MockCard title="Trip composer">
+    <MockCard title="Book a ride">
       <div className="mt-3 flex items-center gap-2">
         <span className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-bg">
           <User className="h-4 w-4 text-subtle" aria-hidden="true" />
@@ -127,17 +109,17 @@ function ScheduleMock() {
           Wheelchair
         </span>
       </div>
-      <div className="mt-4 text-[13px] text-muted">
+      {/* Discrete outbound + return trips around the appointment — NOT joined into one linked route
+          (Stage 14 §10.4): the marching connectors were removed to match the facilities twin. */}
+      <div className="mt-4 space-y-2 text-[13px] text-muted">
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 shrink-0 rounded-full border border-border-strong bg-surface" aria-hidden="true" />
           <span>Home — Silver Spring, MD</span>
         </div>
-        <MarchConnector />
         <div className="flex items-center gap-2">
           <MapPin className="h-3.5 w-3.5 shrink-0 text-accent" aria-hidden="true" />
           <span className="text-default">Riverside Dialysis Center</span>
         </div>
-        <MarchConnector />
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 shrink-0 rounded-full border border-border-strong bg-surface" aria-hidden="true" />
           <span>Home — Silver Spring, MD</span>

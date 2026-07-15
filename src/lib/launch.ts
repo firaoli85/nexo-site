@@ -14,6 +14,13 @@ export const LAUNCH = {
   //                              server WITH TLS + encryption-at-rest confirmed
 } as const;
 
+// HIPAA Notice effective date (Stage 13). SET AT DEPLOY to the site's public launch date, e.g.
+// "August 1, 2026". Until then it stays null — we never fabricate a date — and the HIPAA Notice shows
+// the "takes effect when we first handle member information" sentence instead of a concrete date. The
+// owner may instead choose a FIXED ADOPTION DATE (the date the policy was formally adopted) — see the
+// Stage-13 report DECISIONS. A real date must be in place before the notice is legally operative.
+export const HIPAA_EFFECTIVE_DATE: string | null = null;
+
 // (a) Compliance line. CURRENT: the honest "building toward it" claim (the only HIPAA phrasing the
 // copy gate permits pre-verification). STAGED (HIPAA_INFRA_VERIFIED): the concrete infrastructure
 // claim. Read by the credential strip + anywhere the compliance phrase appears.

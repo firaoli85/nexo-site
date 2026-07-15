@@ -6,6 +6,8 @@ import { Footer } from "@/components/chrome/Footer";
 import { RouteOverlay } from "@/components/home/RouteOverlay";
 import { MapObserver } from "@/components/home/MapObserver";
 import { SITE } from "@/lib/site";
+import { HOME_TITLE, HOME_DESCRIPTION, OG_IMAGE } from "@/lib/seo";
+import { organizationSchema, schemaJson } from "@/lib/schema";
 
 // Distinctive, characterful pairing on a CONTRAST AXIS — Bricolage Grotesque (a display
 // grotesque with real personality) for headings, Hanken Grotesk (a warm humanist grotesque:
@@ -25,11 +27,32 @@ const fontBody = Hanken_Grotesk({
   display: "swap",
 });
 
-// Placeholder metadata — real per-page SEO metadata lands in a later stage.
+// Site-wide metadata (Stage 11). metadataBase makes every per-page relative canonical / og:url / image
+// resolve to an absolute APEX URL. Per-page metadata (via pageMeta in @/lib/seo) overrides title,
+// description, canonical, and the OG/Twitter title+description; these values are the homepage defaults +
+// the fallback for any route without its own.
 export const metadata: Metadata = {
-  title: SITE.name,
-  description:
-    "Non-emergency medical transportation for DC, Maryland, and Virginia.",
+  metadataBase: new URL(SITE.domain),
+  title: { default: HOME_TITLE, template: "%s" },
+  description: HOME_DESCRIPTION,
+  applicationName: SITE.name,
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    locale: "en_US",
+    url: SITE.domain,
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: [{ url: OG_IMAGE.url, alt: OG_IMAGE.alt }],
+  },
 };
 
 export default function RootLayout({
@@ -40,6 +63,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fontDisplay.variable} ${fontBody.variable}`}>
       <body className="flex min-h-screen flex-col antialiased">
+        {/* Organization JSON-LD (one MedicalBusiness, site-wide). Safely serialized (escapes </script>). */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: schemaJson(organizationSchema()) }}
+        />
         {/* Keyboard/screen-reader escape hatch: first focusable element, jumps
             past the sticky chrome straight to the page content. */}
         <a

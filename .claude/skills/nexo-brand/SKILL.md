@@ -38,6 +38,25 @@ Nexo-specific value or rule.)
   `@media (prefers-reduced-motion: reduce)` block zeroes durations + delays.
 - **The COPY HONESTY GATE (§7) is absolute.** Legal/credibility. Audit EVERY string.
 - **The VISUAL VERIFICATION LOOP (§8) is law.** Never report unseen work.
+- **GREEN IS A FLOOR (§0.1) governs every report.** Never overclaim.
+
+## 0.1 GREEN IS A FLOOR (Stage 13 — permanent, verbatim; report-trust law, overrides convenience)
+The Stage-12 report declared ALL GREEN while the owner found, in minutes, a van overlapping the footer,
+white voids below the endcap, a locked-email violation, a 3-option dropdown, and forms that lock after
+one submit. The harness answered the wrong question and a real defect was ruled a "false-positive" from
+a number, not a screenshot. Therefore, permanently:
+1. **Harness green is a floor, never a verdict.**
+2. **A user-visible anomaly may NEVER be classified as a false-positive without a screenshot proving the
+   USER sees nothing wrong.** (A `scrollHeight` equality, a bbox number, "no van node" — none of these
+   overrule the owner's screenshot. Reproduce with the eye or concede you could not.)
+3. **Every stage report ends with three sections:** (a) **HARNESS RESULTS**, (b) **HUMAN-EYE PASS** —
+   what a person actually saw, with screenshots at real scroll positions (top / each mid-section / footer
+   approach / absolute bottom) and real interaction flows, VIEWED and described, (c) **NOT VERIFIED** —
+   an explicit list of what this stage did not check. **Overclaiming is the failure mode; under-claim and
+   list the gaps.**
+When a probe and a screenshot disagree, the screenshot wins and the PROBE is the bug to fix. The QA sweep
+(§10) is standing infrastructure that catches regressions — it is NOT proof that a human would see nothing
+wrong. Ship the human-eye pass, every stage.
 
 ## 1. THE TONAL MAP (color assigned by PURPOSE, ink stays rare)
 Three background registers: **white** (openings/beginnings), **tint** (connective rhythm +
@@ -352,6 +371,167 @@ us → /contact); **(b) link columns** — the four nav columns (headers `text-b
   arrow-nudge (`group`); the footer Apply CTA reuses `.nav-apply` for parity. Every hover has a focus
   twin.
 
+## 6.3 THE AUDIENCE-PAGE PATTERN (Stage 7) — /solutions/* on the finished system
+> **COPY NOTE (Stage 8):** do NOT call the product "certified" in rendered copy — it is an
+> unsubstantiated credential on a pre-live product (no accrediting authority named). Same class as bare
+> "HIPAA compliant". If a real certification lands, gate the word behind a `launch.ts` flag like
+> `COMPLIANCE_LINE`. "the finished/hardened system" is internal shorthand only, never on the page.
+The four audience pages (`/solutions/mcos|providers|facilities|members`) INHERIT the homepage law; they
+are ONE reusable arrangement of EXISTING pieces (`components/solutions/SolutionPage.tsx`), never a new
+design. Server-rendered — no client, no cycle. Composition top→bottom: **eyebrow pill (audience + its
+nav icon) → ONE display `h1` → subline → 3–4 PROOF SECTIONS in the stop grammar (kicker + `h2` claim +
+optional body + icon proof lines) → ONE closing CTA band.**
+- **Exactly ONE product-mock vignette per page**, in the light `MockCard` grammar ("Sample data" hinted,
+  obviously fictional) — it makes its section two-column; the other sections are a single readable
+  column. DOM order is always TEXT-then-mock (reading order) even when visually flipped (`lg:order`).
+- **ONE primary action per page (the B5 rule):** the page BODY has exactly ONE actionable CTA — mcos =
+  Talk to us → /contact · providers = Apply as provider → /apply · facilities = Talk to us → /contact ·
+  members = Member sign in → `SITE.appUrl` (EXTERNAL → `target="_blank"` + `rel="noopener noreferrer"`).
+- **Tonal rhythm:** interior pages stay WHITE/TINT — the terminus footer is the page's ONLY ink (no new
+  ink chapters). Hero = tint; proof sections alternate white/tint by parity; the CTA alternates off the
+  section count; hairline `border-border` between bands.
+- **AmbientMap — ONE region crop per page: mcos = DC · providers = VA · facilities = MD · members =
+  WIDE.** The region's LANDMARK GLYPHS appear ONLY on the hero + CTA BOOKENDS (which are not adjacent, so
+  the no-adjacent-glyph-repeat rule holds); the middle proof sections carry GRID WHISPER ONLY
+  (`<AmbientMap gutter={false}>`) — texture without repeating the region's glyphs down the page.
+- **Metadata:** each page exports its own `metadata` — a unique title (`"<Audience> — Nexo Access"`) + ONE
+  gate-clean description sentence (full OG / JSON-LD / sitemap is a later stage).
+- **The copy gate is PER-AUDIENCE (§7):** providers NEVER payment-speed or trip-volume (the 6.7 blocker
+  class); members NEVER live tracking (scheduled times only); facilities BOOK rides (no will-call
+  activation-flow claim); mcos timely-filing WARNS (never enforces); assist is an add-on, never a 4th
+  level. Product-mock status uses the semantic tokens (warn = `text-warning`/`bg-warning-subtle` 4.8:1,
+  pass = `accent`, held = neutral `muted`) — never invent a colour.
+
+## 6.4 THE DEEP-PAGE / SECTION SUB-NAV PATTERN (Stage 8) — /platform
+`/platform` is the deep page — the hero-CTA landing AND the target of the nav's four Platform anchors
+(`#dispatch #claims-billing #compliance #oversight`). It extends §6.3:
+- **HERO reuses `<ProductDemo/>`** as the opening proof — the self-contained ink CARD floats on a TINT
+  hero (a product mock, NOT a new ink chapter). REUSE, never fork: the IO-offscreen pause, hidden-tab
+  freeze, and reduced-motion static Scene 1 all come for free (verify, don't re-implement).
+- **SECTION SUB-NAV (`components/platform/PlatformSubnav.tsx`, client):** a QUIET sticky bar under the
+  main nav (`sticky top-16 z-30`, hairline `border-border` on `bg-surface`, `text-sm`, never competing
+  with the primary nav). ONE IntersectionObserver marks the section nearest the top ACTIVE
+  (`aria-current="true"`); real `<a href="#id">` (keyboard-operable, focus rings, no-JS-navigable) with
+  smooth scroll gated by reduced-motion. At 390 the chips scroll horizontally — `overflow-x-auto` +
+  `whitespace-nowrap` + `shrink-0`, no wrap, no page overflow.
+- **ANCHOR LANDINGS — size for BOTH sticky bars:** every section carries `scroll-mt-[124px]` (nav 64 +
+  sub-nav ~48 + breathing) so a heading lands fully below both bars from the nav-dropdown deep-link AND
+  the sub-nav. **GOTCHA:** the browser's native hash jump (+ Next's hydration scroll) fires BEFORE fonts
+  + the ProductDemo settle, so it lands early and content grows underneath it — one re-scroll is not
+  enough (it gets overridden). PlatformSubnav RE-APPLIES `scrollIntoView(block:"start")` on a short
+  interval (~1s, capped at 10 ticks) after mount, STOPPING on the first user wheel/touch/keydown so it
+  never fights a real scroll. Verify the FULL matrix: 4 dropdown × 4 sub-nav × 390/768/1440 = every
+  heading fully visible below both bars.
+- **DUAL CTA is correct here** (mixed readers) — the B5 one-CTA rule is for the audience pages only.
+- **AmbientMap:** wide composite at hero + CTA bookends, grid whisper (`gutter={false}`) in the four
+  middle sections (glyphs only on the non-adjacent bookends).
+
+## 6.5 THE TRUST PAGES (Stage 9) — /about + /contact
+Text-led, NO product vignette — the interior grammar (eyebrow → h1 → prose/blocks → CTA), white/tint
+only (the footer is the only ink). Copy gate additions in §7.2.
+- **/about** — eyebrow → ONE h1 → STORY (2-3 short paragraphs, the operator's story, `FOUNDER_REF` only)
+  → "What we hold ourselves to" (3 principle blocks: icon chip + title + line; the member block uses
+  §7.1 dignity language) → a QUIET tint company-facts card (`FC Nexo LLC dba Nexo Access` · technology-
+  first NEMT company · `SERVICE_AREA_LINE` · `SITE.email`) → dual CTA (Talk to us → /contact, Apply as
+  provider → /apply). AmbientMap WIDE bookends, grid whisper middles.
+- **/contact** — eyebrow → ONE h1 → subline (payers/facilities) → PRIMARY ACTION card: a real
+  `mailto:${SITE.email}` button AND the address printed as SELECTABLE text beside it (NEVER mailto-only)
+  + ONE soft line ("you'll hear back from the person who built the platform", NO SLA) → two quiet
+  ROUTING cards (providers → /apply; MEMBERS → `SITE.appUrl` external, `target="_blank"` +
+  `rel="noopener noreferrer"` — never route members to email) → `SERVICE_AREA_LINE`. The contact FORM now
+  lives in the primary action card (§6.6); the `mailto:` path stays below as a quiet "Prefer email?" line
+  (link + selectable address). AmbientMap DC bookends.
+
+## 6.6 THE LEAD FORMS + EMAIL SEAM (Stage 10S) — static site, AWS SES, zero database
+**ARCHITECTURE (law).** The site is **STATIC forever — zero database, zero Supabase, zero Resend, zero
+PHI scope.** Lead forms email their submissions through **AWS SES v2 (region us-east-2)** and store
+NOTHING. Pages stay static (○); Next **server actions** run on-demand (NOT `output: export`). Server
+secrets ONLY (`AWS_SES_REGION` / `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`) — NEVER `NEXT_PUBLIC_`;
+`.env*.local` is gitignored, `.env.example` carries the NAMES only. The ONE sanctioned runtime
+dependency is **`@aws-sdk/client-sesv2`** (hand-rolled SigV4 rejected). FUTURE (record, don't build):
+when the platform deploys, the apply form MAY additionally POST to a platform-owned public lead endpoint.
+- **THE SEAM — `src/lib/mail.ts` (server-only).** The ONLY module that talks to SES; swap vendors here.
+  Server-only via a runtime `if (typeof window !== "undefined") throw` guard (NOT the `server-only`
+  package — that breaks the one-dependency budget; the sole importer is the `"use server"` action, which
+  Next never ships to the client). `readConfig()` reads env **at call time** → a missing var returns a
+  typed friendly `unavailable`, never a crash / never a fake success. Lazy module-scoped `SESv2Client`.
+  `sendLeadEmails()` = TWO legs: **(a) NOTIFICATION = system of record** (awaited; From `no-reply@`, To
+  `providers@`[provider]/`info@`[contact], ReplyTo = submitter; its success IS the form's success),
+  **(b) AUTO-ACK = best-effort** (From `info@`, To submitter; failure caught + logged, NEVER fails the
+  form — absorbs SES-sandbox rejects of unverified submitters). Addresses derive from `SITE.domain`.
+  **Plain-text bodies ONLY** (zero HTML-injection surface).
+- **INJECTION HARDENING — `src/lib/leadSanitize.ts` (pure, unit-tested).** `clean(v)` strips CR/LF + all
+  C0/C1 controls + DEL by CODE-POINT iteration (collapse runs → one space, trim) — implemented WITHOUT
+  any literal control char / unicode-range regex in source (the Write tool mangles literal control bytes;
+  build control-char TEST inputs with `String.fromCharCode`, run tests as `.mts`). EVERY value reaching a
+  subject/body passes `clean()`; `buildSubject` caps the subject at 160 from the sanitized name only.
+- **PROTECTIONS — the single `"use server"` action (`src/app/actions/leads.ts`).** Guard ORDER: honeypot
+  (filled → silent `{ok:true}`, no send) → **min-elapsed-time (FAIL CLOSED:** `Number("")` is 0/finite,
+  so check the raw string is present AND the value is a positive epoch AND elapsed ≥ 3s) → rate limit →
+  validate (required / email shape / length caps / service-level + role whitelist) → send. `kind` is
+  client-supplied → whitelisted. Typed `LeadState = {ok:true} | {ok:false, fieldErrors?, formError?}`;
+  both `unavailable` + `send_failed` map to ONE generic banner (no SES detail leaks to the client — it
+  goes to the server console only).
+- **RATE LIMITING (in-memory, per-instance — honest caveat in code).** Per-IP window limit PLUS a
+  **GLOBAL per-instance cap** as a spoof-PROOF backstop (the leftmost `x-forwarded-for` token is
+  client-spoofable; prefer `x-real-ip`, pin the trusted-proxy boundary at deploy). Bound the IP map
+  (evict elapsed keys / hard cap). The **auto-ack carries NO submitter text** (fixed "Hello," greeting;
+  the name appears only in the internal notification) so no attacker content is reflected out through the
+  domain, plus a **per-recipient ack cooldown** blunts using the ack as a reflection/bombing relay.
+- **FORMS — `src/components/leads/`.** a11y primitives (`<label htmlFor>`+id, `aria-invalid` +
+  `aria-describedby`, required `*` + sr-only, input EDGES use `border-control` for WCAG 1.4.11 ≥3:1, error
+  text `text-danger`, checkbox group = `<fieldset><legend>`, off-screen honeypot `aria-hidden` +
+  `tabIndex={-1}`). `useLeadForm` uses a MANUAL `pending` `useState` (not `useFormStatus`; robust on React
+  18); moves focus to the first errored field / the success `role="status"` panel / the `role="alert"`
+  banner. **The form OWNS its card heading** so the success panel cleanly replaces the whole thing (never a
+  stale "fill this out" header above a confirmation); success/alert focus rings use `ring-offset-surface`.
+  **/apply is HIGHEST-RISK copy — audit twice: NEVER payment speed, trip volume, or earnings.** PHI
+  microcopy is mandatory on every lead form (§7.2).
+
+## 6.7 THE LEGAL / POLICY PAGES (Stage 10S) — /privacy, /terms, /hipaa, /accessibility
+`src/components/legal/LegalPage.tsx` — a calm prose layout in the certified type: eyebrow → ONE h1 →
+optional lead → optional banner → NUMBERED `<h2>` sections, body **`text-lg`** (match the site's reading
+columns), grid-whisper AmbientMap `gutter={false}` ONLY (no region glyphs, no vignettes), sequential
+headings. **Port RULES:** substance ported UNCHANGED; entity/email/domain normalized to SITE constants
+(`SITE.email` / `SITE.domain`); **NO invented "last updated" / effective dates** (a HIPAA NPP effective
+date is owner-set via an `effectiveNote` prop; the statutory "respond within 30 days" is a legal timeframe,
+kept — distinct from the marketing no-SLA rule). Keep the required HIPAA banner + the real HHS-OCR external
+link (new-tab affordance). **/accessibility is NOT a verbatim port — it is an HONEST statement grounded in
+the audits actually run** (contrast-by-luminance, keyboard, visible focus, reduced-motion, semantic
+structure); it drops any phone / SLA / member-portal-dispatch claim. **GEOGRAPHY-IN-LEGAL:** keep the
+seed's narrower REGULATORY language (e.g. "DC and Maryland" for Medicaid enrollment) rather than inventing
+a wider claim — marketing may say the aspirational DC/MD/VA, but a legal doc must not assert an unverified
+regulatory footprint (gate). Any security claim in a legal page follows the launch-flag doctrine (§7.2):
+the privacy page says "**built for HIPAA compliance**", never an unverified "encrypted at rest" present fact.
+
+## 6.8 THE SEO LAYER (Stage 11) — metadata, schema, sitemap, OG
+- **`src/lib/seo.ts` — the SEO SINGLE SOURCE.** `ROUTE_META` (title + description + path per route) +
+  `pageMeta()` (builds `alternates.canonical` + OpenGraph + Twitter). The root layout sets
+  `metadataBase = new URL(SITE.domain)`, so every relative `path` resolves to an absolute APEX URL.
+  Each page: `export const metadata = pageMeta(ROUTE_META.x)` (home inherits the root defaults).
+- **Canonical = apex, no `www`, no trailing slash** on interior routes; the home canonical is the bare apex.
+- **Titles.** Interior pattern **"{Page} | Nexo Access — NEMT for the DMV"**; homepage = brand + spelled-out
+  primary query + region, **≤ 65 chars** ("Nexo Access | Non-Emergency Medical Transportation — DC, MD & VA"
+  = 64). Set via `title.absolute` so a template never doubles the suffix.
+- **Descriptions** ~150–160 chars, unique per route, gate-clean + query-lexicon-safe (§7.3).
+- **ONE branded OG image** (`/public/og.png`, 1200×630, < 300 kB): ink field + terminus-node motif +
+  Bricolage wordmark + the approved region line; wired site-wide with alt via `OG_IMAGE`; Twitter
+  `summary_large_image`. `/public/logo.png` (512×512) for schema. Authored via a scratchpad HTML →
+  Playwright screenshot (NOT a build dependency).
+- **JSON-LD — `src/lib/schema.ts` SINGLE SOURCE**, one `<script type="application/ld+json">` in the root
+  layout. `@type MedicalBusiness`; absolute URLs; email `info@`, telephone E.164, `areaServed` = DC
+  (AdministrativeArea) + MD/VA (State). **NO `address`** (none public — omit the property), **NO
+  aggregateRating / review / openingHours** (nothing invented — gate). Serialize with `schemaJson()`,
+  which escapes `< > &` + U+2028/9 (prevents a `</script>` breakout while staying valid JSON).
+- **`sitemap.ts` + `robots.ts`** (Next conventions): the sitemap lists all public routes as absolute apex
+  URLs derived from `ROUTE_META` (no fabricated `lastModified`); robots allows all, sets apex `host`, and
+  references the sitemap. **Zero `noindex` anywhere.**
+- **Semantic floor:** exactly one h1/route, clean heading order, `<html lang>`, every decorative SVG hidden
+  from AT (its own OR an ancestor `aria-hidden`), no unlabeled images. **GATE: Lighthouse SEO ≥ 90 AND
+  Performance ≥ 90 on desktop AND mobile**, verified against the prod build.
+- Redirect + post-deploy SEO decisions live in `DEPLOY-NOTES.md` (apex canonical; www + fcnexo.com 301→apex;
+  Rich Results + Search Console + sitemap submission post-deploy; per-city pages as a future content layer).
+
 ## 7. THE COPY HONESTY GATE (verbatim — audit EVERY string, incl. aria-label, sr-only, alt, SVG title/desc)
 **NEVER claim, imply, or depict:** GPS / live tracking / live map / ETA / "track your ride";
 EDI / 837 / 835 / ERA / clearinghouse / electronic payer submission; a driver app or drivers using
@@ -362,6 +542,19 @@ HIPAA compliance"**; the concrete infrastructure claim ("HIPAA-compliant infrast
 AWS under a signed BAA, encrypted in transit and at rest") renders ONLY behind the
 `HIPAA_INFRA_VERIFIED` launch flag (§7.2). Also NEVER: analytics / BI dashboards; ANY volume or
 performance statistic.
+**LINKED ROUND-TRIP / MULTI-LEG CLAIMS ARE BANNED (Stage 14, strategy-chat §10.4).** The platform's
+round-trip / multi-leg data model is a KNOWN OPEN structural bug, so copy must NEVER claim linked
+round-trip booking — no "**booked as one linked trip**", no "**linked, time-validated legs**", no
+"**as one trip**", no "**multi-stop**" booked-as-one framing, no van/vignette caption implying joined
+legs. Offering **"round trips"** / **"recurring rides"** as a scheduled service is fine; the softened,
+true-today framing is "**outbound and return trips scheduled around the appointment (including will-call
+returns)**" — separate trips, never joined. GATED: the owner lifts this ONLY when the platform's
+multi-leg redesign actually ships. (Assist copy §10.5 stays offering-level — never a platform
+attendant-tracking/matching feature claim.)
+**§10.6 — THE STATS BAND NUMBERS ARE CLAIMS, RE-COUNTED AT EVERY SHIP.** The permitted numbers below
+(4 scrub / 7 adjudication / 13 frozen) are asserted CAPABILITY COUNTS, not decoration — this repo cannot
+see the platform codebase, so **re-count them against the live platform at every deploy** (a DEPLOY-NOTES
+launch-day step). If a count changed, the copy changed.
 **PERMITTED numbers ONLY:** 4 scrub checks · 7 adjudication checks · 13 frozen fields · 2 appeal
 levels · **3 service levels** · RLS on every table · DC/MD/VA. **Sample data must be OBVIOUSLY
 fictional** (e.g. "J. Sample", "R. Doe", "Riverside Dialysis Center", "Silver Spring, MD",
@@ -428,6 +621,39 @@ undecided; copy must NOT commit to one.
   - Both ship `false` → the site renders the honest current copy everywhere. Components import the
     strings from `launch.ts`; never hardcode the staged/current phrasing in a component.
 
+### 7.2 TRUST-PAGE GATE ADDITIONS (Stage 9 — /about + /contact, but apply site-wide)
+- **NO invented company theater:** no team grid, no advisory board, no office photos, no timeline, no
+  FOUNDING YEAR (none supplied), no partner / client / press LOGOS, no headcount or scale implication.
+- **The founder is referenced ONLY via `SITE.FOUNDER_REF`** (currently `"our founder"`, a one-string
+  flip the owner may later set to a name). Keep it lowercase — copy never starts a sentence with it.
+  Founder facts are limited to **years of hands-on NEMT operating experience in the DMV** + **built the
+  platform**. NEVER a name, NEVER a prior or affiliated company.
+- **NO street ADDRESS anywhere** (none is public). **PHONE is public by DELIBERATE PLACEMENT (Stage 11):**
+  `SITE.phone` (`display` + `e164`) renders ONLY on the /contact primary-action card ("Call or email us" —
+  a `tel:` link + the number as selectable text, mirroring the email row) and in the JSON-LD `telephone`.
+  Do not scatter it elsewhere.
+- **NO response-time promise / SLA** — "within 24 hours" (or any hours / business-days pledge) is
+  BANNED. Soft framing only ("you'll hear back from the person who built the platform").
+- **MEMBERS are never routed to email for rides** — always to the member portal (`SITE.appUrl`).
+- **"certified" is banned in rendered copy** (Stage 8 — unsubstantiated credential on a pre-live
+  product; gate it behind a `launch.ts` flag if a real certification ever lands).
+- **PHI MICROCOPY on every lead form (Stage 10S):** "Please don't include any member or health
+  information in this form." + a link to `/privacy`. The site collects NO PHI; the microcopy keeps it that
+  way. The **auto-ack email is PUBLIC copy** — the no-SLA rule applies to it, and it carries ZERO
+  submitter-supplied text (no attacker content reflected out through the domain).
+
+### 7.3 THE SEO QUERY LEXICON (Stage 11) — metadata + schema are PUBLIC copy, audit them
+Metadata (titles, descriptions, OG strings) and JSON-LD are gate-governed copy, not a keyword dumping
+ground. Target-query terms **"NEMT provider" / "NEMT broker"** may appear ONLY as SEARCHER language or a
+THIRD-PARTY reference (e.g. "for transport providers", "join the transport-provider network", "NEMT for
+MCOs") — **NEVER as a description of Nexo Access itself** (the §7.2 lexicon stands: Nexo = "technology-first
+NEMT company"; calling the SOFTWARE "the platform for non-emergency medical transportation (NEMT)" is fine).
+Service-AREA keywords (DC / Maryland / Virginia / the DMV / "Washington, DC") are unrestricted. Service
+CLAIMS stay launch-flag governed — **no "serving" in any title/description/OG string** until
+`LIVE_OPERATIONS` ("Built for…" / neutral geography only). Visible-copy keyword weaving is MINIMAL and
+surgical (one spelled-out "non-emergency medical transportation (NEMT)" where a human would write it),
+each edit gate-audited. No keyword stuffing; no duplicate descriptions.
+
 ## 8. THE VISUAL VERIFICATION LOOP (mandatory, every visual change)
 Implement → run the production server → Playwright screenshots at **390 / 768 / 1280** (scratchpad
 tooling, NOT a project dep) → **VIEW the images yourself** → write a critique against this law →
@@ -443,4 +669,37 @@ so it is safe to run while a server is up. Poll `curl` for HTTP 200 (a 404 page 
 tsc TRUE 0 · lint 0 warnings · build 0 · all routes static · copy grep clean · contrast table for
 every new/changed pairing on its real surface · CLS + reduced-motion unchanged on demo/morph/spine ·
 First Load JS reported (flag > 1 kB moves) · zero hardcoded hex outside globals.css. Then an
-adversarial review (contrast highest-severity) with a verify pass; fix confirmed findings.
+adversarial review (contrast highest-severity) with a verify pass; fix confirmed findings. **Any stage
+that adds a server action / secret / user-input → outbound surface runs a DEDICATED SECURITY pass**
+(key exposure, header/subject injection, rate-limit/throttle bypass, error-message info leak, reflected
+outbound abuse). For a real external-send E2E on the owner's infrastructure, CONFIRM FIRST — it is
+outward-facing (see the Stage-10S ask-before-send precedent).
+
+## 10. THE QA SWEEP + REGRESSION RULE (Stage 12) — standing invariant harness
+A permanent Playwright harness (`scripts/qa/`, run via **`npm run qa:sweep`**; `playwright` is a QA-only
+**devDependency** — runtime deps stay zero) asserts the site's structural invariants against the PROD
+build for EVERY route × 390/768/1440/1920 (+ a 404 check), and exits non-zero on any failure. It is
+**law-protected: never deleted, never weakened — invariants are only ADDED.** Invariants I1–I14:
+endcap/no-void (I1), no h-overflow (I2), one h1 + clean headings (I3), zero console errors/failed
+requests (I4), CLS≈0 (I5), skip-link + focus rings (I6), nav dropdowns/mobile overlay (I7), footer
+arrival settles to opacity 1 (I8), **/platform anchors land + light the correct chip for BOTH cold
+deep-link AND client-nav — #dispatch never lights Oversight** (I9), reduced-motion static (I10), no-JS
+SSR parity (I11), map gutter-glyph clearance (I12), forms render + honeypot hidden, never sends (I13),
+metadata title/apex-canonical/og (I14).
+- **THE REGRESSION RULE:** any change touching **shared chrome** — Navbar, Footer, root layout,
+  AmbientMap, globals.css/tokens, the `site`/`launch`/`nav`/`seo`/`schema` libs, or the
+  `SolutionPage`/`LegalPage`/`PlatformSubnav` patterns — MUST run `npm run qa:sweep` to full green before
+  its stage may report. Shared chrome propagates; a green sweep proves no sibling route regressed.
+- **HARNESS-vs-REAL discipline (Stage-12 lesson):** a probe failure is guilty until proven — but VERIFY
+  it's a real defect, not a probe artifact, before "fixing" the site. Real bugs found the site with a
+  screenshot/DOM diff; false positives were probe bugs (an SVG bbox extending past a clipped footer read
+  as a "void"; a fast programmatic scroll skipping an IntersectionObserver; measuring decorative
+  low-opacity nodes as "not arrived"; `scroll-behavior:smooth` making a synchronous `elementFromPoint`
+  read the pre-scroll position). Fix the probe when it's wrong; fix the source when it's right.
+- **THE #dispatch/scrollspy LESSON (S2, real bug fixed):** a scrollspy that picks "topmost section
+  intersecting a band" lights the PREVIOUS section (its tail clips the band's top edge) and is sensitive
+  to IntersectionObserver callback batching — so a client-nav settle fired a callback where only the
+  prior section LEFT (empty set → active stuck one behind), while a cold scroll happened to fire the
+  right final callback. The robust fix is a rAF-throttled scroll/resize handler that sets active = the
+  LAST section whose top ≤ a trigger line matching the sections' `scroll-mt` — deterministic by POSITION,
+  so cold + client-nav that settle at the same scroll always resolve to the same chip.

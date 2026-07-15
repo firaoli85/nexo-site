@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { cn } from "@/utils/cn";
+
+// The journey motif (scroll-drawn line + traveling van) is HOMEPAGE-ONLY — the homepage is the only
+// page with stops. Interior routes render ZERO van/route nodes (Stage 13 ruling). The van's path also
+// terminates a handoff gap ABOVE the footer card so it never enters/overlaps the footer at any scroll.
+const HOME_PATH = "/";
+const FOOTER_HANDOFF = 36; // px the line + van stop short of the footer seam (the terminus handoff) —
+//                            the van arrives just above the ink card and hands off to its terminus motif
 
 // THE FULL-PAGE ROUTE (Stage 6.4) — ONE continuous scroll-drawn line that runs from the spine's
 // start, down through the proof band / audience triage / provider teaser / final CTA, curving gently
@@ -35,8 +43,16 @@ export function RouteOverlay() {
   const vanRef = useRef<HTMLSpanElement>(null);
   const geoRef = useRef<Geo | null>(null);
   const [geo, setGeo] = useState<Geo | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
+    if (pathname !== HOME_PATH) {
+      // homepage-only: no listeners/geometry on interior routes. Clear any stale geometry so a
+      // back/forward return to the homepage doesn't paint one frame off the previous measurement.
+      geoRef.current = null;
+      setGeo(null);
+      return;
+    }
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const root = rootRef.current;
     const region = document.querySelector<HTMLElement>("[data-spine-region]");
@@ -79,7 +95,9 @@ export function RouteOverlay() {
       const regionTopDoc = regionRect.top + sy;
       const top = regionTopDoc - hostTop;
       const seamDoc = seamEl.getBoundingClientRect().top + sy;
-      const h = Math.max(1, seamDoc - regionTopDoc);
+      // Stop the drawn line + van a handoff gap ABOVE the footer seam — the van must never paint into
+      // or overlap the footer card (Stage 13). The footer's own terminus motif is the destination.
+      const h = Math.max(1, seamDoc - regionTopDoc - FOOTER_HANDOFF);
       const w = root.offsetWidth;
       const endRect = endEl.getBoundingClientRect();
       const motifX = endRect.left + endRect.width / 2 + sx - hostLeft;
@@ -126,6 +144,7 @@ export function RouteOverlay() {
     };
 
     let ticking = false;
+    let rafId = 0;
     let lastDirP = 0;
     const update = () => {
       ticking = false;
@@ -154,7 +173,7 @@ export function RouteOverlay() {
     const onScroll = () => {
       if (!ticking) {
         ticking = true;
-        requestAnimationFrame(update);
+        rafId = requestAnimationFrame(update);
       }
     };
 
@@ -194,6 +213,7 @@ export function RouteOverlay() {
     if (!reduce) stops.forEach((s) => io.observe(s));
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       io.disconnect();
@@ -202,7 +222,7 @@ export function RouteOverlay() {
       root.removeAttribute("data-direction");
       root.removeAttribute("data-leg");
     };
-  }, []);
+  }, [pathname]);
 
   // The van follows the measured path — offset-path can only be set imperatively (dynamic d).
   useEffect(() => {
@@ -215,6 +235,9 @@ export function RouteOverlay() {
       }
     }
   }, [geo]);
+
+  // Homepage-only: interior routes render nothing (zero van/route nodes in the DOM).
+  if (pathname !== HOME_PATH) return null;
 
   return (
     <div
@@ -234,6 +257,7 @@ export function RouteOverlay() {
             preserveAspectRatio="none"
             fill="none"
             focusable="false"
+            aria-hidden="true"
           >
             <defs>
               <linearGradient id="routeGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2={geo.h}>
@@ -278,7 +302,7 @@ export function RouteOverlay() {
               rotation. Livery: white/on-ink body, ink outline, one jade stripe. NEVER an ambulance. */}
           <span ref={vanRef} className="route-van" aria-hidden="true">
             <span className="route-van-lane">
-              <svg viewBox="0 0 32 20" className="block h-[19px] w-[30px]" fill="none">
+              <svg viewBox="0 0 32 20" className="block h-[19px] w-[30px]" fill="none" aria-hidden="true">
                 {/* body — boxy rear, rounded roof, sloped hood to a rounded nose */}
                 <path
                   d="M2.6 15.6 L2.6 8 Q2.6 5.5 5.1 5.5 L20 5.5 Q23 5.5 24.6 7.7 L27.7 11.4 Q29.1 12 29.1 13.7 L29.1 15.6 Z"
