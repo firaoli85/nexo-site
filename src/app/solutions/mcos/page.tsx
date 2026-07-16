@@ -55,7 +55,7 @@ const SECTIONS: SolutionSection[] = [
     claim: "Only current credentials get on the road.",
     body: "The network checks itself before a trip is ever assigned.",
     proofs: [
-      { icon: ShieldCheck, text: "Drivers and vehicles with lapsed credentials are blocked from assignment — checked live at dispatch." },
+      { icon: ShieldCheck, text: "Drivers and vehicles with lapsed credentials are blocked from assignment, checked live at dispatch." },
       { icon: Lock, text: "Providers only receive the service levels they’re formally approved for, enforced at the database level." },
       { icon: BadgeCheck, text: "Every assignment carries the credentials it was cleared against." },
     ],
@@ -91,7 +91,7 @@ export default function McosPage() {
       eyebrow="For MCOs & payers"
       eyebrowIcon={Landmark}
       h1="A benefit that holds up to review."
-      subline="Every trip runs on a credential-gated network, and every claim clears the same checks — so the transportation benefit stands up to scrutiny."
+      subline="Every trip runs on a credential-gated network, and every claim clears the same checks, so the transportation benefit stands up to scrutiny."
       sections={SECTIONS}
       cta={{
         heading: "See how it fits your program.",

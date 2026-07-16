@@ -34,7 +34,7 @@ export function ProviderTeaser() {
             Run trips with us.
           </h2>
           <p className="mt-4 text-lg text-muted">
-            Transparent credentialing and clean claims — you always know where every trip and
+            Transparent credentialing and clean claims: you always know where every trip and
             every claim stands.
           </p>
         </div>

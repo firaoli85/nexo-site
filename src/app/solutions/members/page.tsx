@@ -65,7 +65,7 @@ const SECTIONS: SolutionSection[] = [
     kicker: "Your needs",
     claim: "Your needs, checked every time.",
     proofs: [
-      { icon: ClipboardList, text: "Your needs are checked at every booking — not assumed from last time." },
+      { icon: ClipboardList, text: "Your needs are checked at every booking, not assumed from last time." },
       { icon: MessageSquare, text: "Tell us what’s changed, and the ride changes with it." },
     ],
   },

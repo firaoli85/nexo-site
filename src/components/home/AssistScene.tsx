@@ -56,7 +56,7 @@ export function AssistScene() {
             Bariatric &amp; two-person assist.
           </h4>
           <p className="mt-3 max-w-md text-lg leading-relaxed text-on-ink-muted">
-            Extra trained hands and reinforced equipment on any service level — two or more
+            Extra trained hands and reinforced equipment on any service level, with two or more
             attendants when a member’s needs require it.
           </p>
           <ProofSpotlight surface="ink" className="mt-6 space-y-3">

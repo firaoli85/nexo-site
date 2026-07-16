@@ -38,7 +38,7 @@ export default function ApplyPage() {
               Run trips with us.
             </h1>
             <p className="mt-5 max-w-prose text-xl leading-relaxed text-muted">
-              Work from one honest system — clear credentialing, and claims checked before they’re
+              Work from one honest system, with clear credentialing and claims checked before they’re
               billed. Tell us about your operation and we’ll take it from there.
             </p>
           </div>

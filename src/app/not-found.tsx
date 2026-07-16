@@ -26,7 +26,7 @@ export default function NotFound() {
             This page took a wrong turn.
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-muted">
-            The page you’re looking for isn’t here — it may have moved, or the link was mistyped. Let’s
+            The page you’re looking for isn’t here. It may have moved, or the link was mistyped. Let’s
             get you back on route.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">

@@ -29,9 +29,9 @@ const SECTIONS: LegalSection[] = [
     heading: "Who We Are",
     body: (
       <p>
-        {SITE.legalName}, doing business as {SITE.name}, is a covered entity under HIPAA. We are a
-        non-emergency medical transportation (NEMT) coordinator enrolled with Medicaid in DC and
-        Maryland.
+        {SITE.legalName}, doing business as {SITE.name}, is a non-emergency medical transportation
+        (NEMT) company. When we handle your health information to arrange transportation, federal law
+        (HIPAA) requires us to protect it and to provide you with this notice.
       </p>
     ),
   },

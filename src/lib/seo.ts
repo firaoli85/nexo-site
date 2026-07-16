@@ -8,19 +8,19 @@ import { SITE } from "@/lib/site";
 // (Nexo = "technology-first NEMT company"); no "serving" verb pre-LIVE_OPERATIONS (neutral geography is
 // exempt); no banned capability/number.
 
-export const HOME_TITLE = "Nexo Access | Non-Emergency Medical Transportation — DC, MD & VA";
+export const HOME_TITLE = "Nexo Access | Non-Emergency Medical Transportation, DC, MD & VA";
 export const HOME_DESCRIPTION =
   "Non-emergency medical transportation for Medicaid members across DC, Maryland, and Virginia. Nexo Access is the technology-first NEMT company built for the DMV.";
 
 // Interior title pattern: "{Page} | Nexo Access — NEMT for the DMV".
-export const interiorTitle = (name: string) => `${name} | Nexo Access — NEMT for the DMV`;
+export const interiorTitle = (name: string) => `${name} | Nexo Access, NEMT for the DMV`;
 
 // ONE branded OG image, site-wide (1200×630, /public/og.png).
 export const OG_IMAGE = {
   url: "/og.png",
   width: 1200,
   height: 630,
-  alt: "Nexo Access — non-emergency medical transportation across DC, Maryland, and Virginia",
+  alt: "Nexo Access, non-emergency medical transportation across DC, Maryland, and Virginia",
 };
 
 export type RouteMeta = { title: string; description: string; path: string };
@@ -36,7 +36,7 @@ export const ROUTE_META = {
   mcos: {
     title: interiorTitle("For MCOs & Payers"),
     description:
-      "NEMT for MCOs and payers — credentialing enforced at dispatch and claims checked before billing, so every trip and claim holds up. Built for DC, MD, and VA.",
+      "NEMT for MCOs and payers, with credentialing enforced at dispatch and claims checked before billing, so every trip and claim holds up. Built for DC, MD, and VA.",
     path: "/solutions/mcos",
   },
   providers: {
@@ -60,25 +60,25 @@ export const ROUTE_META = {
   apply: {
     title: interiorTitle("Apply as a Provider"),
     description:
-      "Run trips with Nexo Access — clear credentialing and claims checked before billing, on one system. Apply to join the transport-provider network in the DMV.",
+      "Run trips with Nexo Access on one system: clear credentialing, and claims checked before billing. Apply to join the transport-provider network in the DMV.",
     path: "/apply",
   },
   about: {
     title: interiorTitle("About"),
     description:
-      "Nexo Access is a technology-first NEMT company built by an operator — every rule the industry keeps in a binder, enforced by the platform. Built for the DMV.",
+      "Nexo Access is a technology-first NEMT company built by an operator, and every rule the industry keeps in a binder is enforced by the platform. Built for the DMV.",
     path: "/about",
   },
   contact: {
     title: interiorTitle("Contact"),
     description:
-      "Talk to Nexo Access about your NEMT program — payers and facilities, tell us about the trips you cover. Call or email us. DC, Maryland, and Virginia.",
+      "Talk to Nexo Access about your NEMT program. Payers and facilities, tell us about the trips you cover. Call or email us. DC, Maryland, and Virginia.",
     path: "/contact",
   },
   privacy: {
     title: interiorTitle("Privacy Policy"),
     description:
-      "How Nexo Access collects, uses, shares, and protects your information — and the rights you have over it. The privacy policy for our NEMT platform in the DMV.",
+      "How Nexo Access collects, uses, shares, and protects your information, and the rights you have over it. The privacy policy for our NEMT platform in the DMV.",
     path: "/privacy",
   },
   terms: {
@@ -96,7 +96,7 @@ export const ROUTE_META = {
   accessibility: {
     title: interiorTitle("Accessibility"),
     description:
-      "How we build and test Nexo Access to meet WCAG 2.1 AA — contrast, keyboard access, visible focus, and reduced motion — plus how to reach us about barriers.",
+      "How we build and test Nexo Access to meet WCAG 2.1 AA: contrast, keyboard access, visible focus, and reduced motion, plus how to reach us about barriers.",
     path: "/accessibility",
   },
 } as const satisfies Record<string, RouteMeta>;

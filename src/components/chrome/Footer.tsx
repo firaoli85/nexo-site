@@ -20,7 +20,7 @@ import { TerminusReveal } from "@/components/chrome/TerminusReveal";
 
 // Mission line — a trim of the (approved) hero subline; no new claims, no service-area verb.
 const MISSION =
-  "Every driver credential-verified before dispatch. Every claim checked — automatically — before it’s billed.";
+  "Every driver credential-verified before dispatch. Every claim checked automatically before it’s billed.";
 
 // Column links adopt the NAV item grammar (6.8): an underline that slides in on hover/focus (the
 // `.footer-link` ::after), plus the resting→on-ink colour lift. Every hover has a focus twin.

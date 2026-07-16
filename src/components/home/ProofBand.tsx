@@ -61,7 +61,7 @@ export function ProofBand() {
           ))}
         </div>
         <p className="mt-10 text-center text-base text-muted">
-          Every number here is enforced by the platform’s code — not a policy binder.
+          Every number here is enforced by the platform’s code, not a policy binder.
         </p>
       </Container>
     </Section>

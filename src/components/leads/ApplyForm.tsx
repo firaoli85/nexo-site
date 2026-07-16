@@ -25,7 +25,7 @@ export function ApplyForm() {
           <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
         </span>
         <h2 className="mt-4 font-display text-xl font-bold tracking-tight text-default sm:text-2xl">
-          Thanks — your application is in.
+          Thanks, your application is in.
         </h2>
         <p className="mt-2 text-base leading-relaxed text-muted">
           We’ve got your details and we’ll follow up about running trips with us. If you need to add
@@ -103,7 +103,7 @@ export function ApplyForm() {
         required
         autoComplete="address-level2"
         maxLength={LIMITS.city}
-        hint="Where you’re based — e.g. Silver Spring, MD."
+        hint="Where you’re based (e.g. Silver Spring, MD)."
         error={fieldErrors?.[FIELDS.city]}
       />
       <CheckboxGroup

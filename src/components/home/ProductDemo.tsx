@@ -64,7 +64,7 @@ function ScheduleScene() {
         <div className="mt-3 space-y-2 text-[13px] text-on-ink-muted">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 shrink-0 rounded-full border border-on-ink-border bg-ink-surface" aria-hidden="true" />
-            <span>Home — Silver Spring, MD</span>
+            <span>Home, Silver Spring, MD</span>
           </div>
           <div className="flex items-center gap-2">
             <MapPin className="h-3.5 w-3.5 shrink-0 text-accent-on-ink" aria-hidden="true" />

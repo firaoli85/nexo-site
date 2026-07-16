@@ -39,7 +39,7 @@ function BookRideMock() {
       <div className="mt-4 space-y-2 text-[13px] text-muted">
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 shrink-0 rounded-full border border-border-strong bg-surface" aria-hidden="true" />
-          <span>Home — Silver Spring, MD</span>
+          <span>Home, Silver Spring, MD</span>
         </div>
         <div className="flex items-center gap-2">
           <MapPin className="h-3.5 w-3.5 shrink-0 text-accent" aria-hidden="true" />
@@ -47,7 +47,7 @@ function BookRideMock() {
         </div>
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 shrink-0 rounded-full border border-border-strong bg-surface" aria-hidden="true" />
-          <span>Home — Silver Spring, MD</span>
+          <span>Home, Silver Spring, MD</span>
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
@@ -70,7 +70,7 @@ const SECTIONS: SolutionSection[] = [
     claim: "Book rides for the people in your care.",
     body: "One place to arrange and confirm every trip.",
     proofs: [
-      { icon: CalendarCheck, text: "Book outbound and return trips around the appointment time — including will-call returns." },
+      { icon: CalendarCheck, text: "Book outbound and return trips around the appointment time, including will-call returns." },
       { icon: Bookmark, text: "Saved destinations for recurring care like dialysis." },
       { icon: CircleCheck, text: "Confirm the ride and the details in one place." },
     ],
@@ -105,7 +105,7 @@ export default function FacilitiesPage() {
       eyebrow="For facilities & case managers"
       eyebrowIcon={Hospital}
       h1="Book the ride, hold the details."
-      subline="Arrange rides for the people in your care — with their mobility and care needs read fresh at every booking."
+      subline="Arrange rides for the people in your care, with their mobility and care needs read fresh at every booking."
       sections={SECTIONS}
       cta={{
         heading: "Let’s set up your facility.",

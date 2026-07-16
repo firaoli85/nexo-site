@@ -36,7 +36,7 @@ export function Hero() {
             <p className="mt-5 max-w-prose text-xl leading-snug text-on-ink-muted">
               Nexo Access is a technology-first NEMT company {SERVICE_AREA_PROSE}.
               Every driver is credential-verified before dispatch, and every claim
-              is checked — automatically — before it’s billed.
+              is checked automatically before it’s billed.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="/platform" variant="primaryOnInk" size="md">

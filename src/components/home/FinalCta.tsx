@@ -15,7 +15,7 @@ export function FinalCta() {
             Ready when your members are.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-xl leading-relaxed text-muted">
-            One platform for every trip — from the first booking to a checked, billable claim.
+            One platform for every trip, from the first booking to a checked, billable claim.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button href="/contact" variant="primary" size="md">

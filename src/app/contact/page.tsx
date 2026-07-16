@@ -37,7 +37,7 @@ export default function ContactPage() {
             </h1>
             <p className="mt-5 max-w-prose text-xl leading-relaxed text-muted">
               If you run a transportation benefit or book rides for the people in your care, tell us
-              about the trips you cover — and we’ll show you how Nexo Access handles them.
+              about the trips you cover, and we’ll show you how Nexo Access handles them.
             </p>
           </div>
         </Container>
@@ -58,16 +58,16 @@ export default function ContactPage() {
               Call{" "}
               <a href={`tel:${SITE.phone.e164}`} className={inlineLink}>
                 {SITE.phone.display}
-              </a>{" "}
-              — or copy it:{" "}
+              </a>
+              , or copy it:{" "}
               <span className="select-all font-medium text-default">{SITE.phone.display}</span>.
             </p>
             <p>
               Email{" "}
               <a href={`mailto:${SITE.email}`} className={inlineLink}>
                 {SITE.email}
-              </a>{" "}
-              — or copy it:{" "}
+              </a>
+              , or copy it:{" "}
               <span className="select-all font-medium text-default">{SITE.email}</span>.
             </p>
           </div>

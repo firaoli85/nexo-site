@@ -39,7 +39,7 @@ const STOPS: { num: string; claim: string; body: string; proofs: Proof[] }[] = [
   {
     num: "Stop 01",
     claim: "Built around the member.",
-    body: "Every trip starts from the member — their mobility level, their care needs, and the places they go again and again.",
+    body: "Every trip starts from the member: their mobility level, their care needs, and the places they go again and again.",
     proofs: [
       { icon: Waypoints, text: "Round trips and recurring rides, scheduled around the appointment." },
       { icon: ClipboardList, text: "Mobility and care needs read fresh at every booking." },
@@ -52,7 +52,7 @@ const STOPS: { num: string; claim: string; body: string; proofs: Proof[] }[] = [
     body: "Once a trip exists, its history is protected. Status follows one validated path, and final states stay final.",
     proofs: [
       { icon: Workflow, text: "Every status change validated by a state machine." },
-      { icon: Lock, text: "Completed, cancelled, and no-show are final — no silent flips." },
+      { icon: Lock, text: "Completed, cancelled, and no-show are final, with no silent flips." },
       { icon: ShieldCheck, text: "Dispatchers can’t overwrite each other’s edits." },
       { icon: History, text: "Every turnback and restore carries a logged reason." },
     ],
@@ -60,13 +60,13 @@ const STOPS: { num: string; claim: string; body: string; proofs: Proof[] }[] = [
   {
     num: "Stop 03",
     claim: "Every mobility level, covered.",
-    body: "Ambulatory, wheelchair, or stretcher — the platform knows what each trip needs and who is allowed to serve it.",
+    body: "Ambulatory, wheelchair, or stretcher: the platform knows what each trip needs and who is allowed to serve it.",
     proofs: [
       {
         icon: Layers,
-        text: "Three service levels — ambulatory, wheelchair, and stretcher — with bariatric & two-person assist available as an add-on to any of them.",
+        text: "Three service levels (ambulatory, wheelchair, and stretcher), with bariatric & two-person assist available as an add-on to any of them.",
       },
-      { icon: Database, text: "A provider only receives service levels it is formally approved for — enforced at the database level." },
+      { icon: Database, text: "A provider only receives service levels it is formally approved for, enforced at the database level." },
       { icon: Lock, text: "Drivers and vehicles with lapsed credentials are blocked from assignment automatically." },
     ],
   },
@@ -114,7 +114,7 @@ function ScheduleMock() {
       <div className="mt-4 space-y-2 text-[13px] text-muted">
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 shrink-0 rounded-full border border-border-strong bg-surface" aria-hidden="true" />
-          <span>Home — Silver Spring, MD</span>
+          <span>Home, Silver Spring, MD</span>
         </div>
         <div className="flex items-center gap-2">
           <MapPin className="h-3.5 w-3.5 shrink-0 text-accent" aria-hidden="true" />
@@ -122,7 +122,7 @@ function ScheduleMock() {
         </div>
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 shrink-0 rounded-full border border-border-strong bg-surface" aria-hidden="true" />
-          <span>Home — Silver Spring, MD</span>
+          <span>Home, Silver Spring, MD</span>
         </div>
       </div>
       <div className="mt-4 inline-flex items-center gap-1.5 rounded-md border border-border bg-bg px-2 py-1 text-[13px] font-medium text-muted">
@@ -170,7 +170,7 @@ function LifecycleMock() {
           <Ban className="h-3 w-3 text-danger" aria-hidden="true" />
         </span>
         <span className="text-muted">
-          Change Completed → Scheduled — <span className="font-medium text-danger">refused</span>
+          Change Completed → Scheduled: <span className="font-medium text-danger">refused</span>
         </span>
       </div>
     </MockCard>
@@ -401,8 +401,8 @@ export function RouteSpine() {
               From request to clean claim.
             </h2>
             <p className="mt-4 text-lg text-muted">
-              Follow one trip down the line — from the first booking to a checked,
-              billable claim — and the guardrails built into every stop.
+              Follow one trip down the line, from the first booking to a checked,
+              billable claim, and the guardrails built into every stop.
             </p>
           </div>
         </Container>

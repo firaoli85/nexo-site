@@ -18,7 +18,7 @@ const PRINCIPLES = [
   {
     icon: ShieldCheck,
     title: "Enforcement over promises",
-    body: "Credentials checked at dispatch, claims checked before billing — by the platform, not a binder.",
+    body: "Credentials checked at dispatch, claims checked before billing: by the platform, not a binder.",
   },
   {
     icon: HeartHandshake,
@@ -28,7 +28,7 @@ const PRINCIPLES = [
   {
     icon: Eye,
     title: "Transparency for partners",
-    body: "Providers and payers see the same trip and claim record — no separate story for anyone.",
+    body: "Providers and payers see the same trip and claim record, with no separate story for anyone.",
   },
 ];
 
@@ -51,7 +51,7 @@ export default function AboutPage() {
               Built by an operator.
             </h1>
             <p className="mt-5 max-w-prose text-xl leading-relaxed text-muted">
-              Nexo Access didn’t start in a boardroom. It started in dispatch.
+              The person who built this platform spent years dispatching these trips.
             </p>
           </div>
         </Container>
@@ -63,18 +63,19 @@ export default function AboutPage() {
         <Container className="relative">
           <div className="max-w-prose space-y-5 text-lg leading-relaxed text-muted">
             <p>
-              For years, {FOUNDER_REF} ran non-emergency medical transportation across the DMV — and saw
-              the same failures from the inside: missed pickups, credential files kept on paper, and
-              claims that bounced back weeks after the trip.
+              For years, {FOUNDER_REF} ran non-emergency medical transportation in the DMV and watched
+              the same things go wrong from the inside: missed pickups, credential files kept in paper
+              folders, and claims that came back denied weeks after the trip.
             </p>
             <p>
-              Nexo Access is the system {FOUNDER_REF} wished existed. Every rule the industry keeps in a
-              binder — who is allowed to drive, what a clean claim looks like, when a record is final —
-              the platform enforces in code instead.
+              Nexo Access is the system {FOUNDER_REF} needed and could not buy. The rules this industry
+              keeps in binders, who is allowed to drive, what a clean claim looks like, when a record is
+              final, are enforced by the platform itself. An expired license means the assignment is
+              refused. A missing signature means the claim does not go out.
             </p>
             <p>
-              It’s {SERVICE_AREA_PROSE}: one honest system for the whole trip, from the first booking to
-              a checked, billable claim.
+              One honest system for the whole trip, from the first booking to a checked, billable claim.
+              It’s {SERVICE_AREA_PROSE}.
             </p>
           </div>
         </Container>

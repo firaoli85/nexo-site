@@ -25,7 +25,7 @@ const SECTIONS: LegalSection[] = [
       <ul className="list-disc space-y-2 pl-6">
         <li>
           <span className="font-medium text-default">Contrast:</span> text meets at least 4.5:1, and
-          controls and meaningful graphics meet at least 3:1 — verified with luminance calculations
+          controls and meaningful graphics meet at least 3:1, verified with luminance calculations
           rather than by eye.
         </li>
         <li>
@@ -35,7 +35,7 @@ const SECTIONS: LegalSection[] = [
         </li>
         <li>
           <span className="font-medium text-default">Motion:</span> animation respects your system’s
-          “reduced motion” setting — every animated element has a still end state.
+          “reduced motion” setting, and every animated element has a still end state.
         </li>
         <li>
           <span className="font-medium text-default">Structure:</span> semantic landmarks, sequential
@@ -61,7 +61,7 @@ const SECTIONS: LegalSection[] = [
     body: (
       <p>
         Accessibility is ongoing work, and no site is ever perfectly done. If you run into a barrier,
-        tell us — we’ll work with you to provide the information you need in an accessible format.
+        tell us. We’ll work with you to provide the information you need in an accessible format.
       </p>
     ),
   },
@@ -84,7 +84,7 @@ export default function AccessibilityPage() {
     <LegalPage
       eyebrow="Accessibility"
       title="Accessibility Statement"
-      lead="What we do to make Nexo Access usable for everyone — and how to reach us if something gets in your way."
+      lead="What we do to make Nexo Access usable for everyone, and how to reach us if something gets in your way."
       sections={SECTIONS}
     />
   );

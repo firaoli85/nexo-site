@@ -96,7 +96,7 @@ function ClaimReviewMock() {
       </div>
       <div className="mt-2 flex items-start gap-2 rounded-lg border border-border bg-bg px-3 py-2 text-[13px] text-muted">
         <Scale className="mt-0.5 h-3.5 w-3.5 shrink-0 text-subtle" aria-hidden="true" />
-        <span>Denied? A two-level appeal — provable from the records overturns automatically.</span>
+        <span>Denied? A two-level appeal, provable from the records, overturns automatically.</span>
       </div>
     </MockCard>
   );
@@ -168,9 +168,9 @@ const SECTIONS: PlatformSection[] = [
     claim: "One validated path for every trip.",
     subline: "From booking to a locked, completed record, the system holds the trip to a single path.",
     proofs: [
-      { icon: Workflow, text: "Every trip follows a validated state machine — completed, cancelled, and no-show are final." },
+      { icon: Workflow, text: "Every trip follows a validated state machine. Completed, cancelled, and no-show are final." },
       { icon: ShieldCheck, text: "Drivers and vehicles with lapsed credentials are blocked from assignment, checked live at dispatch." },
-      { icon: Users, text: "Two dispatchers can’t overwrite each other — the losing write is rejected, and every turnback or restore carries a logged reason." },
+      { icon: Users, text: "Two dispatchers can’t overwrite each other: the losing write is rejected, and every turnback or restore carries a logged reason." },
       { icon: Waypoints, text: "Outbound and return trips scheduled around the appointment, including will-call returns." },
     ],
     mock: <AssignBoardMock />,
@@ -185,7 +185,7 @@ const SECTIONS: PlatformSection[] = [
       { icon: ClipboardCheck, text: "Seven adjudication checks route every claim to approve, review, or deny." },
       { icon: Snowflake, text: "Thirteen fields frozen at submission into a tamper-evident record." },
       { icon: Lock, text: "A database constraint makes double-paying a claim impossible." },
-      { icon: Scale, text: "A two-level appeal ladder — appeals provable from the platform’s own records overturn automatically." },
+      { icon: Scale, text: "A two-level appeal ladder: appeals provable from the platform’s own records overturn automatically." },
       { icon: ReceiptText, text: "Every claim bills the plan that covered the member on the trip date." },
       { icon: Clock, text: "Timely-filing deadlines warn before they lapse." },
     ],
@@ -195,12 +195,12 @@ const SECTIONS: PlatformSection[] = [
     id: "compliance",
     kicker: "Compliance",
     claim: "Isolation and audit, enforced in the database.",
-    subline: "The controls aren’t a policy binder — they’re constraints the platform can’t skip.",
+    subline: "These controls are constraints the platform can’t skip, not entries in a policy binder.",
     proofs: [
-      { icon: BadgeCheck, text: "Credentials tracked for drivers, vehicles, and providers — expiry blocks assignment automatically." },
+      { icon: BadgeCheck, text: "Credentials tracked for drivers, vehicles, and providers. Expiry blocks assignment automatically." },
       { icon: Lock, text: "Providers only receive the service levels they’re formally approved for, enforced at the database level." },
       { icon: History, text: "An immutable audit trail on the records that matter." },
-      { icon: Database, text: "Row-Level Security on every table — per-organization isolation." },
+      { icon: Database, text: "Row-Level Security on every table, for per-organization isolation." },
       { icon: ShieldCheck, text: COMPLIANCE_LINE },
     ],
     mock: <CredentialWallMock />,
@@ -238,7 +238,7 @@ export default function PlatformPage() {
               </h1>
               <p className="mt-5 max-w-prose text-xl leading-relaxed text-muted">
                 The platform for non-emergency medical transportation (NEMT): dispatch, claims,
-                compliance, and oversight in one system — from the first booking to a checked,
+                compliance, and oversight in one system, from the first booking to a checked,
                 billable claim.
               </p>
             </div>

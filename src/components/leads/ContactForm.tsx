@@ -28,7 +28,7 @@ export function ContactForm() {
           <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
         </span>
         <h2 className="mt-4 font-display text-xl font-bold tracking-tight text-default sm:text-2xl">
-          Thanks — we’ve got your message.
+          Thanks, we’ve got your message.
         </h2>
         <p className="mt-2 text-base leading-relaxed text-muted">
           We’ll read it and follow up about your program. If you need to add anything, just reply to

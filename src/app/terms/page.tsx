@@ -18,9 +18,9 @@ const SECTIONS: LegalSection[] = [
     body: (
       <p>
         {SITE.name} provides a platform for scheduling and coordinating non-emergency medical
-        transportation (NEMT) for Medicaid-eligible members in DC and Maryland. We are not a
-        transportation provider — we coordinate between members, case workers, and credentialed
-        transportation providers.
+        transportation (NEMT) for Medicaid members, beginning with the District of Columbia and
+        Maryland. We are not a transportation provider. We coordinate between members, case workers,
+        and credentialed transportation providers.
       </p>
     ),
   },

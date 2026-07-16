@@ -25,7 +25,7 @@ export const HIPAA_EFFECTIVE_DATE: string | null = null;
 // copy gate permits pre-verification). STAGED (HIPAA_INFRA_VERIFIED): the concrete infrastructure
 // claim. Read by the credential strip + anywhere the compliance phrase appears.
 export const COMPLIANCE_LINE: string = LAUNCH.HIPAA_INFRA_VERIFIED
-  ? "HIPAA-compliant infrastructure — hosted on AWS under a signed Business Associate Agreement, encrypted in transit and at rest."
+  ? "HIPAA-compliant infrastructure: hosted on AWS under a signed Business Associate Agreement, encrypted in transit and at rest."
   : "Built for HIPAA compliance";
 
 // (b) Service-area tagline. CURRENT: "Built for" (we are built for the region, not yet operating in

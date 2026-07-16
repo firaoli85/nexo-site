@@ -82,7 +82,7 @@ function notificationBody(p: LeadPayload): string {
   const lines = [
     heading,
     "",
-    ...p.fields.map((f) => `${f.label}: ${clean(f.value) || "—"}`),
+    ...p.fields.map((f) => `${f.label}: ${clean(f.value) || "(not provided)"}`),
     "",
     `Source page: ${clean(p.sourcePage)}`,
     `Submitted (UTC): ${p.submittedAt}`,
@@ -94,8 +94,8 @@ function notificationBody(p: LeadPayload): string {
 // what-happens-next line per kind, zero marketing.
 function ackSubject(kind: LeadKind): string {
   return kind === "provider"
-    ? "We received your application — Nexo Access"
-    : "We received your message — Nexo Access";
+    ? "Nexo Access: we received your application"
+    : "Nexo Access: we received your message";
 }
 
 // The ack carries NO submitter-supplied text (fixed greeting, no name) — so even though it goes to a
@@ -108,12 +108,12 @@ function ackBody(kind: LeadKind): string {
   return [
     "Hello,",
     "",
-    "Thanks for reaching out to Nexo Access — we’ve received your message.",
+    "Thanks for reaching out to Nexo Access. We’ve received your message.",
     whatNext,
     "",
     "If you need to add anything, just reply to this email.",
     "",
-    "— Nexo Access",
+    "The Nexo Access team",
     DOMAIN,
   ].join("\n");
 }

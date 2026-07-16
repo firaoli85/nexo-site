@@ -17,7 +17,7 @@ import { cn } from "@/utils/cn";
 const DWELL = 4000;
 
 const SR_SENTENCE =
-  "Three service levels: ambulatory, wheelchair, and stretcher — each trip scheduled to the member’s mobility needs.";
+  "Three service levels: ambulatory, wheelchair, and stretcher. Each trip is scheduled to the member’s mobility needs.";
 
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-on-ink " +

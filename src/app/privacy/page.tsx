@@ -90,7 +90,7 @@ export default function PrivacyPage() {
     <LegalPage
       eyebrow="Legal"
       title="Privacy Policy"
-      lead="How we collect, use, share, and protect your information — and the rights you have over it."
+      lead="How we collect, use, share, and protect your information, and the rights you have over it."
       sections={SECTIONS}
     />
   );
