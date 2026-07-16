@@ -679,6 +679,33 @@ facilities). Mobile: a fourth accordion group in the same grammar; the pinned CT
 - Harness: **I7 asserts the Sign-in trigger is present AND opens** — a regression back to a plain link
   drops it from the `aria-expanded` trigger set, which I7 now catches.
 
+### 7.5 THE LOGIN SEAM CONTRACT (Stage 15.1) — the cross-repo handoff is LAW
+The marketing site and the platform share ONE login seam. This contract is binding on BOTH repos.
+- **THE THREE PUBLIC PORTALS — letter-identical (source of truth = `src/lib/nav.ts` `SIGNIN_ITEMS`).** The
+  label AND the one-line description below must match byte-for-byte on the marketing Sign-in panel and on
+  the platform's rendered portal panels:
+  - **Member** — "See your upcoming and past rides."
+  - **Provider** — "Claims, credentials & scheduling."
+  - **Care portal** — "For case managers & facilities — schedule rides for the people in your care."
+- **URL CONTRACT.** `SITE.portalLogin(portal)` → `${appUrl}/login?portal=member|provider|care` (single
+  source — `src/lib/site.ts`; never hardcode the query). The platform reads `?portal=` and **renders that
+  portal's sign-in panel directly**; an **absent or invalid** value falls back to the platform's own
+  **picker** (`SITE.loginUrl` = `${appUrl}/login`, which is also the footer "Sign in").
+- **ADMIN IS UNLISTED — on EVERY public surface, marketing AND the platform picker.** The admin door is
+  never rendered, named, or linked anywhere a visitor can see it (nav, footer, sitemap, JSON-LD, the
+  picker itself). It is reachable ONLY by going straight to it — `?portal=admin` or an `/admin*` path
+  (which the platform may infer via `?next`). It is NOT one of the three public portals.
+- **SAME-TAB always.** Portal navigation is a product handoff, not an external reference — no
+  `target="_blank"` / `rel="noopener"` / "(opens in a new tab)" cue (see §7.4; genuine third-party links
+  such as the HHS-OCR complaint page are exempt).
+- **`?portal=` is PRESENTATION-ONLY.** It selects which panel the platform shows — nothing more.
+  **Authorization stays role-based**; the door a user entered NEVER scopes, grants, or narrows
+  credentials. A member who lands on `?portal=provider` is still a member; the param is never an authz
+  signal.
+- **BOTH-REPOS RULE.** Any change to a portal **name or description** must land in the marketing repo
+  (`src/lib/nav.ts` + this §7.5) **and** the platform repo **in the same working session, letter-identical**
+  — the strings are a shared contract, not independently-owned copy (cf. the NAP consistency rule).
+
 ## 8. THE VISUAL VERIFICATION LOOP (mandatory, every visual change)
 Implement → run the production server → Playwright screenshots at **390 / 768 / 1280** (scratchpad
 tooling, NOT a project dep) → **VIEW the images yourself** → write a critique against this law →
