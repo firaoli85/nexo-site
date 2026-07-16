@@ -14,6 +14,7 @@ import {
   CircleCheck,
 } from "lucide-react";
 import { SITE } from "@/lib/site";
+import { PORTAL_LIVE } from "@/lib/launch";
 import { SolutionPage, MockCard, type SolutionSection } from "@/components/solutions/SolutionPage";
 
 export const metadata = pageMeta(ROUTE_META.members);
@@ -100,11 +101,12 @@ export default function MembersPage() {
       sections={SECTIONS}
       cta={{
         heading: "Ready for your next ride?",
-        body: "Sign in to see your rides.",
-        label: "Member sign in",
-        // Stage 15: the member portal door, SAME-TAB (product handoff, not an external reference —
-        // law §7.4). portalLogin is the single source; the old target=_blank + new-tab cue are gone.
-        href: SITE.portalLogin("member"),
+        // Portal sign-in is gated until app.nexoaccess.com is live (PORTAL_LIVE). Until then the CTA
+        // keeps the section + heading but shows a "coming soon" line and NO button (SolutionPage hides
+        // the button when the label is empty). When live: the original body + Member sign-in button.
+        body: PORTAL_LIVE ? "Sign in to see your rides." : "Member sign-in is coming soon.",
+        label: PORTAL_LIVE ? "Member sign in" : "",
+        href: PORTAL_LIVE ? SITE.portalLogin("member") : "",
       }}
     />
   );

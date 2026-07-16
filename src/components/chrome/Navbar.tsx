@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 import { SITE } from "@/lib/site";
+import { PORTAL_LIVE } from "@/lib/launch";
 import {
   PLATFORM_ITEMS,
   SOLUTIONS_ITEMS,
@@ -341,21 +342,23 @@ export function Navbar() {
                   site keeps exactly ONE nav landmark (the "Primary" root above; Stage-1 rule). Lists the
                   three customer portal doors; admin is deliberately excluded (law §7.4). Panel anchors
                   RIGHT so it opens inward. */}
-              <NavigationMenu.Root asChild delayDuration={100} skipDelayDuration={300}>
-                <div className="relative">
-                  <NavigationMenu.List className="flex items-center">
-                    <DesktopMenu
-                      label="Sign in"
-                      items={SIGNIN_ITEMS}
-                      panelClass="w-[26rem]"
-                      align="right"
-                    />
-                    <NavigationMenu.Indicator className="nav-indicator">
-                      <div className={cn("nav-indicator-bar", NT.indicatorBar)} />
-                    </NavigationMenu.Indicator>
-                  </NavigationMenu.List>
-                </div>
-              </NavigationMenu.Root>
+              {PORTAL_LIVE ? (
+                <NavigationMenu.Root asChild delayDuration={100} skipDelayDuration={300}>
+                  <div className="relative">
+                    <NavigationMenu.List className="flex items-center">
+                      <DesktopMenu
+                        label="Sign in"
+                        items={SIGNIN_ITEMS}
+                        panelClass="w-[26rem]"
+                        align="right"
+                      />
+                      <NavigationMenu.Indicator className="nav-indicator">
+                        <div className={cn("nav-indicator-bar", NT.indicatorBar)} />
+                      </NavigationMenu.Indicator>
+                    </NavigationMenu.List>
+                  </div>
+                </NavigationMenu.Root>
+              ) : null}
               {/* Apply — lift + arrow nudge; the single bright accent pop on the dark bar. */}
               <Button
                 href="/apply"
@@ -415,7 +418,9 @@ export function Navbar() {
             {/* Sign in — a fourth accordion group in the same grammar (Stage 15), holding the three portal
                 doors. The pinned row below keeps ONLY the primary CTA so "Sign in" appears exactly once
                 (no duplicate affordance). */}
-            <MobileAccordion label="Sign in" items={SIGNIN_ITEMS} onNavigate={closeMobile} index={3} />
+            {PORTAL_LIVE ? (
+              <MobileAccordion label="Sign in" items={SIGNIN_ITEMS} onNavigate={closeMobile} index={3} />
+            ) : null}
           </div>
 
           <div

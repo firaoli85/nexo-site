@@ -14,6 +14,9 @@ export const LAUNCH = {
   //                              server WITH TLS + encryption-at-rest confirmed
 } as const;
 
+// Flip to true on platform-deploy day (when app.nexoaccess.com is live). Gates every sign-in surface site-wide.
+export const PORTAL_LIVE = false;
+
 // HIPAA Notice effective date (Stage 13). SET AT DEPLOY to the site's public launch date, e.g.
 // "August 1, 2026". Until then it stays null — we never fabricate a date — and the HIPAA Notice shows
 // the "takes effect when we first handle member information" sentence instead of a concrete date. The

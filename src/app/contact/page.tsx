@@ -6,7 +6,7 @@ import { Section } from "@/components/ui/Section";
 import { AmbientMap } from "@/components/home/AmbientMap";
 import { ContactForm } from "@/components/leads/ContactForm";
 import { SITE } from "@/lib/site";
-import { SERVICE_AREA_LINE } from "@/lib/launch";
+import { SERVICE_AREA_LINE, PORTAL_LIVE } from "@/lib/launch";
 
 export const metadata = pageMeta(ROUTE_META.contact);
 
@@ -93,22 +93,26 @@ export default function ContactPage() {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>
-            <div className="rounded-2xl border border-surface-tint-border bg-surface p-6">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-subtle text-accent">
-                <Users className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <h3 className="mt-4 text-lg font-semibold text-default">Members</h3>
-              <p className="mt-2 text-base leading-relaxed text-muted">
-                Need a ride or have a question about one? Sign in to your member portal.
-              </p>
-              {/* Stage 15: the member portal door, SAME-TAB (product handoff, not an external reference —
-                  law §7.4). portalLogin is the single source; the old target=_blank + "(opens in a new
-                  tab)" cue are gone now that portal navigation stays in-tab. */}
-              <Link href={SITE.portalLogin("member")} className={routeLink}>
-                Member sign in
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-              </Link>
-            </div>
+            {/* Members card — gated: hidden entirely until portal sign-in is live (PORTAL_LIVE), since
+                app.nexoaccess.com does not exist yet. The Transport-providers card above always shows. */}
+            {PORTAL_LIVE ? (
+              <div className="rounded-2xl border border-surface-tint-border bg-surface p-6">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-subtle text-accent">
+                  <Users className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <h3 className="mt-4 text-lg font-semibold text-default">Members</h3>
+                <p className="mt-2 text-base leading-relaxed text-muted">
+                  Need a ride or have a question about one? Sign in to your member portal.
+                </p>
+                {/* Stage 15: the member portal door, SAME-TAB (product handoff, not an external reference —
+                    law §7.4). portalLogin is the single source; the old target=_blank + "(opens in a new
+                    tab)" cue are gone now that portal navigation stays in-tab. */}
+                <Link href={SITE.portalLogin("member")} className={routeLink}>
+                  Member sign in
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </Link>
+              </div>
+            ) : null}
           </div>
           <p className="mt-8 text-sm text-subtle">{SERVICE_AREA_LINE}</p>
         </Container>

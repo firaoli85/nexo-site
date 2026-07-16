@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { FOOTER_COLUMNS } from "@/lib/nav";
-import { SERVICE_AREA_LINE } from "@/lib/launch";
+import { SERVICE_AREA_LINE, PORTAL_LIVE } from "@/lib/launch";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { AmbientMap } from "@/components/home/AmbientMap";
@@ -136,9 +136,11 @@ export function Footer() {
               {/* The fallback picker door (Stage 15): plain /login, no portal hint, SAME-TAB (a product
                   handoff, not an external reference — law §7.4). The nav Sign-in menu offers the
                   audience-specific doors; this footer link lands on the platform's own picker. */}
-              <Link href={SITE.loginUrl} className={signInLink}>
-                Sign in
-              </Link>
+              {PORTAL_LIVE ? (
+                <Link href={SITE.loginUrl} className={signInLink}>
+                  Sign in
+                </Link>
+              ) : null}
             </div>
           </div>
         </Container>
