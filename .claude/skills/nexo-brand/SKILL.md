@@ -755,3 +755,46 @@ metadata title/apex-canonical/og (I14).
   right final callback. The robust fix is a rAF-throttled scroll/resize handler that sets active = the
   LAST section whose top ≤ a trigger line matching the sections' `scroll-mt` — deterministic by POSITION,
   so cold + client-nav that settle at the same scroll always resolve to the same chip.
+
+### 10.1 THE ENGINE CUBE + THE BROWSER/DEVICE-GAP LAW (Stage 16 — the engine gap, closed permanently)
+The Stage-12 harness certified ONE engine (headless chromium) at desktop-ish widths, so two live defects
+rode a whole deploy green: a **WHITE VOID** below the ink footer on the owner's iPhone (Safari overscroll +
+URL-bar collapse reveal the ROOT background) and a **FROZEN MAGIC LINE** (the nav indicator stuck under the
+first trigger). Neither is exotic — the harness simply never ran the engine or the device where they live.
+Therefore, permanently:
+- **THE SWEEP IS A CUBE: every route × invariant × ENGINE × PROFILE.** Engines = **chromium + webkit +
+  firefox** (WebKit IS the Safari engine — the closest automatable proxy for iOS; Firefox is the
+  tiebreaker). Profiles = the desktop widths (390 / 768 / 1440 / 1920) **plus** real device descriptors —
+  at minimum a Playwright **iPhone** descriptor (touch, DPR 3, mobile UA) and one **Android** descriptor.
+  `qa:sweep` runs the full cube by default; `QA_ENGINES` / `QA_PROFILES` / `QA_ROUTES` narrow it for
+  iteration ONLY. **The harness never certifies a single engine again.** (Firefox contexts reject
+  `isMobile`; the sweep strips it for Firefox so a device profile still runs there, minus that one flag.)
+- **A BROWSER/DEVICE GAP MAY NEVER RIDE "NOT VERIFIED" ACROSS A DEPLOY.** It is either closed in-stage
+  (fixed + proven green in every engine × profile) or **explicitly owner-accepted in writing**. "We didn't
+  test Safari / iPhone" is NOT a NOT-VERIFIED line you may ship — it is a blocker.
+- **EVERY ESCAPED DEFECT BECOMES A NAMED INVARIANT IN ITS FIX STAGE.** The white void → **I18** (the
+  document root is ink-safe; nothing paints or scrolls white below the footer; scrollHeight sanity, per
+  engine × profile). The frozen line → **I17** (for each desktop nav trigger, hover + open it and assert
+  the visible indicator's x-center matches the trigger's, ±4px, per engine). Invariants are only ADDED.
+- **THE DEPLOY GATE = full-cube green + the owner's 5-minute REAL-DEVICE checklist.** Playwright's WebKit
+  is the Safari ENGINE but not the full iOS browser (no live URL-bar dynamics, no rubber-band physics), so
+  the LAST rung is always human: the owner runs the checklist below on an ACTUAL iPhone before a deploy is
+  blessed. A green cube is necessary, never sufficient.
+- **ROOT CAUSES (record so they never recur):** (1) white void = `html`/`:root` had NO background (only
+  `body` did, at near-white `--bg`); the ROOT paints the overscroll region, so `html { background:
+  var(--ink) }` is mandatory, and `100vh` / `min-h-screen` on the body migrates to `svh` / `dvh` (WebKit's
+  dynamic toolbar inflates `vh`). (2) frozen line = each `NavigationMenu.Item` was `position: relative`,
+  making it the trigger's `offsetParent`, so Radix read every trigger's `offsetLeft` as 0 and never moved
+  the indicator; the Item must stay STATIC (the shared Root becomes the offsetParent, matching the
+  Indicator) and the dropdown panel gets its OWN `relative` wrapper — a sibling of the trigger, never an
+  ancestor.
+
+**THE REAL-DEVICE CHECKLIST (owner, ~5 min on an actual iPhone, EVERY deploy — WebKit automation cannot replace it):**
+1. Hard-refresh the homepage; scroll to the ABSOLUTE bottom — the page ends on the ink footer endcap, NO
+   white, and bouncing / overscrolling past the bottom shows INK, never a white flash.
+2. Open every nav menu (Platform / Solutions / Company, + Sign in when `PORTAL_LIVE`) — the magic line
+   FOLLOWS the open menu each time, smoothly.
+3. Watch the van journey down the homepage + the U-turn at the footer.
+4. Watch the footer arrival choreography settle.
+5. Focus one form field (tab or tap) — the focus ring shows.
+6. Repeat the bottom-scroll (no white) on `/platform` and one `/solutions/*` page.

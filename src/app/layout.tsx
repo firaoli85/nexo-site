@@ -62,7 +62,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${fontDisplay.variable} ${fontBody.variable}`}>
-      <body className="flex min-h-screen flex-col antialiased">
+      <body className="flex min-h-svh flex-col antialiased">
         {/* Organization JSON-LD (one MedicalBusiness, site-wide). Safely serialized (escapes </script>). */}
         <script
           type="application/ld+json"

@@ -147,6 +147,11 @@
 
 html {
   scroll-behavior: smooth;
+  /* Ink-safe document root (Stage 16, Defect A). The iOS overscroll rubber-band and the URL-bar
+     collapse reveal the ROOT background, not <body>. Painting it ink means no white ever shows below
+     the ink footer endcap (or above the ink hero). The page's own light --bg is painted by <body>,
+     which covers the whole viewport; the root ink only shows in the overscroll/gap region. */
+  background: var(--ink);
 }
 
 body {

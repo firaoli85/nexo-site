@@ -95,7 +95,14 @@ function DesktopMenu({
   align?: "left" | "right";
 }) {
   return (
-    <NavigationMenu.Item className="relative">
+    // The Item is intentionally NOT `position: relative` (Stage 16, Defect B — the frozen magic line).
+    // Radix positions the shared Indicator from each trigger's `offsetLeft`; if the Item is the trigger's
+    // offsetParent, offsetLeft is 0 for EVERY trigger and the line freezes under the first one. Keeping
+    // the Item static makes the shared Root the offsetParent (the same one the Indicator measures
+    // against), so offsetLeft is correct. The dropdown panel gets its OWN `relative` wrapper below — a
+    // sibling of the trigger, never an ancestor — so it still anchors under its trigger without
+    // reintroducing the offsetParent bug. Verified by I17 across chromium/webkit/firefox.
+    <NavigationMenu.Item>
       <NavigationMenu.Trigger
         className={cn(
           "group inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium outline-none transition-colors focus-visible:ring-2",
@@ -112,6 +119,9 @@ function DesktopMenu({
           )}
         />
       </NavigationMenu.Trigger>
+      {/* Relative wrapper for the absolute panel (Stage 16): restores per-trigger anchoring now that the
+          Item is static. It is a SIBLING of the trigger, so it does not become the trigger's offsetParent. */}
+      <div className="relative">
       <NavigationMenu.Content
         className={cn(
           "nav-panel absolute top-full z-50 mt-1.5 rounded-xl border p-2 shadow-md",
@@ -165,6 +175,7 @@ function DesktopMenu({
           })}
         </ul>
       </NavigationMenu.Content>
+      </div>
     </NavigationMenu.Item>
   );
 }

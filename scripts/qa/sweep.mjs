@@ -4,11 +4,11 @@
 //
 // Run indirectly via `npm run qa:sweep` (scripts/qa/run.mjs builds + serves + calls this). Or directly
 // against an already-running server: `node scripts/qa/sweep.mjs` (expects the prod build on :3300).
-import { chromium } from "playwright";
+import { chromium, webkit, firefox, devices } from "playwright";
 import { mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { ROUTES, NOT_FOUND, VIEWPORTS, BASE, PLATFORM_ANCHORS, FORM_ROUTES } from "./routes.mjs";
+import { ROUTES, NOT_FOUND, ENGINES, PROFILES, BASE, PLATFORM_ANCHORS, FORM_ROUTES } from "./routes.mjs";
 
 const ART = resolve(dirname(fileURLToPath(import.meta.url)), "artifacts");
 mkdirSync(ART, { recursive: true });
@@ -16,9 +16,18 @@ mkdirSync(ART, { recursive: true });
 const CLS_INIT = () => {
   window.__cls = 0;
   try {
-    new PerformanceObserver((l) => {
-      for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls += e.value;
-    }).observe({ type: "layout-shift", buffered: true });
+    // `layout-shift` is Chromium + WebKit only. Firefox logs a console WARNING if you observe an
+    // unsupported entryType, which would trip I4 (zero console warnings). Feature-detect so Firefox stays
+    // quiet — CLS is measured on the engines that support it; on Firefox it reads 0 / unmeasured (noted).
+    const ok =
+      typeof PerformanceObserver !== "undefined" &&
+      Array.isArray(PerformanceObserver.supportedEntryTypes) &&
+      PerformanceObserver.supportedEntryTypes.includes("layout-shift");
+    if (ok) {
+      new PerformanceObserver((l) => {
+        for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls += e.value;
+      }).observe({ type: "layout-shift", buffered: true });
+    }
   } catch {}
 };
 
@@ -172,15 +181,42 @@ const PROBES = {
     const canonOk = canon === "https://nexoaccess.com" + (expectedPath === "/" ? "" : expectedPath);
     return { pass: title.length > 0 && canonOk && ogImg.startsWith("https://nexoaccess.com/og.png"), title, detail: `${canonOk ? "" : `canon=${canon} `}${ogImg ? "" : "no-og"}`.trim() };
   },
+  // I18 INK-SAFE DOCUMENT ROOT (Stage 16, Defect A). The <html> background must be dark ink so the iOS
+  // overscroll rubber-band + URL-bar collapse never reveal white below the ink footer endcap (or above
+  // the ink hero); and the document must not scroll past the footer (scrollHeight sanity, re-proven per
+  // engine + profile — the endcap law, now engine-agnostic).
+  inkSafe() {
+    const parse = (col) => {
+      const m = col && col.match(/rgba?\(([^)]+)\)/);
+      if (!m) return null;
+      const p = m[1].split(",").map((s) => parseFloat(s));
+      return { r: p[0], g: p[1], b: p[2], a: p[3] === undefined ? 1 : p[3] };
+    };
+    const htmlBg = getComputedStyle(document.documentElement).backgroundColor;
+    const c = parse(htmlBg);
+    const lum = c ? (0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b) / 255 : 1;
+    const dark = !!c && c.a >= 1 && lum < 0.25;
+    const footer = document.querySelector("footer, [role=contentinfo]");
+    const fb = footer ? footer.getBoundingClientRect().bottom + window.scrollY : 0;
+    const voidPx = Math.round(document.documentElement.scrollHeight - fb);
+    return { pass: dark && voidPx <= 2, detail: `htmlBg=${htmlBg}${dark ? "" : " NOT-INK"}${voidPx > 2 ? ` void=${voidPx}px` : ""}` };
+  },
 };
 
 // ── I6 skip link + focus ring ───────────────────────────────────────────────────────────────────
 async function checkSkipAndFocus(page) {
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.keyboard.press("Tab");
+  // The skip link is the first focusable — an <a href="#main-content"> that is sr-only until focused.
+  // WebKit/Safari's DEFAULT keyboard mode does not Tab to links (only form controls) unless Full Keyboard
+  // Access is on, so pressing Tab and expecting the link fails in WebKit for a browser-config reason, not
+  // a site bug (harness-vs-real, §10). Verify it engine-agnostically by FOCUSING it directly: it must
+  // exist, take focus, target #main, and REVEAL itself (focus:not-sr-only paints it — proving it works).
   const skip = await page.evaluate(() => {
-    const a = document.activeElement;
-    return a && a.tagName === "A" && (a.getAttribute("href") || "").includes("#main");
+    const a = document.querySelector('a[href*="#main"]');
+    if (!a) return false;
+    a.focus();
+    const r = a.getBoundingClientRect();
+    return document.activeElement === a && (a.getAttribute("href") || "").includes("#main") && r.width > 4 && r.height > 4;
   });
   // Sample focus stops for a REAL keyboard focus indicator. The site zeroes native outlines and draws
   // every ring as a Tailwind `focus-visible:ring-*` (a box-shadow built from `--tw-ring-shadow`), so we
@@ -217,10 +253,10 @@ async function checkNav(page, width) {
       const count = await triggers.count();
       if (count === 0) return { pass: false, detail: "no nav trigger" };
       let tested = 0;
-      // Stage 15: "Sign in" is now a dropdown TRIGGER (a fourth menu), not a bare link. Track that the
-      // Sign-in trigger is present AND opens a real panel — otherwise a regression back to a plain link
-      // would silently drop it from this trigger set and I7 would still pass on the other three.
-      let signinOpened = false;
+      // Stage 16: "Sign in" is launch-gated (PORTAL_LIVE). When present it must be a working dropdown
+      // menu (opens a real panel — verified in the loop below); when gated off it must be ABSENT, never
+      // a bare link. So I7 no longer REQUIRES a Sign-in trigger to exist; instead it rejects a bare
+      // "Sign in" <a> link in the header (the "regressed to a link" failure the Stage-15 check guarded).
       for (let i = 0; i < count; i++) {
         const t = triggers.nth(i);
         if (!(await t.isVisible())) continue; // skips the lg:hidden mobile hamburger at desktop widths
@@ -245,13 +281,17 @@ async function checkNav(page, width) {
           .catch(() => false);
         await handle.dispose().catch(() => {}); // caller-created handles aren't auto-disposed; free it per trigger
         tested++;
-        if (opened && panelOk && /sign\s*in/i.test(label)) signinOpened = true;
         if (!(opened && panelOk && closed)) {
           return { pass: false, detail: `trigger#${i}${label ? ` (${label})` : ""}: open=${opened} panel=${panelOk} closed=${closed}` };
         }
       }
       if (tested === 0) return { pass: false, detail: "no visible triggers" };
-      if (!signinOpened) return { pass: false, detail: "Sign-in menu trigger missing or did not open (Stage 15 regressed to a link?)" };
+      // A bare "Sign in" <a> in the HEADER is the "regressed to a link" failure (the footer picker link is
+      // separate and allowed). While PORTAL_LIVE is off, Sign-in is simply absent from the header — fine.
+      const signinLinkInHeader = await page.evaluate(() =>
+        [...document.querySelectorAll("header a")].some((a) => /^\s*sign\s*in\s*$/i.test(a.textContent || "")),
+      );
+      if (signinLinkInHeader) return { pass: false, detail: "Sign-in is a bare <a> link in the header (must be a working menu or absent while gated)" };
       return { pass: true, detail: "" };
     }
     // mobile: the hamburger is identified by its aria-label ("Open menu") — NOT the desktop
@@ -421,16 +461,86 @@ async function checkOverlap(page, route, width) {
   return { pass: !detail, detail };
 }
 
-export async function runSweep({ base = BASE, viewports = VIEWPORTS, routes = ROUTES } = {}) {
-  const browser = await chromium.launch();
+// ── the cube: engines × profiles (Stage 16) ──────────────────────────────────────────────────────
+const ENGINE_BY_NAME = { chromium, webkit, firefox };
+
+// A profile is a plain desktop width ("w1440") or a Playwright device descriptor name ("iPhone 14").
+function resolveProfile(name) {
+  const m = /^w(\d+)$/.exec(name);
+  if (m) return { name, width: +m[1], device: null };
+  const d = devices[name];
+  if (!d) throw new Error(`Unknown QA profile "${name}" — use wNNN (e.g. w1440) or a Playwright device name (e.g. "iPhone 14")`);
+  return { name, width: d.viewport.width, device: d };
+}
+function contextOpts(engineName, profile) {
+  if (!profile.device) return { viewport: { width: profile.width, height: 900 }, deviceScaleFactor: 1 };
+  const o = { ...profile.device };
+  if (engineName === "firefox") delete o.isMobile; // Firefox contexts do not accept isMobile
+  return o;
+}
+
+// ── I17 MAGIC LINE tracks each trigger (Stage 16, Defect B) ──────────────────────────────────────
+// Hover + open each desktop nav trigger; assert the VISIBLE indicator's x-center matches the trigger's
+// (±4px). This is the invariant the chromium-only harness never had — the frozen line rode green for a
+// whole deploy. Desktop only (there is no indicator below lg). Runs per engine.
+async function checkIndicator(page, width) {
+  if (width < 1024) return { pass: true, detail: "" };
+  try {
+    const triggers = page.locator("header button[aria-expanded]");
+    const count = await triggers.count();
+    const bad = [];
+    let tested = 0;
+    for (let i = 0; i < count; i++) {
+      const t = triggers.nth(i);
+      if (!(await t.isVisible())) continue;
+      const label = ((await t.textContent()) || "").trim().replace(/\s+/g, " ").slice(0, 12);
+      const h = await t.elementHandle();
+      await t.hover();
+      const opened = await page.waitForFunction((el) => el.getAttribute("aria-expanded") === "true", h, { timeout: 2000 }).then(() => true).catch(() => false);
+      await page.waitForTimeout(340); // let the transform transition settle before measuring
+      const m = await page.evaluate((el) => {
+        const tr = el.getBoundingClientRect();
+        let best = null, bestD = 1e9;
+        for (const ind of document.querySelectorAll('.nav-indicator[data-state="visible"]')) {
+          const bar = ind.querySelector(".nav-indicator-bar") || ind;
+          const br = bar.getBoundingClientRect();
+          if (br.width === 0) continue;
+          const cx = br.left + br.width / 2;
+          const d = Math.abs(cx - (tr.left + tr.width / 2));
+          if (d < bestD) { bestD = d; best = cx; }
+        }
+        return { trigCx: tr.left + tr.width / 2, indCx: best };
+      }, h);
+      await page.keyboard.press("Escape").catch(() => {});
+      await page.mouse.move(3, 340);
+      await page.waitForTimeout(120);
+      await h.dispose().catch(() => {});
+      tested++;
+      if (!opened || m.indCx == null) { bad.push(`${label}:open=${opened}/no-indicator`); continue; }
+      const diff = Math.round(Math.abs(m.indCx - m.trigCx));
+      if (diff > 4) bad.push(`${label}:Δ${diff}px`);
+    }
+    return { pass: tested > 0 && bad.length === 0, detail: bad.length ? bad.join(" ") : tested ? "" : "no triggers" };
+  } catch (e) {
+    return { pass: false, detail: "I17-err: " + String(e.message).slice(0, 40) };
+  }
+}
+
+async function sweepOneEngine(browser, engineName, profiles, base, routes) {
   const rows = [];
   let failures = 0;
   const titleByRoute = {}; // I14: collected across routes to assert uniqueness
   const emailByRoute = {}; // I16: collected across routes to assert one identical canonical identity
 
-  for (const route of routes) {
-    for (const width of viewports) {
-      const ctx = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
+  for (const profile of profiles) {
+    const width = profile.width;
+    for (const route of routes) {
+      // RETRY-ONCE (Stage 16): the cube is timing-sensitive (footer arrival, IntersectionObserver,
+      // network-idle, GC under sustained load). A transient flake must NOT fail the deploy gate — but a
+      // REAL defect fails BOTH attempts. Only the final attempt's result is recorded (and marked).
+      let res;
+      for (let attempt = 1; attempt <= 2; attempt++) {
+      const ctx = await browser.newContext(contextOpts(engineName, profile));
       const page = await ctx.newPage();
       const errs = [];
       page.on("console", (m) => {
@@ -440,7 +550,7 @@ export async function runSweep({ base = BASE, viewports = VIEWPORTS, routes = RO
       page.on("requestfailed", (r) => errs.push(`reqfail: ${r.url().split("/").pop()} ${(r.failure() && r.failure().errorText) || ""}`));
       await page.addInitScript(CLS_INIT);
 
-      const res = { route, width, I: {} };
+      res = { route, profile: profile.name, width, I: {}, attempt };
       try {
         await page.goto(base + route, { waitUntil: "domcontentloaded" });
         await page.waitForLoadState("networkidle").catch(() => {});
@@ -456,8 +566,10 @@ export async function runSweep({ base = BASE, viewports = VIEWPORTS, routes = RO
         if (res.I.I14 && res.I.I14.title) titleByRoute[route] = res.I.I14.title;
         res.I.I6 = await checkSkipAndFocus(page);
         res.I.I7 = await checkNav(page, width);
+        if (width >= 1024) res.I.I17 = await checkIndicator(page, width);
         if (FORM_ROUTES.includes(route)) res.I.I13 = await page.evaluate(PROBES.form);
         res.I.I1 = await page.evaluate(PROBES.endcap);
+        res.I.I18 = await page.evaluate(PROBES.inkSafe);
         // I8 — measure AFTER a real footer arrival: scroll it into view + dwell so the play-once
         // choreography fires and settles (a fast programmatic scroll can skip the IntersectionObserver).
         await page.evaluate(() => {
@@ -488,12 +600,19 @@ export async function runSweep({ base = BASE, viewports = VIEWPORTS, routes = RO
       }
 
       const failed = Object.entries(res.I).filter(([, v]) => v && v.pass === false);
-      if (failed.length) {
-        failures++;
-        await page.screenshot({ path: `${ART}/FAIL_${route.replace(/\//g, "_") || "_home"}_${width}.png`, fullPage: true }).catch(() => {});
+      const done = failed.length === 0 || attempt === 2;
+      if (done) {
+        if (failed.length) {
+          failures++;
+          const tag = `${engineName}_${profile.name.replace(/[^a-z0-9]/gi, "")}_${route.replace(/\//g, "_") || "_home"}`;
+          await page.screenshot({ path: `${ART}/FAIL_${tag}.png`, fullPage: true }).catch(() => {});
+        }
+        await ctx.close();
+        break; // passed, or exhausted the single retry
+      }
+      await ctx.close(); // attempt 1 failed → close this context and loop back for attempt 2
       }
       rows.push(res);
-      await ctx.close();
     }
   }
 
@@ -513,7 +632,9 @@ export async function runSweep({ base = BASE, viewports = VIEWPORTS, routes = RO
       const branded = !isDefault && /Nexo Access/.test(document.body.textContent || "") && !!footer && !!nav;
       return { footer: !!footer, nav: !!nav, h1, branded, isDefault, hasHome: links.includes("/"), hasContact: links.includes("/contact") };
     });
-    rows.push({ route: NOT_FOUND, width: 1440, I: { STATUS: { pass: status === 404, detail: `status=${status}` }, BRANDED: { pass: info.branded && info.h1 === 1 && info.hasHome && info.hasContact, detail: JSON.stringify(info) } } });
+    const brandedOk = info.branded && info.h1 === 1 && info.hasHome && info.hasContact;
+    rows.push({ route: NOT_FOUND, profile: "w1440", width: 1440, I: { STATUS: { pass: status === 404, detail: `status=${status}` }, BRANDED: { pass: brandedOk, detail: JSON.stringify(info) } } });
+    if (status !== 404 || !brandedOk) failures++;
     await ctx.close();
   }
 
@@ -529,48 +650,59 @@ export async function runSweep({ base = BASE, viewports = VIEWPORTS, routes = RO
   const identity = { pass: emails.length > 0 && new Set(emails).size === 1 && emails[0] === "info@nexoaccess.com", detail: `emails across routes: ${[...new Set(emails)].join(" | ") || "(none)"}` };
   const extraFails = [...anchors, ...reduced, ...nojs].filter((x) => !x.pass).length + (titleUnique.pass ? 0 : 1) + (identity.pass ? 0 : 1);
 
-  await browser.close();
-  return { rows, failures: failures + extraFails, anchors, reduced, nojs, titleUnique, identity };
+  return { engineName, rows, anchors, reduced, nojs, titleUnique, identity, failures: failures + extraFails };
 }
 
-export function printMatrix({ rows, failures, anchors, reduced, nojs, titleUnique, identity }) {
-  const INV = ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I12", "I13", "I14", "I15", "I16"];
-  console.log("\nROUTE                     W     " + INV.join("  "));
-  for (const r of rows) {
-    if (r.route === NOT_FOUND) {
-      const s = r.I.STATUS, b = r.I.BRANDED;
-      console.log(`404 ${r.route.padEnd(30)} status:${s.pass ? "OK" : "FAIL(" + s.detail + ")"} branded:${b.pass ? "OK" : "FAIL(" + b.detail + ")"}`);
-      continue;
-    }
-    const cells = INV.map((k) => {
-      const v = r.I[k];
-      if (!v) return " · ";
-      return v.pass ? " ✓ " : " ✗ ";
-    }).join(" ");
-    const line = `${r.route.padEnd(24)} ${String(r.width).padEnd(5)} ${cells}`;
-    console.log(line);
-    for (const k of INV) {
-      const v = r.I[k];
-      if (v && v.pass === false) console.log(`      ↳ ${k} FAIL: ${v.detail}`);
-    }
-    if (r.I.ERR) console.log(`      ↳ ERROR: ${r.I.ERR.detail}`);
-  }
-  // I9 anchors
-  if (anchors && anchors.length) {
-    console.log("\nI9 ANCHORS (/platform):");
-    for (const a of anchors) console.log(`  ${a.pass ? "✓" : "✗"} ${a.mode.padEnd(11)} ${a.route.padEnd(18)} ${a.pass ? "" : a.detail}`);
-  }
-  // I10 reduced-motion + I11 no-JS
-  for (const [label, list] of [["I10 REDUCED-MOTION", reduced], ["I11 NO-JS", nojs]]) {
-    if (list && list.length) {
-      const bad = list.filter((x) => !x.pass);
-      console.log(`\n${label}: ${bad.length === 0 ? "all pass ✓" : bad.length + " fail"}`);
-      for (const x of bad) console.log(`  ✗ ${x.route.padEnd(24)} ${x.detail}`);
+export async function runSweep({ base = BASE, engines = ENGINES, profiles = PROFILES, routes = ROUTES } = {}) {
+  const resolved = profiles.map(resolveProfile);
+  const perEngine = [];
+  for (const engineName of engines) {
+    const engine = ENGINE_BY_NAME[engineName];
+    if (!engine) { console.error(`Unknown engine "${engineName}" — skipping`); continue; }
+    console.log(`\n── ${engineName}: ${resolved.length} profiles × ${routes.length} routes ──`);
+    const browser = await engine.launch();
+    try {
+      perEngine.push(await sweepOneEngine(browser, engineName, resolved, base, routes));
+    } finally {
+      await browser.close();
     }
   }
-  if (titleUnique) console.log(`\nI14b TITLE UNIQUENESS: ${titleUnique.pass ? "✓" : "✗"} (${titleUnique.detail})`);
-  if (identity) console.log(`I16b IDENTITY CONSISTENCY: ${identity.pass ? "✓" : "✗"} (${identity.detail})`);
-  console.log(`\n${failures === 0 ? "ALL GREEN ✓" : failures + " failing cells"}`);
+  return { perEngine, failures: perEngine.reduce((a, e) => a + e.failures, 0) };
+}
+
+export function printMatrix({ perEngine, failures }) {
+  const INV = ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I12", "I13", "I14", "I15", "I16", "I17", "I18"];
+  for (const eng of perEngine) {
+    console.log(`\n\n════════════ ENGINE: ${eng.engineName.toUpperCase()} ════════════`);
+    console.log("ROUTE                     PROFILE      " + INV.join(" "));
+    for (const r of eng.rows) {
+      if (r.route === NOT_FOUND) {
+        const s = r.I.STATUS, b = r.I.BRANDED;
+        console.log(`404 ${r.route.padEnd(24)} status:${s.pass ? "OK" : "FAIL(" + s.detail + ")"} branded:${b.pass ? "OK" : "FAIL"}`);
+        continue;
+      }
+      const cells = INV.map((k) => { const v = r.I[k]; return !v ? "  ·" : v.pass ? "  ✓" : "  ✗"; }).join("");
+      console.log(`${r.route.padEnd(24)} ${String(r.profile).padEnd(12)}${cells}${r.attempt === 2 ? "  (retried)" : ""}`);
+      if (r.attempt === 2) console.log("      ↳ NOTE: attempt 1 flaked; this row is the attempt-2 (retry) result");
+      for (const k of INV) { const v = r.I[k]; if (v && v.pass === false) console.log(`      ↳ ${k} FAIL: ${v.detail}`); }
+      if (r.I.ERR) console.log(`      ↳ ERROR: ${r.I.ERR.detail}`);
+    }
+    if (eng.anchors && eng.anchors.length) {
+      const bad = eng.anchors.filter((a) => !a.pass);
+      console.log(`  I9 ANCHORS: ${bad.length === 0 ? "all pass ✓" : bad.length + " fail"}`);
+      for (const a of bad) console.log(`    ✗ ${a.mode.padEnd(11)} ${a.route.padEnd(18)} ${a.detail}`);
+    }
+    for (const [label, list] of [["I10 REDUCED-MOTION", eng.reduced], ["I11 NO-JS", eng.nojs]]) {
+      if (list && list.length) {
+        const bad = list.filter((x) => !x.pass);
+        console.log(`  ${label}: ${bad.length === 0 ? "all pass ✓" : bad.length + " fail"}`);
+        for (const x of bad) console.log(`    ✗ ${x.route.padEnd(24)} ${x.detail}`);
+      }
+    }
+    console.log(`  I14b TITLES: ${eng.titleUnique.pass ? "✓" : "✗ " + eng.titleUnique.detail}   I16b IDENTITY: ${eng.identity.pass ? "✓" : "✗ " + eng.identity.detail}`);
+    console.log(`  ▶ [${eng.engineName}] ${eng.failures === 0 ? "GREEN ✓" : eng.failures + " FAILING"}`);
+  }
+  console.log(`\n${failures === 0 ? "═══════ CUBE ALL GREEN ✓ ═══════" : "═══════ " + failures + " FAILING CELLS ═══════"}`);
   return failures;
 }
 

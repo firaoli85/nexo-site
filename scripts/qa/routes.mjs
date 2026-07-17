@@ -30,6 +30,20 @@ export const VIEWPORTS = process.env.QA_VIEWPORTS
 
 export const BASE = process.env.QA_BASE_URL || "http://localhost:3300";
 
+// STANDING LAW (Stage 16): the sweep runs the FULL CUBE — every route × invariant × ENGINE × PROFILE.
+// The harness never certifies a single engine again. QA_ENGINES / QA_PROFILES narrow it for iteration.
+export const ENGINES = process.env.QA_ENGINES
+  ? process.env.QA_ENGINES.split(",").map((s) => s.trim())
+  : ["chromium", "webkit", "firefox"];
+
+// Profiles: "wNNN" = a plain desktop viewport of width NNN (height 900); a bare name resolves to a
+// Playwright device descriptor (touch, DPR, mobile UA) in sweep.mjs. Stage 16 requires at minimum an
+// iPhone descriptor + one Android descriptor alongside the existing desktop widths. (Firefox does not
+// accept isMobile — sweep.mjs strips it for that engine.)
+export const PROFILES = process.env.QA_PROFILES
+  ? process.env.QA_PROFILES.split(",").map((s) => s.trim())
+  : ["w390", "w768", "w1440", "w1920", "iPhone 14", "Pixel 7"];
+
 // The four anchored sections on /platform (seed hunt S2 — #dispatch must never light Oversight).
 export const PLATFORM_ANCHORS = ["dispatch", "claims-billing", "compliance", "oversight"];
 
