@@ -90,6 +90,15 @@ compensating top padding) so the page-top nav sits over ink, not the body white.
 - **Display:** Bricolage Grotesque (`--font-display`, `font-display`) — headings only.
 - **Body:** Hanken Grotesk (`--font-body`, `font-sans`) — a warm humanist grotesque on a contrast
   axis with Bricolage. Never Inter/Roboto/Arial/system, never a second grotesque for body.
+  - **§2 NOTE — font-display posture (Stage 16.1 owner ruling, 2026-07-16).** The "never
+    Inter/Roboto/Arial/system" rule governs the typeface **CHOICE** — the faces stay Bricolage + Hanken.
+    Both load via `next/font` with **`display: "optional"`** (NOT `swap`): on an uncached first paint that
+    misses the ~100ms window, next/font's **metric-matched fallback** renders for the whole load (no swap
+    → zero font-swap CLS); cached / fast loads render the real faces. That metric-matched fallback during
+    first paint is a **SANCTIONED performance posture, NOT a "system font" violation**. (`swap` caused a
+    real reflow: on /about at 768px, P1 gained a line when Hanken loaded, shifting siblings ~29px → CLS
+    0.0213 on chromium; `optional` → verified CLS 0 across 5 cold-cache runs. This is why I5 CLS < 0.02
+    is enforced per engine × profile — see §10.1.)
 - **Scale:** marketing body **17–18px** (`text-lg`), hero/section **subline one step up**
   (`text-xl`), display headings large (`text-4xl … text-6xl`), measure **65–75ch**
   (`max-w-prose`), line-height 1.5–1.75, display tracking ≥ `-0.04em` (`tracking-tight`).

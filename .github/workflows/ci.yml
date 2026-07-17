@@ -1,5 +1,10 @@
 name: CI
 
+# Lean pre-deploy safety net (Stage 16.1). Runs on every push / PR to main, ahead of Coolify's
+# auto-deploy. Scope is deliberate: typecheck + prod build + a SINGLE-engine (chromium, desktop)
+# structural smoke. The full engine x device CUBE (webkit + firefox + mobile profiles) is a LOCAL
+# pre-push gate (scripts/qa, nexo-brand SKILL 10.1) — too heavy and browser-hungry for per-push CI.
+
 on:
   push:
     branches: [main]
@@ -8,9 +13,9 @@ on:
 
 jobs:
   check:
-    name: Typecheck and build
+    name: Typecheck, build, chromium smoke
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,5 +32,14 @@ jobs:
       - name: Typecheck (tsc must be TRUE 0)
         run: npx tsc --noEmit
 
-      - name: Production build
-        run: npm run build
+      - name: Production build (into .next-check, servable by the smoke)
+        run: npm run build:check
+
+      - name: Install Chromium for the smoke
+        run: npx playwright install --with-deps chromium
+
+      - name: Structural smoke — chromium desktop ONLY (not the full cube)
+        run: npm run qa:sweep
+        env:
+          QA_ENGINES: chromium
+          QA_PROFILES: w1440

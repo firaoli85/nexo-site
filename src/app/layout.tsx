@@ -14,17 +14,23 @@ import { organizationSchema, schemaJson } from "@/lib/schema";
 // soft open counters, healthcare-credible, comfortable at 17px) for body (chosen in the lab,
 // Stage 4.7 Section T). Exposed as CSS vars consumed by tailwind fontFamily (font-display /
 // font-sans) and globals.css body{}.
+// DISPLAY: "optional" (Stage 16.1, owner ruling). `swap` caused a web-font-swap reflow — on /about at
+// 768px, paragraph 1 gained a line when Hanken loaded, shifting siblings ~29px (CLS 0.0213, chromium).
+// `optional` renders next/font's METRIC-MATCHED fallback for the whole first uncached paint if the font
+// misses the ~100ms window (no swap → zero font CLS); cached/fast loads still get the real faces. The
+// nexo-brand §2 "never system" rule governs the typeface CHOICE (still Bricolage + Hanken) — the
+// metric-matched fallback under `optional` is a sanctioned performance posture, not a violation (§2 note).
 const fontDisplay = Bricolage_Grotesque({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
   variable: "--font-display",
-  display: "swap",
+  display: "optional",
 });
 const fontBody = Hanken_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",
-  display: "swap",
+  display: "optional",
 });
 
 // Site-wide metadata (Stage 11). metadataBase makes every per-page relative canonical / og:url / image
