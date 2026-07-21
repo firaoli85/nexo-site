@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SITE } from "@/lib/site";
+import { SERVICE_AREA_PROSE } from "@/lib/launch";
 
 // SEO single source (Stage 11). Per-route titles + descriptions + the pageMeta() builder (canonical +
 // OpenGraph + Twitter). metadataBase lives in the root layout, so relative `path`s here resolve to
@@ -11,6 +12,13 @@ import { SITE } from "@/lib/site";
 export const HOME_TITLE = "Nexo Access | Non-Emergency Medical Transportation, DC, MD & VA";
 export const HOME_DESCRIPTION =
   "Non-emergency medical transportation for Medicaid members across DC, Maryland, and Virginia. Nexo Access is the technology-first NEMT company built for the DMV.";
+
+// The hero's opening sentence — the §7.2 approved self-description ("technology-first NEMT company")
+// plus the launch-flag-governed service-area prose. SINGLE SOURCE: rendered by the homepage hero
+// subline (components/home/Hero.tsx) AND used verbatim as the JSON-LD `description` (lib/schema.ts),
+// so the two can never drift. Flag-governed, never hardcoded: flipping LIVE_OPERATIONS swaps
+// "built for the DMV" -> "serving the DMV" in the hero and the structured data together.
+export const HERO_LEDE = `Nexo Access is a technology-first NEMT company ${SERVICE_AREA_PROSE}.`;
 
 // Interior title pattern: "{Page} | Nexo Access — NEMT for the DMV".
 export const interiorTitle = (name: string) => `${name} | Nexo Access, NEMT for the DMV`;

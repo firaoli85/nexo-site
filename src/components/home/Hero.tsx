@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { ProductDemo } from "@/components/home/ProductDemo";
 import { AmbientMap } from "@/components/home/AmbientMap";
-import { SERVICE_AREA_PROSE } from "@/lib/launch";
+import { HERO_LEDE } from "@/lib/seo";
 
 // Stage 4.8 — the hero is now an INK ENVIRONMENT (lab pick H-A). Nav + hero + console share
 // ONE ink world: the console belongs kin-to-kin (its on-ink-border-strong edge carries the
@@ -34,9 +34,8 @@ export function Hero() {
               {HEADLINE.after}
             </h1>
             <p className="mt-5 max-w-prose text-xl leading-snug text-on-ink-muted">
-              Nexo Access is a technology-first NEMT company {SERVICE_AREA_PROSE}.
-              Every driver is credential-verified before dispatch, and every claim
-              is checked automatically before it’s billed.
+              {HERO_LEDE} Every driver is credential-verified before dispatch, and
+              every claim is checked automatically before it’s billed.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="/platform" variant="primaryOnInk" size="md">

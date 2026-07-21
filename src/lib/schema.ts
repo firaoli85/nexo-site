@@ -1,5 +1,5 @@
 import { SITE } from "@/lib/site";
-import { HOME_DESCRIPTION } from "@/lib/seo";
+import { HERO_LEDE } from "@/lib/seo";
 
 // JSON-LD single source (Stage 11). One MedicalBusiness object, emitted once in the root layout.
 // Absolute URLs (schema requires them). NO `address` property (none is public — omit entirely, don't
@@ -19,7 +19,8 @@ export function organizationSchema() {
     image: abs("/og.png"),
     email: SITE.email,
     telephone: SITE.phone.e164,
-    description: HOME_DESCRIPTION,
+    // Verbatim the homepage hero's opening sentence (shared constant, so hero + schema cannot drift).
+    description: HERO_LEDE,
     areaServed: [
       { "@type": "AdministrativeArea", name: "Washington, DC" },
       { "@type": "State", name: "Maryland" },
