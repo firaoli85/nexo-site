@@ -14,7 +14,8 @@
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
 import { SITE } from "@/lib/site";
 import type { LeadKind } from "@/lib/leads";
-import { clean, buildSubject } from "@/lib/leadSanitize";
+import { clean } from "@/lib/leadSanitize";
+import { staffNotification, visitorAck } from "@/lib/email/templates";
 
 if (typeof window !== "undefined") {
   throw new Error("src/lib/mail.ts is server-only and must never be imported into client code.");
@@ -72,70 +73,65 @@ function getClient(cfg: SesConfig): SESv2Client {
   return client;
 }
 
-// Plain-text ONLY (no HTML anywhere) → zero HTML-injection surface. Every value is clean()'d; the
-// structural lines (labels, source, timestamp) are literals we control.
-function notificationBody(p: LeadPayload): string {
-  const heading =
-    p.kind === "provider"
-      ? "New provider application from the Nexo Access website."
-      : "New contact message from the Nexo Access website.";
-  const lines = [
-    heading,
-    "",
-    ...p.fields.map((f) => `${f.label}: ${clean(f.value) || "(not provided)"}`),
-    "",
-    `Source page: ${clean(p.sourcePage)}`,
-    `Submitted (UTC): ${p.submittedAt}`,
-  ];
-  return lines.join("\n");
-}
-
-// Auto-ack: brief, professional, §7.2-compliant — soft assurance, NO response-time promise, one
-// what-happens-next line per kind, zero marketing.
-function ackSubject(kind: LeadKind): string {
-  return kind === "provider"
-    ? "Nexo Access: we received your application"
-    : "Nexo Access: we received your message";
-}
-
-// The ack carries NO submitter-supplied text (fixed greeting, no name) — so even though it goes to a
-// submitter-controlled address, no attacker-chosen content is ever reflected out through our domain.
-function ackBody(kind: LeadKind): string {
-  const whatNext =
-    kind === "provider"
-      ? "We’ll review your details and follow up about running trips with us."
-      : "We’ll read your note and follow up about your program.";
-  return [
-    "Hello,",
-    "",
-    "Thanks for reaching out to Nexo Access. We’ve received your message.",
-    whatNext,
-    "",
-    "If you need to add anything, just reply to this email.",
-    "",
-    "The Nexo Access team",
-    DOMAIN,
-  ].join("\n");
-}
-
-function simpleEmail(args: {
+// Build a SES SendEmailCommand carrying BOTH an HTML and a text/plain part (multipart alternative).
+// Every transactional email now ships a styled HTML body (src/lib/email) AND a text part — text is
+// required for deliverability + accessibility; values reaching the HTML are escaped in the templates.
+function buildCommand(a: {
   from: string;
   to: string;
   replyTo?: string;
   subject: string;
-  body: string;
+  html: string;
+  text: string;
 }): SendEmailCommand {
   return new SendEmailCommand({
-    FromEmailAddress: args.from,
-    Destination: { ToAddresses: [args.to] },
-    ReplyToAddresses: args.replyTo ? [args.replyTo] : undefined,
+    FromEmailAddress: a.from,
+    Destination: { ToAddresses: [a.to] },
+    ReplyToAddresses: a.replyTo ? [a.replyTo] : undefined,
     Content: {
       Simple: {
-        Subject: { Data: args.subject, Charset: "UTF-8" },
-        Body: { Text: { Data: args.body, Charset: "UTF-8" } },
+        Subject: { Data: a.subject, Charset: "UTF-8" },
+        Body: {
+          Html: { Data: a.html, Charset: "UTF-8" },
+          Text: { Data: a.text, Charset: "UTF-8" },
+        },
       },
     },
   });
+}
+
+// Generic single-email send, EXPORTED for scripts/send-test-email.ts so real-client testing is one
+// command. Reads config at call time (missing env → typed 'unavailable', never a crash / faked
+// success); From defaults to the unmonitored no-reply address.
+export async function sendEmail(msg: {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+  from?: string;
+  replyTo?: string;
+}): Promise<MailResult> {
+  const cfg = readConfig();
+  if (!cfg) {
+    console.warn("[mail] SES env not configured — email not sent (returning 'unavailable').");
+    return { ok: false, reason: "unavailable" };
+  }
+  try {
+    await getClient(cfg).send(
+      buildCommand({
+        from: msg.from ?? ADDR.noReply,
+        to: msg.to,
+        replyTo: msg.replyTo,
+        subject: msg.subject,
+        html: msg.html,
+        text: msg.text,
+      }),
+    );
+    return { ok: true };
+  } catch (err) {
+    console.error("[mail] sendEmail failed:", err instanceof Error ? err.message : String(err));
+    return { ok: false, reason: "send_failed" };
+  }
 }
 
 // Per-recipient auto-ack cooldown. The ack is best-effort and goes to a submitter-SUPPLIED address, so
@@ -171,18 +167,20 @@ export async function sendLeadEmails(p: LeadPayload): Promise<MailResult> {
   }
 
   const ses = getClient(cfg);
-  const subject = buildSubject(p.kind === "provider" ? "Apply" : "Contact", p.name);
   const replyTo = clean(p.email);
 
-  // (a) NOTIFICATION — awaited; its failure fails the form.
+  // (a) NOTIFICATION — the styled staff template (labeled detail table + Reply button). System of
+  //     record: awaited, and its failure fails the form.
+  const note = staffNotification(p.kind, p.fields);
   try {
     await ses.send(
-      simpleEmail({
+      buildCommand({
         from: ADDR.noReply,
         to: notificationTo(p.kind),
         replyTo: replyTo || undefined,
-        subject,
-        body: notificationBody(p),
+        subject: note.subject,
+        html: note.html,
+        text: note.text,
       }),
     );
   } catch (err) {
@@ -191,17 +189,14 @@ export async function sendLeadEmails(p: LeadPayload): Promise<MailResult> {
     return { ok: false, reason: "send_failed" };
   }
 
-  // (b) AUTO-ACK — best-effort. Skip if we have no deliverable address OR this address was acked
-  //     recently (per-recipient cooldown blunts reflection/bombing). Swallow any failure.
+  // (b) AUTO-ACK — the styled visitor template (approved copy verbatim). Best-effort: skipped when
+  //     there is no deliverable address OR the per-recipient cooldown is active, and ANY failure is
+  //     swallowed so the visitor's success state is NEVER affected (logic unchanged from Stage 10S).
   if (replyTo && ackAllowed(replyTo.toLowerCase())) {
+    const ack = visitorAck(p.name, p.kind);
     try {
       await ses.send(
-        simpleEmail({
-          from: ADDR.info,
-          to: replyTo,
-          subject: ackSubject(p.kind),
-          body: ackBody(p.kind),
-        }),
+        buildCommand({ from: ADDR.info, to: replyTo, subject: ack.subject, html: ack.html, text: ack.text }),
       );
     } catch (err) {
       console.warn(

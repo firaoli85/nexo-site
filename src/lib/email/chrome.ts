@@ -16,8 +16,8 @@ export const emailBrand = {
   wordmarkInk: "Nexo",
   wordmarkJade: "Access",
   name: "Nexo Access",
-  // exact footer descriptor (owner-approved; note "Non-emergency" uses a hyphen, not a dash).
-  descriptor: "Non-emergency medical transportation (NEMT) management company",
+  // exact footer descriptor (owner-set; plain punctuation only, no em/en dashes).
+  descriptor: "A technology platform for medical transportation. Members at the center, providers at the wheel.",
   phoneDisplay: "(202) 409-2970", // SITE.phone.display
   phoneHref: "tel:+12024092970", // SITE.phone.e164
   siteLabel: "nexoaccess.com",
