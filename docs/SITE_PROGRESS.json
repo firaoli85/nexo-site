@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-17",
-    "currentTask": "P1a craft lane: exemplar dissection (pending owner exemplar verdict)",
+    "currentTask": "P1a craft lane: exemplar dissection (owner verdict pending)",
     "activePhase": "P1",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -116,10 +116,10 @@
       "id": "P1-B",
       "phase": "P1",
       "title": "Provider requirements research -> docs/PROVIDER_REQUIREMENTS_RESEARCH.md",
-      "status": "todo",
-      "date": "",
-      "note": "How a transport company becomes a compliant NEMT provider in DC, MD, VA. Portals (ePREP/MPRIME, DC OCP/DHCF, VA DMAS + DMV certificate), inspections, driver requirements, insurance minimums. VERIFY the reported $1.5M payer figure and the VA CSL $300K-$1M range; publish nothing unverified.",
-      "fixlogRef": ""
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "Primary-source research complete: DC/MD/VA chapters, cross-state comparison, publish map. $1.5M CONFIRMED as MTM's published DC broker requirement (undated source, contradicted by MTM's own archived handbook at $500k) with two alternative origins verified (VA 7-15 pax tier; WMATC restricted authority). VA CSL CORRECTED: state floor is $350,000 for 1-6 pax per Code of Virginia 46.2-2053; Virginia never uses the term CSL. 351 requirements captured, 58 owner questions, 128 sources, 47 unreachable.",
+      "fixlogRef": "2026-08-17 - Task #6"
     },
     {
       "id": "P1-C",
@@ -462,6 +462,18 @@
       "date": "2026-08-17",
       "text": "src/lib/launch.ts still carries the pre-D1 'operating model UNDECIDED' comment; code comment only, the law is now SITE_GROUND_TRUTH section 1. Fold into the D3 sign-in un-gate task.",
       "status": "scheduled"
+    },
+    {
+      "id": "DISC-15",
+      "date": "2026-08-17",
+      "text": "DC FFS broker contract term is UNRESOLVED: MTM's own re-award announcement (2021) describes 'one year plus four option years', which runs out around 2026, and no DHCF procurement notice or Council approval confirming the current term was found. If the DC NEMT broker changes, our /providers/dc page and any broker-specific guidance goes stale immediately. Re-check before publishing that page.",
+      "status": "open"
+    },
+    {
+      "id": "DISC-16",
+      "date": "2026-08-17",
+      "text": "58 OWNER QUESTIONS are pending an owner review pass across the three P1b chapters. His answers get recorded as OWNER-VERIFIED and still require a primary source before site publication.",
+      "status": "scheduled"
     }
   ],
   "gates": {
@@ -527,6 +539,10 @@
     {
       "date": "2026-08-17",
       "summary": "Task #5 P1a industry lane: five-subject IA teardown, 43-category matrix with honest V1 gaps, sign-in and vocabulary findings, draft 24-page V2 inventory for P2 freeze."
+    },
+    {
+      "date": "2026-08-17",
+      "summary": "Task #6 P1b provider requirements: primary-source DC/MD/VA research, the two contested insurance figures resolved (1.5M confirmed-with-caveats, VA CSL corrected to $350k floor), cross-state comparison and publish map."
     }
   ]
 }
