@@ -40,3 +40,6 @@ next-env.d.ts
 
 # Local render of the site board (D13). The committed truth is docs/SITE_PROGRESS.json.
 docs/SITE_BOARD.html
+
+# Working screenshots from research tasks (P1a and later). The documents are the receipt.
+scripts/qa/artifacts/research/

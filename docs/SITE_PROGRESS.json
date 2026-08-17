@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-17",
-    "currentTask": "P1a: exemplar + competitor teardown (docs/DESIGN_RESEARCH.md)",
+    "currentTask": "P1a craft lane: exemplar dissection (pending owner exemplar verdict)",
     "activePhase": "P1",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -26,7 +26,8 @@
       "items": [
         "P1-A",
         "P1-B",
-        "P1-C"
+        "P1-C",
+        "P1-A1"
       ]
     },
     {
@@ -106,9 +107,9 @@
       "id": "P1-A",
       "phase": "P1",
       "title": "Competitor teardown -> docs/DESIGN_RESEARCH.md part 1",
-      "status": "todo",
+      "status": "in-progress",
       "date": "",
-      "note": "MTM, Verida, Modivcare, SafeRide Health + 2-3 modern healthcare-infrastructure SaaS sites. Full IA inventory, what an MCO sees vs a provider. Includes the SafeRide member-eligibility flow as a pattern study. Owner ruling (D14 queued) adds a TECHNIQUE-TEARDOWN workstream: per reference site record animation library, what is animated, loading strategy, degradation strategy.",
+      "note": "MTM, Verida, Modivcare, SafeRide Health + 2-3 modern healthcare-infrastructure SaaS sites. Full IA inventory, what an MCO sees vs a provider. Includes the SafeRide member-eligibility flow as a pattern study. Owner ruling (D14 queued) adds a TECHNIQUE-TEARDOWN workstream: per reference site record animation library, what is animated, loading strategy, degradation strategy. SPLIT: industry lane done (P1-A1); craft lane (exemplar dissection) pending the owner exemplar verdict.",
       "fixlogRef": ""
     },
     {
@@ -263,6 +264,15 @@
       "date": "2026-08-17",
       "note": "Positioning decided and de-negated (D15); Mobbin-class visual target locked (D14); handoff-in-parallel protocol (D16). nexo-brand amended in BOTH copies, verified byte-identical. PRODUCT.md lifts the impeccable NO_PRODUCT_MD block.",
       "fixlogRef": "2026-08-17 - Task #4"
+    },
+    {
+      "id": "P1-A1",
+      "phase": "P1",
+      "title": "P1a industry lane: five-subject competitor IA teardown -> docs/DESIGN_RESEARCH.md part 1",
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "MTM, Modivcare, Verida, SafeRide Health, Roundtrip. 43 information categories found; V1 carries 10 fully and 6 partially. Draft V2 inventory: 24 pages (DRAFT FOR P2 FREEZE, not frozen). Vocabulary findings corroborate D1/D15.",
+      "fixlogRef": "2026-08-17 - Task #5"
     }
   ],
   "decisions": [
@@ -446,6 +456,12 @@
       "date": "2026-08-17",
       "text": "playwright-cli 0.1.18 does not load file:// URLs: `open file:///...` silently yields about:blank (https loads fine). Found while eye-passing the board; the screenshot was taken with the canonical Playwright-library lane instead. Affects any future local-file render check via that CLI. Workaround lane exists (Playwright library); fix when it blocks.",
       "status": "open"
+    },
+    {
+      "id": "DISC-14",
+      "date": "2026-08-17",
+      "text": "src/lib/launch.ts still carries the pre-D1 'operating model UNDECIDED' comment; code comment only, the law is now SITE_GROUND_TRUTH section 1. Fold into the D3 sign-in un-gate task.",
+      "status": "scheduled"
     }
   ],
   "gates": {
@@ -507,6 +523,10 @@
     {
       "date": "2026-08-17",
       "summary": "Task #4 law updates: ground truth v1.2 (D14-D16), PRODUCT.md, nexo-brand amendment (both copies), PLATFORM_DESIGN_HANDOFF scaffold, board refresh."
+    },
+    {
+      "date": "2026-08-17",
+      "summary": "Task #5 P1a industry lane: five-subject IA teardown, 43-category matrix with honest V1 gaps, sign-in and vocabulary findings, draft 24-page V2 inventory for P2 freeze."
     }
   ]
 }
