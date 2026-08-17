@@ -1,0 +1,480 @@
+{
+  "$schema": "internal://nexo-site/site-progress/v1",
+  "meta": {
+    "updatedAt": "2026-08-17",
+    "currentTask": "P0 Task 3 — the board (D13): progress JSON truth + board generator",
+    "activePhase": "P0",
+    "branch": "v2",
+    "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
+  },
+  "phases": [
+    {
+      "id": "P0",
+      "title": "The machine",
+      "status": "done",
+      "items": [
+        "P0-T1",
+        "P0-T2",
+        "P0-T3"
+      ]
+    },
+    {
+      "id": "P1",
+      "title": "Research (timeboxed: ends when the sitemap can be frozen)",
+      "status": "todo",
+      "items": [
+        "P1-A",
+        "P1-B",
+        "P1-C"
+      ]
+    },
+    {
+      "id": "P2",
+      "title": "Sitemap freeze",
+      "status": "todo",
+      "items": [
+        "P2-1"
+      ]
+    },
+    {
+      "id": "P3",
+      "title": "Design system (Mobbin/Figma-driven, component-up)",
+      "status": "todo",
+      "items": [
+        "P3-1",
+        "P3-2"
+      ]
+    },
+    {
+      "id": "P4",
+      "title": "Build (page by page against the frozen plan)",
+      "status": "todo",
+      "items": [
+        "P4-1"
+      ]
+    },
+    {
+      "id": "P5",
+      "title": "QA extension + measurement",
+      "status": "todo",
+      "items": [
+        "P5-1",
+        "P5-2",
+        "P5-3"
+      ]
+    },
+    {
+      "id": "P6",
+      "title": "Copy + launch",
+      "status": "todo",
+      "items": [
+        "P6-1",
+        "P6-2"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "P0-T1",
+      "phase": "P0",
+      "title": "Found the machine: v2 branch, ground truth, FIXLOG, recon receipt",
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "SITE_GROUND_TRUTH.md (law, D1-D13), FIXLOG.md, docs/SITE_RECON_2026-08-17.md committed on v2.",
+      "fixlogRef": "2026-08-17 — Task #1"
+    },
+    {
+      "id": "P0-T2",
+      "phase": "P0",
+      "title": "Skills audit: registry, cube baseline, tool fixes",
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "103 project / 89 user / 14 plugin skills inventoried and classified. Cube baseline ALL GREEN (234 cells, 3175 checks). playwright-cli FIXED. Addendum: repair-first law, huashu-design restored from GitHub origin, impeccable .agents paths fixed and proven.",
+      "fixlogRef": "2026-08-17 — Task #2 (+ ADDENDUM v2)"
+    },
+    {
+      "id": "P0-T3",
+      "phase": "P0",
+      "title": "The board (D13): SITE_PROGRESS.json + scripts/board.mjs + SITE_BOARD.html",
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "Committed JSON is the truth; the HTML is a local render (gitignored) regenerated at the end of every task. Validation guard fails loudly on malformed truth (D12); negative-tested 3 ways.",
+      "fixlogRef": "2026-08-17 — Task #3"
+    },
+    {
+      "id": "P1-A",
+      "phase": "P1",
+      "title": "Competitor teardown -> docs/DESIGN_RESEARCH.md part 1",
+      "status": "todo",
+      "date": "",
+      "note": "MTM, Verida, Modivcare, SafeRide Health + 2-3 modern healthcare-infrastructure SaaS sites. Full IA inventory, what an MCO sees vs a provider. Includes the SafeRide member-eligibility flow as a pattern study. Owner ruling (D14 queued) adds a TECHNIQUE-TEARDOWN workstream: per reference site record animation library, what is animated, loading strategy, degradation strategy.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P1-B",
+      "phase": "P1",
+      "title": "Provider requirements research -> docs/PROVIDER_REQUIREMENTS_RESEARCH.md",
+      "status": "todo",
+      "date": "",
+      "note": "How a transport company becomes a compliant NEMT provider in DC, MD, VA. Portals (ePREP/MPRIME, DC OCP/DHCF, VA DMAS + DMV certificate), inspections, driver requirements, insurance minimums. VERIFY the reported $1.5M payer figure and the VA CSL $300K-$1M range; publish nothing unverified.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P1-C",
+      "phase": "P1",
+      "title": "SEO / indexing strategy -> docs/SEO_PLAN.md",
+      "status": "todo",
+      "date": "",
+      "note": "Diagnose the homepage indexing issue, www->apex redirect, metadata/JSON-LD rewrite for the new positioning, provider-guide pages as the organic engine.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P2-1",
+      "phase": "P2",
+      "title": "Freeze the sitemap -> docs/SITE_BUILD_PLAN.md (numbered items)",
+      "status": "todo",
+      "date": "",
+      "note": "Hypothesis to be corrected by research: current 12 public pages + Sign-in + provider resource center (per-state guides + PDFs) + security/trust page + FAQ. The frozen list only shrinks; new ideas go to the roadmap section.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P3-1",
+      "phase": "P3",
+      "title": "Tokens reviewed against C1-C4, then primitives, then page compositions",
+      "status": "todo",
+      "date": "",
+      "note": "Component-up. Every choice receipted in DESIGN_RESEARCH part 2.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P3-2",
+      "phase": "P3",
+      "title": "Consolidate docs/UI_STANDARDS.md (incl. motion budget + performance budget)",
+      "status": "todo",
+      "date": "",
+      "note": "From the design report + the token file.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P4-1",
+      "phase": "P4",
+      "title": "Build page by page against the frozen plan",
+      "status": "todo",
+      "date": "",
+      "note": "One task at a time, design skills mandatory, each ending with FIXLOG + progress update + board regeneration + commit + push to v2.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P5-1",
+      "phase": "P5",
+      "title": "Throttled old-device profile + hard performance budget in the cube",
+      "status": "todo",
+      "date": "",
+      "note": "The real gap: nothing today asserts frame smoothness, JS weight, LCP, or animation cost on weak hardware.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P5-2",
+      "phase": "P5",
+      "title": "Cross-engine visual screenshot baselines with diffing",
+      "status": "todo",
+      "date": "",
+      "note": "Complements the 18 structural invariants; catches what structure cannot.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P5-3",
+      "phase": "P5",
+      "title": "Measure C1-C4, then decide each: keep the fork, flatten it, or harden the palette",
+      "status": "todo",
+      "date": "",
+      "note": "Decisions become new D-entries. C1-C4 are HYPOTHESES until measured.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P6-1",
+      "phase": "P6",
+      "title": "COPY_DECK written last",
+      "status": "todo",
+      "date": "",
+      "note": "Owner ruling: copy is the cheapest layer; the machine underneath is the work.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "P6-2",
+      "phase": "P6",
+      "title": "Merge v2 -> main at the quality gates (= deploy)",
+      "status": "todo",
+      "date": "",
+      "note": "Full-cube green + perf budget green + owner's real-iPhone checklist. GREEN IS A FLOOR.",
+      "fixlogRef": ""
+    },
+    {
+      "id": "GY-1",
+      "phase": "P0",
+      "title": "Restore huashu-design bgm-*.mp3 background-music assets (~26.7 MB)",
+      "status": "rejected",
+      "date": "2026-08-17",
+      "note": "REJECTED: six MP3 tracks serve the MP4/video narration pipeline, a capability this static marketing site will never use. Restoring them would push ~31 MB permanently into repo history for zero value. Completion command recorded in SKILLS_REGISTRY 4.1 if ever needed.",
+      "fixlogRef": "2026-08-17 — Task #2 ADDENDUM v2"
+    },
+    {
+      "id": "GY-2",
+      "phase": "P0",
+      "title": "Fix impeccable paths with a .agents/ junction to the real install",
+      "status": "rejected",
+      "date": "2026-08-17",
+      "note": "REJECTED in favour of rewriting the routed paths: a junction is machine-local, would not survive a clone, and would add an untracked directory to the repo root. The path rewrite is durable and version-controlled.",
+      "fixlogRef": "2026-08-17 — Task #2 ADDENDUM v2"
+    },
+    {
+      "id": "GY-3",
+      "phase": "P0",
+      "title": "playwright-cli as the default browser lane",
+      "status": "rejected",
+      "date": "2026-08-17",
+      "note": "REJECTED as default: kept installed and working (FIXED this session), but webapp-testing (scripted Playwright, matches nexo-brand 8 visual-verification loop) plus agent-browser MCP for one-off inspection are the canonical lanes. Three tools for one job is redundancy.",
+      "fixlogRef": "2026-08-17 — Task #2"
+    },
+    {
+      "id": "GY-4",
+      "phase": "P5",
+      "title": "scripts/qa/toolchain-check.mjs preflight (tool + skill-companion integrity)",
+      "status": "deferred",
+      "date": "2026-08-17",
+      "note": "DEFERRED to P0 Task 3 follow-up or P5: assert node/npm/playwright/3 engines/playwright-cli/agent-browser resolve AND that skill routed paths resolve, wired into qa:sweep. Not added during the audit because it introduces a new harness file outside that task's authorized scope. Needs owner sign-off.",
+      "fixlogRef": "2026-08-17 — Task #2 (+ ADDENDUM v2)"
+    },
+    {
+      "id": "GY-5",
+      "phase": "P0",
+      "title": "Run playwright-cli install --skills to refresh its stale skill doc",
+      "status": "deferred",
+      "date": "2026-08-17",
+      "note": "DEFERRED: the installed playwright-cli skill doc is stale versus the 0.1.18 binary (documents screenshot --path=, the real flag is --filename). Not run during the audit because it rewrites a repo-tracked skill file outside that task's staging list.",
+      "fixlogRef": "2026-08-17 — Task #2"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D1",
+      "date": "2026-08-17",
+      "title": "Positioning",
+      "summary": "Medical transportation management organization. We manage; providers drive. Resolves the 'operating model UNDECIDED' note in src/lib/launch.ts."
+    },
+    {
+      "id": "D2",
+      "date": "2026-08-17",
+      "title": "Public scope",
+      "summary": "NEMT-first, DMV-first. Broader markets modular, later."
+    },
+    {
+      "id": "D3",
+      "date": "2026-08-17",
+      "title": "Sign-in visible pre-launch",
+      "summary": "Un-gate the PORTAL_LIVE surface. Any attempt: 'no account found, contact support.' No sign-up path (B2B). Wire to real auth when app.nexoaccess.com deploys."
+    },
+    {
+      "id": "D4",
+      "date": "2026-08-17",
+      "title": "Cross-repo design law",
+      "summary": "The site's design system is documented as UI guidance for the nexo-access platform (docs/PLATFORM_DESIGN_HANDOFF.md; seed = NEXO_SITE_DESIGN_REPORT.md 7 incl. shadcn token-collision warnings)."
+    },
+    {
+      "id": "D5",
+      "date": "2026-08-17",
+      "title": "Cross-project checkpoints",
+      "summary": "Between site and platform, relayed by Oli, every exchange documented."
+    },
+    {
+      "id": "D6",
+      "date": "2026-08-17",
+      "title": "Skills audited, not assumed",
+      "summary": "Registry doc; broken tools stopped and fixed, never silently worked around. Extended 2026-08-17 by the REPAIR-FIRST LAW: a skill with missing files gets a repair attempt before any BROKEN verdict."
+    },
+    {
+      "id": "D7",
+      "date": "2026-08-17",
+      "title": "REVERSAL — git moves to Claude Code",
+      "summary": "Build prompts include the git steps; Claude Code stages, commits (one per task), and pushes.",
+      "reversal": {
+        "was": "Oli runs all git himself; git never inside a Claude Code prompt.",
+        "now": "Claude Code stages, commits with a descriptive message, and pushes to v2.",
+        "why": "Manual git caused costly mistakes; removing the human step removes the mistake class. Guardrails: never force-push, never push with tsc red, never touch main except at declared merge gates."
+      }
+    },
+    {
+      "id": "D8",
+      "date": "2026-08-17",
+      "title": "Branch strategy",
+      "summary": "All V2 work on v2. CI typechecks and builds every push; the deploy job fires only on main (verified in .github/workflows/ci.yml), so pushing v2 never deploys. Merge v2 -> main only when the 7 quality gates pass."
+    },
+    {
+      "id": "D9",
+      "date": "2026-08-17",
+      "title": "Identity: text wordmark",
+      "summary": "No logo for now. A logo waits until one actually satisfies the owner."
+    },
+    {
+      "id": "D10",
+      "date": "2026-08-17",
+      "title": "Research-first sequencing",
+      "summary": "No page is designed before the research phase documents the industry standard (P1)."
+    },
+    {
+      "id": "D11",
+      "date": "2026-08-17",
+      "title": "Mobbin + Figma design-reference pipeline",
+      "summary": "Every adopted reference gets a receipt in docs/DESIGN_RESEARCH.md: screenshot, what we take, what we reject, why. CORRECTION (Task #2): the Mobbin MCP is available to Claude Code directly and was functionally verified; only Figma has no MCP and still arrives via chat."
+    },
+    {
+      "id": "D12",
+      "date": "2026-08-17",
+      "title": "Challenge-to-test law (automatic)",
+      "summary": "Any task that fixes something genuinely hard must add an automated test covering that problem's whole class, in the same task, same commit. Manual verification recipes are test specs: captured as automation, never performed once and discarded."
+    },
+    {
+      "id": "D13",
+      "date": "2026-08-17",
+      "title": "SITE_BOARD — the visual HQ",
+      "summary": "docs/SITE_PROGRESS.json (committed) is the living status truth; scripts/board.mjs renders self-contained docs/SITE_BOARD.html (gitignored, local render). Regenerated at the end of every task."
+    }
+  ],
+  "discoveries": [
+    {
+      "id": "DISC-1",
+      "date": "2026-08-17",
+      "text": "PRODUCT.md is missing. Prerequisite for the impeccable skill (its setup halts with NO_PRODUCT_MD) and for P3. Scheduled as its own owner-scheduled task.",
+      "status": "scheduled"
+    },
+    {
+      "id": "DISC-2",
+      "date": "2026-08-17",
+      "text": "nexo-brand amendment task (BOTH copies, same change, per its sync rule): 7.2 still says the operating model is UNDECIDED and bans 'provider'/'broker' self-description, now stale versus D1; and 0 names huashu-design as a design co-lead, which must be reconciled with huashu's own scope note deferring SEO/marketing sites to frontend-design.",
+      "status": "scheduled"
+    },
+    {
+      "id": "DISC-3",
+      "date": "2026-08-17",
+      "text": "D14 QUEUED (owner ruling, to be appended to SITE_GROUND_TRUTH.md by the next docs task): V2 visual target is Mobbin-class animated premium; performance via technique + measurement, not restraint; P1a gains a technique-teardown workstream (animation library, what is animated, loading strategy, degradation strategy); research findings no installed skill covers get encoded into new project skills via skill-creator (candidate: nexo-motion). The static-complete SSR doctrine is retained.",
+      "status": "scheduled"
+    },
+    {
+      "id": "DISC-4",
+      "date": "2026-08-17",
+      "text": "www -> apex 301 redirect still pending (apex is canonical in metadataBase, sitemap and robots.host).",
+      "status": "open"
+    },
+    {
+      "id": "DISC-5",
+      "date": "2026-08-17",
+      "text": "Six stale FAIL_chromium_* entries committed under scripts/qa/artifacts/ are tracked FILES (not directories, correcting the recon receipt). Cleanup candidate; deliberately restored unchanged during Task #2 because cleanup belongs to a future task.",
+      "status": "open"
+    },
+    {
+      "id": "DISC-6",
+      "date": "2026-08-17",
+      "text": "C1-C4 cross-machine inconsistency candidates remain HYPOTHESES awaiting P5 measurement: C1 font-display optional, C2 @supports capability forks (glass, van), C3 subtle palette on cheap monitors, C4 unbudgeted animation cost.",
+      "status": "open"
+    },
+    {
+      "id": "DISC-7",
+      "date": "2026-08-17",
+      "text": "Homepage indexing issue open; canonical/OG and schema.ts still carry the OLD 'NEMT company' positioning. Repositioning touches metadata, not just page copy.",
+      "status": "open"
+    },
+    {
+      "id": "DISC-8",
+      "date": "2026-08-17",
+      "text": "An empty learned/ skill directory exists in both .claude/skills/ and ~/.claude/skills/ (no SKILL.md, no files). Cleanup candidate.",
+      "status": "open"
+    },
+    {
+      "id": "DISC-9",
+      "date": "2026-08-17",
+      "text": "The repo vendors a copy of the 14 superpowers plugin skills, so each exists twice (plugin cache + repo copy). Byte-identical today, but a drift surface with no sync rule attached.",
+      "status": "open"
+    },
+    {
+      "id": "DISC-10",
+      "date": "2026-08-17",
+      "text": "playwright-cli writes an untracked .playwright-cli/ scratch directory into the repo root. .gitignore candidate so the tool cannot dirty the working tree mid-task.",
+      "status": "open"
+    },
+    {
+      "id": "DISC-11",
+      "date": "2026-08-17",
+      "text": "Doctrine conflicts on record (nexo-brand wins, so future tasks must not 'fix' the site toward the generic advice): impeccable endorses motion libraries and blur/glow and caps card radii at 12-16px; ui-ux-pro-max treats its palette/font generator as required, offers glassmorphism, prefers spring physics, and states a 16px body minimum.",
+      "status": "open"
+    },
+    {
+      "id": "DISC-12",
+      "date": "2026-08-17",
+      "text": "RESOLVED: huashu-design companion files restored from its GitHub origin, and impeccable .agents/ path routing fixed and proven. Their reappearance would be a regression, not a discovery.",
+      "status": "resolved"
+    },
+    {
+      "id": "DISC-13",
+      "date": "2026-08-17",
+      "text": "playwright-cli 0.1.18 does not load file:// URLs: `open file:///...` silently yields about:blank (https loads fine). Found while eye-passing the board; the screenshot was taken with the canonical Playwright-library lane instead. Affects any future local-file render check via that CLI.",
+      "status": "open"
+    }
+  ],
+  "gates": {
+    "tsc": {
+      "state": "green",
+      "date": "2026-08-17",
+      "note": "npx tsc --noEmit TRUE 0"
+    },
+    "ci": {
+      "state": "green",
+      "date": "2026-08-17",
+      "note": "GitHub Actions check job (tsc + build) on every push; deploy job fires only on main (D8)."
+    },
+    "cube": {
+      "state": "green",
+      "cells": 234,
+      "checks": 3175,
+      "date": "2026-08-17",
+      "note": "13 routes x 6 profiles x 3 engines. 0 failures, 0 retries, 0 console errors. Also closed the Stage 16.1 CLS verification gap."
+    },
+    "perfBudget": {
+      "state": "not-built",
+      "date": "",
+      "note": "P5 builds it: throttled old-device profile with a hard budget. The real gap in the harness today."
+    }
+  },
+  "skills": {
+    "audited": true,
+    "date": "2026-08-17",
+    "registryRef": "docs/SKILLS_REGISTRY.md",
+    "counts": {
+      "project": 103,
+      "user": 89,
+      "plugin": 14,
+      "mcpServers": 2
+    },
+    "canonicalPicks": [
+      "Design law: nexo-brand (wins on any Nexo-specific value)",
+      "General design LEAD: frontend-design + emil-design-eng and the standing set",
+      "Design audit / verdict: design-is",
+      "Anti-slop doctrine + scoped contribution: huashu-design",
+      "Accessibility: frontend-a11y",
+      "Motion review: review-animations + emil-design-eng",
+      "UI implementation reference: ui-styling (no shadcn in this project)",
+      "Cross-check list: ui-ux-pro-max (never as a palette/font generator)",
+      "React code: react-patterns (+ react-performance from P5)",
+      "Testing / QA: the scripts/qa cube (primary) + webapp-testing + agent-browser MCP",
+      "Security: security-review + healthcare-phi-compliance / hipaa-compliance",
+      "Code/perf audits: production-audit, click-path-audit, systematic-debugging, ponytail",
+      "Docs / process: the repo doc system (SITE_GROUND_TRUTH + FIXLOG) + doc-coauthoring + skill-creator",
+      "Workflow: do, dispatching-parallel-agents, brainstorming, make-plan"
+    ]
+  },
+  "sessions": [
+    {
+      "date": "2026-08-17",
+      "summary": "Founding session: recon, D1-D13, Tasks 1-3 (ground truth + FIXLOG + recon receipt; skills audit with cube baseline and repair-first fixes; the board)."
+    }
+  ]
+}

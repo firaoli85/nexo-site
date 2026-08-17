@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "qa:sweep": "node scripts/qa/run.mjs"
+    "qa:sweep": "node scripts/qa/run.mjs",
+    "board": "node scripts/board.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-sesv2": "^3.1087.0",

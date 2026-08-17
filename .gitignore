@@ -37,3 +37,6 @@ next-env.d.ts
 
 # verification build dir (build:check)
 .next-check
+
+# Local render of the site board (D13). The committed truth is docs/SITE_PROGRESS.json.
+docs/SITE_BOARD.html
