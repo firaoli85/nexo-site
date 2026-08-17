@@ -11,13 +11,19 @@ one coherent taxonomy (see DISCOVERY 14).
 **Scope note:** this task fixed TOOL/ENVIRONMENT breakage only. No site code was touched. Anything found in the site
 itself is recorded under DISCOVERIES, never fixed here.
 
+**REPAIR-FIRST LAW (owner ruling, 2026-08-17, binding on this whole audit):** a skill with missing files gets a
+**repair attempt BEFORE any BROKEN verdict**. Repair = locate its source (the plugin/marketplace it came from, its
+GitHub origin, or a sibling installation under `~/.claude`) and restore the missing pieces. Only if the source cannot
+be found after a genuine, documented search does it stay BROKEN, with the full diagnosis recorded.
+
 ### Verdict legend
 
 | Verdict | Meaning |
 |---|---|
 | **WORKING** | Exists and was exercised successfully (Tier 1) or resolves and reads coherently (Tier 2/3). |
 | **FIXED** | Was broken; this task repaired it. The repair is stated. |
-| **BROKEN** | Still broken after a repair attempt. Full diagnosis attached. |
+| **FIXED-PATH / BLOCKED** | A specific defect was repaired and proven, but a separate, named prerequisite still blocks full use. |
+| **BROKEN** | Still broken after a repair attempt. Full diagnosis attached, including where the search looked. |
 | **NOT-INSTALLED** | Absent from this machine. A finding, not a failure. |
 | **REDUNDANT** | Superseded for this project by a named better fit. |
 | **NOT-RELEVANT** | Built for a stack, domain, or product shape this project does not have. |
@@ -98,21 +104,79 @@ cube-verified across all three engines.
 
 ## 4. TIER 2 — THE STANDING DESIGN SET
 
-All 11 resolve, all are readable, all **WORKING**. Contributions below are grounded in the files themselves.
+All 11 resolve and are readable. Nine are **WORKING** as installed; two had real defects that were **repaired in this
+task** under the repair-first law (`huashu-design` → FIXED, `impeccable` → FIXED-PATH / BLOCKED). Contributions below
+are grounded in the files themselves.
 
 | Skill | One-line contribution | Verdict |
 |---|---|---|
 | `nexo-brand` | Supplies the actual law: 3-chapter tonal map, Bricolage/Hanken type, jade token hex, glass doctrine, COPY HONESTY GATE, visual-verification loop, QA engine-cube. | WORKING |
-| `huashu-design` | Anti-AI-slop table (no purple gradients, emoji icons, SVG people), 3-parallel-direction variant exploration, four positional questions, honest-placeholder rule, Playwright screenshot verification. | WORKING |
+| `huashu-design` | Anti-AI-slop table (no purple gradients, emoji icons, SVG people), 3-parallel-direction variant exploration, four positional questions, honest-placeholder rule, Playwright screenshot verification. **Its own scope note defers SEO/marketing sites to `frontend-design`**, so it contributes doctrine here, not machinery. | **FIXED** (see §4.1) |
 | `frontend-design` | Two-pass method: brainstorm a token plan (4-6 named hex, display+body+utility faces, ASCII wireframes, one signature element), critique against AI-default looks, then build. | WORKING |
 | `emil-design-eng` | Concrete motion law: animate-or-not frequency table, custom cubic-bezier easings, sub-300ms durations, never scale(0), transform/opacity-only, Radix transform-origin var. | WORKING |
-| `impeccable` | Register-based flow: read reference/brand.md for marketing surfaces, then craft/shape/critique/audit/polish sub-commands, plus absolute bans (gradient text, per-section eyebrow, ghost-card border+shadow, 32px radii). | WORKING |
+| `impeccable` | Register-based flow: read reference/brand.md for marketing surfaces, then craft/shape/critique/audit/polish sub-commands, plus absolute bans (gradient text, per-section eyebrow, ghost-card border+shadow, 32px radii). | **FIXED-PATH / BLOCKED: needs PRODUCT.md** (see §4.2) |
 | `ui-ux-pro-max` | Queryable CSV design database via scripts/search.py (--design-system, --domain ux/landing/color/typography, --stack nextjs) plus a 10-priority checklist: contrast, 44px targets, CLS, 150-300ms motion. | WORKING |
 | `design-system` | Audit lens: 10-dimension 0-10 visual scorecard with file:line fixes, an AI-slop checklist, and a generate mode emitting DESIGN.md + design-tokens.json + preview page. | WORKING |
 | `ui-styling` | shadcn/Radix + Tailwind reference library (7 docs: components, theming, a11y, utilities, responsive, customization, canvas) plus utility-first, mobile-first, no-dynamic-class-names practices. | WORKING |
 | `frontend-a11y` | Concrete label/id, aria-describedby+role=alert errors, aria-expanded/controls, modal focus-restore, icon-button patterns, plus an 8-item pre-review checklist for lead forms and nav. | WORKING |
 | `design-is` | Rams ten-principle audit: 0-3 evidence-cited scores, five parallel evidence subagents, NEW/REFINE/REDESIGN threshold verdict, and a self-contained /make-plan handoff. | WORKING |
 | `review-animations` | Ten non-negotiable motion standards plus escalation triggers, remedial hierarchy, and a Before/After table + Block/Approve verdict gating van, morph, and scroll-spine motion. | WORKING |
+
+### 4.1 REPAIR — `huashu-design`: **FIXED**
+
+**Symptom:** the skill directory contained **only `SKILL.md`**; all 47 paths its instructions route to
+(`references/*`, `assets/*`, `scripts/*`) were missing.
+
+**Search performed (repair-first law).** Sibling installations: found five on this machine —
+`~/.claude/skills/huashu-design`, this repo's copy, `Desktop/equb-app/.agents/skills/`,
+`Desktop/equb-app/.claude/skills/`, `Desktop/equb-platform/.claude/skills/` — **all five had only `SKILL.md`**, so no
+sibling could donate the files. Plugin/marketplace: not present in any plugin cache; the registered marketplaces are
+`claude-plugins-official` and `thedotmack` (neither ships it). The ECC bundle that supplied most skills
+(`github.com/affaan-m/everything-claude-code`) does **not** contain huashu-design. GitHub origin: **found** —
+**`github.com/alchaincyf/huashu-design`** (upstream `HEAD e735935`).
+
+**Root cause (confirmed upstream):** the skill's own installation notes state that a **skills CLI ≤ 1.5.15 synced only
+single files** and that **≥ 1.5.19 is required to sync subdirectories**. That is exactly the observed symptom, and it
+explains why every install on this machine is file-less rather than corrupt.
+
+**Restored:** `references/` (32 entries), `scripts/` (18 entries), `assets/` (15 entries) into **both** the repo copy
+and the user mirror. **43 of 47 routed paths now resolve** (verified programmatically); the 4 that do not are literal
+documentation placeholders — `assets/xxx.jsx`, `references/xxx.md`, `scripts/xxx.sh`, and a user-supplied `assets/img`
+— which do not exist upstream either.
+
+**Deliberately excluded:** the six `assets/bgm-*.mp3` background-music tracks (**~26.7 MB**) that serve the MP4/video
+narration pipeline, a capability this static marketing site will never use. Restoring them would have pushed a
+permanent ~31 MB into repo history for zero value. To complete the restore if ever needed:
+`git clone --depth 1 https://github.com/alchaincyf/huashu-design && cp huashu-design/assets/bgm-*.mp3 .claude/skills/huashu-design/assets/`.
+Net added to the repo: **5.0 MB**.
+
+**Caveat on record:** the installed `SKILL.md` (62,990 B) differs slightly from upstream master (62,111 B) — the
+companions come from upstream `e735935` and pair with a near-but-not-identical revision of the instructions.
+
+### 4.2 REPAIR — `impeccable`: **FIXED-PATH / BLOCKED (needs PRODUCT.md)**
+
+**Symptom:** every command the skill documents routed to `.agents/skills/impeccable/scripts/*.mjs`, but this repo has
+**no `.agents/` directory**; the 26 scripts live at `.claude/skills/impeccable/scripts/`. Executing the documented
+command failed with a module-not-found error (captured before the fix).
+
+**Why the wrong root existed:** `.agents/` is ECC's alternate install convention — the upstream ECC repo has a
+top-level `.agents/`, and the sibling `Desktop/equb-app` project carries **both** `.agents/skills/impeccable` and
+`.claude/skills/impeccable`. This repo installs under `.claude/` only.
+
+**Fix applied (and why this one):** rewrote the routing `.agents/skills/impeccable` → `.claude/skills/impeccable`
+across the skill's docs (`SKILL.md` + `reference/critique.md`, `hooks.md`, `init.md`, `live.md`, `polish.md`) and in
+`scripts/hook-admin.mjs`, in **both** the repo copy and the user mirror. The alternative — creating a `.agents/`
+junction to the real install — was rejected because it is machine-local, would not survive a clone, and would add an
+untracked directory to the repo root. `hook-admin.mjs` was included because it *writes* the hook command: left
+unfixed, `$impeccable hooks on` would have silently installed a hook pointing at a nonexistent path, failing on every
+UI edit. Zero `.agents/skills/impeccable` references remain in either copy; `node --check` passes on the edited script.
+
+**Proof of repair:** running the now-documented command verbatim —
+`node .claude/skills/impeccable/scripts/context.mjs` — **executes successfully (exit 0)** and returns its
+`RESOLVED_CONTEXT` payload.
+
+**Remaining block (NOT fixed here, by ruling):** that same output is `NO_PRODUCT_MD` — the skill's setup step 1 halts
+because the repo has no `PRODUCT.md`. Authoring it is **deferred to its own owner-scheduled task** (DISCOVERY 3).
 
 ### Precedence rule (confirmed)
 
@@ -282,7 +346,8 @@ Tally: **19 RELEVANT-TO-SITE · 14 REDUNDANT · 59 NOT-RELEVANT.**
 | Category | Canonical pick(s) | Rationale |
 |---|---|---|
 | **Design law** | `nexo-brand` | The only skill carrying real Nexo values (tokens, tonal map, copy gate, QA law). Wins every conflict. |
-| **General design** | `impeccable` (brand register) + `frontend-design` | `impeccable` supplies the register-based craft flow and the absolute-bans list; `frontend-design` the two-pass token/wireframe method. Both yield to nexo-brand on values. |
+| **General design (LEAD)** | **`frontend-design`** + `emil-design-eng` and the standing set | Owner ruling 2026-08-17: `frontend-design` is the general-design lead (its two-pass token/wireframe method), with `emil-design-eng` on motion craft and the rest of the standing set alongside. `impeccable` still supplies the register-based craft flow and absolute-bans list. **`nexo-brand` remains law above all.** |
+| **Where huashu applies** | `huashu-design` (scoped contribution) | Contributes where its scope applies — anti-slop doctrine, variant exploration, critique. Its own scope note defers SEO/marketing sites to `frontend-design`, so it does not lead here. |
 | **Design audit / verdict** | `design-is` | The only one that terminates in an evidence-cited NEW / REFINE / REDESIGN verdict — exactly the V2 question. `design-system` is kept as a scorecard lens only. |
 | **Anti-slop doctrine** | `huashu-design` (doctrine only) | Its anti-AI-slop table and variants-not-final-answers rule transfer; its machinery does not, and it self-excludes SEO sites. |
 | **Accessibility** | `frontend-a11y` | Concrete label/aria/focus patterns matching the lead forms and nav. |
@@ -324,15 +389,15 @@ not limited to second-hand Mobbin material.
    "technology-first NEMT company". SITE_GROUND_TRUTH D1 now fixes the positioning as a **medical transportation
    management organization ("we manage; providers drive")**. The skill must be amended in **BOTH copies in the same
    change** (its own SYNC RULE) — a future task, not this one.
-2. **`impeccable` script paths cannot resolve.** Every command it documents points at
-   `.agents/skills/impeccable/scripts/*.mjs`, but there is **no `.agents/` directory**; the 26 `.mjs` scripts actually
-   live at `.claude/skills/impeccable/scripts/`. Verified directly. Its scripted steps fail as written; the doctrine
-   is still usable.
-3. **`impeccable` setup hard-blocks on this repo.** Setup step 1 routes to `reference/init.md` when it reports
-   `NO_PRODUCT_MD`; **no `PRODUCT.md` (or `DESIGN.md`) exists** at the repo root. A literal run detours into init
-   before any design work. (Deciding whether to add PRODUCT.md or invoke it partially is a P3 decision.)
-4. **`huashu-design` has dangling references.** Its directory contains **only `SKILL.md`** — every `references/*.md`,
-   `assets/*`, and `scripts/*` path it routes to is missing. Verified directly.
+2. **RESOLVED IN THIS TASK — `impeccable` script paths could not resolve.** Documented commands pointed at a
+   nonexistent `.agents/` root. **Fixed and proven** (§4.2). Recorded so it is not re-flagged; if `.agents/`-rooted
+   paths ever reappear (e.g. a skill re-install from ECC), that is a **regression**, not a new discovery.
+3. **`PRODUCT.md` is missing — prerequisite for `impeccable` and for P3; scheduled as its own task.** The repo has no
+   `PRODUCT.md` (nor `DESIGN.md`), so `impeccable`'s setup step 1 halts with `NO_PRODUCT_MD` before any design work.
+   **Not fixed here by ruling** — authoring it is an owner-scheduled task of its own.
+4. **RESOLVED IN THIS TASK — `huashu-design` had no companion files.** Only `SKILL.md` was installed. **Repaired from
+   its GitHub origin** (§4.1); root cause was a known skills-CLI sync bug (≤1.5.15 synced single files only). Recorded
+   so it is not re-flagged; note the deliberate `bgm-*.mp3` exclusion documented in §4.1.
 5. **`huashu-design` self-excludes this project type.** Its own scope section lists SEO/marketing sites as
    不适用 (not applicable) and defers them to `frontend-design`. Only its transferable doctrine is adopted (§6 canonical picks).
 6. **The `playwright-cli` skill doc is stale versus the installed binary.** The tool prints a version-mismatch banner
@@ -371,3 +436,14 @@ not limited to second-hand Mobbin material.
 15. **`playwright-cli` writes scratch into the repo root.** Running it created an untracked `.playwright-cli/`
     directory (page snapshot `.yml` files). Removed after the test. It is a `.gitignore` candidate so the tool cannot
     dirty the working tree during a future task.
+16. **`nexo-brand` §0 names `huashu-design` as a design co-lead** ("huashu-design + frontend-design lead"), which now
+    sits against huashu's own scope note deferring SEO/marketing sites to `frontend-design`, and against the owner's
+    2026-08-17 canonical-picks ruling (§6: `frontend-design` leads). **To be reconciled in the queued `nexo-brand`
+    amendment task, alongside the stale §7.2 operating-model line (D1). Amend BOTH copies per the sync rule.**
+17. **Owner ruling 2026-08-17 — queued as ground-truth D14, to be appended in the next docs task.** The V2 visual
+    target is **Mobbin-class animated premium**; **performance is achieved via technique + measurement, not
+    restraint**; **P1a gains a technique-teardown workstream** (per reference site: animation library, what is
+    animated, loading strategy, degradation strategy); and **research findings that no installed skill covers get
+    encoded into new project skills via `skill-creator`** (candidate: **`nexo-motion`**). **The static-complete SSR
+    doctrine is retained.** Recorded here so the ruling is not lost between tasks; appending D14 to
+    SITE_GROUND_TRUTH.md is the next docs task's job, not this one's.
