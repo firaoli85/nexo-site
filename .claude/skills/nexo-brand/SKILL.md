@@ -9,10 +9,15 @@ description: The design law for the Nexo Access site (Next.js NEMT healthcare ma
 > `nexo-site/.claude/skills/nexo-brand/SKILL.md` (CANONICAL — versioned with the code) and this
 > **user mirror** at `~/.claude/skills/nexo-brand/SKILL.md`. Any edit to one MUST be applied to the
 > other in the same change so they never drift.
+>
+> **CHANGELOG**
+> - 2026-08-17: operating model decided (D1/D15) and design precedence updated (registry audit);
+>   synchronized both copies.
 
-Premium, calm, credible marketing site for a technology-first non-emergency medical transportation
-(NEMT) company serving DC / Maryland / Virginia. (Nexo Access self-describes ONLY as a "technology-
-first NEMT company" — the operating model is deliberately undecided; see the COPY GATE §7.2.) Stack:
+Premium, calm, credible marketing site for a **medical transportation management organization** working
+DC / Maryland / Virginia. (Nexo Access delivers trips through a **credentialed provider network**:
+providers operate the vehicles, Nexo Access manages and answers for the service. The operating model is
+DECIDED — see SITE_GROUND_TRUTH.md §1 for the canonical wording, D1 + D15, and the COPY GATE §7.2.) Stack:
 Next.js 14 App Router, React 18, Tailwind 3.4,
 `@radix-ui/react-navigation-menu`, `lucide-react`. Every color flows from CSS vars in
 `src/app/globals.css`, mapped to Tailwind in `tailwind.config.ts`. **No hardcoded hex anywhere
@@ -21,8 +26,12 @@ outside globals.css.** No new project dependencies without approval. No git comm
 ## 0. SKILL DISCOVERY (standing process — Stage 6.5)
 Before designing/building, ENUMERATE every skill installed in the workspace (user `~/.claude/skills`,
 project `.claude/skills`, and plugin skills — `find … -iname SKILL.md`). Resolve **nexo-brand FIRST**
-as design law, then combine the standing design set (huashu-design, frontend-design, emil-design-eng,
-impeccable, ui-ux-pro-max, design-system, ui-styling, frontend-a11y, review-animations). Then SHORTLIST
+as design law, then combine the standing design set. **PRECEDENCE (updated 2026-08-17 by the registry
+audit): `frontend-design` LEADS the general design set** (with `emil-design-eng` and the standing skills:
+impeccable, ui-ux-pro-max, design-system, ui-styling, frontend-a11y, design-is, review-animations);
+**`huashu-design` contributes where its scope applies** — its own scope note defers SEO/marketing sites to
+`frontend-design`, so it supplies doctrine (anti-slop, variant exploration, critique), not leadership;
+**nexo-brand wins on any Nexo-specific value.** Then SHORTLIST
 any other installed skill plausibly relevant to the stage (animation, React perf/patterns, a11y,
 testing, healthcare/PHI, design), READ the shortlisted ones, and apply what genuinely helps. End the
 report with a table: skill → considered/used → concrete contribution. (nexo-brand always WINS on any
@@ -602,14 +611,22 @@ dump. Audit `nav.ts` + footer data + all mounted-on-open content at the source l
   - **Dignity language is mandatory:** needs-based ("when a member's needs require it"), never
     size-as-spectacle, never clinical-gawking.
 
-### 7.2 POSITIONING + LAUNCH FLAGS (Stage 6.2) — the operating model is UNDECIDED
-FC Nexo's operating model (fleet **provider** / **broker** / **SaaS** / **hybrid**) is deliberately
-undecided; copy must NOT commit to one.
-- **Nexo self-description lexicon.** BANNED as a description of Nexo Access itself: **"provider",
-  "broker", "operations platform"**, and any phrasing that commits to an operating model. The ONLY
-  approved self-description is **"technology-first NEMT company"**. (Referring to the SOFTWARE as
-  "the platform" / a product section named "Platform" / "the platform's code" is fine — that is the
-  product a tech company builds, not an operating-model claim.)
+### 7.2 POSITIONING + LAUNCH FLAGS (Stage 6.2; positioning DECIDED 2026-08-17 — D1 + D15)
+FC Nexo's operating model is **DECIDED**: Nexo Access is a **medical transportation management
+organization**. Transportation is the business — trips are delivered through a **credentialed network of
+transport providers**, on our platform, under our standards, and **we take responsibility for every
+trip**. Providers operate the vehicles; Nexo Access manages and answers for the service. The canonical
+wording lives in **SITE_GROUND_TRUTH.md §1** and that file wins if these ever drift.
+- **Nexo self-description lexicon.** PERMITTED as the identity claim: **"medical transportation
+  management organization"** (and the §1 wording above). STILL BANNED as a description of Nexo Access
+  itself: **"broker"**, **"operations platform"**, and **"provider"** used of *us* — Nexo Access is not
+  one of its own network providers. **NEVER negate the transportation role** (D15): no "we do not
+  drive", no "we're just software", no framing that disowns the service. (Referring to the SOFTWARE as
+  "the platform" / a product section named "Platform" / "the platform's code" is fine.)
+- **Identity is decided; OPERATIONS remain flag-gated.** Deciding who we are does NOT unlock what we do:
+  "serving", trip counts, volume, and every performance claim stay governed by the launch flags and the
+  §7 NEVER list exactly as before. The gate MECHANISM is unchanged — staged claims, LAUNCH flags, audit
+  every string.
 - **Third-party "provider" is CORRECT and stays.** When "provider" names EXTERNAL fleet/transport
   companies it is proper NEMT vocabulary and MUST remain: "Apply as provider", "Transport
   providers", the partner funnel, `/solutions/providers`, the provider teaser, "A provider only
@@ -655,8 +672,9 @@ undecided; copy must NOT commit to one.
 Metadata (titles, descriptions, OG strings) and JSON-LD are gate-governed copy, not a keyword dumping
 ground. Target-query terms **"NEMT provider" / "NEMT broker"** may appear ONLY as SEARCHER language or a
 THIRD-PARTY reference (e.g. "for transport providers", "join the transport-provider network", "NEMT for
-MCOs") — **NEVER as a description of Nexo Access itself** (the §7.2 lexicon stands: Nexo = "technology-first
-NEMT company"; calling the SOFTWARE "the platform for non-emergency medical transportation (NEMT)" is fine).
+MCOs") — **NEVER as a description of Nexo Access itself** (the §7.2 lexicon stands: Nexo = a "medical
+transportation management organization" delivering trips through a credentialed provider network; calling
+the SOFTWARE "the platform for non-emergency medical transportation (NEMT)" is fine).
 Service-AREA keywords (DC / Maryland / Virginia / the DMV / "Washington, DC") are unrestricted. Service
 CLAIMS stay launch-flag governed — **no "serving" in any title/description/OG string** until
 `LIVE_OPERATIONS` ("Built for…" / neutral geography only). Visible-copy keyword weaving is MINIMAL and

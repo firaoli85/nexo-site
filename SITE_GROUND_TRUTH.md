@@ -8,7 +8,7 @@ Read this first, every session, before touching anything.
 | **Owner** | Firaoli ("Oli") Seboka, solo founder, FC Nexo LLC dba Nexo Access |
 | **Status** | V1 live at nexoaccess.com. V2 rebuild starting: research-first, on the `v2` branch. |
 | **Horizon** | Built to hold for 2 to 3 years of solo operation. Oli will be running the business, not rebuilding the site. |
-| **Version** | v1.1 — August 17, 2026 |
+| **Version** | v1.2 — August 17, 2026 |
 
 ---
 
@@ -20,14 +20,12 @@ V1 was built with real craft and real QA discipline, but its decisions live in c
 
 ## 1. WHAT NEXO ACCESS IS (positioning law)
 
-**Nexo Access is a medical transportation management organization. We manage medical transportation. We do not drive.**
-
-Providers bring the vehicles and drivers. We credential them, hold them to requirements, give them the tools (dispatch, claims, compliance, payment visibility), and manage the transportation benefit for payers. Inspired by the Verida-class positioning, in our own words.
+**Nexo Access is a medical transportation management organization. Transportation is the business: trips are delivered through our credentialed network of transport providers, on our platform, under our standards, and we take responsibility for every trip. Providers operate the vehicles; Nexo Access manages and answers for the service.**
 
 - First market: **NEMT in the DMV** (DC, Maryland, Virginia). That is the public story.
 - The broader ambition (private pay, facility contracts, other transportation management) stays **structural and modular**, not on the site yet. Adding a market later is adding a module, not repositioning.
-- The site's job: make an MCO contracting director, a state program officer, or a provider owner conclude within one visit that this is a serious, well-built transportation management company.
-- Anti-identity: never "we have cars and drivers," never consumer taxi language, never "book your ride today" as the lead.
+- The site's job: make an MCO contracting director, a state program officer, or a provider owner conclude within one visit that this is a serious, well-built transportation management company that answers for its network.
+- Anti-identity: never consumer taxi language ("book your ride today") in the lead; never framing that disowns transportation ("we don't drive", "we're just software"). We manage the service and we own the outcome.
 
 ## 2. AUDIENCES (in priority order)
 
@@ -66,6 +64,9 @@ Append-only. A decision changes only with a new dated entry stating from where, 
 | D11 | 2026-08-17 | **Mobbin + Figma are the design-reference pipeline.** Inspiration is pulled from Mobbin (and Figma), and every adopted reference gets a receipt in docs/DESIGN_RESEARCH.md: screenshot, what we take, what we reject, why. Both Claude (chat, Mobbin connector live) and Claude Code use it. |
 | D12 | 2026-08-17 | **Challenge-to-test law (automatic).** Any task that fixes something genuinely hard — a bug that cost time, a rendering defect, a regression, a class of mistake — must add an automated test (QA invariant, unit test, or script check) covering that problem's whole class, in the same task, same commit. Manual verification recipes are test specs: captured as automation, never performed once and discarded. The owner never has to request this; the prompt template enforces it. |
 | D13 | 2026-08-17 | **SITE_BOARD — the visual HQ.** `docs/SITE_PROGRESS.json` (committed) is the living status truth; `scripts/board.mjs` renders self-contained `docs/SITE_BOARD.html` (gitignored, local render). Shows: current task ("you are here"), phase bars P0–P6, plan ledger with status dots, decisions ledger with reversal chains, latest FIXLOG entries, gates dashboard, skills registry, discovery inbox, and a graveyard of rejected/deferred items (kept forever, with reasons). Regenerated at the end of every task automatically. Built in P0 Task #3. |
+| D14 | 2026-08-17 | **V2 visual target: Mobbin-class animated premium.** Performance comes from technique + measurement, not restraint. P1a gains a technique-teardown workstream (per admired reference: animation library, what is animated, loading strategy, degradation strategy). Research findings no installed skill covers get encoded into new project skills via skill-creator (first candidate: nexo-motion). The static-complete SSR doctrine is retained. |
+| D15 | 2026-08-17 | **Positioning language refinement (amends D1's expression, not its substance).** Public framing never negates: no "we do not drive," no "nothing to do with transportation." We deliver transportation through a credentialed provider network and take responsibility for every trip; providers operate the vehicles, Nexo Access manages and answers for the service. §1 carries the canonical wording. |
+| D16 | 2026-08-17 | **Handoff-in-parallel protocol (extends D4).** docs/PLATFORM_DESIGN_HANDOFF.md is maintained WHILE building, never retrospectively: every design decision receives a transfer verdict at decision time — TRANSFERS (identity-level) / ADAPTS (platform reworks it) / SITE-ONLY (marketing furniture) — with reason and date. Two different products, one identity: neither wholesale copying nor from-scratch. Cross-project checkpoints (D5) continue. |
 
 ## 5. SITE FACTS (verified 2026-08-17, recon receipt: docs/SITE_RECON_2026-08-17.md)
 
@@ -83,7 +84,7 @@ Each phase produces documents before code. A phase is done when its documents ex
 **P0 — The machine.** Task 1: this founding commit (ground truth + FIXLOG + recon receipt on `v2`). Task 2: skills audit — list, test, and register every installed skill and tool (Playwright, agent-browser, screenshot tooling first); fix what is broken; output `docs/SKILLS_REGISTRY.md`. Task 3: the board (D13).
 
 **P1 — Research.** Three documented studies, all with VERIFIED / REPORTED source labels. Timeboxed: research ends when the sitemap can be frozen, not when the internet runs out.
-- **P1a Competitor teardown** (`docs/DESIGN_RESEARCH.md` part 1): MTM, Verida, Modivcare, SafeRide Health, and 2 to 3 modern healthcare-infrastructure SaaS sites. Full information-architecture inventory: every page they have, every information category, what an MCO sees, what a provider sees. Copy the good, reject the bad, reasons on record. Includes the SafeRide member-eligibility flow (sign-up → payer check → confirmation email) as a pattern study for the platform.
+- **P1a Competitor teardown** (`docs/DESIGN_RESEARCH.md` part 1): MTM, Verida, Modivcare, SafeRide Health, and 2 to 3 modern healthcare-infrastructure SaaS sites. Full information-architecture inventory: every page they have, every information category, what an MCO sees, what a provider sees. Copy the good, reject the bad, reasons on record. Includes the SafeRide member-eligibility flow (sign-up → payer check → confirmation email) as a pattern study for the platform. Method: global scope, not NEMT-only — select exemplar companies and dissect them anatomically, section by section from navigation to footer, diagnosing every part (structure, technique, why it works) before any page of ours is designed; Mobbin is the reference tool on both the chat and Claude Code sides.
 - **P1b Provider requirements research** (`docs/PROVIDER_REQUIREMENTS_RESEARCH.md`): how a transport company actually becomes a compliant NEMT provider in DC, MD, and VA. Government bodies, portals (ePREP/MPRIME, DC OCP/DHCF, VA DMAS + DMV certificate), inspections, driver requirements, insurance minimums (owner reports a $1.5M figure for at least one payer; strategic plan records VA CSL $300K to $1M — VERIFY both, publish nothing unverified). Feeds the provider resource center: state-by-state guides + downloadable PDFs.
 - **P1c SEO/indexing strategy** (`docs/SEO_PLAN.md`): diagnose the homepage indexing issue, www→apex redirect, metadata/JSON-LD rewrite for the new positioning, content strategy for provider-guide pages as the organic engine.
 
@@ -117,8 +118,10 @@ Each phase produces documents before code. A phase is done when its documents ex
 - **Skills law:** every prompt uses and combines relevant installed skills; visual work always includes the design skills (frontend-design, emil-design-eng, impeccable, ui-ux-pro-max, frontend-a11y, ui-styling, design-system, design-is, huashu-design); code/perf work uses react-patterns, react-performance, security-review, tdd-workflow; never cite ui-design:* namespace, javascript-testing-patterns, auth-implementation-patterns. FIXLOG records SKILLS USED per task.
 - **Prompt format law:** every Claude Code prompt is explicit numbered steps (nothing implied), begins with the FIXLOG read-first line, ends with FIXLOG append + progress/board update + the git steps (D7: one commit, descriptive message, push to `v2`, never force-push, never touch `main`).
 - **Instruction-to-Oli law:** anything the owner must do by hand arrives as a short numbered list, one action per line.
+- **Transfer-verdict law (D16):** every design-decision task appends its verdict to docs/PLATFORM_DESIGN_HANDOFF.md in the same task.
+- **Positioning language law (D15):** public copy never negates the transportation role; §1 wording is canonical.
 - **GREEN IS A FLOOR:** agent-reported green can miss human-visible defects; the owner's real-device check is the last rung, always.
 
 ## 9. CURRENT STATE (update every session)
 
-**As of August 17, 2026:** Recon complete and receipted (docs/SITE_RECON_2026-08-17.md). Decisions D1–D13 locked. Ground truth committed on `v2` (this founding task). NEXT: P0 Task 2 — the skills audit → docs/SKILLS_REGISTRY.md. Then P0 Task 3 — the board (D13).
+**As of August 17, 2026:** P0 complete (Tasks 1–3: machine founded, skills audited + cube baseline ALL GREEN 234 cells / 3,175 checks, board live). Task #4 committed the law updates (D14–D16, PRODUCT.md, nexo-brand amendment, handoff scaffold). NEXT: P1a — exemplar + competitor teardown into docs/DESIGN_RESEARCH.md.

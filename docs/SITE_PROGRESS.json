@@ -2,8 +2,8 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-17",
-    "currentTask": "P0 Task 3 — the board (D13): progress JSON truth + board generator",
-    "activePhase": "P0",
+    "currentTask": "P1a: exemplar + competitor teardown (docs/DESIGN_RESEARCH.md)",
+    "activePhase": "P1",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
   },
@@ -15,7 +15,8 @@
       "items": [
         "P0-T1",
         "P0-T2",
-        "P0-T3"
+        "P0-T3",
+        "P0-T4"
       ]
     },
     {
@@ -253,6 +254,15 @@
       "date": "2026-08-17",
       "note": "DEFERRED: the installed playwright-cli skill doc is stale versus the 0.1.18 binary (documents screenshot --path=, the real flag is --filename). Not run during the audit because it rewrites a repo-tracked skill file outside that task's staging list.",
       "fixlogRef": "2026-08-17 — Task #2"
+    },
+    {
+      "id": "P0-T4",
+      "phase": "P0",
+      "title": "Law updates bundle: ground truth v1.2 (D14-D16), PRODUCT.md, nexo-brand amendment, handoff scaffold",
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "Positioning decided and de-negated (D15); Mobbin-class visual target locked (D14); handoff-in-parallel protocol (D16). nexo-brand amended in BOTH copies, verified byte-identical. PRODUCT.md lifts the impeccable NO_PRODUCT_MD block.",
+      "fixlogRef": "2026-08-17 - Task #4"
     }
   ],
   "decisions": [
@@ -338,26 +348,44 @@
       "date": "2026-08-17",
       "title": "SITE_BOARD — the visual HQ",
       "summary": "docs/SITE_PROGRESS.json (committed) is the living status truth; scripts/board.mjs renders self-contained docs/SITE_BOARD.html (gitignored, local render). Regenerated at the end of every task."
+    },
+    {
+      "id": "D14",
+      "date": "2026-08-17",
+      "title": "V2 visual target: Mobbin-class animated premium",
+      "summary": "Performance comes from technique plus measurement, not restraint. P1a gains a technique-teardown workstream (animation library, what is animated, loading strategy, degradation strategy). Research findings no installed skill covers get encoded into new project skills via skill-creator (first candidate: nexo-motion). The static-complete SSR doctrine is retained."
+    },
+    {
+      "id": "D15",
+      "date": "2026-08-17",
+      "title": "Positioning language refinement (amends D1 expression, not substance)",
+      "summary": "Public framing never negates: no “we do not drive”, no “nothing to do with transportation”. We deliver transportation through a credentialed provider network and take responsibility for every trip; providers operate the vehicles, Nexo Access manages and answers for the service. SITE_GROUND_TRUTH section 1 carries the canonical wording."
+    },
+    {
+      "id": "D16",
+      "date": "2026-08-17",
+      "title": "Handoff-in-parallel protocol (extends D4)",
+      "summary": "docs/PLATFORM_DESIGN_HANDOFF.md is maintained WHILE building, never retrospectively: every design decision receives a transfer verdict at decision time (TRANSFERS / ADAPTS / SITE-ONLY) with reason and date. Two different products, one identity. Cross-project checkpoints (D5) continue."
     }
   ],
   "discoveries": [
     {
       "id": "DISC-1",
       "date": "2026-08-17",
-      "text": "PRODUCT.md is missing. Prerequisite for the impeccable skill (its setup halts with NO_PRODUCT_MD) and for P3. Scheduled as its own owner-scheduled task.",
-      "status": "scheduled"
+      "text": "PRODUCT.md is missing. Prerequisite for the impeccable skill (its setup halts with NO_PRODUCT_MD) and for P3. Scheduled as its own owner-scheduled task. RESOLVED 2026-08-17: PRODUCT.md authored at the repo root; the impeccable NO_PRODUCT_MD block is lifted.",
+      "status": "resolved"
     },
     {
       "id": "DISC-2",
       "date": "2026-08-17",
-      "text": "nexo-brand amendment task (BOTH copies, same change, per its sync rule): 7.2 still says the operating model is UNDECIDED and bans 'provider'/'broker' self-description, now stale versus D1; and 0 names huashu-design as a design co-lead, which must be reconciled with huashu's own scope note deferring SEO/marketing sites to frontend-design.",
-      "status": "scheduled"
+      "text": "nexo-brand amendment task (BOTH copies, same change, per its sync rule): 7.2 still says the operating model is UNDECIDED and bans 'provider'/'broker' self-description, now stale versus D1; and 0 names huashu-design as a design co-lead, which must be reconciled with huashu's own scope note deferring SEO/marketing sites to frontend-design. RESOLVED 2026-08-17: nexo-brand amended in both copies (positioning decided, huashu precedence settled); copies verified byte-identical.",
+      "status": "resolved"
     },
     {
       "id": "DISC-3",
       "date": "2026-08-17",
-      "text": "D14 QUEUED (owner ruling, to be appended to SITE_GROUND_TRUTH.md by the next docs task): V2 visual target is Mobbin-class animated premium; performance via technique + measurement, not restraint; P1a gains a technique-teardown workstream (animation library, what is animated, loading strategy, degradation strategy); research findings no installed skill covers get encoded into new project skills via skill-creator (candidate: nexo-motion). The static-complete SSR doctrine is retained.",
-      "status": "scheduled"
+      "text": "D14 QUEUED (owner ruling, to be appended to SITE_GROUND_TRUTH.md by the next docs task): V2 visual target is Mobbin-class animated premium; performance via technique + measurement, not restraint; P1a gains a technique-teardown workstream (animation library, what is animated, loading strategy, degradation strategy); research findings no installed skill covers get encoded into new project skills via skill-creator (candidate: nexo-motion). The static-complete SSR doctrine is retained. RESOLVED 2026-08-17: appended to the ledger as D14, alongside D15 and D16.",
+      "status": "resolved"
     },
     {
       "id": "DISC-4",
@@ -416,7 +444,7 @@
     {
       "id": "DISC-13",
       "date": "2026-08-17",
-      "text": "playwright-cli 0.1.18 does not load file:// URLs: `open file:///...` silently yields about:blank (https loads fine). Found while eye-passing the board; the screenshot was taken with the canonical Playwright-library lane instead. Affects any future local-file render check via that CLI.",
+      "text": "playwright-cli 0.1.18 does not load file:// URLs: `open file:///...` silently yields about:blank (https loads fine). Found while eye-passing the board; the screenshot was taken with the canonical Playwright-library lane instead. Affects any future local-file render check via that CLI. Workaround lane exists (Playwright library); fix when it blocks.",
       "status": "open"
     }
   ],
@@ -475,6 +503,10 @@
     {
       "date": "2026-08-17",
       "summary": "Founding session: recon, D1-D13, Tasks 1-3 (ground truth + FIXLOG + recon receipt; skills audit with cube baseline and repair-first fixes; the board)."
+    },
+    {
+      "date": "2026-08-17",
+      "summary": "Task #4 law updates: ground truth v1.2 (D14-D16), PRODUCT.md, nexo-brand amendment (both copies), PLATFORM_DESIGN_HANDOFF scaffold, board refresh."
     }
   ]
 }
