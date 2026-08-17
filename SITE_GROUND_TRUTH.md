@@ -1,0 +1,124 @@
+# SITE GROUND TRUTH
+
+**The single source of truth for the Nexo Access marketing site (nexo-site).**
+Read this first, every session, before touching anything.
+
+| | |
+|---|---|
+| **Owner** | Firaoli ("Oli") Seboka, solo founder, FC Nexo LLC dba Nexo Access |
+| **Status** | V1 live at nexoaccess.com. V2 rebuild starting: research-first, on the `v2` branch. |
+| **Horizon** | Built to hold for 2 to 3 years of solo operation. Oli will be running the business, not rebuilding the site. |
+| **Version** | v1.1 — August 17, 2026 |
+
+---
+
+## 0. WHY THIS DOCUMENT EXISTS
+
+V1 was built with real craft and real QA discipline, but its decisions live in code comments and lost chats ("stage reports" cited everywhere, existing nowhere). The site also speaks as the wrong company. This document ends both problems. Every principle and decision lives here or in a doc this file points to. It is law. **If code and this document disagree, this document is right and the code is wrong.** If Oli leaves for two years, this file plus FIXLOG resumes the project.
+
+---
+
+## 1. WHAT NEXO ACCESS IS (positioning law)
+
+**Nexo Access is a medical transportation management organization. We manage medical transportation. We do not drive.**
+
+Providers bring the vehicles and drivers. We credential them, hold them to requirements, give them the tools (dispatch, claims, compliance, payment visibility), and manage the transportation benefit for payers. Inspired by the Verida-class positioning, in our own words.
+
+- First market: **NEMT in the DMV** (DC, Maryland, Virginia). That is the public story.
+- The broader ambition (private pay, facility contracts, other transportation management) stays **structural and modular**, not on the site yet. Adding a market later is adding a module, not repositioning.
+- The site's job: make an MCO contracting director, a state program officer, or a provider owner conclude within one visit that this is a serious, well-built transportation management company.
+- Anti-identity: never "we have cars and drivers," never consumer taxi language, never "book your ride today" as the lead.
+
+## 2. AUDIENCES (in priority order)
+
+1. **MCOs and payers** — contracting directors, provider network managers. They evaluate: credibility, compliance posture, network capacity, technology proof, a pilot path.
+2. **Transport providers** — owner-operators in the DMV. They evaluate: is joining worth it, what is required, how do claims and payment work, is this company organized. Recruitment surface AND a genuine resource: the site must teach them how to become a compliant provider in each state.
+3. **Facilities and case managers** — booking and confirming rides for people in their care.
+4. **Members** — reassurance and what to expect. Smallest surface. B2B site; no consumer sign-up.
+
+## 3. VOICE AND MESSAGE PILLARS
+
+Voice: plain, direct, evidence-based. State what the platform enforces; claim nothing the code cannot back. Copy is written last (into COPY_DECK) and is the cheapest layer; the machine underneath is the work.
+
+Pillars (each must be provable from the platform):
+1. **We manage, providers drive** — the operating model, stated plainly.
+2. **Credential-gated everything** — expired credentials block assignment automatically.
+3. **Clean claims by construction** — scrubbing, adjudication, frozen records, no double payment.
+4. **Enforced in the database, not a policy binder** — RLS, state machines, audit trails.
+5. **Built for the DMV** — regional depth: the states, the programs, the requirements.
+
+## 4. LOCKED DECISIONS LEDGER
+
+Append-only. A decision changes only with a new dated entry stating from where, to where, and why. Nothing is ever deleted; rejected paths stay in the record, marked rejected, with the reason.
+
+| # | Date | Decision |
+|---|---|---|
+| D1 | 2026-08-17 | **Positioning:** medical transportation management organization. We manage; providers drive. Resolves the "operating model UNDECIDED" note in `src/lib/launch.ts`. |
+| D2 | 2026-08-17 | **Public scope:** NEMT-first, DMV-first. Broader markets modular, later. |
+| D3 | 2026-08-17 | **Sign-in visible pre-launch.** Un-gate the existing `PORTAL_LIVE` surface. Any attempt: "no account found, contact support." No sign-up path (B2B). Wire to real auth when app.nexoaccess.com deploys. |
+| D4 | 2026-08-17 | **Cross-repo design law:** the site's design system is documented as UI guidance for the nexo-access platform (docs/PLATFORM_DESIGN_HANDOFF.md; seed = NEXO_SITE_DESIGN_REPORT.md §7 incl. shadcn token-collision warnings). |
+| D5 | 2026-08-17 | **Cross-project checkpoints** between site and platform, relayed by Oli, every exchange documented. |
+| D6 | 2026-08-17 | **Skills audited, not assumed.** Registry doc; broken tools stopped and fixed, never silently worked around. |
+| D7 | 2026-08-17 | **REVERSAL — git moves to Claude Code.** WAS: Oli runs all git himself; git never inside a Claude Code prompt. NOW: build prompts include the git steps; Claude Code stages, commits (one commit per task, descriptive message), and pushes. WHY: manual git caused costly mistakes; removing the human step removes the mistake class. Guardrails: never force-push, never push with tsc red, never touch `main` except at declared merge gates. |
+| D8 | 2026-08-17 | **Branch strategy:** all V2 work on the `v2` branch. CI typechecks and builds every push; the deploy job fires only on `main` (verified in `.github/workflows/ci.yml`), so pushing `v2` never deploys. Merge `v2` → `main` only when the §7 quality gates pass. The live V1 site stays untouched until then. |
+| D9 | 2026-08-17 | **Identity: text wordmark, no logo for now.** A logo waits until one actually satisfies the owner. Many serious companies run on a wordmark; so do we. |
+| D10 | 2026-08-17 | **Research-first sequencing.** No page is designed before the research phase documents the industry standard (see §6, P1). |
+| D11 | 2026-08-17 | **Mobbin + Figma are the design-reference pipeline.** Inspiration is pulled from Mobbin (and Figma), and every adopted reference gets a receipt in docs/DESIGN_RESEARCH.md: screenshot, what we take, what we reject, why. Both Claude (chat, Mobbin connector live) and Claude Code use it. |
+| D12 | 2026-08-17 | **Challenge-to-test law (automatic).** Any task that fixes something genuinely hard — a bug that cost time, a rendering defect, a regression, a class of mistake — must add an automated test (QA invariant, unit test, or script check) covering that problem's whole class, in the same task, same commit. Manual verification recipes are test specs: captured as automation, never performed once and discarded. The owner never has to request this; the prompt template enforces it. |
+| D13 | 2026-08-17 | **SITE_BOARD — the visual HQ.** `docs/SITE_PROGRESS.json` (committed) is the living status truth; `scripts/board.mjs` renders self-contained `docs/SITE_BOARD.html` (gitignored, local render). Shows: current task ("you are here"), phase bars P0–P6, plan ledger with status dots, decisions ledger with reversal chains, latest FIXLOG entries, gates dashboard, skills registry, discovery inbox, and a graveyard of rejected/deferred items (kept forever, with reasons). Regenerated at the end of every task automatically. Built in P0 Task #3. |
+
+## 5. SITE FACTS (verified 2026-08-17, recon receipt: docs/SITE_RECON_2026-08-17.md)
+
+- **Stack:** Next.js 14.2.35, React 18, TypeScript strict, Tailwind 3.4, framer-motion, Radix nav, Playwright QA. Single hex-sRGB token file (`globals.css`); no OKLCH anywhere.
+- **Deploy:** push to `main` → GitHub Actions (tsc TRUE 0 + build) → arm64 image → ghcr.io → Coolify webhook → live. Server never compiles. Branch pushes run checks only.
+- **QA:** 18-invariant cube, 3 engines × 6 profiles, regression law, deploy gate = full green + Oli's real-iPhone checklist. Missing: performance budget, throttled old-device profile, visual screenshot diffing.
+- **Staged truth:** `launch.ts` flags (LIVE_OPERATIONS, HIPAA_INFRA_VERIFIED, PORTAL_LIVE, HIPAA_EFFECTIVE_DATE) gate every strong claim; flags flip only on explicit owner instruction. This system is kept.
+- **Consistency defects on record:** C1 fonts-optional (slow machines keep system fonts), C2 capability forks (glass, van), C3 subtle palette on cheap monitors, C4 unbudgeted animation cost. Measure before fixing (P5 builds the measurement).
+- **Known SEO state:** homepage indexing issues open; www→apex 301 redirect planned; canonical/OG currently carry the OLD "NEMT company" positioning and will be rewritten in V2.
+
+## 6. THE V2 PROGRAM (the professional order of work)
+
+Each phase produces documents before code. A phase is done when its documents exist in the repo with a FIXLOG entry. V2 is a reposition + deepen + harden, NOT a teardown: the QA cube, the token system, the motion doctrine, and the signature craft (map landmarks, route van, terminus) carry forward unless a documented decision retires them.
+
+**P0 — The machine.** Task 1: this founding commit (ground truth + FIXLOG + recon receipt on `v2`). Task 2: skills audit — list, test, and register every installed skill and tool (Playwright, agent-browser, screenshot tooling first); fix what is broken; output `docs/SKILLS_REGISTRY.md`. Task 3: the board (D13).
+
+**P1 — Research.** Three documented studies, all with VERIFIED / REPORTED source labels. Timeboxed: research ends when the sitemap can be frozen, not when the internet runs out.
+- **P1a Competitor teardown** (`docs/DESIGN_RESEARCH.md` part 1): MTM, Verida, Modivcare, SafeRide Health, and 2 to 3 modern healthcare-infrastructure SaaS sites. Full information-architecture inventory: every page they have, every information category, what an MCO sees, what a provider sees. Copy the good, reject the bad, reasons on record. Includes the SafeRide member-eligibility flow (sign-up → payer check → confirmation email) as a pattern study for the platform.
+- **P1b Provider requirements research** (`docs/PROVIDER_REQUIREMENTS_RESEARCH.md`): how a transport company actually becomes a compliant NEMT provider in DC, MD, and VA. Government bodies, portals (ePREP/MPRIME, DC OCP/DHCF, VA DMAS + DMV certificate), inspections, driver requirements, insurance minimums (owner reports a $1.5M figure for at least one payer; strategic plan records VA CSL $300K to $1M — VERIFY both, publish nothing unverified). Feeds the provider resource center: state-by-state guides + downloadable PDFs.
+- **P1c SEO/indexing strategy** (`docs/SEO_PLAN.md`): diagnose the homepage indexing issue, www→apex redirect, metadata/JSON-LD rewrite for the new positioning, content strategy for provider-guide pages as the organic engine.
+
+**P2 — Sitemap freeze.** From P1: the full page inventory (how many pages, which pages, what each must contain) frozen into `docs/SITE_BUILD_PLAN.md` as numbered items. Starting hypothesis, to be corrected by research: current 12 public pages + Sign-in + provider resource center (per-state guides + PDFs) + security/trust page + FAQ. The frozen list only shrinks; new ideas go to the roadmap section.
+
+**P3 — Design system.** Mobbin/Figma-driven, component-up: tokens reviewed against C1–C4 findings, then universal primitives (buttons, cards, forms, nav), then page-specific compositions. Every choice receipted in DESIGN_RESEARCH part 2. Consolidate `docs/UI_STANDARDS.md` (from the design report + token file) including the motion budget and the performance budget.
+
+**P4 — Build.** Page by page against the frozen plan, one task at a time, design skills mandatory, each task ending with FIXLOG + progress update + board regeneration + commit + push to `v2` (Claude Code does the git, D7).
+
+**P5 — QA extension + measurement.** Add to the cube: throttled old-device profile with a hard performance budget, and cross-engine visual screenshot baselines with diffing. Then measure C1–C4 and decide each: keep the fork, flatten it, or harden the palette. Decisions become D-entries.
+
+**P6 — Copy + launch.** COPY_DECK written last (fast, per the owner ruling "copy is cheap"). Full-cube green, perf budget green, Oli's real-iPhone checklist, then merge `v2` → `main` = deploy.
+
+## 7. QUALITY GATES (nothing merges to main without all of these)
+
+1. tsc TRUE 0, CI green.
+2. Full-cube qa:sweep green for shared-chrome changes (existing law, kept).
+3. Performance budget green on the throttled old-device profile (from P5 onward).
+4. Reduced-motion path for every animation; every capability fork deliberate and on record.
+5. FIXLOG + progress updated in the same commit.
+6. Owner's real-device checklist. GREEN IS A FLOOR.
+
+## 8. STANDING LAWS
+
+- **Document-first law:** we communicate through documentation, not chat memory. Every decision, change, fix, and reversal gets a written receipt in the repo. Reversals show from where, to where, and why.
+- **Documents are created and edited by Claude Code in the repo.** Chat is for design discussion and sign-off only. The owner is never handed files to move by hand; the owner uploads to project knowledge only by choice.
+- **FIXLOG discipline:** append-only, reverse-chronological. Every recon/audit prompt begins "Read FIXLOG.md first — do not re-flag anything recorded there as fixed unless you find evidence of regression." Every build prompt ends with appending its FIXLOG entry in the same task.
+- **Discovery capture:** anything found mid-task that is not the task's job is recorded immediately (progress JSON discovery inbox), never acted on mid-task, never lost.
+- **Challenge-to-test law:** see D12. Enforced by the prompt template on every fix.
+- **Writing rules (site-facing):** no em-dashes in site copy/UI/payer-facing documents; "Built for HIPAA compliance" only, "100% HIPAA compliant" banned; no PHI ever; sample data labeled; 12-hour AM/PM time; evidence-based voice.
+- **Skills law:** every prompt uses and combines relevant installed skills; visual work always includes the design skills (frontend-design, emil-design-eng, impeccable, ui-ux-pro-max, frontend-a11y, ui-styling, design-system, design-is, huashu-design); code/perf work uses react-patterns, react-performance, security-review, tdd-workflow; never cite ui-design:* namespace, javascript-testing-patterns, auth-implementation-patterns. FIXLOG records SKILLS USED per task.
+- **Prompt format law:** every Claude Code prompt is explicit numbered steps (nothing implied), begins with the FIXLOG read-first line, ends with FIXLOG append + progress/board update + the git steps (D7: one commit, descriptive message, push to `v2`, never force-push, never touch `main`).
+- **Instruction-to-Oli law:** anything the owner must do by hand arrives as a short numbered list, one action per line.
+- **GREEN IS A FLOOR:** agent-reported green can miss human-visible defects; the owner's real-device check is the last rung, always.
+
+## 9. CURRENT STATE (update every session)
+
+**As of August 17, 2026:** Recon complete and receipted (docs/SITE_RECON_2026-08-17.md). Decisions D1–D13 locked. Ground truth committed on `v2` (this founding task). NEXT: P0 Task 2 — the skills audit → docs/SKILLS_REGISTRY.md. Then P0 Task 3 — the board (D13).
