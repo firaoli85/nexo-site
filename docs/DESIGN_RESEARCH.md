@@ -1639,3 +1639,526 @@ run), news/insights (unsustainable solo pre-launch), careers (one person), adjac
 NEMT-first).
 
 **The frozen list only shrinks.** Per P2, new ideas go to a roadmap section rather than expanding this.
+
+
+---
+
+# PART 2 — CRAFT LANE: EXEMPLAR DISSECTION
+
+**Task #7 (P1a craft lane). Subjects: Stripe (primary, full anatomy), Linear (secondary, motion only).**
+Part 1 asked *what pages exist and why*. Part 2 asks *how the surface is actually built*, so that P2 and P3
+inherit technique rather than vibes.
+
+## 7. METHOD, AND WHAT THIS PASS CANNOT SEE
+
+**Instrumentation.** Headless Chromium via Playwright, viewport 1440x900, run 2026-08-17. Each subject was
+loaded twice, once normally and once with `prefers-reduced-motion: reduce`, with a `getContext` interceptor
+installed before page scripts so canvas context requests could be captured with their attributes. Section,
+nav, footer, and type measurements are `getComputedStyle` and `getBoundingClientRect` readings taken after a
+full scroll pass to trigger lazy content.
+
+**Source law applies.** Everything in Part 2 is **VERIFIED (observed 2026-08-17)** unless labelled otherwise:
+it is a direct machine reading of the live page, not recall. Where an instrument could not see something, that
+is stated as a limit rather than filled in.
+
+**Four limits, stated up front:**
+
+1. **The harness has software WebGL only.** A control canvas proves WebGL is *available* here
+   (`getContext("webgl")` returns a context; renderer reports `ANGLE (Google, Vulkan 1.3.0 (SwiftShader
+   Device (Subzero)), SwiftShader driver)`). It is software-rasterized, not GPU. So this pass can observe what
+   Stripe does when it *declines* a weak GPU, and cannot observe what it renders when it accepts a strong one.
+2. **Stripe's stylesheets are cross-origin and unreadable** (`cssRules` throws). Its
+   `prefers-reduced-motion` CSS therefore **could not be inspected in either direction**. No claim is made
+   about whether Stripe ships reduced-motion CSS. Linear's and Maze's sheets are same-origin and fully
+   readable, so absences recorded for them are real absences.
+3. **Transfer and request counts are single-run with an uncontrolled HTTP cache.** Both runs of a subject
+   share a browser, so the second run may be warm. Treat the byte figures as indicative magnitude, never as
+   a measurement. The direction is not even consistent (Linear's reduced-motion run transferred *more*), which
+   is itself evidence of run-to-run noise.
+4. **Section enumeration is selector-dependent.** On pages that do not use `<section>` (Stripe `/enterprise`,
+   ElevenLabs) the probe collapsed the page into one block. Where that happened it is reported as a probe
+   limit, not as "the page has one section".
+
+---
+
+## 8. STRIPE — FULL ANATOMY
+
+### 8.0 PRIORITY QUESTION: how does the gradient hero degrade?
+
+**The premise needed correcting, and the correction is the finding.**
+
+**stripe.com's hero is not WebGL today.** The hero wave is a pre-rendered raster image. Inside
+`.hero-wave-animation` the probe counted **0 canvas, 0 svg, 0 video, 1 img**. The DOM is:
+
+```
+.hero-wave-animation
+  .hero-wave-animation__layout
+    .hero-wave-animation__contents
+      .hero-wave-animation__static      <- transform: matrix(1,0,0,1,-696,-487.5)
+        <picture>
+          <source media="(min-width: 1264px)">                        wave-fallback-desktop.png?w=1392
+          <source media="(min-width: 640px) and (max-width: 1263px)"> wave-fallback-tablet.png?w=1248&fm=webp
+          <source media="(max-width: 639px)">                         wave-fallback-mobile.png?w=624&fm=webp
+          <img alt="" loading="auto" decoding="auto">                 1392x975 natural, q=60
+```
+
+Stripe's own asset filenames are **`wave-fallback-desktop.png`, `wave-fallback-tablet.png`,
+`wave-fallback-mobile.png`**, served from `images.stripeassets.com` (Contentful). The wrapper class is
+`__static`. Stripe named this path "fallback" and "static" itself. That is the blueprint stated in their
+vocabulary, not mine.
+
+**Three details worth stealing:** the image is **art-directed at three breakpoints** (different crops, not one
+image scaled), delivered as **WebP at `q=60`** (aggressive compression is invisible on a soft gradient, so the
+quality budget is spent where the eye cannot audit it), and carries **`alt=""`** so it is correctly absent
+from the accessibility tree. It is positioned by a **translate on an oversized image** rather than by
+background-size trickery.
+
+**The capability gate is the real prize.** The only canvas on the homepage is `squeezy-carousel__canvas`
+(1232x460) at document Y ~11,676, deep inside the "What's happening" section. Intercepting its context
+requests captured this exact ladder:
+
+| # | Request | Attributes | Result |
+|---|---------|-----------|--------|
+| 1 | `getContext("webgl")` | `alpha:false, antialias:false, depth:false, stencil:false, failIfMajorPerformanceCaveat:true, powerPreference:"high-performance"` | **null** |
+| 2 | `getContext("experimental-webgl")` | same attributes | **null** |
+| 3 | `getContext("2d")` | none | **granted** |
+
+**The discriminator is `failIfMajorPerformanceCaveat: true`, not the absence of WebGL.** Proven with a
+control canvas created in the same document at the same moment:
+
+| Control request | Result |
+|---|---|
+| `getContext("webgl")` plain | **true** |
+| `getContext("webgl", {failIfMajorPerformanceCaveat: true})` | **false** |
+| `getContext("webgl", {powerPreference: "high-performance", failIfMajorPerformanceCaveat: true})` | **false** |
+
+WebGL works in this environment. Stripe **refuses it anyway** because the browser would only hand back a
+software rasterizer. This is voluntary degradation: rather than render a GPU effect slowly on a weak machine,
+Stripe declines the context and takes a cheaper path. `antialias:false` and `depth:false` and `stencil:false`
+in the same request show the effect is a flat 2D shader with no depth buffer, requested as cheaply as possible.
+
+**So the full degradation ladder Stripe ships is four rungs, and we can see three of them:**
+
+1. **Strong GPU** — WebGL granted, live effect. *Not observable in this harness (limit 1).*
+2. **Weak or software GPU** — WebGL deliberately refused via `failIfMajorPerformanceCaveat`. **Observed.**
+3. **No WebGL at all** — falls through `experimental-webgl` to a **2D canvas context**. **Observed.**
+4. **Hero specifically** — never gambles at all; ships a named, art-directed, responsive static image.
+   **Observed.**
+
+**Reduced motion:** the hero is byte-identical between the normal and reduced-motion runs, because a static
+image has nothing to reduce. The logo carousel container reports `animation-name: none` on both the container
+and its child in both runs, so the marquee is not CSS-keyframe driven. The only named animation running at rest
+is `detect-scroll` with a `null` duration, which is the CSS-scroll-timeline-as-scroll-sensor trick rather than
+a visual effect. Whether Stripe suppresses anything else under reduced motion **cannot be determined** (limit 2).
+
+> **VERDICT — TAKE, and it resolves an open question for us.** Our morph, spine, van, and ambient map are all
+> hand-built SVG and CSS, which is rung 4 by construction: our "fallback" and our "effect" are the same
+> artifact, so we have no degradation cliff to fall off. Stripe's ladder tells us the *right* answer if we ever
+> reach for GPU work: gate it behind `failIfMajorPerformanceCaveat: true`, keep a named static asset, and never
+> put the gamble in the hero. **Recorded as the standing rule for any future canvas or WebGL work on this site.**
+
+### 8.1 Homepage, section by section
+
+Thirteen sections survived the >80px filter, measured after a full scroll.
+
+| # | Height | Background | Heading | Content |
+|---|--------|-----------|---------|---------|
+| 1 | 685 | `#ffffff` | Financial infrastructure to grow your revenue | 1 img, 38 svg, 30 links |
+| 2 | 2196 | `#ffffff` | Flexible solutions for every business model | 12 img, 41 svg |
+| 3 | 560 | `#ffffff` | *(none)* | 2 img |
+| 4 | 977 | `#ffffff` | The backbone of global commerce | `stats-section--time-sunset` |
+| 5 | 4610 | `#ffffff` | Powering businesses of all sizes | 18 img, 60 svg, 31 links |
+| 6 | 1388 | transparent | Transform your enterprise with agile financial infrastructure | 4 img, 23 svg, 12 links |
+| 7 | 1026 | transparent | Build a foundation for your startup | 9 img, 22 svg, 11 links |
+| 8 | 624 | transparent | *(none)* `startups-carousel` | 8 img, 18 svg |
+| 9 | 1533 | transparent | Make your SaaS platform a complete financial operating system | 5 img, 15 svg |
+| 10 | 2341 | **`rgb(13,23,56)` = `#0d1738`** | Reliable, extensible infrastructure for every stack | 1 img, 4 svg, 5 links |
+| 11 | 1741 | `#ffffff` | What's happening | 9 img, 20 svg, **1 canvas** |
+| 12 | 701 | transparent | What's happening *(nested row)* | 8 img, 18 svg |
+| 13 | 380 | `rgb(248,250,253)` = `#f8fafd` | *(none)* | pre-footer |
+
+**PURPOSE.** A single page that sells to five different buyers in sequence (general, enterprise, startup,
+carousel of startups, SaaS platform) before turning to infrastructure credibility and then news.
+
+**STRUCTURE.** Audience-segmented middle. Sections 6, 7, and 9 are the same shape repeated per audience
+(`section-row section-row-gap`), which is the pattern our own audience triage already gestures at. The
+document is 14,644px tall.
+
+**TECHNIQUE.** Near-total white. **Exactly one dark chapter in thirteen sections** (#10, deep navy `#0d1738`),
+and it is spent on the infrastructure claim, the most technical and least emotional content on the page. The
+pre-footer steps to a very light blue-grey rather than jumping straight from white.
+
+**DEGRADATION.** 54 images of which 51 are `loading="lazy"`; only the hero and near-hero images load eagerly.
+
+> **VERDICT — VALIDATES OUR TONAL MAP, with one adjustment to consider.** Stripe spends its single dark
+> chapter on *infrastructure credibility*. We spend three on hero, morph, and footer. Ours is defensible
+> because our ink hero is the brand opening and our footer is the terminus, but the observation is worth
+> holding: **the highest-authority use of dark is a technical proof section, not decoration.** Our Stop 3
+> morph already does this. Also note the light-grey pre-footer step (#13): Stripe buffers *into* its footer
+> the way our law buffers *out of* ink.
+
+### 8.2 The nav system
+
+| Property | Observed |
+|---|---|
+| `<nav>` landmark count | **1** |
+| Header `position` | **`relative`** (not sticky, not fixed) |
+| Header background | `rgba(0,0,0,0)` transparent |
+| Header `backdrop-filter` | `none` |
+| Header height | 76px |
+| Dropdown triggers | 4 `<button aria-expanded>`: Products, Solutions, Developers, Resources |
+| Plain links | Pricing, Sign in |
+| CTAs | Start now, Contact sales |
+| Mobile | includes a `Back` button (drill-down, not accordion) |
+| Open panel | 1262 x 630px, **33 links** |
+| Panel transition | `clip-path, max-height, opacity, transform, height` at `0.2s, 0.2s, 0.3s, 0.3s, 0.3s, 0.3s` |
+
+**PURPOSE.** Route four audiences into a very deep catalogue without a mega-menu that feels like a sitemap.
+
+**STRUCTURE.** Triggers are real `<button>`s carrying `aria-expanded`, and the panel is a single shared
+container that re-shapes per trigger. Thirty-three links in one panel is far denser than ours (our largest is
+well under half that).
+
+**TECHNIQUE — the one to steal.** The panel animates **`clip-path` and `height`/`max-height` together with
+opacity and transform**. That combination is what produces the famous Stripe morph: the container's *shape*
+interpolates between the old and new panel size while the contents cross-fade, so switching from Products to
+Solutions reads as one object changing shape rather than two panels swapping. Two durations are in play: 200ms
+for the clip and max-height, 300ms for opacity, transform, and height.
+
+**DEGRADATION.** Not determinable (limit 2). The header being `position: relative` means there is no scrolled
+state to degrade at all.
+
+> **VERDICT — PARTIALLY TAKE.**
+> - **TAKE the shape-morph vocabulary.** Our Radix Indicator already slides a magic line between triggers, but
+>   our panel currently grows origin-aware from its trigger and does not interpolate between *sizes* when the
+>   user moves from one open menu to another. Adding a height/clip interpolation on trigger-to-trigger movement
+>   is the single highest-value nav upgrade available, and it stays inside our 250ms ceiling if we adopt
+>   Stripe's split (200ms shape, 250ms contents, capped).
+> - **REJECT the non-sticky header.** Stripe can afford `position: relative` because its page is a catalogue
+>   people scan. Ours is a decision path with a persistent Apply action; our sticky nav stays.
+> - **CONFIRMS our one-landmark law.** Stripe ships exactly one `<nav>`, which is what our Stage-15
+>   `NavigationMenu.Root asChild` fix was protecting. Independent corroboration that the rule is normal
+>   practice, not our idiosyncrasy.
+> - **REJECT the density.** 33 links per panel serves a catalogue. Ours serves a choice.
+
+### 8.3 The footer system
+
+| Property | Observed |
+|---|---|
+| Links | **85** |
+| Height | 1078px |
+| Background | `rgb(248,250,253)` = `#f8fafd` (very light blue-grey) |
+| Region / language control | 1 |
+| Column headings | **not resolvable by this probe** (their headings are not the immediate previous sibling of each `<ul>`; the count is not zero, it is unmeasured) |
+
+**PURPOSE.** Terminal sitemap plus jurisdiction switching.
+
+**TECHNIQUE.** The footer is **light, not dark.** Stripe ends the page on a near-white blue-grey, one step
+down from the white body, with a light-grey section (#13) buffering into it.
+
+> **VERDICT — DO NOT TAKE; our divergence is deliberate and we should record why.** Our footer is the ink
+> terminus and it is one of only three ink chapters. Stripe's light footer works because Stripe's page is a
+> catalogue that should feel like it continues; ours is a decision path that should feel like it *lands*.
+> Stripe at 85 links is a sitemap; ours is a close. **This is a considered divergence, and Part 2 is where we
+> log that we looked at the alternative and rejected it.** The one element worth importing is the
+> **jurisdiction control**: Stripe surfaces region in the footer, and our DC/MD/VA service area is the same
+> class of information. Worth a P2 question, not a change today.
+
+### 8.4 Deep page — `/enterprise`
+
+**Why this page.** It is the closest structural analogue we have to `/platform` and to our MCO and facility
+audience pages: one long page selling to a committee reader who did not arrive ready to buy, where the CTA is
+a conversation rather than a signup.
+
+| Property | Observed |
+|---|---|
+| Title | Enterprise Payment Solutions for Large Businesses \| Stripe |
+| Document height | **14,184px** |
+| Sticky in-page sub-nav | **false** |
+| Dark usage | **card-level, not section-level**: `AccentedCard__background` `rgb(12,46,78)` 389px; `EnterpriseHubStatsCarousel__waveContainer` `rgb(0,0,0)` 800px |
+| CTA vocabulary | **Contact sales** (dominant, repeated), Start now, Get support, Startups |
+| Claim style | "Grow payment volume 2x faster on average" (hedged with "on average") |
+
+**STRUCTURE.** Section headings run: Build the next era of your enterprise / Global payments / Platform
+payments / Finance automation, then a stats carousel.
+
+**TECHNIQUE.** Dark is applied to **cards inside light sections** rather than to whole bands. That is a
+different tool from our tonal map: it lets a page raise emphasis locally without spending a chapter.
+
+**DEGRADATION — and a defect we should not copy.** The page contains **20 `<h1>` elements**. The list includes
+`H1: Stripe logo`, and the nav panel's group labels each appear as `H1` twice over (`Payments`, `Revenue`,
+`Money management`, `Platforms and marketplaces`, `More`), alongside genuine section titles. On the homepage
+the hero ships **two** `h1`s, `hero-section__title--background` and `hero-section__title--foreground`, a
+layered treatment for the colour effect.
+
+> **VERDICT — MIXED, and the failure is the more useful half.**
+> - **TAKE the dark-card idea** as a way to raise emphasis on interior pages without adding a fourth ink
+>   chapter. This is a real gap in our system: today we have only "whole band goes ink" or "stay light".
+> - **TAKE the hedged-claim grammar.** "on average" is doing legal work in that sentence. Our copy gate bans
+>   the statistic outright, which is stricter and stays, but the *construction* is worth noting for the day a
+>   real number exists.
+> - **REJECT, loudly, the heading structure.** 20 `h1`s including the logo and duplicated nav labels is a
+>   genuine accessibility defect on a site we otherwise treat as an exemplar. Our §2 sequential-heading law
+>   (h1 -> h2 -> h3, never picked for size) is *better than Stripe's*. **Exemplars are dissected, not
+>   worshipped**, and this is the proof: world-class visual craft and a broken document outline ship together
+>   all the time.
+> - **NOTE the absent sub-nav.** 14,184px with no sticky anchor nav. Our `/platform` ships a scrollspy
+>   sub-nav at the same page length. We keep ours; a committee reader comparing four capabilities needs to
+>   jump. Divergence logged, not corrected.
+
+### 8.5 Typography
+
+| | Stripe |
+|---|---|
+| Fonts actually loaded | **`sohne-var` only** (variable, weight axis 1-1000). `SourceCodePro` present but `unloaded`. |
+| Body | 16px |
+| h1 | 48px / **weight 300** / line-height 55.2px (1.15) / letter-spacing -0.96px (-0.02em) |
+| h2 | 32px / weight 300 / lh 35.2px (1.1) |
+| h3 | 26px / weight 300 / lh 29.12px (1.12) |
+| Lead paragraph | 32px / weight 300 |
+| Body paragraphs | 16-18px, line-height 1.4 |
+| Measure | **42-56 characters** |
+
+**TECHNIQUE.** One variable font for the entire site, which is why 274 requests still feel fast: the type
+system costs a single file. Display sizes are set at **weight 300**, light rather than bold, with negative
+tracking, which is where the "expensive and calm" quality comes from. Line-height at display sizes is 1.1-1.15,
+much tighter than body.
+
+> **VERDICT — MOSTLY CONFIRMS US, with two concrete deltas.**
+> - **Our two-family system (Bricolage display + Hanken body) stays.** Stripe's one-family approach depends on
+>   a licensed variable face with a huge weight axis doing all the contrast work. Our contrast comes from the
+>   family pairing instead. Both are valid; ours is already built and already passes.
+> - **DELTA 1, light display weight.** Stripe sets 48px headings at weight 300. Worth a test on our display
+>   face, because light-weight large display is the single strongest "premium" signal in this sample and it
+>   costs nothing.
+> - **DELTA 2, measure.** Stripe runs 42-56 characters. Our §2 law mandates 65-75ch (`max-w-prose`). Stripe's
+>   is *narrower than our floor.* Their content is scannable marketing fragments; ours includes genuine prose
+>   on `/about` and the legal pages, which needs the wider measure. **No change, but the law should note that
+>   65-75ch is a prose rule and short marketing columns may sit narrower.**
+> - **CONFIRMED, tight display leading and negative tracking.** Our `tracking-tight` at `-0.04em` is actually
+>   *more* aggressive than Stripe's -0.02em. Ours is fine on Bricolage; recorded for reference.
+
+---
+
+## 9. LINEAR — MOTION ONLY
+
+> **STANDING NOTE: Linear's dark register is NOT taken.** Linear is a dark-mode-native product site. Our tonal
+> map keeps ink to three chapters and everything else light. Nothing in this section is an argument to darken
+> the site. Linear is read here **for motion vocabulary only**, and its type and colour are recorded solely so
+> the motion measurements have context.
+
+| Measurement | Normal | Reduced motion |
+|---|---|---|
+| Running animations at rest | **139** | **103** |
+| Named CSS animations | `grid-dot-0-0-agent`, `grid-dot-0-1-agent`, `grid-dot-0-2-agent` ... (2 each) | same set, still running |
+| WAAPI animations | 36 | drops out of the top ten |
+| Duration min / median / max | 500 / 2800 / 3200 ms | 1200 / 2800 / 3200 ms |
+| `will-change` elements | **4** (of ~4000 sampled) | 4 |
+| Transformed elements | 91 | 91 |
+| Filtered / of which blurred | 54 / 9 | 54 / 9 |
+| `prefers-reduced-motion` CSS rules | **1 of 1359** | 1 of 1346 |
+
+**PURPOSE.** Ambient aliveness. The page is never fully still, but nothing demands attention.
+
+**STRUCTURE.** The signature effect is a **programmatically generated dot grid**: animations are named
+`grid-dot-{row}-{col}-agent`, one keyframe animation per cell, two animations per cell. The grid is not one
+animation on one element; it is dozens of individually scheduled cell animations, which is what allows wave
+and ripple patterns to propagate across it.
+
+**TECHNIQUE — three things worth taking.**
+1. **Long durations.** Median 2800ms, max 3200ms. Ambient motion is slow motion. Anything that loops must be
+   too slow to track, or it becomes a distraction. Our current motion ceiling is 300ms for page content and
+   250ms for nav, which is correct for *response* motion. **We have no vocabulary at all for ambient motion,
+   and this is where the 2-3 second band belongs.**
+2. **`will-change` restraint.** Four elements out of roughly four thousand. Linear runs 139 simultaneous
+   animations while promoting almost nothing to its own layer. This is the opposite of the usual advice and it
+   is correct: `will-change` is for imminent transitions, not for permanent residents.
+3. **Per-cell scheduling.** One animation per grid cell, offset, rather than one animation over a group.
+
+**DEGRADATION — and this is a failure, recorded as such.** Linear's stylesheets are **same-origin and fully
+readable** (1359 rules enumerated), so this is a real absence and not an inspection limit. Of those 1359 rules,
+exactly **one** sits inside a `prefers-reduced-motion` media query, and it is not Linear's:
+
+```
+.sonner-loading-bar, [data-sonner-toast], [data-sonner-toast] > * {
+  transition: none !important; animation: auto ease 0s 1 normal ...
+}
+```
+
+That is `sonner`, a third-party toast library, shipping its own accessibility. **Linear ships no first-party
+reduced-motion CSS.** Something JavaScript-side does respond, since the animation count falls from 139 to 103
+and the shortest duration rises from 500ms to 1200ms, but **103 animations still run** for a user who has
+explicitly asked their operating system for less motion, and the dot grid is among them.
+
+**Type, recorded for context only, not adopted:** Inter Variable and Berkeley Mono; h1 64px at weight **510**
+with line-height 64px (ratio 1.0) and letter-spacing -1.408px; h2 48px/510; h3 20px/590; body 15px/400/lh 24px.
+The weights 510 and 590 are custom variable-axis values rather than the standard 500 and 600.
+
+> **VERDICT — TAKE THE VOCABULARY, REJECT THE POSTURE.**
+> - **TAKE** long ambient durations (2-3s), `will-change` restraint, and per-cell offset scheduling.
+> - **REJECT** the reduced-motion posture entirely. Our §0 non-negotiable requires every motion surface to have
+>   a static end-state and the global `@media (prefers-reduced-motion: reduce)` block to zero durations and
+>   delays. **Our law is materially stronger than Linear's implementation**, and this measurement is the
+>   evidence. Any ambient system we build from Linear's vocabulary inherits *our* reduced-motion rule, which
+>   means it must be capable of stopping dead, not merely slowing down.
+> - **NOTE the 15px body.** Below our 17-18px marketing-body law and below our 14px small-text floor for its
+>   secondary text. Not taken.
+
+---
+
+## 10. THE PERFORMANCE BAR
+
+**Label: observed 2026-08-17, single run, headless Chromium, 1440x900, unthrottled home broadband,
+uncontrolled cache state. This is not lab-grade. No throttling profile, no percentile, n=1.** It establishes an
+order of magnitude, nothing finer. Byte counts marked "not measurable" are cases where responses carried no
+`content-length` header; reporting those as zero would be a lie.
+
+| | Stripe | Linear | Maze | ElevenLabs |
+|---|---|---|---|---|
+| Transfer | ~2,942 KB | ~1,474 KB | ~2,631 KB | ~1,498 KB |
+| Requests | 274 | 553 | 58 | 134 |
+| Script requests | not isolated | **372** | not isolated | not isolated |
+| JS bytes | 952 KB (127 files) | **not measurable** (no `content-length`) | not isolated | not isolated |
+| DOMContentLoaded | 1,956 ms | 2,686 ms | 4,440 ms | 3,799 ms |
+| Network idle | 5,468 ms | 3,810 ms | not captured | not captured |
+| Document height | 14,644 px | 10,898 px | 8,323 px | 10,758 px |
+| Images / lazy | 54 / 51 | 32 / 30 | 95 / n/a | 46 / n/a |
+
+**Reading it honestly.** Every one of these sites is heavy. Stripe transfers roughly 2.9 MB and takes about
+5.5 seconds to reach network idle. Linear issues 553 requests, 372 of them scripts. Maze takes 4.4 seconds to
+DOMContentLoaded. **Being an exemplar of craft does not make a site fast**, and the reflex of copying an
+admired site's techniques wholesale imports its weight as well.
+
+**THE BAR WE SET.** These numbers are a ceiling to stay far below, not a target to approach. Our site is a
+static Next.js export with hand-built SVG, no video, no WebGL, and one animation library. Proposed and
+recorded here for P2 to ratify:
+
+| Metric | Nexo bar | Versus this sample |
+|---|---|---|
+| Total transfer, any route | **<= 600 KB** | ~5x under Stripe |
+| JS transferred | **<= 150 KB** | ~6x under Stripe |
+| DOMContentLoaded | **<= 1,200 ms** | ~1.6x under Stripe's best |
+| Requests | **<= 60** | comparable to Maze, far under Linear |
+| Lighthouse Performance | **>= 98** | already achieved at Stage 11 |
+
+The existing Stage-11 result (Performance >= 98, SEO 100) says we are already inside this envelope. The bar's
+job is to stop P2 and P3 from spending it. **Every new dependency, font, or effect is measured against this
+table before it ships**, and the measurement is re-run at deploy, consistent with the §10.6 recount law.
+
+---
+
+## 11. SYNTHESIS
+
+### 11a. Nav and footer verdicts
+
+**Nav.**
+
+| Decision | Verdict | Basis |
+|---|---|---|
+| One `<nav>` landmark | **KEEP** | Stripe ships exactly 1; corroborates our Stage-1 and Stage-15 rule |
+| Sticky header | **KEEP ours, diverge from Stripe** | Stripe is `position: relative`; our page is a decision path with a persistent Apply |
+| Panel shape morph | **ADOPT (highest-value nav upgrade)** | Stripe transitions `clip-path` + `height`/`max-height` + opacity + transform, 200ms shape / 300ms contents |
+| Panel density | **REJECT** | 33 links per panel is a catalogue; ours is a choice |
+| Real `<button aria-expanded>` triggers | **KEEP** | Same as ours via Radix |
+| Mobile drill-down with Back | **NOTE** | Stripe drills; we accordion. Ours is simpler and already passes the cube. No change without a reason. |
+
+**Footer.**
+
+| Decision | Verdict | Basis |
+|---|---|---|
+| Ink terminus footer | **KEEP, as a logged divergence** | Stripe ends light (`#f8fafd`, 85 links, sitemap-shaped). Ours ends dark because our page must land, not continue. Considered and rejected, not overlooked. |
+| Link count | **KEEP ours far lower** | 85 is a sitemap |
+| Jurisdiction control in footer | **OPEN QUESTION for P2** | Stripe surfaces region there; our DC/MD/VA service area is the same class of fact |
+| Light pre-footer buffer step | **ALREADY OURS** | Stripe steps white -> `#f8fafd` -> footer; our law already forbids ink -> white without a tint buffer |
+
+### 11b. Typography direction
+
+Our system holds. Bricolage Grotesque for display against Hanken Grotesk for body remains correct, and it
+solves by family pairing what Stripe solves with one variable face and what Linear solves with custom weight
+axes. Three specific movements come out of this pass, none of them structural:
+
+1. **Test light display weight.** Stripe sets 48px at weight 300 and ElevenLabs sets 48px at weight 300, the
+   same value from two independent premium sites. This is the strongest single correlation in the sample.
+   Worth a lab comparison on Bricolage before P3.
+2. **Clarify the measure law.** §2 mandates 65-75ch. Stripe runs 42-56ch, ElevenLabs sets 18px body. The
+   resolution is that **65-75ch is a law for prose** (`/about`, the legal pages) and short marketing columns
+   may legitimately sit narrower. This is a clarification to §2, not a relaxation.
+3. **Hold the body size.** ElevenLabs at 18px sits inside our 17-18px law; Linear at 15px and Stripe at 16px
+   sit below it. Two of four are below us and both are product-led sites talking to engineers. Our readers
+   include case managers and members. **Our floor stays.**
+
+Tight display leading (1.1-1.15) and negative display tracking are confirmed across every subject and already
+match our practice.
+
+### 11c. `nexo-motion` candidates
+
+The gap this pass exposes is specific: **our motion system has a response vocabulary and no ambient
+vocabulary.** Our ceilings (300ms content, 250ms nav) are correct for motion that answers an action. Linear's
+2-3 second band is for motion that occupies a room. Four candidates, each one bound to our §0 reduced-motion
+non-negotiable, meaning each must have a static end-state and must stop dead, not slow down:
+
+| # | Candidate | Mechanism | Duration band | Where it would live | Reduced motion |
+|---|---|---|---|---|---|
+| 1 | **`nexo-drift`** | Per-node offset opacity/transform cycle across the AmbientMap dot grid, scheduled per cell in Linear's `grid-dot-{r}-{c}` manner, amplitude far below Linear's | 2400-3200ms | AmbientMap, all tones | Static grid, current appearance exactly |
+| 2 | **`nexo-shape`** | Nav panel size interpolation on trigger-to-trigger movement: `clip-path` + `height` at 200ms, contents at 250ms | 200 / 250ms | Desktop nav panel | Instant swap, no interpolation |
+| 3 | **`nexo-settle`** | Existing play-once settle grammar (AssistScene, premium terminus) formalised as a named primitive rather than re-authored per component | <= 300ms | Any IO-gated arrival | Final frame, immediately |
+| 4 | **`nexo-accent-card`** | Local dark card on a light section, from Stripe `/enterprise`, so interior pages can raise emphasis without a fourth ink chapter | static, no motion | Interior page proof blocks | n/a |
+
+**Governing rules for all four**, carried from the two subjects:
+
+- **`will-change` is for imminent transitions only.** Linear runs 139 animations with `will-change` on 4
+  elements. Ambient residents never get a permanent layer.
+- **Ambient motion is slow.** If a loop can be tracked by eye, it is too fast.
+- **Transform and opacity only** (our existing §5 rule; nothing here needs an exception).
+- **Every candidate ships its static end-state first**, and the animated layer is added on top. This is
+  Stripe's hero lesson generalised: the fallback and the artifact should be the same object wherever possible.
+
+Candidate 2 (`nexo-shape`) is the highest value per unit of risk and is recommended first. Candidate 4 is not
+motion at all but falls out of the same dissection and closes a real gap in the tonal system.
+
+### 11d. Maze and ElevenLabs
+
+**Maze** (observed 2026-08-17, 1440x900). Maze sets its h1 at **130px, weight 300, letter-spacing -11.7px**
+(about -0.09em) in a face named `Phonic`, which is the most extreme display typography in the sample and the
+clearest demonstration that scale plus light weight plus tight tracking reads as confidence rather than
+shouting. The page is 8,323px over eight sections, nearly all transparent-backgrounded with a single warm
+off-white band, and it uses **`oklch()` colour in production** (`oklch(0.967 0.005 95.1)` for that band and the
+footer), which is worth noting as evidence that the modern colour space is shippable today. It carries 95
+images, no canvas and no video, so its entire visual identity is raster and SVG. Two failures are worth
+recording precisely because the surface is so accomplished: the page has **zero `<nav>` landmarks**, and
+across four fully readable stylesheets and 473 rules there is **not one `prefers-reduced-motion` rule**.
+Animation count does fall from 19 to 11 under reduced motion, so JavaScript responds where CSS does not.
+**Verdict: take the display-type confidence and the oklch note; reject the landmark and reduced-motion
+posture, both of which our law already prevents.**
+
+**ElevenLabs** (observed 2026-08-17, 1440x900). The most disciplined page in the sample and the closest to our
+own values. At rest it runs **zero animations** and sets `will-change` on **zero elements**, while still having
+105 transformed elements, meaning the composition is built with transforms but nothing is in motion until
+something is asked of it. Body type is **Inter at 18px**, which sits inside our 17-18px marketing-body law, and
+the h1 is 48px at weight 300 in a custom face named `Waldenburg`, the same light-display value Stripe uses. It
+ships **one `<nav>` landmark**. Its reduced-motion approach is the technique most worth stealing: rather than
+writing `prefers-reduced-motion` overrides to switch animation *off*, it uses Tailwind's **`motion-safe:`
+variant to switch animation *on***, so the observed rules read `.motion-safe\:tw-transition-\[height\,opacity\]`
+and `.motion-safe\:tw-duration-300`. **Motion becomes opt-in at the utility level, which makes the accessible
+path the default and forgetting impossible.** Note the inspection limit: only 4 of 9 stylesheets were readable,
+so 3 rules is a floor and not a total. **Verdict: strongest candidate for adoption in the sample. The
+`motion-safe:` inversion should be evaluated for our Tailwind config in P2**, because it converts our
+reduced-motion law from something a developer must remember into something the class names enforce.
+
+---
+
+## 12. PART 2 CLOSE-OUT
+
+**What Part 2 changes about our plan.** Nothing structural. The V1 site's architecture, tonal map, type system,
+copy gate, and reduced-motion law all survive contact with four exemplars, and in two measurable respects
+(sequential headings, reduced-motion enforcement) **our law is stronger than what these sites actually ship**.
+What Part 2 adds is a motion vocabulary we did not have, one nav upgrade worth doing, one tonal tool
+(`nexo-accent-card`) that closes a real gap, a performance bar with numbers in it, and a set of divergences
+that are now logged as chosen rather than unexamined.
+
+**What stays blocked.** Every candidate in 11c is a proposal for P2 and P3, not an approved change. Nothing
+here is published to the site. The performance bar is proposed for P2 ratification.
+
+**Standing rule added by this pass.** Any future canvas or WebGL work on this site must follow the Stripe
+ladder: gate the GPU request behind `failIfMajorPerformanceCaveat: true`, ship a named art-directed static
+asset as the resting state, and never place the gamble in a hero.

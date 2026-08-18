@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-17",
-    "currentTask": "P1a craft lane: exemplar dissection (owner verdict pending)",
+    "currentTask": "P1c: SEO and indexing plan (docs/SEO_PLAN.md)",
     "activePhase": "P1",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -107,10 +107,10 @@
       "id": "P1-A",
       "phase": "P1",
       "title": "Competitor teardown -> docs/DESIGN_RESEARCH.md part 1",
-      "status": "in-progress",
-      "date": "",
-      "note": "MTM, Verida, Modivcare, SafeRide Health + 2-3 modern healthcare-infrastructure SaaS sites. Full IA inventory, what an MCO sees vs a provider. Includes the SafeRide member-eligibility flow as a pattern study. Owner ruling (D14 queued) adds a TECHNIQUE-TEARDOWN workstream: per reference site record animation library, what is animated, loading strategy, degradation strategy. SPLIT: industry lane done (P1-A1); craft lane (exemplar dissection) pending the owner exemplar verdict.",
-      "fixlogRef": ""
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "MTM, Verida, Modivcare, SafeRide Health + 2-3 modern healthcare-infrastructure SaaS sites. Full IA inventory, what an MCO sees vs a provider. Includes the SafeRide member-eligibility flow as a pattern study. Owner ruling (D14 queued) adds a TECHNIQUE-TEARDOWN workstream: per reference site record animation library, what is animated, loading strategy, degradation strategy. SPLIT: industry lane done (P1-A1, Task #5); craft lane done (P1-A2, Task #7). Both lanes delivered; D14 technique-teardown workstream satisfied by part 2.",
+      "fixlogRef": "2026-08-17 - Task #7"
     },
     {
       "id": "P1-B",
@@ -120,6 +120,15 @@
       "date": "2026-08-17",
       "note": "Primary-source research complete: DC/MD/VA chapters, cross-state comparison, publish map. $1.5M CONFIRMED as MTM's published DC broker requirement (undated source, contradicted by MTM's own archived handbook at $500k) with two alternative origins verified (VA 7-15 pax tier; WMATC restricted authority). VA CSL CORRECTED: state floor is $350,000 for 1-6 pax per Code of Virginia 46.2-2053; Virginia never uses the term CSL. 351 requirements captured, 58 owner questions, 128 sources, 47 unreachable.",
       "fixlogRef": "2026-08-17 - Task #6"
+    },
+    {
+      "id": "P1-B1",
+      "phase": "P1",
+      "title": "Owner-verified pass on the 58 provider-research questions (before P4 provider pages)",
+      "status": "todo",
+      "date": "",
+      "note": "GATE ITEM. docs/PROVIDER_REQUIREMENTS_RESEARCH.md carries 58 open owner questions plus the section 5b OWNER-REPORTED block (OR-1 WMATC scope, OR-2 DC workers' comp >3 workers, OR-3 DC GL $1.5M-$2M). Under D17 nothing UNRESOLVED or merely REPORTED/OWNER-REPORTED is publishable, so the provider pages in P4 are BLOCKED until the owner rules on these. This item is the gate.",
+      "fixlogRef": "2026-08-17 - Task #7"
     },
     {
       "id": "P1-C",
@@ -273,6 +282,15 @@
       "date": "2026-08-17",
       "note": "MTM, Modivcare, Verida, SafeRide Health, Roundtrip. 43 information categories found; V1 carries 10 fully and 6 partially. Draft V2 inventory: 24 pages (DRAFT FOR P2 FREEZE, not frozen). Vocabulary findings corroborate D1/D15.",
       "fixlogRef": "2026-08-17 - Task #5"
+    },
+    {
+      "id": "P1-A2",
+      "phase": "P1",
+      "title": "P1a craft lane: exemplar dissection (Stripe primary, Linear secondary) -> docs/DESIGN_RESEARCH.md part 2",
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "Stripe full anatomy (13 sections, nav, footer, /enterprise deep page, type), Linear motion only. PRIORITY QUESTION ANSWERED: the stripe.com hero is NOT WebGL today; it is an art-directed <picture> whose assets Stripe itself names wave-fallback-{desktop,tablet,mobile}.png. The live capability gate was captured with a getContext interceptor: WebGL is requested with failIfMajorPerformanceCaveat:true and DECLINED on a software rasterizer, then experimental-webgl, then a granted 2d context. A control canvas in the same document proves the flag is the discriminator (plain webgl true, with-flag false). Standing rule recorded for any future canvas/WebGL work. Performance bar proposed (<=600KB transfer, <=150KB JS, <=1200ms DCL, <=60 requests, Lighthouse >=98) for P2 ratification. Four nexo-motion candidates: nexo-drift, nexo-shape, nexo-settle, nexo-accent-card. Two exemplar defects recorded as what-not-to-copy: Stripe /enterprise ships 20 h1 elements; Linear ships no first-party prefers-reduced-motion CSS (1 of 1359 rules, and it belongs to the sonner toast library) with 103 animations still running under reduced motion. ElevenLabs motion-safe: inversion flagged as the strongest adoption candidate in the sample.",
+      "fixlogRef": "2026-08-17 - Task #7"
     }
   ],
   "decisions": [
@@ -376,6 +394,12 @@
       "date": "2026-08-17",
       "title": "Handoff-in-parallel protocol (extends D4)",
       "summary": "docs/PLATFORM_DESIGN_HANDOFF.md is maintained WHILE building, never retrospectively: every design decision receives a transfer verdict at decision time (TRANSFERS / ADAPTS / SITE-ONLY) with reason and date. Two different products, one identity. Cross-project checkpoints (D5) continue."
+    },
+    {
+      "id": "D17",
+      "date": "2026-08-17",
+      "title": "Publish boundary for the resource center: requirements, never advice",
+      "summary": "Resource pages state requirements with citations and verification dates. NEVER business-formation, ownership, legal, or financial guidance (\"form an LLC\" and its relatives are banned). Every resource page carries an informational-only disclaimer and its verification date. Nothing UNRESOLVED or merely REPORTED/OWNER-REPORTED is publishable."
     }
   ],
   "discoveries": [
@@ -543,6 +567,10 @@
     {
       "date": "2026-08-17",
       "summary": "Task #6 P1b provider requirements: primary-source DC/MD/VA research, the two contested insurance figures resolved (1.5M confirmed-with-caveats, VA CSL corrected to $350k floor), cross-state comparison and publish map."
+    },
+    {
+      "date": "2026-08-17",
+      "summary": "Task #7 P1a craft lane: Stripe and Linear dissection (DESIGN_RESEARCH part 2), the WebGL degradation question answered with instrumented evidence, performance bar proposed, four nexo-motion candidates; D17 publish boundary added to the ground truth and the OWNER-REPORTED block added to the provider research."
     }
   ]
 }

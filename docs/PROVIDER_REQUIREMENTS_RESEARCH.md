@@ -743,7 +743,30 @@ time (see the re-verification rule below).
 
 ---
 
+## 5b. OWNER-REPORTED (2026-08-17, pending primary source; not publishable until VERIFIED)
+
+Recorded from the owner, who operated an NEMT company in this market. **These are leads for verification, not
+findings.** Under D17 nothing here may appear on the site until a primary source is located and cited.
+
+| # | Owner-reported claim | Status | Note |
+|---|---|---|---|
+| OR-1 | **WMATC certification is required for for-hire passenger operation across the DC-metro area, including parts of Maryland and Virginia.** | OWNER-REPORTED — **converges with a VERIFIED finding** | The research independently VERIFIED WMATC Regulation No. 58's insurance limits (\\$1.5M CSL restricted / \\$5M unrestricted) and that WMATC authority overlays the metro district. **The certification-scope claim itself — precisely which operations and which parts of MD/VA are captured — still needs its own primary source** from WMATC. Convergence raises confidence; it does not substitute for the citation. |
+| OR-2 | **DC workers' compensation is required when employing more than three workers.** | OWNER-REPORTED — unverified | No DC primary source establishing a three-worker threshold was located in this research. Note the contrast with **Maryland**, where the PSC requires *every* applicant, **including a sole proprietor driving alone**, to file coverage, an Exclusion Form, or a Certificate of Compliance (VERIFIED). If the DC threshold is real it is a genuine cross-state difference worth publishing — once cited. |
+| OR-3 | **DC general liability is commonly required in the \\$1.5M–\\$2M range.** | OWNER-REPORTED — unverified, but **consistent with a VERIFIED document** | MTM's DC NET Provider FAQ states \\$1,500,000 for general **and** automobile liability (VERIFIED, §4a) — the bottom of the owner's range. The word "commonly" implies a market norm across payers, which no source in this research establishes. **Both the figure and the norm stay BLOCKED** while MTM's own archived handbook contradicts it at \\$500,000. |
+
+**How these get promoted:** locate the primary source → re-label VERIFIED with URL and access date → move the
+claim into the relevant jurisdiction chapter → only then consider it for the publish map below.
+
+---
+
 ## 6. WHAT NEXO PUBLISHES (the publish map)
+
+> **Governed by D17 (publish boundary): requirements, never advice.** The site states what the rules ARE, with
+> citation and verification date. It never gives business-formation, ownership, legal, or financial guidance —
+> "form an LLC" and its relatives are banned outright. Every resource page carries an informational-only
+> disclaimer and its verification date. **Nothing `UNRESOLVED`, REPORTED, or OWNER-REPORTED is publishable.**
+> Note the consequence for §1b/§2b/§3b below: the business-formation steps are recorded here as *research
+> context* to explain where the requirements sit in the sequence — they are **not** publishable page content.
 
 Mapping these findings onto the draft V2 pages from `docs/DESIGN_RESEARCH.md` §6e. **Publishable today** means
 a primary source was VERIFIED *and* the content is stable enough to state plainly. **Blocked** means it must
