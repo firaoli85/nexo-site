@@ -308,7 +308,7 @@ primary source before anything is published on the site.**
 |---|---|---|---|---|
 | Automobile liability — for-hire passenger vehicle, seating capacity SEVEN PASSENGERS OR LESS (typical NEMT sedan/minivan) | **$50,000 for injury to any one person, $100,000 for injuries to two or more persons, and $20,000 for property damage; OR $120,000 combined single limit** | Maryland Public Service Commission (state regulation — COMAR 20.95.01.18.B) | **VERIFIED** | COMAR 20.95.01.18 — https://regs.maryland.gov/us/md/exec/comar/20.95.01.18 ; identical figures independently confirmed in the PSC 'Obtaining Passenger Carrier Operating Authority (except Taxicabs)' FAQ — https://www.psc.state.md.us/transportation/wp-content/uploads/sites/6/FAQs-for-Passenger-Authority2.pdf — both accessed 2026-08-17 |
 | Automobile liability — for-hire passenger vehicle, seating capacity EIGHT TO 15 PASSENGERS (typical wheelchair van / cutaway) | **$75,000 for injury to any one person, $200,000 for injuries to two or more persons, and $50,000 for property damage; OR $250,000 combined single limit** | Maryland Public Service Commission (state regulation — COMAR 20.95.01.18.B) | **VERIFIED** | COMAR 20.95.01.18 — https://regs.maryland.gov/us/md/exec/comar/20.95.01.18 ; identical figures in PSC FAQ — https://www.psc.state.md.us/transportation/wp-content/uploads/sites/6/FAQs-for-Passenger-Authority2.pdf — accessed 2026-08-17 |
-| Automobile liability — for-hire passenger vehicle, seating capacity 16 OR MORE PASSENGERS | **$75,000 for injury to any one person, $400,000 for injuries to two or more persons; OR $500,000 combined single limit** | Maryland Public Service Commission (state regulation — COMAR 20.95.01.18.B) | **VERIFIED** | COMAR 20.95.01.18 — https://regs.maryland.gov/us/md/exec/comar/20.95.01.18 — accessed 2026-08-17 |
+| ~~Automobile liability — for-hire passenger vehicle, seating capacity 16 OR MORE PASSENGERS~~ **[SUPERSEDED 2026-08-17 — see J2 RESOLUTION]** | ~~**$75,000 for injury to any one person, $400,000 for injuries to two or more persons; OR $500,000 combined single limit**~~ **WRONG: omitted the property-damage element. CORRECT TEXT IS $75,000 per person, $400,000 two or more persons, AND $100,000 PROPERTY DAMAGE; or $500,000 CSL — COMAR 20.95.01.18B(3). Cause: mid-clause elision in transcription; the cited host DOES contain the figure. Kept visible as historical record, never deleted.** | Maryland Public Service Commission — **COMAR 20.95.01.18B(3)** | ~~VERIFIED~~ **SUPERSEDED** | COMAR 20.95.01.18 — https://regs.maryland.gov/us/md/exec/comar/20.95.01.18 — accessed 2026-08-17 |
 | Bond in lieu of insurance (alternative to the above) | **Graduated by fleet size (1 vehicle up to 231+ vehicles) and seating capacity, ranging from $120,000 to $845,000** | Maryland Public Service Commission (COMAR 20.95.01.18.C) | **VERIFIED** | COMAR 20.95.01.18 — https://regs.maryland.gov/us/md/exec/comar/20.95.01.18 — accessed 2026-08-17 |
 | Liability insurance — WMATC operating authority, UNRESTRICTED as to vehicle seating capacity | **$5,000,000 minimum** | Washington Metropolitan Area Transit Commission — Commission Regulation No. 58. Binds any point-to-point operation in MONTGOMERY COUNTY and PRINCE GEORGE'S COUNTY, Maryland (plus DC and Arlington/Fairfax VA). | **VERIFIED** | WMATC Order No. 17,042 (In re Dafre, Inc. t/a Dafre Transportation, Certificate of Authority No. 607) — 'thereby reducing from $5 million to $1.5 million applicant's minimum insurance obligation under Commission Regulation No. 58' — https://www.wmatc.gov/WMATCOrders18/Order17042.pdf (downloaded and text-extracted) — accessed 2026-08-17 |
 | Liability insurance — WMATC operating authority WITH a seating-capacity restriction (vehicles seating fewer than 16 persons INCLUDING the driver) | **$1,500,000 combined single limit minimum** | Washington Metropolitan Area Transit Commission — Commission Regulation No. 58. THIS IS THE PRACTICAL FLOOR FOR NEMT IN MONTGOMERY AND PRINCE GEORGE'S COUNTIES, and it is roughly 12x the PSC's $120,000 CSL for a sedan. A carrier must AFFIRMATIVELY APPLY to add the seating-capacity restriction (Regulation No. 54-08) to drop from $5M to $1.5M. Non-compliance automatically suspends the certificate under Regulation No. 58-12 and can lead to revocation. | **VERIFIED** | WMATC Order No. 17,042 — https://www.wmatc.gov/WMATCOrders18/Order17042.pdf — accessed 2026-08-17 |
@@ -410,7 +410,7 @@ primary source before anything is published on the site.**
 - https://www.ccam-tac.org/nemt-state-by-state-profiles/ — CCAM Technical Assistance Center state-by-state NEMT profiles, Maryland entry, profile currency September 2024 ('directly operated'; FFS for all Medicaid recipients; county human service contracts). LOADED. SECONDARY/REPORTED.
 - https://www.highergov.com/sl/contract-opportunity/md-2026-02-nemt-65795550/ — secondary mirror of eMMA solicitation '2026-02 NEMT (BPM056475)', Washington County Health Department, posted April 13 2026, due May 14 2026, performance July 1 2026 - June 30 2027 plus two option years. LOADED. SECONDARY/REPORTED (the eMMA primary record was not readable).
 - https://www.uhcprovider.com/content/provider/en/resource-library/news/2026/md-medicaid-mprime-enrollment.html — UnitedHealthcare provider notice on the ePREP-to-MPRIME transition (SDAT requirement, profile non-migration). Surfaced via search. SECONDARY/REPORTED — not confirmed in MDH transmittals.
-- https://mediroutes.com/nemt-state-guide/maryland , https://safemedtrans.com/blog/maryland-medicaid-transportation-guide/ , https://spedsta.com/blog/how-to-start-an-nemt-business-in-maryland/ , https://medsolercm.com/blog/maryland-medicaid-provider-enrollment , https://elitemedfinancials.com/nemt-driver-requirements/ — commercial NEMT vendor-marketing sites surfaced via search. REPORTED AND UNRELIABLE: they describe a broker/Letter-of-Intent model and a 'Maryland Medicaid / Health Standards NEMT Program Desk' that appear in NO MDH primary source, and they assert insurance minimums ($100,000 GL; $25k/$50k/$25k auto) that match no Maryland primary source. Recorded as contradictions, not relied upon.
+- https://mediroutes.com/nemt-state-guide/maryland , https://safemedtrans.com/blog/maryland-medicaid-transportation-guide/ , https://spedsta.com/blog/how-to-start-an-nemt-business-in-maryland/ , https://medsolercm.com/blog/maryland-medicaid-provider-enrollment , https://elitemedfinancials.com/nemt-driver-requirements/ — commercial NEMT vendor-marketing sites surfaced via search. REPORTED AND UNRELIABLE: they describe a broker/Letter-of-Intent model and a 'Maryland Medicaid / Health Standards NEMT Program Desk' that appear in NO MDH primary source, and they assert insurance minimums ($100,000 GL; $25k/$50k/$25k auto) that match no Maryland primary source. Recorded as contradictions, not relied upon. **[J3 RESOLUTION 2026-08-17: this observation was ACCURATE but its inference was wrong. The same figure is published by the same vendor as at least TEN different states' minimum, including Virginia. It is generic boilerplate attaching to no jurisdiction — see J3 RESOLUTION.]**
 
 ### Unreachable or blocked (14)
 
@@ -834,3 +834,280 @@ this document as current law.
 | Open questions for the owner | 70 |
 | Sources consulted | 128 |
 | Sources unreachable / blocked | 47 |
+
+---
+
+# J2 RESOLUTION — 2026-08-17
+
+**STATUS: RESOLVED from primary text. Cell B was right; Cell A was wrong and is corrected below.**
+
+Task #11. The conflict is recorded at `docs/SITE_BUILD_PLAN.md` §0 row J2: two cells in this document, both
+labelled **VERIFIED**, disagreed on whether the Maryland PSC "16 or more passengers" tier carries a
+property-damage component.
+
+## J2.1 The citation, verified
+
+**Our working cite `COMAR 20.95.01.18.B` is CORRECT.** Hierarchy confirmed on the State's own publisher:
+
+> **Title 20 PUBLIC SERVICE COMMISSION** → **Subtitle 95 TRANSPORTATION** → **Chapter 20.95.01 General** →
+> **Regulation .18 "Insurance or Bond for Motor Vehicles Carrying Passengers."**
+
+Section **B** is captioned **"Liability Insurance"** and holds all three seating tiers at B(1), B(2), B(3).
+The bond alternative is a **separate section, `COMAR 20.95.01.18C` "Bond Instead of Insurance"** — it is not
+part of B, and our earlier cite of `20.95.01.18.C` for the bond was already correct.
+
+**Two refinements adopted:**
+
+1. **Pinpoint to the subsection** — cite `COMAR 20.95.01.18B(3)(a)` for the 16-or-more split limits and
+   `B(3)(b)` for the combined single limit, rather than the bare regulation.
+2. **Drop the period before the subsection letter.** Standard COMAR house style is `20.95.01.18B(3)(a)`, not
+   `20.95.01.18.B`. **Style only — the digits were always right.**
+
+**VERIFIED** — <https://regs.maryland.gov/us/md/exec/comar/20.95.01.18> (HTTP 200) and
+<https://www.law.cornell.edu/regulations/maryland/COMAR-20-95-01-18> (HTTP 200), both accessed 2026-08-17.
+`https://regulations.justia.com/...` returned **HTTP 403** and forms no part of this ruling.
+
+## J2.2 The operative text, quoted verbatim
+
+From `COMAR 20.95.01.18B`, accessed 2026-08-17:
+
+> **"B. Liability Insurance.**
+> **(1)** The minimum per accident insurance required for each motor vehicle with a seating capacity of seven
+> passengers or less is: **(a)** $50,000 for injury to any one person, $100,000 for injuries to two or more
+> persons, and $20,000 for property damage; or **(b)** $120,000 combined single limit.
+> **(2)** The minimum per accident insurance required for each motor vehicle with a seating capacity between
+> eight to 15 passengers is: **(a)** $75,000 for injury to any one person, $200,000 for injuries to two or
+> more persons, and $50,000 for property damage; or **(b)** $250,000 combined single limit.
+> **(3)** The minimum per accident insurance required for each vehicle with a seating capacity of 16
+> passengers or more is: **(a)** $75,000 for injury to any one person, $400,000 for injuries to two or more
+> persons, **and $100,000 for property damage**; or **(b)** $500,000 combined single limit."
+
+## J2.3 THE RULING
+
+**The 16-or-more tier DOES carry a $100,000 property-damage component.**
+
+| | |
+|---|---|
+| **RIGHT** | **Cell B (§4c)** — `$75,000 per person / $400,000 two or more / $100,000 property damage; OR $500,000 CSL` |
+| **WRONG** | **Cell A (§2e)** — omitted the property-damage element entirely |
+
+### CORRECTED CELL — supersedes §2e's 16-or-more row
+
+| Requirement | Amount | Authority | Status | Source |
+|---|---|---|---|---|
+| Automobile liability — for-hire passenger vehicle, seating capacity **16 OR MORE** passengers | **$75,000 for injury to any one person, $400,000 for injuries to two or more persons, and $100,000 for property damage; OR $500,000 combined single limit** | Maryland Public Service Commission — **COMAR 20.95.01.18B(3)** | **VERIFIED** | <https://regs.maryland.gov/us/md/exec/comar/20.95.01.18> and <https://www.law.cornell.edu/regulations/maryland/COMAR-20-95-01-18>, both accessed 2026-08-17; independently restated in the PSC's own **Form-28 Carrier Application Packet**, insert "Form-20 Rev. 02/19 / INSURANCE REQUIREMENTS" |
+
+**The two lower tiers were re-checked against the same primary text and are CORRECT as written** — §2e's
+7-or-fewer row (50/100/20 or $120,000 CSL) and 8-to-15 row (75/200/50 or $250,000 CSL) both match B(1) and
+B(2) exactly. **Only the 16-or-more row was corrupted.**
+
+### REVERSAL RECEIPT — why the wrong cell happened
+
+**Mechanism: a mid-clause elision in our own note-taking.** The third conjunct of a three-part list was
+dropped while the connector that follows it was kept. **This was not a source defect, not a truncated mirror,
+and not a secondary-source error.**
+
+1. **The cited source refutes the cell.** §2e attributes itself to `regs.maryland.gov`. That exact host,
+   re-fetched today, returns `...and $100,000 for property damage`. The attribution was intact; the
+   transcription was not.
+2. **No located document states this tier without property damage.** Six sources address the 16+ tier across
+   this pass — `regs.maryland.gov`, `law.cornell.edu`, PSC Form 28 (Rev. 9-26-23), PSC Form 28 (Rev. 7-1-22),
+   the PSC Vehicle Addition/Deletion Packet (Rev. 3/19), and the PSC FAQ (rev. 9-8-22) — and **all six carry
+   the $100,000**.
+3. **The obvious culprit is excluded.** The superseded PSC FAQ (rev. 2-1-18) omits the **entire** 16+ tier —
+   no $75,000, no $400,000, no $500,000. A source supplying none of those three numbers cannot be the source
+   of a cell containing all three.
+4. **The punctuation is the tell.** Cell A reads `...two or more persons; OR $500,000 combined single limit.`
+   In the regulation that `; or` hinge sits *immediately after* the property-damage clause. Cell A preserved a
+   connector whose position only exists because the PD clause precedes it — the signature of text excised
+   from between `persons,` and `; or`. *(Inference from the artifact, labelled as such.)*
+
+> ### TWO STANDING LESSONS
+>
+> **1. The provenance heuristic would have picked the WRONG cell.** The framing presented Cell B as suspect (a
+> "mirror", used only because the Maryland hosts 404'd that pass) and Cell A as trustworthy (the primary state
+> host). **The mirror was faithful; the primary-sourced cell was corrupted in transcription.** Rank sources by
+> what their text says on re-fetch, never by host prestige.
+>
+> **2. DO NOT REPAIR REGULATORY CELLS BY SYMMETRY.** The 16-or-more **per-person figure is $75,000 —
+> IDENTICAL to the 8-to-15 tier, not escalated.** Only the two-or-more-persons and property-damage legs step
+> up. The row is genuinely non-monotonic. Anyone "fixing" this cell by pattern would have inflated $75,000 to
+> $100,000 and **published a fabricated regulatory figure.**
+
+### Scope warning carried forward
+
+`20.95.01.18B` governs **PSC-permitted for-hire passenger vehicles**. A typical NEMT wheelchair or ambulatory
+van seats well under 16, so **B(1) or B(2) is the operative row for most real fleets** — the 16+ tier is the
+*least* likely to bind our readers. Transportation Network Operator vehicles are governed separately (PUA
+§10-405) at different, lower figures; **do not cross-apply them.** A tier-selection error is a larger
+practical hazard than the property-damage error just fixed.
+
+---
+
+# J3 RESOLUTION — 2026-08-17
+
+**STATUS: RESOLVED. Jurisdiction is `BOTH-GENERIC` — the figure attaches to no jurisdiction at all.**
+
+The conflict is recorded at `docs/SITE_BUILD_PLAN.md` §0 row J3: this document attributed the
+"$100,000 GL / 25-50-25" pattern to **Maryland** (with a DO NOT PUBLISH order); `docs/SEO_PLAN.md` §3.3
+attributed it to **Virginia** and built the planned flagship insurance-contradiction page on it.
+
+## J3.1 THE RULING
+
+> **The "$100,000 general liability / 25-50-25 automobile" pattern is not Maryland's requirement, not
+> Virginia's requirement, and not any state's requirement. It is one software vendor's templated boilerplate,
+> published as at least ten different states' minimum.**
+
+**The internal contradiction dissolves rather than resolving.** Both of our passes reported accurately what
+they saw, and both drew the same wrong inference from it. MediRoutes publishes the identical sentence on its
+Maryland page **and** its Virginia page **and** at least eight others. **The two readings were never in
+conflict about the world — only about which vendor page each happened to open first.**
+
+## J3.2 Hypothesis (a) — is 25/50/25 a misapplied PERSONAL auto minimum? **SUPPORTED**
+
+| State | Current personal-auto minimum | Matches 25/50/25? |
+|---|---|---|
+| **Maryland** | **30/60/15** — `$30,000` BI per person, `$60,000` BI per accident, `$15,000` property damage | **No.** BI legs understate by $5k and $10k; the PD leg **overstates by $10k** |
+| **Virginia** | **50/100/25** for policies effective **on or after Jan 1, 2025** (`30/60/20` for Jan 1 2022 – Dec 31 2024) | **No.** Current per-person minimum is **double** the circulating figure |
+
+**VERIFIED** — Maryland MVA <https://mva.maryland.gov/vehicles/Pages/insurance-requirements.aspx> (HTTP 200);
+Virginia DMV <https://www.dmv.virginia.gov/vehicles/insurance-requirements> (HTTP 200) and Code of Virginia
+§ 46.2-472 <https://law.lis.virginia.gov/vacode/46.2-472/> (HTTP 200) — all accessed 2026-08-17. The Virginia
+statute states both regimes verbatim, `$30,000 / $60,000 / $20,000` and, for policies on or after January 1,
+2025, `$50,000 / $100,000 / $25,000`.
+
+**THE NEAR-MISS THAT MAKES THIS DANGEROUS.** Virginia's **pre-2022** minimum was **25/50/20** — the first two
+legs of the circulating pattern, **but property damage was $20,000, not $25,000**, and that tier has been dead
+since **January 1, 2022**. Even the closest historical match is wrong on the third leg. *(REPORTED — from the
+enrolled text of 2021 Sp. Sess. I ch. 273; not re-fetched.)*
+
+**UNRESOLVED and deliberately not asserted:** 25/50/25 resembles the minimum in several *other* states, which
+would explain why it templates so well across a national vendor's state pages. **No other state's statute was
+fetched, and this document does not claim which states those are.**
+
+## J3.3 Hypothesis (b) — does any MD or VA primary document state $100,000 GL? **NOT FOUND**
+
+**No Maryland or Virginia government or broker primary document states `$100,000` for GENERAL liability as an
+NEMT requirement.** The strongest negatives, all accessed 2026-08-17:
+
+- **Cardinal Care Managed Care Contract SFY2026** — 1.83M characters extracted, **zero occurrences of
+  "general liability"**.
+- **DMAS FFS NEMT provider requirements** (both the 04-01-2025 and 2018 versions) — **zero dollar figures,
+  zero instances of "liability"**. The figure was never there to be removed.
+- **COMAR 10.09.19** turns out to be **"Transportation Grants"** and is not a provider-insurance regulation at
+  all.
+
+**The one genuine general-liability mandate located anywhere** is Maryland **COMAR 30.09.04.06** (MIEMSS):
+*"Commercial general liability insurance coverage of not less than $1 million"* — **ten times** the
+circulating figure, and it governs **commercial ambulance** services, not wheelchair or ambulatory NEMT.
+*(REPORTED — not re-fetched this pass.)*
+
+**THE LIKELY ORIGIN, and it is a specific and dangerous confusion.** Two real, verified `$100,000` figures sit
+nearby and **both are AUTOMOBILE liability, not general liability**:
+
+1. `COMAR 20.95.01.18B(1)(a)` — *"$100,000 for injuries to two or more persons"*, the per-accident auto BI
+   aggregate for 7-or-fewer-passenger vehicles. **The same regulation at issue in J2.**
+2. `Va. Code § 46.2-2143.1` — `$100,000` per person / `$300,000` per incident public liability for motor
+   carriers.
+
+**A $100,000 automobile sub-limit mislabelled as general liability sends a provider to buy the wrong policy
+entirely.**
+
+## J3.4 Hypothesis (c) — which jurisdiction does it attach to in the wild? **BOTH, therefore NEITHER**
+
+Four MediRoutes state guides were fetched (**Maryland, Virginia, Texas, California** — all HTTP 200,
+2026-08-17) and **every one returned the identical sentence**:
+
+> *"Minimum insurance: General liability ($100,000) and automobile liability ($25,000 per person / $50,000 per
+> accident / $25,000 property damage)."*
+
+Each page presents it as **that state's** requirement, and **none cites any statute, regulation or source**.
+**Four states whose insurance law is not remotely alike cannot share one statutory minimum.** That single
+observation settles the question. Six further states (OH, PA, NY, GA, IL, FL) carry the same string —
+**REPORTED**, not independently verified here; the ruling does not depend on them.
+
+**The most dangerous single framing found:** ZeitRide's Virginia page (HTTP 200) states *"Virginia NEMT
+insurance minimums at the state level are $100,000 general liability and $25,000/$50,000/$25,000 commercial
+auto."* **"At the state level" is an explicit attribution to Virginia law, with no statute, regulation or
+authority of any kind cited.**
+
+**A CORRECTION TO OUR OWN EVIDENCE, recorded because a trust page caught overstating its evidence forfeits the
+trust it is building.** One research pass claimed the identical figure appears across *six* vendors for both
+states. **That is overstated.** The pages actually show: **MediRoutes** across ~10 states, plus **ZeitRide**
+for Virginia only. Bambi's Maryland page carries **no dollar amounts**; Spedsta lists coverage categories with
+**no limits** for either state; and Elite Med Financials gives Virginia a **completely different** figure
+($1M CSL, GL 1M/2M). **Do not repeat the six-vendor claim.** The verdict is unaffected — MediRoutes alone,
+across ten states, is conclusive. **The vendor disagreement is itself corroboration:** if a real Virginia
+requirement existed, vendors would converge on it.
+
+## J3.5 What this means for the planned contradiction page
+
+**UNBLOCKED ON JURISDICTION — but the page must be RE-PREMISED, not merely re-labelled.**
+*(P1-B1 and D17 still apply separately and independently; nothing here speaks to them.)*
+
+**The original thesis was false in its premise.** It was *"Virginia says X but the law says Y"* — **Virginia
+never said X.** The correct and far more defensible thesis:
+
+> **A figure circulating as at least ten different states' NEMT insurance minimum is no state's minimum, and
+> appears in no Maryland or Virginia primary source we could retrieve.**
+
+That is a genuinely useful public-interest claim, it is fully evidenced, and **it does not require us to pick
+a jurisdiction at all.**
+
+**FOUR CONDITIONS — none of them a jurisdiction block:**
+
+1. **Never state the figure as any jurisdiction's requirement**, including in a headline or pull-quote that
+   could be screenshotted out of context. **Debunking framing that reads as assertion when clipped is the
+   specific failure mode here.**
+2. **Every affirmative figure must carry its regime.** This is the largest live hazard on the page. The
+   personal-auto minimums in J3.2 are **general motor-vehicle financial-responsibility** figures — **none is
+   an NEMT, commercial-carrier, or Medicaid-provider requirement.** Publishing "30/60/15" or "50/100/25"
+   anywhere near the phrase "NEMT insurance requirements" would **substitute one dangerous misstatement for
+   another.** If the page cannot make that distinction cleanly in its layout, **it should state no affirmative
+   dollar figures at all** and confine itself to the negative finding.
+3. **Vendor naming is an OWNER DECISION, not ours.** §7's NO-REAL-INSTITUTION-NAMES law covers hospitals,
+   health systems, payers and MCOs — software vendors are not on that list, so §7 as written does not bar
+   naming them. **But naming competitors as publishers of dangerous misinformation on a commercial marketing
+   site is trade-libel exposure the owner has not signed off on.** **RECOMMENDED:** describe the pattern
+   without naming vendors — *"at least ten state guides published by NEMT software vendors carry an identical
+   figure"* — which loses nothing evidentially and removes the exposure. **Escalate if the page wants names.**
+4. **The DO NOT PUBLISH order on the figure itself STANDS.** `BOTH-GENERIC` does not lift it. What is
+   unblocked is writing **about** the figure's circulation; what stays blocked is **stating it as a
+   requirement of anywhere.**
+
+**WHAT WOULD OVERTURN THIS RULING** (recorded so the page is not left undefended): a Maryland or Virginia
+**government** primary document — statute, COMAR or VAC regulation, DMAS or MDH provider manual, or an
+executed Medicaid broker/MCO contract — stating `$100,000` expressly as a **general liability** minimum for
+NEMT providers. **Nothing less counts:** not a vendor guide, not a search-engine AI summary, not a secondary
+compilation, and **not an automobile-liability figure that happens to be $100,000.**
+
+**STILL GENUINELY UNRESOLVED — neither is evidence FOR the figure, both are simply not closed:**
+
+- The full text of the **MDH statewide NEMT RFP**, behind BidNet registration, never retrieved — despite a
+  search summary attributing the figure to it.
+- The actual contractual GL limits in **ModivCare's and Access2Care's credentialing packets**, which are
+  private and unpublished. Search indicates brokers commonly require ~$1M auto CSL — **far above $100,000,
+  never at it.**
+- **WMATC Insurance Filing FAQs failed to load** on a TLS certificate error, so the WMATC limits ($1.5M CSL
+  for ≤15 passengers, $5M above) remain **REPORTED via search only** for this pass.
+
+**The page must therefore say "located in no primary source we could retrieve, and here is what we could not
+retrieve" — never "exists nowhere."**
+
+> ### METHOD FLAG WORTH KEEPING
+> Search-engine AI summaries repeatedly returned "$100,000 general liability" as **settled fact** for both
+> states, once attributing it to an MDH RFP whose text was never retrieved. **The figure survives only in the
+> summarisation layer; every time a primary document was opened, it was absent.** That is the actual story,
+> and it is a better story than the one the page was originally going to tell.
+
+## J3.6 The largest remaining gap, stated plainly
+
+**Neither this pass nor any prior pass has located the NEMT-specific provider insurance minimums for Maryland
+or Virginia.** The figures verified here are general financial-responsibility minimums (personal auto) and
+for-hire carrier minimums (PSC / DMV). **What actually binds a Medicaid NEMT provider comes from the state
+Medicaid agency's provider agreement and, in practice, the broker contract — which is typically the highest
+and therefore the operative floor.** Those documents were not retrieved.
+
+**Until they are, no page on this site may state a specific NEMT provider insurance minimum for DC, MD or VA.
+The correct instruction to a provider is to obtain the figure from their broker contract and state Medicaid
+provider agreement.** **DC was not covered by this pass at all and remains UNRESOLVED entirely.**

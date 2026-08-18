@@ -431,10 +431,10 @@
       "id": "P4-prep",
       "phase": "P4",
       "title": "Resolve J2 (COMAR 20.95.01.18.B primary text) and J3 (jurisdiction attribution) before the contradiction page",
-      "status": "todo",
-      "date": "",
-      "note": "SCHEDULED RESEARCH MICRO-ITEM. J2: PROVIDER_REQUIREMENTS_RESEARCH section 2e L311 and section 4c L688 give TWO different Maryland 16+ passenger PSC insurance figure sets, BOTH labelled VERIFIED, from two different sources (one omits the property-damage component, one includes $100,000). The frozen plan ruled that row UNPUBLISHABLE; resolve it against the COMAR 20.95.01.18.B primary text and record which cell was wrong. J3: the '$100,000 GL / 25-50-25' figure set is attributed to MARYLAND by PROVIDER section 2e (which orders DO NOT PUBLISH OR RELY ON THE SECONDARY FIGURES) and to VIRGINIA by SEO_PLAN section 3.3, which builds strongest-opening #1 (the insurance-contradiction page) on it. Both may be true if the same vendor boilerplate circulates for both states, but that is plausible and unproven. A page whose entire premise is correcting a jurisdictional error cannot itself get the jurisdiction wrong, so this blocks the contradiction page specifically, not the whole provider center.",
-      "fixlogRef": "2026-08-17 - Task #10"
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "RESOLVED 2026-08-17 from primary sources. J2: the Maryland PSC 16-or-more tier DOES carry $100,000 property damage — COMAR 20.95.01.18B(3)(a) quoted verbatim from regs.maryland.gov and law.cornell.edu (both HTTP 200) and independently restated in the PSC own Form-28 packet. Cell B (Cornell mirror) was RIGHT; Cell A (regs.maryland.gov) was WRONG via a mid-clause transcription elision — the cited host DOES contain the figure. The two lower tiers were re-checked and are correct. CITATION VERIFIED: Title 20 PSC > Subtitle 95 TRANSPORTATION > Chapter 20.95.01 General > Reg .18; adopt pinpoint form 20.95.01.18B(3)(a) without the period. TWO STANDING LESSONS: the provenance heuristic (primary host beats mirror) would have picked the WRONG cell, and repairing regulatory cells BY SYMMETRY would have inflated the per-person leg from $75,000 to $100,000 and published a fabricated figure — the tier is genuinely non-monotonic. J3: BOTH-GENERIC. 25/50/25 matches NEITHER state (MD is 30/60/15; VA is 50/100/25 since Jan 1 2025, 30/60/20 before; VA pre-2022 was 25/50/20 — close but PD was $20k). No MD or VA government or broker primary document states $100,000 GL: the Cardinal Care SFY2026 contract has ZERO occurrences of general liability across 1.83M chars. MediRoutes publishes the identical uncited sentence on MD, VA, TX and CA pages (all fetched) and ~10 states total. The contradiction page is UNBLOCKED ON JURISDICTION but must be RE-PREMISED — its original thesis was false in premise since Virginia never stated the figure. P1-B1 and D17 still apply. LARGEST REMAINING GAP: the NEMT-specific provider insurance minimums for MD/VA/DC are still not located, so no page may state one.",
+      "fixlogRef": "2026-08-17 - Task #11"
     }
   ],
   "decisions": [
@@ -757,6 +757,10 @@
     {
       "date": "2026-08-17",
       "summary": "Task #10 P3-W3 type-specimen bench: docs/type-bench/index.html + docs/TYPE_BENCH.md, 7 display candidates incl. the incumbent-heavy control, verified font rendering per block by three independent methods. Plus the freeze ratification line (J1-J6 stand, with unblock conditions for the three not-shippable routes) and three pinned items so the W8 obligations and the J2/J3 research cannot be lost."
+    },
+    {
+      "date": "2026-08-17",
+      "summary": "Task #11 P4-prep micro-task: J2 and J3 resolved from primary sources. MD 16+ insurance tier corrected ($100,000 property damage restored, COMAR 20.95.01.18B(3)); the $100k GL / 25-50-25 figure ruled BOTH-GENERIC vendor boilerplate attaching to no jurisdiction, unblocking the contradiction page on jurisdiction while requiring it to be re-premised."
     }
   ]
 }
