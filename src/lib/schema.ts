@@ -1,7 +1,16 @@
 import { SITE } from "@/lib/site";
 import { HERO_LEDE } from "@/lib/seo";
 
-// JSON-LD single source (Stage 11). One MedicalBusiness object, emitted once in the root layout.
+// JSON-LD single source (Stage 11; retyped Task #17 per D1/D15). One Organization object,
+// emitted once in the root layout.
+//
+// WHY Organization AND NOT MedicalBusiness (ruling recorded in SEO_PLAN section 3.2, applied here):
+//   1. MedicalBusiness is a LocalBusiness subtype, and LocalBusiness expects a postal address. We
+//      deliberately publish none, so that type asks for a property we are committed to omitting.
+//   2. MedicalBusiness connotes an entity delivering care directly. Under D1/D15 we are a medical
+//      transportation MANAGEMENT organization: providers operate the vehicles, we manage the service
+//      and answer for it. Organization states that without overclaiming clinical care.
+// areaServed stays: the geography is true and flag-independent.
 // Absolute URLs (schema requires them). NO `address` property (none is public — omit entirely, don't
 // fabricate). NO aggregateRating / review / openingHours (nothing to invent — copy gate). Email is the
 // monitored info@ inbox (also the contact-lead recipient); telephone is the public E.164.
@@ -10,7 +19,7 @@ const abs = (path: string) => new URL(path, SITE.domain).toString();
 export function organizationSchema() {
   return {
     "@context": "https://schema.org",
-    "@type": "MedicalBusiness",
+    "@type": "Organization",
     "@id": `${SITE.domain}/#organization`,
     name: SITE.name,
     legalName: SITE.legalName,

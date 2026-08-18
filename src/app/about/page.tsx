@@ -34,7 +34,7 @@ const PRINCIPLES = [
 
 const FACTS = [
   { label: "Company", value: `${SITE.legalName}, dba ${SITE.name}` },
-  { label: "What we are", value: "A technology-first NEMT company" },
+  { label: "What we are", value: "A medical transportation management organization" },
   { label: "Service area", value: SERVICE_AREA_LINE },
 ];
 

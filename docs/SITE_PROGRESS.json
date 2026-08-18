@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-18",
-    "currentTask": "P3-W4: owner color readings (good + cheap machines — the owed C3 leg; now explicitly including the Yoga-class machine from FO-1)",
+    "currentTask": "P3-W4: token hardening (awaiting owner reading clarification + Yoga leg)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -422,19 +422,19 @@
       "id": "W8-a",
       "phase": "P4",
       "title": "D18 payer-half SEO query classes (national/category queries) - spec before P4 metadata work",
-      "status": "todo",
-      "date": "",
-      "note": "PINNED SO IT CANNOT BE LOST. SEO_PLAN section 3.3 assigns target query classes to SIX provider pages and NONE to any payer-facing surface, while D18 requires payer surfaces to read as a national-grade management organization. The national-legibility decision therefore has no SEO plan behind it. Spec the category-level and national query classes for /solutions/mcos, /platform and the homepage BEFORE the W8 metadata rewrite lands, so the D15 rewrite and the payer query targets are authored together rather than the rewrite shipping first and the targets being retrofitted.",
-      "fixlogRef": "2026-08-17 - Task #10"
+      "status": "done",
+      "date": "2026-08-18",
+      "note": "RESOLVED 2026-08-18 (Task #17). docs/SEO_PLAN.md section 6 now carries the D18 payer-half query classes: the payer lane is CATEGORICAL where the provider lane is GEOGRAPHIC. Category vocabulary: NEMT management company, medical transportation management organization, NEMT broker alternative, transportation benefit management Medicaid, plus long-tail restatements. Mapped: home takes the category noun in the TITLE (implemented this task as 'Nexo Access | Medical Transportation Management, DC, MD & VA'), /platform takes the capability nouns plus the management identity so it is not read as a software vendor, /solutions/mcos takes the buying-decision classes. RULE PRODUCED: the payer lane names the category nationally and geography second; the provider lane names geography first. Deliberately OUT of scope and stated: /solutions/facilities and /solutions/members get no national category targeting, because their readers search for a service and not a vendor category. 'Broker' stays searcher vocabulary, never a self-description.",
+      "fixlogRef": "2026-08-18 - Task #17"
     },
     {
       "id": "W8-b",
       "phase": "P4",
       "title": "Internal-linking spec completion beyond the five bullets",
-      "status": "todo",
-      "date": "",
-      "note": "PINNED SO IT CANNOT BE LOST. SEO_PLAN section 3.3's internal-linking spine gives five bullets (hub at /solutions/providers, lateral state links, up-links to /providers/requirements, editorial in-body links not just footer, descriptive anchor text) and then stops. ABSENT and owed: the actual anchor-text strings, per-page link counts, in-page placement rules, and any rule for linking from the homepage or /platform into the provider center. Measured starting condition: the header contributes only 2 crawlable links because Radix unmounts closed menus, /solutions/mcos has exactly 1 in-body internal link and /about has 3, so today every page is equidistant from every other and nothing signals importance.",
-      "fixlogRef": "2026-08-17 - Task #10"
+      "status": "done",
+      "date": "2026-08-18",
+      "note": "RESOLVED 2026-08-18 (Task #17). docs/SEO_PLAN.md section 7 completes the internal-linking spec beyond the five bullets: the ordered spine (home to platform to solutions to the providers hub to requirements hub to state pages to apply), per-page outbound in-body link COUNTS (mcos rises from its measured 1 to 3-4; /solutions/providers is the 5-7 link hub; /apply and /contact are terminal at 0-1 so conversion is not leaked), the anchor-text table with the never-column ('learn more' and bare URLs banned; exact-match repetition flagged as a smell), the placement rule (in-body at the point the reader forms the question, NOT a bottom related-links block; the footer's 15 links are the discovery safety net and do NOT count toward the spine), the rule that EVERY provider-center state page must link both siblings AND the requirements hub, and BreadcrumbList placement (providers pages only, matching a VISIBLE breadcrumb per the structured-data honesty gate, not on one-level-deep pages; requires the per-page schema seam that does not exist yet).",
+      "fixlogRef": "2026-08-18 - Task #17"
     },
     {
       "id": "P4-prep",
@@ -453,6 +453,15 @@
       "date": "2026-08-18",
       "note": "scripts/qa/preflight-build-identity.mjs, wired into scripts/qa/run.mjs at the server-reuse seam - the exact place Task #14 broke. TWO SIGNALS: (1) BUILD_ID probe, requesting /_next/static/<diskBuildId>/_buildManifest.js, which asks the server directly whether it is running THIS build (one request, no HTML parsing, nothing to rot when markup changes); (2) CSS-asset probe, parsing the served HTML for its stylesheet href and confirming it resolves - the exact Task #14 signature, which catches a torn build where the BUILD_ID directory survived but assets did not. Either disagreeing is fatal. NEGATIVE-TESTED WITH A REAL REPRODUCTION, not a synthetic one: built, left the server running, rebuilt underneath it so BUILD_IDs diverged (08rKY2wIdtQDHn4zHuk4A -> nEfCzgjuuXnuFOdF42ezN), ran the preflight -> exit 1 naming BOTH identities and the kill-and-rerun fix; then killed the server and ran the wired path clean -> Build identity OK ... GREEN, exit 0.",
       "fixlogRef": "2026-08-18 - Task #15"
+    },
+    {
+      "id": "W8-1",
+      "phase": "P4",
+      "title": "W8 part 1: D15 metadata + JSON-LD, hero lede, www->apex 301, I19",
+      "status": "done",
+      "date": "2026-08-18",
+      "note": "THE 301: next.config.mjs gains a host-conditional redirect, statusCode 301 EXPLICITLY (not permanent:true, which emits 308 - the Task #8 spec is law). Host literals are the first outside site.ts:15 because .mjs cannot import the TS constant; documented as deliberate duplication. JSON-LD: MedicalBusiness -> Organization, with the reasoning in a code comment (MedicalBusiness is a LocalBusiness subtype expecting a postal address we deliberately omit, and it connotes direct clinical care we do not provide; under D1/D15 providers operate the vehicles and we manage the service). METADATA: HOME_TITLE now carries the national CATEGORY per D18 ('Medical Transportation Management'); home, platform, mcos and about descriptions rewritten to the management-organization identity; OG_IMAGE.alt no longer names the company AS the transportation. HERO_LEDE replaced with the owner-approved sentence AND THE SERVICE_AREA_PROSE INTERPOLATION PRESERVED - the approved wording contains 'built for the DMV' verbatim, which is exactly the flag's pre-launch value, so approved copy and flag mechanism coexist with neither bent. GREP: 6 occurrences of the old identity in src/ before, ZERO after. I19: raw-request host-redirect invariant wired into run.mjs beside the stale-build preflight and folded into the exit code. KEY FINDING: fetch() CANNOT test this - Host is a forbidden header in the fetch spec, so undici drops it, the request arrives as localhost, returns 200 and looks like a broken redirect. The first version of I19 used fetch and reported a FALSE FAILURE against a working redirect. node:http is required, which is exactly why Task #8 called it the raw-request lane. I14/I16 needed NO expectation changes: I14 asserts title-non-empty + apex canonical + og presence, I16 asserts email addresses; neither encodes identity strings.",
+      "fixlogRef": "2026-08-18 - Task #17"
     }
   ],
   "decisions": [
@@ -742,9 +751,9 @@
     "cube": {
       "state": "green",
       "cells": 234,
-      "checks": "13 routes x 6 profiles x 3 engines; all three engines reported GREEN",
+      "checks": "13 routes x 6 profiles x 3 engines; chromium, webkit and firefox each reported GREEN",
       "date": "2026-08-18",
-      "note": "Full cube re-run after the D21 type implementation. ZERO failures, zero FAIL artifacts. FIRST RUN WAS INVALID AND WAS DISCARDED: a stale next start from an earlier session was still holding :3300, run.mjs reused it, and it served HTML referencing CSS hash 667effaa182fb03f which returned 400 while .next-check on disk held 709e3d23b1dd55e6 - every page rendered completely unstyled and 185 cells failed. That is the recorded never-rebuild-under-a-running-server gotcha, an ENVIRONMENT failure, not a site regression; proven by fetching the CSS link and getting 400 with a hash mismatch. Killed the server, cleaned 212 bogus artifacts, rebuilt into a fresh .next-check, re-ran. Second run had 1 flaky cell (chromium/w1920/home) which passed in isolation on retry; a third full run came back CUBE ALL GREEN with zero failures."
+      "note": "Full cube after the W8 part-1 metadata, JSON-LD, hero-lede and 301 changes. Zero failures, zero FAIL artifacts. Run also carried the stale-build preflight (Build identity OK) and the new I19 host-redirect invariant (4/4: 301 to apex, path and query preserved, apex host unaffected), with I19 folded into the exit code. Cube re-run a second time after Hero.tsx changed, because the human-eye pass found the new lede was being followed by a hardcoded tail that repeated its own claim."
     },
     "perfBudget": {
       "state": "not-built",
@@ -835,6 +844,10 @@
     {
       "date": "2026-08-18",
       "summary": "Task #16: C4 promoted from hypothesis to OBSERVED via field evidence FO-1 from the live site on a Yoga-class machine. Mechanism named and re-verified against source (the source corrected the chat diagnosis on preserveAspectRatio=none plus frozen-height/live-width). W5 gains a two-option fix spec and the I20 van-rides-the-line invariant, bound to the same task per D12."
+    },
+    {
+      "date": "2026-08-18",
+      "summary": "Task #17 W8 part 1: D15 metadata and JSON-LD rewrite (Organization, not MedicalBusiness), the owner-approved hero lede with its flag interpolation preserved, the www->apex 301 at statusCode 301, and I19 as a raw-request invariant. Old identity phrases 6 -> 0 in src/. Also closed the two pinned W8 debts with the D18 payer query classes and the completed internal-linking spec."
     }
   ]
 }

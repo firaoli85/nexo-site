@@ -34,8 +34,12 @@ export function Hero() {
               {HEADLINE.after}
             </h1>
             <p className="mt-5 max-w-prose text-xl leading-snug tracking-lede text-on-ink-muted">
-              {HERO_LEDE} Every driver is credential-verified before dispatch, and
-              every claim is checked automatically before it’s billed.
+            {/* HERO_LEDE is the COMPLETE owner-approved lede (Task #17). A hardcoded tail used to
+              follow it here; the approved second sentence now says "every claim is checked before it
+              is billed", so that tail repeated the same claim in one paragraph (7 lines at 1440, 9 at
+              390). The dropped driver-credentialing clause survives on this page in CredentialStrip
+              and twice in ProductDemo, so no claim was lost. */}
+              {HERO_LEDE}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="/platform" variant="primaryOnInk" size="md">

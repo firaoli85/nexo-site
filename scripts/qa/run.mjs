@@ -5,6 +5,7 @@
 import { spawn } from "node:child_process";
 import { runSweep, printMatrix } from "./sweep.mjs";
 import { checkBuildIdentity, failStale } from "./preflight-build-identity.mjs";
+import { checkHostRedirect } from "./i19-host-redirect.mjs";
 
 const PORT = process.env.QA_PORT || "3300";
 const DIST = process.env.NEXT_DIST_DIR || ".next-check";
@@ -53,6 +54,14 @@ if (!identity.ok) {
 }
 console.log(`Build identity OK — :${PORT} is serving ${DIST} (BUILD_ID ${identity.disk}).`);
 
+// ── I19 HOST REDIRECT (Task #17) ────────────────────────────────────────────────
+// The www -> apex 301 is host-conditional, so NO page load in the sweep can reach it:
+// the cube addresses localhost by port. This is the raw-request lane the Task #8 spec
+// called for. It runs ONCE per sweep (a host rule is global, not per-route) and fails
+// the run like any other invariant.
+const i19 = await checkHostRedirect({ base: BASE });
+console.log(`I19 host redirect: ${i19.pass ? "\u2713" : "\u2717"} ${i19.detail}`);
+
 let failures = 1;
 try {
   const out = await runSweep({ base: BASE });
@@ -63,4 +72,4 @@ try {
     else server.kill("SIGTERM");
   }
 }
-process.exit(failures === 0 ? 0 : 1);
+process.exit(failures === 0 && i19.pass ? 0 : 1);

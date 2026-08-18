@@ -646,3 +646,124 @@ the identified threat to the §3.3 window.
 | 7 | All live-site evidence | Single-fetch, **2026-08-17**. Re-verify before acting on any specific value |
 | 8 | Competitor SERP composition | Observed **2026-08-17**. Third-party sites change; MTM is the one to watch |
 | 9 | Provider-page publication | **BLOCKED** by `P1-B1` (58 owner questions + OR-1/OR-2/OR-3) under D17 |
+
+---
+
+# 6. W8-a — THE D18 PAYER-HALF QUERY CLASSES (completed 2026-08-18, Task #17)
+
+**The debt this pays.** §3.3 assigned target query classes to **six provider pages and none to any payer
+surface**, while **D18** requires payer-facing surfaces to read as a national-grade management organization.
+The national-legibility decision had no SEO plan behind it. It does now.
+
+**No volume data available for any query below.** We have no keyword tool. Classification is by **intent and
+buyer vocabulary**, and the buyer vocabulary is the part we can be confident about: these are the words an
+MCO contracting director uses for the thing they are procuring.
+
+## 6a. The category vocabulary (D18's actual content)
+
+The provider lane is **geographic** ("become a NEMT provider in Maryland"). The payer lane is **categorical** —
+an evaluator in New York or California is searching for a *kind of vendor*, not a local one:
+
+| Query class | Intent | Why a payer types it |
+|---|---|---|
+| **"NEMT management company"** | commercial investigation | The plainest category noun for what we are |
+| **"medical transportation management organization"** | commercial investigation | The formal category; also our exact D15 self-description |
+| **"NEMT broker alternative"** | commercial investigation | A payer unhappy with an incumbent broker searches for the *category that is not that* |
+| **"transportation benefit management Medicaid"** | commercial investigation | Benefit-manager framing: how a payer describes the contract internally |
+| "NEMT vendor for Medicaid plans" · "manage NEMT network" · "NEMT credentialing and claims platform" | commercial | Long-tail restatements of the same buying question |
+| "NEMT compliance oversight" · "NEMT claims adjudication" | informational, mid-funnel | The evaluator checking whether we solve the part that hurts |
+
+**"Broker" is searcher vocabulary, never a self-description** (query-lexicon law §6.8/§7.3). We may target
+*"NEMT broker alternative"* precisely because it is the searcher's word for a category we sit beside; we may
+not call ourselves one.
+
+## 6b. Mapping — surface by surface
+
+| Surface | Primary classes | Title / description implication |
+|---|---|---|
+| **`/` home** | "NEMT management company", "medical transportation management organization" | **Title must carry the CATEGORY, not only the service.** Implemented in Task #17: `Nexo Access \| Medical Transportation Management, DC, MD & VA`. The description leads with the category noun and states the network model. **The DMV stays** — D18 refines D2, it does not delete the footprint |
+| **`/platform`** | "NEMT credentialing and claims platform", "NEMT compliance oversight", "NEMT claims adjudication" | The mid-funnel proof surface. Description names the four capability nouns (dispatch, claims, compliance, oversight) **and** the management identity, so it is not read as a software vendor |
+| **`/solutions/mcos`** | "NEMT broker alternative", "transportation benefit management Medicaid", "NEMT vendor for Medicaid plans" | The buying-decision surface. Description leads **"Medical transportation management for MCOs and payers"** and states what is enforced, without a performance number |
+
+**The rule this produces:** *the payer lane names the category nationally and the geography second; the
+provider lane names the geography first.* One site, two search grammars, because they are two different
+searches.
+
+**Out of scope here and stated:** `/solutions/facilities` and `/solutions/members` are **not** payer surfaces
+and deliberately receive no national category targeting. Their readers search for a service, not a vendor
+category, and stuffing the management noun into them would be keyword repetition that serves nobody.
+
+---
+
+# 7. W8-b — THE INTERNAL-LINKING SPEC, COMPLETED (2026-08-18, Task #17)
+
+**The debt this pays.** §3.3's spine stopped after five bullets: no anchor-text strings, no per-page counts,
+no placement rule, no rule for linking from home or `/platform` into the provider center. Measured starting
+condition: **the header contributes only 2 crawlable links** (Radix unmounts closed menus), **`/solutions/mcos`
+has exactly 1 in-body internal link**, `/about` has 3. Every page is equidistant from every other, so nothing
+signals importance.
+
+## 7a. The spine, in order
+
+```
+/  →  /platform  →  /solutions/{mcos,providers,facilities,members}
+                         │
+                         └─ /solutions/providers (HUB)
+                                  →  /providers/requirements (the requirements HUB)
+                                  →  /providers/{dc,maryland,virginia}
+                                  →  /providers/credentialing · /providers/faq
+                                             ↓
+                                          /apply
+```
+
+**Direction matters.** The spine flows **toward `/apply`** for providers and **toward `/contact`** for payers.
+A link that points backwards up the spine is a *return* link and is allowed once per page, not repeatedly.
+
+## 7b. Per-page rules
+
+| Page | Outbound in-body links | Rule |
+|---|---|---|
+| `/` home | **3–5** | One per audience block, pointing at that audience's solutions page. Plus **one** into `/platform` |
+| `/platform` | **3–4** | One per anchored section into the audience page that cares about it; **one into `/providers/requirements`** — this is the home-and-platform-into-the-provider-center link §3.3 never specified |
+| `/solutions/mcos` | **3–4** (from 1) | `/platform` (proof), `/contact` (pilot path), `/security` when it ships |
+| `/solutions/providers` | **5–7** | The **hub**. Links down to every `/providers/*` page in body copy, plus `/apply` |
+| `/providers/requirements` | **4–6** | Down to each state page; across to `/providers/credentialing` and `/providers/faq` |
+| **Each `/providers/{state}`** | **4–5** | **MUST link both sibling states and the requirements hub.** A provider who lands on Maryland from search and operates across the line needs Virginia in one click, and the hub is the only page that shows the comparison |
+| `/apply`, `/contact` | **0–1** | Terminal. Do not leak the conversion |
+
+## 7c. Anchor text
+
+**Descriptive, never "learn more", never a bare URL.** The anchor should name the destination's subject in the
+words the reader is already using:
+
+| Destination | Use | Never |
+|---|---|---|
+| `/providers/requirements` | "what Maryland requires", "the requirements by state" | "click here", "our requirements page" |
+| `/providers/maryland` | "becoming a provider in Maryland" | "Maryland" alone |
+| `/platform` | "how dispatch and claims work" | "the platform" |
+| `/solutions/mcos` | "for MCOs and payers" | "learn more" |
+| `/apply` | "apply to join the network" | "apply" alone |
+
+**Exact-match repetition is a smell.** If three links on one page use the same anchor for the same target,
+two of them are decoration.
+
+## 7d. Placement
+
+**In-body, inside the prose, at the point the reader forms the question** — not a "related links" block at the
+bottom, which readers skip and which signals nothing about relevance. The footer keeps all 15 route links: it
+is the **discovery safety net**, proven necessary in §1.5 because the header only exposes 2 crawlable links.
+**Footer links are not the spine** and do not count toward the per-page numbers above.
+
+## 7e. BreadcrumbList placement
+
+**`/providers/*` only, once the provider center has depth.** The breadcrumb reflects the real hierarchy:
+
+```
+Home  ›  For transport providers  ›  Requirements  ›  Maryland
+```
+
+- Emitted as `BreadcrumbList` JSON-LD **on the page it describes**, matching a **visible** breadcrumb — the
+  structured-data honesty gate (§3.2) forbids asserting a trail the reader cannot see.
+- **Not on** `/`, the four `/solutions/*` pages, or the legal set: they are one level deep and a
+  single-item breadcrumb is noise.
+- Requires the per-page schema seam, which **does not exist today** (§3.2) and is part of the same P4 work.
