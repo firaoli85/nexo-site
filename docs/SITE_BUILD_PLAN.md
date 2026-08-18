@@ -475,6 +475,7 @@ otherwise exercise a host rule) · C1–C4 measurement.
 | Downloadable per-state PDF guides | Deferred until the state pages ship **and** figures are re-verified |
 | A sourced cost-floor page (SEO opening #5) | Matches no planned page; adding it now would be scope growth |
 | Segmented payer sub-audience pages | Split only when we have distinct proof per segment |
+| **One premium typeface (the D-pre21a door)** | **Premium purchase DECLINED for now.** If at **P6** the type feels insufficient on the real site, evaluate **ONE** premium face — **one-time license only, never subscription** — and a **bench rerun is required** before adoption. Not a P3 option; a P6 gate. |
 
 ---
 

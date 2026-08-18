@@ -157,3 +157,120 @@ a cheap panel. **A single-screen verdict is not a verdict.** This is the same re
 **Out of scope for this bench, deliberately:** production font loading (C1 — the app self-hosts through
 `next/font` with `display:"optional"`; the CDN here is bench-only), the final type *scale*, and any change to
 `nexo-brand` §2. **§2 remains law until D21 supersedes it.**
+
+---
+
+# CONTEXT ROUND — 2026-08-17 (Task #12)
+
+**Bench: [`docs/type-bench/context.html`](./type-bench/context.html).** Supersedes the specimen bench for the
+D21 decision. The specimen bench narrowed seven faces to two; **this one decides between the two, on real page
+anatomy, because a font alone makes no site premium — the combination does (owner insight, §13d).**
+
+**Structure:** one set of markup, rendered twice through a single top toggle (native radios, keyboard-native).
+Three fragments — ink hero, light content section, ink terminus — plus **two simultaneous 390px pairs** (body +
+data labels, then the display line) and a live font-load readout.
+
+## 1. THE TWO SYSTEMS — exact specs
+
+| | **System A** | **System B** |
+|---|---|---|
+| Display | **Sora** — hero 800, headings 600 | **Bricolage Grotesque** — hero 800, headings 700 |
+| Body | **Instrument Sans** | **Hanken Grotesk** |
+| Mono | **Space Mono** | **IBM Plex Mono** |
+| Hero letter-spacing | **-0.040em** | **-0.030em** |
+| Heading letter-spacing | **-0.030em** | **-0.022em** |
+| Lede/body letter-spacing | **-0.012em** | **-0.008em** |
+| Mono letter-spacing | **+0.045em** | **+0.035em** |
+
+**Sizes, weights, spacing, colour and markup are identical.** Only the faces and the per-face tracking differ.
+
+### Why the tracking differs per face — and why that is the correct method
+
+Measured in Task #10 on an identical 72px probe: **Sora set 929px, Bricolage 830px — Sora is ~12% wider.**
+Applying one tracking value to both would have compared **two different optical densities and called it a
+typeface comparison.** Each face is instead tracked to the same optical colour.
+
+**System A sits exactly at the -0.04em floor**, not past it — verified, with zero margin left. The
+deterministic detector's `extreme-negative-tracking` rule (threshold ≤ -0.05em) held fire correctly.
+
+## 2. VERIFICATION
+
+**Standing font check** (the method recorded in §3, Task #10) run per system, per profile:
+
+**6/6 families LOADED at both 1440 and 390**, each distinct from its own fallback chain:
+Sora Δ107.3 · Instrument Sans Δ85.4 · Space Mono Δ250.8 · Bricolage Δ188.9 · Hanken Δ46.5 · IBM Plex Δ202.4.
+
+> **THE STANDING CHECK CAUGHT A REAL DEFECT, AND THE METHOD IS NOW AMENDED.**
+> The first build reported **Hanken Grotesk as FALLBACK (Δ0.0, `fonts.check=false`)**. Not a CDN failure — the
+> CSS contained it. **The page opens in System A, so Hanken had zero on-screen usage, and a browser never
+> downloads a webfont no element is using.** Bricolage and IBM Plex escaped only because the 390 strip and the
+> chrome labels used them unconditionally. Fixed with `document.fonts.load()` priming before measuring, which
+> also pre-warms System B so the first toggle cannot flash.
+>
+> **AMENDMENT TO THE STANDING CHECK: prime every family with `document.fonts.load()` before measuring.** A
+> family declared in CSS but not currently rendered reports a false FALLBACK otherwise.
+
+**Toggle coverage: 14/14 elements swap family across all three fragments** — no fragment left un-toggled,
+verified at both profiles. The two 390px pairs deliberately ignore the toggle and render both systems at once.
+
+**Also verified:** 0 console errors, 0 failed requests at both profiles; zero horizontal overflow at 390 / 768
+/ 1024 / 1440 / 1920; keyboard operable (Tab reaches the group, arrows change selection **and** the rendered
+system); every contrast pairing clears AA on real composited backgrounds — hero h1 16.17:1, hero lede 9.66:1,
+chip on composited `--ink-glass` 8.80:1, light body 8.06:1, mono chips 17.44:1.
+
+## 3. IMPECCABLE — findings and responses
+
+**`$impeccable critique` was run for real this task** (Task #10 recorded honestly that it was not). Two
+independent assessments, neither seeing the other: **A** design review, **B** detector + browser evidence.
+
+**Score: 22/40.** Deterministic detector: **0 findings, exit 0** — and verified non-vacuous, because the same
+detector fired 4 findings on the sibling specimen bench (`overused-font` on Space Grotesk and Fraunces,
+`em-dash-overuse`, `numbered-section-markers`). **AI-slop verdict: not slop** — zero `box-shadow` in the file,
+max radius 16px, no gradient text, no side-stripes, no sketchy SVG.
+
+| # | Finding | Severity | Response |
+|---|---|---|---|
+| 1 | **The bench never said System B is what the site already ships.** `layout.tsx` imports Bricolage + Hanken. B = change nothing; A = re-typeset 13 pages and re-run the CLS work. The bench presented them as a symmetric, cost-free choice | **P0** | **FIXED — the most important change in this round.** The control bar now states it plainly: *"B is what the site ships today. A is a change: 13 pages re-typeset and the CLS work re-run."* **The two options do not cost the same; saying so is not a thumb on the scale — hiding it was.** |
+| 2 | **Hero line-count confound.** A wraps to 3 lines, B to 2, at identical 62.4px. The founder forms a preference in 3 seconds and attributes a line break to the typeface — while the bar claimed *"Only the faces change"* | **P0** | **PARTIALLY FIXED, deliberately.** Added `text-wrap: balance` to match the site's shipped `.text-balance`. **The line-count difference REMAINS, because it is genuinely caused by the faces** — Sora is 12% wider and needs the third line. Suppressing it would hide real information. **The false reassurance is what was fixed:** the bar now reads *"Same markup, same sizes. Faces differ — and so does how they wrap."* |
+| 3 | **`max-width: 68ch` gave 95 chars/line in A and 85 in B** — over the 65–75ch law, and a *second uncontrolled variable* pushing opposite to the hero confound | **P1** | **FIXED.** Shared pixel measure (560px). Re-measured: **both systems now 560px, 3 lines, ~57 chars/line.** The `ch` unit is the advance of "0" and overshoots 25–40%. Hero lede and terminus converted too; `ch` survives only on two headings. |
+| 4 | **Only the display face was ever shown simultaneously.** Body and mono were memory tests across a toggle — and body texture at 17px is exactly what does *not* survive in memory | **P1** | **FIXED, and it is the best addition in the round.** New Fragment 4 renders body + data label in both systems at once, at 390px. The display strip moved to Fragment 5. The hard comparison now comes first, while attention is fresh. |
+| 5 | **Font-load check raced and went stale.** A single 250ms timeout printed a false FALLBACK on slower profiles, and never re-ran after a toggle | **P2** | **FIXED.** Polls up to 10× at 300ms, re-runs on every system change, and leads with one plain-language line: *"All 6 fonts loaded. This comparison is valid."* / *"A font did not load. Do not judge that system until this line turns green."* |
+| 6 | **`.light p:first-of-type` (0,2,1) beat `.eyebrow` (0,1,0).** The eyebrow *is* the first `<p>`, so "Claims" rendered `--text` not `--accent` — the light fragment showed **zero** accent-coloured text — and the intended lead-paragraph emphasis never landed | **P2** | **FIXED.** Explicit `.light p.lead` class. **Both assessments found this independently, and it also explains something I saw by eye and set aside**: "Claims" looked black rather than jade in the first screenshot. |
+| 7 | **CHROME FAIRNESS: all six chrome zones hardcoded IBM Plex Mono — System B's own accent face.** It was on screen 100% of the time in both states; Space Mono only in state A. Mere exposure makes B's mono read normal and A's odd — precisely the axis being judged | **fairness defect** | **FIXED.** Chrome now uses `ui-monospace, SFMono-Regular, Menlo, Consolas` — **a face belonging to neither contestant.** Constant does not have to mean "one of the two contestants." |
+| 8 | Clipped focus ring — `.seg { overflow: hidden }` ate 3 of the ring's 4 edges, leaving green-on-green | **a11y** | **FIXED.** `overflow: hidden` removed; labels carry their own radii. |
+| 9 | Touch targets 44.2 × **34.8**px at 390 | **a11y** | **FIXED.** 12px block padding + `min-height: 44px` → 44×44 clear. |
+| 10 | **No `prefers-reduced-motion` block at all**; fades measurably still ran under `reduce` | **a11y** | **FIXED.** Guard added. §0 calls reduced motion non-negotiable and the bench had no guard whatsoever. |
+| 11 | `__setSystem()` desynced the control from the render — the pill said "A" while the page rendered B | **bug** | **FIXED.** Now syncs the radio. **This had corrupted my own first screenshot set.** |
+| 12 | Mirrored `--ease-out` was `cubic-bezier(0.23, 1, 0.32, 1)`; the site uses `(0.22, 1, 0.36, 1)` in 31 places. `#verify .bad` used a raw hex. `.console` used the divider border tier where the card tier applies | **token fidelity** | **ALL FIXED.** 21/21 colours were already verbatim; these were the three drift points. |
+
+**NOT ADOPTED, with reasons.** *Default to System B:* rejected — the incumbent is now disclosed in words,
+which addresses the substance without re-introducing an ordering bias in the other direction. *Split into three
+independent role toggles (display / body / mono):* a genuinely good idea — Assessment A notes the current
+design cannot reach "Bricolage + Instrument Sans + IBM Plex Mono" — but **it changes the question the owner was
+asked**, and the finalists were chosen as systems. **Recorded as an open question for the D21 conversation
+rather than built unilaterally.** *Pin the hero to equal line count:* rejected as above; that would hide a real
+property of the faces.
+
+## 4. WHAT THE BENCH SHOWS — honest craft observations
+
+- **The 390px display strip:** both wrap to two lines and break at the same point, because the per-face
+  tracking equalised optical width. **Sora's "accounted for." nearly touches the box edge; Bricolage keeps
+  comfortable room.** That margin is the clearest single difference on the page.
+- **The hero at 1440:** **A = 3 lines with "accounted" isolated in green; B = 2 lines.** A reads more
+  art-directed. **That is a line break, not a quality judgment** — and it is now labelled as such.
+- **Body pair:** Instrument Sans reads slightly narrower and more neutral; Hanken slightly warmer and rounder.
+  At 560px both set 3 lines at ~57 chars — genuinely close, which is why simultaneity was needed to see it.
+- **Mono pair:** Space Mono is distinctly more characterful — arguably "retro-tech" on data labels that should
+  recede. IBM Plex Mono is more engineered and neutral. **On the healthcare-trust register this is the axis
+  where the two systems differ most, and it is the one the old bench could not show at all.**
+
+## 5. DECISION PROTOCOL
+
+> **Owner picks A or B in chat; ruling becomes D21 with commit-and-close in force.**
+
+Per **D-pre21(b)**, once D21 locks the finalist, **type is CLOSED until post-launch — no re-litigating
+mid-build.** The premium-face door (D-pre21(a)) is a **P6** gate, one-time licence only, bench rerun required.
+
+**Still owed, and not exercised by this round: the cheap-panel leg of the C3 protocol.** §13d records that both
+devices used so far were good screens. **A face that holds on a Mac and a gaming monitor has not been tested
+against the display C3 exists to catch.** That check lands in W4.

@@ -2267,3 +2267,37 @@ cost us the van or the map is out of scope by this ruling.
 4. **P3 harden-and-evolve stance** (13a) — the Railway convergence is the argument against a from-scratch
    visual rebuild; if P3 rebuilds anyway, it must say why this receipt was overridden.
 5. **T1 and T5 are binding on all of the above.**
+
+## 13d. TYPE BENCH REACTIONS — 2026-08-17
+
+**Evidence tier: OWNER-STATED.** Reactions to the Task #10 specimen bench (`docs/type-bench/index.html`).
+
+**Testing conditions, stated including the gap.** The owner viewed the bench on **two devices — a Mac and a
+Windows machine with a good gaming monitor.** **The cheap-panel leg of the C3 protocol was NOT exercised.**
+Both screens the bench was judged on are good ones, which is the opposite of the condition C3 exists to catch.
+**Recorded as an open gap, not hidden**: a face that holds on a Mac and a gaming monitor has not yet been
+tested against the display C3 is actually about. This does not invalidate the finalist pick; it means the
+cheap-panel check is still owed, and W4 is where it lands.
+
+**FINALISTS CHOSEN — two, from seven:**
+
+| | System | Display | Body | Mono |
+|---|---|---|---|---|
+| **A** | **#06** | **Sora** | Instrument Sans | Space Mono |
+| **B** | **#02** | **Bricolage Heavy** (the incumbent-heavy control) | Hanken Grotesk | IBM Plex Mono |
+
+**That block 02 survived to the final two is itself a finding.** It was built as the control — the same
+incumbent family pushed to its heavy cuts, testing whether *weight* rather than *family* was the wound
+(T2). It reaching the finals means the cheapest possible outcome is still live: the site may already have
+the right family and only the wrong weight.
+
+**OWNER SELF-DISCOVERY, ON RECORD:** fonts are inherently hard to satisfy him. **Accepted as a working
+constraint rather than treated as a problem to solve** — and countered structurally by the commit-and-close
+law (D-pre21b), which exists precisely because an unbounded search for a face that finally satisfies would
+never terminate.
+
+**OWNER INSIGHT, ON RECORD:** *a font alone makes no site premium; the combination does.* This is consistent
+with **T1 (combination over cloning)** and it is the direct reason the next round is a **context bench**
+rather than more specimens. Judging a face in isolation cannot answer a question about combination, so the
+finalists are now shown inside real page anatomy — hero, light content section, ink terminus — with
+everything else held identical.
