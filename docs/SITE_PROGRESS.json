@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-18",
-    "currentTask": "P3-W4: owner color readings (good + cheap machines — the owed C3 leg)",
+    "currentTask": "P3-W4: owner color readings (good + cheap machines — the owed C3 leg; now explicitly including the Yoga-class machine from FO-1)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -720,6 +720,12 @@
       "date": "2026-08-18",
       "status": "open",
       "text": "NO hardcoded-HEX guard exists. nexo-brand section 0 bans hex outside globals.css, but nothing enforces it - scripts/qa/ contains routes.mjs, run.mjs, sweep.mjs and the new static-type-check.mjs, and none checks colour literals. Task #14 deliberately did NOT build one (out of scope; the task said record it). W4 is the natural home because W4 is the colour workstream: build a hex guard on the same pattern as static-type-check.mjs (zero-dep, file+line, same sanctioned-exemption list plus src/lib/email/ which must hardcode colours for the same reason it hardcodes families). Note the type guard already proves the pattern works and is negative-tested."
+    },
+    {
+      "id": "DISC-21",
+      "date": "2026-08-18",
+      "status": "scheduled",
+      "text": "FO-1: C4 OBSERVED on the LIVE production site (main @ f0de3c9) on a Lenovo Yoga 7 class Windows machine with basic dedicated graphics - the route line and the livery van sit at visibly different positions at the same scroll, and in one frame the van renders with no line nearby. Owner also reports a bluish panel cast (C3-class, panel-level; a screenshot cannot capture it, so the colour-bench readings on that machine remain the instrument and are pending). MECHANISM NAMED AND SOURCE-VERIFIED in docs/FIELD_OBSERVATIONS.md - git diff f0de3c9..HEAD on RouteOverlay.tsx is EMPTY, so live V1 and current v2 are identical here. One path string serves two renderers in two coordinate systems: the line as SVG path with pathLength=1 inside viewBox 0 0 geo.w geo.h, the van via CSS offset-path in raw pixels. measure() runs on mount and window.resize ONLY (grep-confirmed: no ResizeObserver, no MutationObserver), so docStart/docSpan go stale. THE SOURCE CORRECTED THE CHAT DIAGNOSIS: the SVG carries preserveAspectRatio=none while the host height is FROZEN inline at geo.h and the width is LIVE at w-full, so the axes scale independently - a live-width change (a scrollbar appearing as document height changes) stretches the path NON-UNIFORMLY, which changes arc-length parameterisation, so the line head (dashoffset on the stretched normalised path) and the van (offset-distance on the raw path) are different points, expressing vertically on a long mostly-vertical route. That is the desync. The frozen height is a SEPARATE failure producing the stale band and the van-with-no-line frame. SCHEDULED: W5, with invariant I20 shipping in the same task per D12. NOT ESTABLISHED: which failure dominates on that machine - needs measurement on the machine, not reasoning from source."
     }
   ],
   "gates": {
@@ -825,6 +831,10 @@
     {
       "date": "2026-08-18",
       "summary": "Task #15: stale-build preflight guard (negative-tested with a real rebuild-under-server reproduction) + the W4 colour hardening bench. Impeccable caught a blocker in the bench arithmetic and a P0 in its own canvas; both fixed and re-verified."
+    },
+    {
+      "date": "2026-08-18",
+      "summary": "Task #16: C4 promoted from hypothesis to OBSERVED via field evidence FO-1 from the live site on a Yoga-class machine. Mechanism named and re-verified against source (the source corrected the chat diagnosis on preserveAspectRatio=none plus frozen-height/live-width). W5 gains a two-option fix spec and the I20 van-rides-the-line invariant, bound to the same task per D12."
     }
   ]
 }

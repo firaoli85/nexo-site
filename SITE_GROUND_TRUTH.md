@@ -81,7 +81,7 @@ Append-only. A decision changes only with a new dated entry stating from where, 
 - **Deploy:** push to `main` → GitHub Actions (tsc TRUE 0 + build) → arm64 image → ghcr.io → Coolify webhook → live. Server never compiles. Branch pushes run checks only.
 - **QA:** 18-invariant cube, 3 engines × 6 profiles, regression law, deploy gate = full green + Oli's real-iPhone checklist. Missing: performance budget, throttled old-device profile, visual screenshot diffing.
 - **Staged truth:** `launch.ts` flags (LIVE_OPERATIONS, HIPAA_INFRA_VERIFIED, PORTAL_LIVE, HIPAA_EFFECTIVE_DATE) gate every strong claim; flags flip only on explicit owner instruction. This system is kept.
-- **Consistency defects on record:** C1 fonts-optional (slow machines keep system fonts), C2 capability forks (glass, van), C3 subtle palette on cheap monitors, C4 unbudgeted animation cost. Measure before fixing (P5 builds the measurement).
+- **Consistency defects on record:** C1 fonts-optional (slow machines keep system fonts), C2 capability forks (glass, van), C3 subtle palette on cheap monitors, C4 **OBSERVED (FO-1, 2026-08-18)** — route line and livery van desynchronise on a Yoga-class machine; mechanism named in `docs/FIELD_OBSERVATIONS.md`; fix in W5 with a regression invariant (I20). Measure before fixing (P5 builds the measurement).
 - **Known SEO state:** homepage indexing issues open; www→apex 301 redirect planned; canonical/OG currently carry the OLD "NEMT company" positioning and will be rewritten in V2.
 
 ## 6. THE V2 PROGRAM (the professional order of work)

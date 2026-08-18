@@ -417,6 +417,38 @@ The four candidates (D20d), approved for P3 exploration and **encoding into a `n
 tracked by eye it is too fast) · transform and opacity only · **every candidate ships its static end-state
 first**. **`nexo-shape` is recommended first** (highest value per unit of risk).
 
+#### W5 ADDENDUM — C4 FIX SPEC + I20 (added 2026-08-18, Task #16)
+
+**C4 is no longer a hypothesis: it is OBSERVED on live V1 (FO-1).** The route line and the livery van
+desynchronise on a Yoga-class machine. Mechanism named and source-verified in `docs/FIELD_OBSERVATIONS.md`.
+
+**THE FIX — spec, not code. The implementation task chooses between these WITH MEASUREMENTS, not by taste:**
+
+- **Option A — re-measure on content reflow.** Add a debounced `ResizeObserver` on the overlay host and on
+  document height (there is currently **no** `ResizeObserver` and **no** `MutationObserver`; `measure()`
+  runs on mount and `window.resize` only). Cheapest change; keeps both coordinate systems but stops them
+  drifting apart. **Risk: it narrows the window rather than closing it** — anything that reflows between
+  observer callbacks still desyncs, and it adds observer cost to a scroll-heavy page.
+- **Option B — collapse to ONE coordinate system.** Derive the van's position from the **same rendered SVG
+  geometry** the line uses — e.g. `pathEl.getPointAtLength(progress * pathEl.getTotalLength())` on the
+  rendered path, positioning the van from that point instead of via CSS `offset-path`. **This removes the
+  class of bug rather than its trigger**, because there is then no second parameterisation to disagree with.
+  **Cost:** `offset-path`'s free GPU-side interpolation is lost, and the van must be positioned per frame
+  inside the existing single rAF — which is where the measurement is needed.
+
+**Whichever is chosen, the fix must address BOTH failures in FO-1** — the arc-length divergence driven by the
+**live width** under `preserveAspectRatio="none"`, and the stale band left by the **frozen height** with its
+stale `docStart`/`docSpan`. A fix that only re-measures geometry but leaves the progress mapping stale is
+incomplete.
+
+**I20 — "THE VAN RIDES THE LINE" (new invariant; ships IN THE SAME TASK as the fix, per D12).**
+At one or more scrolled positions on the homepage, compute the expected van position from the **drawn path**
+and the current `--route-progress`, and assert the **rendered van's centre agrees within a small pixel
+tolerance**. Runs across the engines and profiles where the van actually renders, **respecting the
+`@supports (offset-path)` gate and the reduced-motion / sub-`lg` branches where the van is deliberately
+absent** — those must be skips, not failures. **The invariant is the receipt: without I20 the fix is
+unverifiable on the machines that exhibit the bug, and per D12 the fix is incomplete without it.**
+
 ### W6 — Illustration / animation imagery system (D19)
 
 Primary imagery = animation + custom illustration in our own visual language. **Stock people-photography
