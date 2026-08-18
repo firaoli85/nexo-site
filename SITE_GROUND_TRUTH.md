@@ -8,7 +8,7 @@ Read this first, every session, before touching anything.
 | **Owner** | Firaoli ("Oli") Seboka, solo founder, FC Nexo LLC dba Nexo Access |
 | **Status** | V1 live at nexoaccess.com. V2 rebuild starting: research-first, on the `v2` branch. |
 | **Horizon** | Built to hold for 2 to 3 years of solo operation. Oli will be running the business, not rebuilding the site. |
-| **Version** | v1.4 — August 17, 2026 |
+| **Version** | v1.5 — August 18, 2026 |
 
 ---
 
@@ -74,6 +74,7 @@ Append-only. A decision changes only with a new dated entry stating from where, 
 | D-pre21 | 2026-08-17 | **Type process rulings (D21 pending finalist pick).** (a) Premium purchase declined for now; ROADMAP door: if at P6 the type feels insufficient on the real site, evaluate ONE premium face, one-time license only, never subscription, bench rerun required. (b) Commit-and-close law: once D21 locks the finalist, type is CLOSED until post-launch; no re-litigating mid-build. (c) J3 contradiction page names no vendors (trade-libel: the pattern is the story); owner veto open. |
 | D21 | 2026-08-17 | **Type ruling (W3 closed; commit-and-close in force).** System B: Bricolage Grotesque display at heavy cuts (headings 700, hero 800), Hanken Grotesk body, IBM Plex Mono accent layer (stat lines, eyebrows, codes). Bench-measured tracking is law: hero -0.030em, heading -0.022em, lede -0.008em, mono +0.035em. Owner verdict on two good screens: systems close; B chosen; B is also the zero-retypeset path (bench-disclosed). MODULAR TYPE LAW: type follows the color single-source architecture — one token block (families, weights, tracking), font loading in one file, Tailwind mapped once, zero hardcoded font families in components; a future swap = one block edit + full cube. Type is CLOSED until post-launch. Cheap-panel C3 leg still owed → W4. |
 | D22 | 2026-08-17 | **Private evidence tier: OWNER-DOC-VERIFIED.** Facts confirmed from the owner's historical broker/payer documents (Healthway era; PHI-scanned clean) carry internal-verification weight. HANDLING LAW: the source documents and the evidence memo live in Claude project knowledge ONLY; no figures, broker names, or contract terms enter any repo; site publication still requires public primary sources (D17). Chat-side memo creation was the deliberate exception to the Claude-Code-creates-docs law: private material cannot pass through a public repo. |
+| D23 | 2026-08-18 | **Perception floors (C3 hardened).** Owner two-device readings (high-end control + standard laptop operative): surfaces A06/B06, borders E1-07/E2-05, glass floors 0.75/0.60 (current 0.90/0.70 held — safety margin recorded), disabled tier exempt, F1+F3 PROPOSED adopted. FLOORS-ONLY-RISE LAW: perception floors may rise with new device readings, never lower; no task may soften a floor by good-screen judgment. Identity unchanged: same jade, hardened deltas. Hex guard live (DISC-20 closed). |
 
 ## 5. SITE FACTS (verified 2026-08-17, recon receipt: docs/SITE_RECON_2026-08-17.md)
 
@@ -81,7 +82,7 @@ Append-only. A decision changes only with a new dated entry stating from where, 
 - **Deploy:** push to `main` → GitHub Actions (tsc TRUE 0 + build) → arm64 image → ghcr.io → Coolify webhook → live. Server never compiles. Branch pushes run checks only.
 - **QA:** 18-invariant cube, 3 engines × 6 profiles, regression law, deploy gate = full green + Oli's real-iPhone checklist. Missing: performance budget, throttled old-device profile, visual screenshot diffing.
 - **Staged truth:** `launch.ts` flags (LIVE_OPERATIONS, HIPAA_INFRA_VERIFIED, PORTAL_LIVE, HIPAA_EFFECTIVE_DATE) gate every strong claim; flags flip only on explicit owner instruction. This system is kept.
-- **Consistency defects on record:** C1 fonts-optional (slow machines keep system fonts), C2 capability forks (glass, van), C3 subtle palette on cheap monitors, C4 **OBSERVED (FO-1, 2026-08-18)** — route line and livery van desynchronise on a Yoga-class machine; mechanism named in `docs/FIELD_OBSERVATIONS.md`; fix in W5 with a regression invariant (I20). Measure before fixing (P5 builds the measurement).
+- **Consistency defects on record:** C1 fonts-optional (slow machines keep system fonts), C2 capability forks (glass, van), C3 **MEASURED + HARDENED (D23)**; further device readings may only raise floors, C4 **OBSERVED (FO-1, 2026-08-18)** — route line and livery van desynchronise on a Yoga-class machine; mechanism named in `docs/FIELD_OBSERVATIONS.md`; fix in W5 with a regression invariant (I20). Measure before fixing (P5 builds the measurement).
 - **Known SEO state:** homepage indexing issues open; www→apex 301 redirect planned; canonical/OG currently carry the OLD "NEMT company" positioning and will be rewritten in V2.
 
 ## 6. THE V2 PROGRAM (the professional order of work)
@@ -133,4 +134,4 @@ Each phase produces documents before code. A phase is done when its documents ex
 
 ## 9. CURRENT STATE (update every session)
 
-**As of August 17, 2026:** P3-W3 CLOSED (D21). Owner document packet analyzed 2026-08-17 → OWNER-DOC-VERIFIED tier (D22); evidence memo in project knowledge. NEXT: Task #14 — modular type implementation (first code on v2; full cube). Then W4 color hardening (carries the cheap-panel C3 leg).
+**As of August 18, 2026:** P3-W3 CLOSED (D21, implemented Task #14). **P3-W4 CLOSED (D23, implemented Task #18):** the palette is hardened to the owner's measured perception floors — 12 token values moved, F1 (scrolled-nav edge → card tier) and F3 (15 section/chrome boundary rules → `--border-strong`) adopted, and the hex guard is live so the token block is enforced as the single source (DISC-20 closed). Glass alphas were deliberately NOT changed: their read floors (0.75 / 0.60) sit below the shipped values (0.90 / 0.70), and floors-only-rise gives no mandate to move what already clears. **The closing proof is owed and is the owner's:** these values were derived from readings but have not yet been scrolled by the owner on the standard laptop that set the floor. NEXT: W5 — motion system (nexo-motion skill, the C4 fix + I20, motion-safe architecture).

@@ -9,18 +9,40 @@
    No prefers-color-scheme block — this app is universal light.
 ──────────────────────────────────────────────────────────────────────────────── */
 :root {
+  /* ══════════════════════════════════════════════════════════════════════════
+     D23 PERCEPTION FLOORS (2026-08-18). The deltas below are HARDENED to the owner's
+     two-device readings (high-end display as control, standard laptop as the OPERATIVE
+     floor). Rungs: light surfaces A06 (2.0x), ink surfaces B06 (2.0x), light borders
+     E1-07 (3.0x), on-ink borders E2-05 (1.3x). Every value is the bench's own
+     mix(from, to, k) at the read rung — converted, not re-invented.
+     GLASS IS DELIBERATELY UNCHANGED: the read floors were alpha 0.75 (nav) and 0.60
+     (ink card); the shipped 0.90 / 0.70 already clear them, so they stand and the
+     floors are recorded as margin. --text-disabled is EXEMPT (WCAG 1.4.3).
+     FLOORS-ONLY-RISE LAW: a perception floor may RISE with new device readings and may
+     NEVER be lowered. No task may soften one by good-screen judgment. Identity is
+     unchanged — same jade, hardened deltas. See docs/COLOR_BENCH.md, ground truth D23.
+     ══════════════════════════════════════════════════════════════════════════ */
+
   /* Surfaces — soft, layered off-white for calm depth (not stark white) */
-  --bg:             #fafbfc;   /* page/layout base — faint cool off-white */
-  --surface:        #ffffff;   /* cards, panels */
-  --surface-hover:  #f3f5f8;   /* hover state on surfaces */
-  --surface-alt:    #f5f7fa;   /* alternate tinted surface — section banding */
+  --bg:             #f5f7f9;   /* page/layout base. D23 A06 — was #fafbfc (1.04:1 vs a white card, i.e. invisible on a standard panel); now 1.07:1 */
+  --surface:        #ffffff;   /* cards, panels — the unchanged anchor every A-ladder delta is measured FROM */
+  --surface-hover:  #e7ebf1;   /* hover state on surfaces. D23 A06 — was #f3f5f8; now 1.20:1 vs white */
+  /* D23 A06 applied here too, though no reading named it: at the hardened --bg this token's
+     old #f5f7fa would have landed within ONE blue step of the page base — two tokens with
+     different jobs rendering as the same colour. Currently unused in src/, so this is a latent
+     trap being closed rather than a visible change. */
+  --surface-alt:    #ebeff5;   /* alternate tinted surface — section banding */
   /* (--surface-glass, the old LIGHT nav glass, was retired in Stage 6.1 — the nav is now a SINGLE
      dark register, see --nav-glass below.) */
-  --input-bg:       #f7f9fb;   /* form inputs */
+  --input-bg:       #eff3f7;   /* form inputs. D23 A06 — an input fill at 1.06:1 vs its white card is exactly the
+                                  vanishing-on-a-cheap-panel case the A ladder measured; now 1.12:1. text 16.64:1 */
 
-  /* Borders — soft, low-contrast (Railway uses very subtle borders) */
-  --border:         #ebedf1;   /* standard divider / card border */
-  --border-strong:  #dcdfe4;   /* stronger border / hover emphasis */
+  /* Borders. D23 E1-07 (3.0x): the owner could not see the old hairlines on a standard laptop,
+     and a vanished border takes the card's SHAPE with it. These two are the DECORATIVE tier —
+     WCAG 1.4.11's 3:1 governs --border-control below, not these; they are edges you should see,
+     not controls you must locate. They stay deliberately under the control tier. */
+  --border:         #c3c9d5;   /* standard divider / card border. D23 E1-07 — was #ebedf1 at 1.17:1; now 1.66:1 */
+  --border-strong:  #969fae;   /* stronger border / section-boundary rule (F3). D23 E1-07 — was #dcdfe4 at 1.34:1; now 2.67:1 on white, 2.49:1 on --bg */
   /* Control edge — a jade-cast gray that clears the WCAG 1.4.11 3:1 floor for a
      boundary-dependent control on its real fields: vs white fill 3.48, vs tint 3.27,
      vs bg 3.36. Used by the light secondary button (its old #dcdfe4 was 1.34:1). */
@@ -83,7 +105,7 @@
      stage report). No gradients/glow — flat fills + hairlines only. */
   /* Ink — a near-black deep jade for dark sections (the footer). */
   --ink:             #0b1512;   /* section bg; on-ink text = 16:1 */
-  --ink-surface:     #12201b;   /* faintly raised ink surface */
+  --ink-surface:     #192b24;   /* raised ink surface. D23 B06 — was #12201b at 1.10:1 vs --ink (a card that did not read as a card); now 1.25:1 */
   --on-ink:          #e9f1ee;   /* primary text on ink (16.4:1) */
   /* Secondary/link text on ink. Lifted one step in Stage 6.1 (readability sweep): #a0b3ac → #adbfb8
      so small on-ink reading text (assist proofs, hero body, console captions) has more PRESENCE and
@@ -93,16 +115,27 @@
   /* On-ink borders — a TWO-TIER system (Stage 4.6). The old single #24332e was 1.41:1
      vs ink: a dead, invisible edge. Now derived from the ink's own hue (not flat gray):
        -border       = faint DIVIDER/track tier, lifted to 2.12:1 (visible-but-quiet).
-       -border-strong = CARD-EDGE tier, 3.15:1 (a clearly present edge; brief floor >=3). */
-  --on-ink-border:        #35504a;   /* dividers / tracks / connectors — 2.12:1 vs ink */
-  --on-ink-border-strong: #4a6b60;   /* card & panel edges on ink — 3.15:1 vs ink */
+       -border-strong = CARD-EDGE tier, 3.15:1 (a clearly present edge; brief floor >=3).
+     D23 E2-05 (1.3x) hardened BOTH tiers against the new --ink-surface. The strong tier is the
+     one that mattered: at #4a6b60 it measured 2.85:1 against the raised surface it actually sits
+     on, MISSING the 3:1 card-edge floor it is named for — it only ever cleared 3.15:1 against flat
+     --ink. It now clears the floor on its real background. */
+  --on-ink-border:        #405e58;   /* dividers / tracks / connectors — 2.10:1 vs --ink-surface */
+  --on-ink-border-strong: #5b8275;   /* card & panel edges on ink — 3.47:1 vs --ink-surface (was 2.85:1 there) */
   --accent-on-ink:   #46d6a0;   /* jade that reads on ink — links (10.1:1) */
   --accent-on-ink-hover: #74e2b8;
   /* Nav item hover fill on ink (Stage 6) — the old hover used --ink-surface, which is ~1.04:1
-     vs the ink-glass panel => the hover was INVISIBLE (owner couldn't see it). This is lifted a
-     step (1.44:1 vs the panel) so the row visibly lightens; description text (on-ink-muted) still
-     clears AA on it at 5.11:1. */
-  --ink-hover:       #264035;
+     vs the ink-glass panel => the hover was INVISIBLE (owner couldn't see it). Lifted so the row
+     visibly lightens while description text still clears AA on it.
+     D23 — NOT dictated by any reading, and deliberately so. The B ladder measured --ink-surface,
+     a raised CARD; this is a nav-row hover FILL with text on it. Carrying B06's 2.0x across to it
+     gave #416b58, which dropped --on-ink-muted from 5.85:1 to 3.15:1 — a real AA FAILURE created
+     by extrapolating a reading past what it measured. Re-derived instead against both of its own
+     constraints: (a) --on-ink-muted must clear 4.5:1 on it, (b) it must read as a step lighter
+     than --ink-surface. 1.30x satisfies both with margin (muted 4.85:1, not the 4.57:1 edge that
+     1.40x would leave) and separation RISES to 1.59:1 from 1.50:1 — the hover reads more than it
+     did while its text got safer. Where a floor and AA conflict, AA wins. */
+  --ink-hover:       #2e4d40;
 
   /* ══════════════════════════════════════════════════════════════════════════
      D21 MODULAR TYPE LAW — the only place type is defined. Bench-measured
@@ -131,10 +164,14 @@
   --track-lede:    -0.008em;
   --track-mono:     0.035em;
 
-  /* Soft jade tint (~4% toward jade from white) — section bands, eyebrow pill,
-     chip fills. text-muted = 5.5:1, text-accent = 4.7:1 on it. */
-  --surface-tint:        #f4f9f7;
-  --surface-tint-border: #dbeae3;
+  /* Soft jade tint — section bands, eyebrow pill, chip fills. D23: tint A06 (2.0x), its edge
+     E1-07 (3.0x), so the banding holds its relationships at the hardened floor.
+     WATCH — the tightest margin in the palette: --accent on this tint is 4.54:1, only 0.04 above
+     AA. Darkening --surface-tint any further FAILS accent text on it. Do not touch this value
+     without recomputing that pairing; if the tint must darken, --accent-hover (#0a6b49) is the
+     designated deeper-field substitute. text 16.38:1 / text-muted 7.12:1 / text-subtle 6.27:1. */
+  --surface-tint:        #e9f3ef;
+  --surface-tint-border: #93c0ab;
 
   /* ── On-ink graphical + status variants (Stage 4.5) — for strokes / fills / status
      text on the INK stages; each AA-verified against --ink (see stage report). Raw

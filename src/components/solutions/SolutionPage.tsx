@@ -108,7 +108,7 @@ export function SolutionPage({
         return (
           <Section
             key={s.claim}
-            className={cn("relative overflow-hidden border-t border-border", tint ? "bg-surface-tint" : "bg-bg")}
+            className={cn("relative overflow-hidden border-t border-border-strong", tint ? "bg-surface-tint" : "bg-bg")}
           >
             {/* Grid whisper only (gutter={false}): subtle texture that ties the middle sections to the
                 homepage rhythm WITHOUT repeating the region's landmark glyphs down the page (that would
@@ -142,7 +142,7 @@ export function SolutionPage({
           Alternates cleanly off the last proof section; the region crop closes the page. */}
       <section
         className={cn(
-          "relative overflow-hidden border-t border-border",
+          "relative overflow-hidden border-t border-border-strong",
           sections.length % 2 === 1 ? "bg-surface-tint" : "bg-bg"
         )}
       >

@@ -15,6 +15,8 @@ description: The design law for the Nexo Access site (Next.js NEMT healthcare ma
 >   synchronized both copies.
 > - 2026-08-18: §2 aligned to D21 (System B heavy + mono accent + modular type law);
 >   synchronized both copies.
+> - 2026-08-18: §3 HARDENED to D23 perception floors (10 token values + their ratios) and §0 gained
+>   the floors-only-rise law plus the hex guard; synchronized both copies.
 
 Premium, calm, credible marketing site for a **medical transportation management organization** working
 DC / Maryland / Virginia. (Nexo Access delivers trips through a **credentialed provider network**:
@@ -44,6 +46,13 @@ Nexo-specific value or rule.)
   computed against the *actual composited* background (worst case — e.g. glass over ink), never
   assumed. Verify with a luminance calculator, not by eye.
 - **Zero hardcoded hex/rgb in components.** Colors come through tokens/Tailwind utilities only.
+  **ENFORCED, not reviewed:** `npm run qa:static` runs `scripts/qa/static-hex-check.mjs`, which fails
+  the build naming file+line. Exemptions are `globals.css` and the email surfaces ONLY (mail clients
+  strip `<style>` and ignore `var()`), and they are listed with reasons in the script header.
+- **FLOORS-ONLY-RISE (D23).** The palette's deltas are set by measured perception floors on the
+  OPERATIVE device (a standard laptop), not the best one. A floor may RISE when a new device reading
+  demands it; it may **never be lowered**, and no task may soften one because it looks fine on a good
+  screen. Softening a floor is a law violation, not a taste call.
 - **Zero-CLS.** Reserve space (grid-stack, aspect-ratio, fixed dims). Screenshot-verify.
 - **Reduced-motion is respected** — every motion surface has a static end-state; the global
   `@media (prefers-reduced-motion: reduce)` block zeroes durations + delays.
@@ -162,12 +171,22 @@ All in `globals.css :root`; Tailwind utilities in `tailwind.config.ts`.
 `--text #0c1512` · `--text-muted #42544c` · `--text-subtle #4b5c53` · `--text-disabled #b6c2ba`.
 Use on white/tint surfaces. On ink surfaces use the on-ink ramp instead.
 
-**Surfaces:** `--bg #fafbfc` (page) · `--surface #ffffff` (cards) · `--surface-hover #f3f5f8` ·
-`--surface-tint #f4f9f7` + `--surface-tint-border #dbeae3` (bands, eyebrow pills, chips).
+**Surfaces (D23-hardened — see the floors-only-rise law in §0):** `--bg #f5f7f9` (page) ·
+`--surface #ffffff` (cards — the unchanged anchor every light delta is measured FROM) ·
+`--surface-hover #e7ebf1` · `--surface-tint #e9f3ef` + `--surface-tint-border #93c0ab` (bands,
+eyebrow pills, chips) · `--surface-alt #ebeff5` · `--input-bg #eff3f7`.
+**TIGHTEST MARGIN IN THE PALETTE:** `--accent` on `--surface-tint` is **4.54:1**, only 0.04 above AA.
+Darkening `--surface-tint` any further FAILS accent text on it — recompute that pairing before
+touching the value, and use `--accent-hover` if the field must deepen.
 (The old light `--surface-glass` was RETIRED in Stage 6.1 — the nav is one dark register now; see
 `--nav-glass` under the INK family.)
 
-**Borders (light):** `--border #ebedf1` (decorative card/divider) · `--border-strong #dcdfe4` ·
+**Borders (light, D23-hardened):** `--border #c3c9d5` (decorative card/divider, 1.66:1 on white) ·
+`--border-strong #969fae` (2.67:1 on white, 2.49:1 on `--bg`) — **`border-strong` is the
+SECTION-BOUNDARY rule** (F3): every section and sticky-chrome edge uses the directional form
+(`border-t/-y/-b border-border-strong`), while CARD edges stay on `--border`. Both are the
+DECORATIVE tier and deliberately sit under the control tier — 1.4.11's 3:1 governs
+`--border-control`, not these. ·
 `--border-control #7e8d86` (**boundary-dependent controls** — clears WCAG 1.4.11 3:1 on white/tint/bg;
 used by the light secondary button). A light secondary/outline button MUST use `border-control`, not
 `border`/`border-strong`, so its shape is perceivable; text-only ghost buttons are exempt (identified
@@ -177,19 +196,25 @@ by their text, not a boundary).
 `--accent-hover #0a6b49` (also the accent word on any deeper light field where jade-on-jade would
 fail) · `--accent-text #ffffff` · `--accent-subtle #e8f8f1`.
 
-**INK family (dark showcases only):** `--ink #0b1512` (section bg) · `--ink-surface #12201b`
+**INK family (dark showcases only, D23-hardened):** `--ink #0b1512` (section bg) · `--ink-surface #192b24`
 (raised surface / glass fallback) · `--on-ink #e9f1ee` (primary text, 16:1) ·
 `--on-ink-muted #adbfb8` (secondary — LIFTED a step in Stage 6.1: 9.7:1 on ink / 7.4:1 over an ink
 map stroke, so small on-ink reading text has presence, still clearly secondary below on-ink 16:1) ·
-`--on-ink-border #35504a` (2.1:1 — faint dividers/tracks) · `--on-ink-border-strong #4a6b60`
-(3.15:1 — **card/panel EDGES**) · `--accent-on-ink #46d6a0` (links/status/CTAs on ink, 10:1) ·
+`--on-ink-border #405e58` (2.10:1 vs `--ink-surface` — faint dividers/tracks) ·
+`--on-ink-border-strong #5b8275` (**3.47:1 vs `--ink-surface`** — **card/panel EDGES**, and the
+SCROLLED NAV bottom edge per F1. Ratios are now quoted against `--ink-surface`, the surface these
+actually sit on: at the old `#4a6b60` this tier measured only 2.85:1 there and MISSED the 3:1 floor
+it is named for — it cleared 3.15:1 only against flat `--ink`) · `--accent-on-ink #46d6a0` (links/status/CTAs on ink, 10:1) ·
 `--accent-on-ink-hover #74e2b8` · `--ink-glass rgb(22 42 34 / 0.70)` (COLORED liquid glass for CARDS
 on ink; over ink ≈#13241d keeps on-ink 14.1 / on-ink-muted 7.4 / accent-on-ink 8.8 — all AA) ·
 `--nav-glass rgb(12 23 19 / 0.90)` (the SINGLE nav-bar glass — deep-jade, high-alpha; over pure
 white ≈rgb(36 46 43) → on-ink 12.2 / on-ink-muted 7.3 / accent-on-ink 7.6, over the ink hero
-near-seamless; see §4) · `--ink-hover #264035` (nav item hover fill — a visible step lighter than
-the SOLID ink-surface dropdown panel, 1.45:1, so the row clearly lightens; on-ink-muted still clears
-AA on it at 5.9). On-ink borders are TWO-TIER: strong for card edges, faint for dividers. `--on-ink-border` alone never carries state/focus — those use `accent-on-ink` + a
+near-seamless; see §4) · `--ink-hover #2e4d40` (nav item hover fill — a visible step lighter than
+the SOLID ink-surface dropdown panel, 1.59:1, so the row clearly lightens; on-ink-muted still clears
+AA on it at 4.85. **NOT set by a ladder reading:** carrying the ink-surface floor across to this fill
+would have pushed on-ink-muted to 3.15:1 — a real AA failure from extrapolating a reading past what it
+measured. It is derived from its own two constraints instead. Where a perception floor and AA conflict,
+AA wins). On-ink borders are TWO-TIER: strong for card edges, faint for dividers. `--on-ink-border` alone never carries state/focus — those use `accent-on-ink` + a
 non-color cue.
 
 **On-ink status/graphics:** `--danger-on-ink #f87171` (Blocked, AA text) ·

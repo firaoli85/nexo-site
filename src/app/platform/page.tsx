@@ -263,7 +263,7 @@ export default function PlatformPage() {
             key={s.id}
             id={s.id}
             className={cn(
-              "relative scroll-mt-[124px] overflow-hidden border-t border-border",
+              "relative scroll-mt-[124px] overflow-hidden border-t border-border-strong",
               tint ? "bg-surface-tint" : "bg-bg"
             )}
           >
@@ -286,7 +286,7 @@ export default function PlatformPage() {
       })}
 
       {/* CLOSING CTA BAND — DUAL CTA (mixed readers; the B5 one-CTA rule is for the audience pages). */}
-      <section className="relative overflow-hidden border-t border-border bg-surface-tint">
+      <section className="relative overflow-hidden border-t border-border-strong bg-surface-tint">
         <AmbientMap tone="light" region="wide" />
         <Container className="relative py-16 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-2xl text-center">

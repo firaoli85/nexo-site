@@ -55,7 +55,7 @@ export function LegalPage({
       </section>
 
       {/* CONTENT — white; grid whisper only. */}
-      <Section className="relative overflow-hidden border-t border-border bg-bg">
+      <Section className="relative overflow-hidden border-t border-border-strong bg-bg">
         <AmbientMap tone="light" region="wide" gutter={false} />
         <Container className="relative">
           <div className="max-w-prose">

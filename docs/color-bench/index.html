@@ -26,14 +26,20 @@
 
 <style>
   :root {
-    /* ── MIRRORED FROM globals.css (2026-08-18) ───────────────────────────── */
-    --bg: #fafbfc;
+    /* ── MIRRORED FROM globals.css — HARDENED 2026-08-18 PER D23 ───────────────
+       These are the POST-hardening values. Every ladder below is regenerated around
+       them, so '1.00x = CURRENT' stays true by construction and CURRENT now marks the
+       shipped hardened token, not the value the owner read against. The pre-hardening
+       value is kept on each line as PREVIOUS so this file is its own before/after
+       receipt: a second reading on the same machine should now find the first visible
+       step at or below 1.00x. If it does not, the floor RISES again (floors-only-rise). */
+    --bg: #f5f7f9;                    /* PREVIOUS #fafbfc — read floor A06 (2.0x) */
     --surface: #ffffff;
-    --surface-hover: #f3f5f8;
-    --surface-tint: #f4f9f7;
-    --surface-tint-border: #dbeae3;
-    --border: #ebedf1;
-    --border-strong: #dcdfe4;
+    --surface-hover: #e7ebf1;      /* PREVIOUS #f3f5f8 — A06 (2.0x) */
+    --surface-tint: #e9f3ef;       /* PREVIOUS #f4f9f7 — A06 (2.0x) */
+    --surface-tint-border: #93c0ab; /* PREVIOUS #dbeae3 — E1-07 (3.0x) */
+    --border: #c3c9d5;             /* PREVIOUS #ebedf1 — E1-07 (3.0x) */
+    --border-strong: #969fae;      /* PREVIOUS #dcdfe4 — E1-07 (3.0x) */
     --border-control: #7e8d86;
     --text: #0c1512;
     --text-muted: #42544c;
@@ -42,12 +48,12 @@
     --accent: #0b7d56;
     --accent-subtle: #e8f8f1;
     --ink: #0b1512;
-    --ink-surface: #12201b;
-    --ink-hover: #264035;
+    --ink-surface: #192b24;        /* PREVIOUS #12201b — B06 (2.0x) */
+    --ink-hover: #2e4d40;          /* PREVIOUS #264035 — re-derived, AA-constrained */
     --on-ink: #e9f1ee;
     --on-ink-muted: #adbfb8;
-    --on-ink-border: #35504a;
-    --on-ink-border-strong: #4a6b60;
+    --on-ink-border: #405e58;      /* PREVIOUS #35504a — E2-05 (1.3x) */
+    --on-ink-border-strong: #5b8275; /* PREVIOUS #4a6b60 — E2-05 (1.3x) */
     --accent-on-ink: #46d6a0;
     --ink-glass: rgb(22 42 34 / 0.70);
     --nav-glass: rgb(12 23 19 / 0.90);
@@ -216,6 +222,14 @@
 
 <div class="wrap">
   <h1>Color hardening bench — C3</h1>
+  <p style="margin:0 0 18px;padding:12px 14px;border:2px solid var(--border-control);border-radius:8px;background:var(--surface-tint);font-size:14px;line-height:1.6">
+    <strong>HARDENED 2026-08-18 per D23.</strong> This bench has been re-mirrored: every CURRENT marker and
+    every ladder anchor is now the <em>post</em>-hardening token, and each mirrored token carries its
+    pre-hardening value as <strong>PREVIOUS</strong>. Readings taken before this date were taken against the
+    PREVIOUS column — <strong>A06 / B06 / E1-07 / E2-05 are those older rungs and are now 1.00×</strong>.
+    Glass alphas were deliberately left alone (floors 0.75 / 0.60 sat below the shipped 0.90 / 0.70).
+    <strong>FLOORS-ONLY-RISE:</strong> a re-read may move a floor up, never down.
+  </p>
   <p class="lede">One question: <strong>which of these distinctions survive on your worst screen?</strong>
   Identity is not in question — the palette is Railway-derived and you re-picked it blind. <strong>Deltas
   are.</strong> Every specimen is numbered so a reading converts to a value.</p>
@@ -340,7 +354,7 @@ function stepCard(n, mult, isCurrent, meta, inner, prefix) {
 
 /* ── a · light surface staircase ── */
 {
-  const white = hex2rgb("#ffffff"), curBg = hex2rgb("#fafbfc");
+  const white = hex2rgb("#ffffff"), curBg = hex2rgb("#f5f7f9");  // D23-hardened (was #fafbfc)
   document.getElementById("steps-a").innerHTML = MULT.map((m, i) => {
     const bg = mix(white, curBg, m), hex = rgb2hex(bg);
     const r = ratio(bg, white);
@@ -357,7 +371,7 @@ function stepCard(n, mult, isCurrent, meta, inner, prefix) {
 
 /* ── b · ink staircase ── */
 {
-  const ink = hex2rgb("#0b1512"), curCard = hex2rgb("#12201b");
+  const ink = hex2rgb("#0b1512"), curCard = hex2rgb("#192b24");  // D23-hardened (was #12201b)
   document.getElementById("steps-b").innerHTML = MULT.map((m, i) => {
     const card = mix(ink, curCard, m), hex = rgb2hex(card);
     const r = ratio(card, ink);
@@ -440,8 +454,8 @@ function stepCard(n, mult, isCurrent, meta, inner, prefix) {
          </div>`, isInk ? "E2-" : "E1-");
     }).join("");
   };
-  mkBorders("steps-e1", "#ffffff", "#ffffff", "#ebedf1", false, MULT);
-  mkBorders("steps-e2", "#12201b", "#12201b", "#35504a", true, MULT_INK_BORDER);
+  mkBorders("steps-e1", "#ffffff", "#ffffff", "#c3c9d5", false, MULT);          // D23-hardened (was #ebedf1)
+  mkBorders("steps-e2", "#192b24", "#192b24", "#405e58", true, MULT_INK_BORDER); // D23-hardened (was #12201b / #35504a)
 }
 
 /* ── f · danger pairs ── */
@@ -481,17 +495,17 @@ function stepCard(n, mult, isCurrent, meta, inner, prefix) {
 
   const PAIRS = [
     ["F1 · Nav over ink",
-      navBar("rgb(12 23 19 / 0.90)", "var(--on-ink-border)"),
+      navBar("rgb(12 23 19 / 0.90)", "var(--on-ink-border-strong)"),
       navBar("rgb(12 23 19 / 0.96)", "var(--on-ink-border-strong)"),
-      "CURRENT is the SCROLLED nav as Navbar.tsx ships it (glass 0.90, --on-ink-border edge); at page top the real nav has no border at all, which is the harder case. PROPOSED raises the glass to 0.96 and the edge to the card tier."],
+      "ADOPTED 2026-08-18 (D23), PARTIALLY. CURRENT now renders what Navbar.tsx actually ships after hardening: the scrolled edge was promoted from the divider tier to the CARD tier (--on-ink-border-strong), which is itself hardened to #5b8275, so the edge gained twice. THE GLASS ALPHA WAS DELIBERATELY NOT RAISED: the C1 reading put the perception floor at 0.75, BELOW the shipped 0.90, so the alpha already cleared its floor and floors-only-rise gives no mandate to change it — the fragment collapse was the EDGE, and the edge is what moved. The 0.96 variant is kept on the right as the unused proposal. Page top still has no border at all, by design."],
     ["F2 · Ink-glass card",
       inkCard("rgb(22 42 34 / 0.70)", "var(--on-ink-border)"),
       inkCard("rgb(22 42 34 / 0.82)", "var(--on-ink-border-strong)"),
       "PROPOSED raises ink-glass 0.70 → 0.82 and moves the edge from the divider tier (2.12:1) to the card tier (3.15:1). NOTE: globals.css currently pairs .ink-glass with --on-ink-border deliberately, so this is a proposed CHANGE to that pairing, not a fix to a misapplication."],
     ["F3 · Subtle section boundary",
-      boundary("var(--surface)", "var(--bg)", "var(--border)"),
+      boundary("var(--surface)", "var(--bg)", "var(--border-strong)"),
       boundary("var(--surface)", "var(--surface-tint)", "var(--border-strong)"),
-      "PROPOSED swaps the second band from --bg (a ~1.6 L* step off white) to --surface-tint, and the rule from --border to --border-strong. The tint carries the brand hue, so the band reads as intentional rather than as a rendering artifact."],
+      "ADOPTED 2026-08-18 (D23). The RULE half shipped everywhere: all 15 section and sticky-chrome boundaries moved from --border to --border-strong (now #969fae, 2.49:1 on --bg), while the 34 CARD edges deliberately stayed on --border. The BAND half was NOT applied as a blanket swap and that is a ruling, not an omission: the site already alternates --bg against --surface-tint, so turning every --bg section into tint would have left every section tinted and destroyed the white register the tonal map (nexo-brand §1) is built on. The band half is instead satisfied by hardening: --bg and --surface-tint are both A06-lifted, so the alternation reads without collapsing the register. Both panes now show the shipped rule; the right pane additionally shows the tint band."],
   ];
 
   document.getElementById("pairs").innerHTML = PAIRS.map(([title, cur, pro, note]) => `

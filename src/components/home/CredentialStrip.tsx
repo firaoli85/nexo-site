@@ -18,7 +18,7 @@ const CHIPS: { icon: LucideIcon; label: string }[] = [
 
 export function CredentialStrip() {
   return (
-    <section className="relative overflow-hidden border-y border-border bg-surface-tint">
+    <section className="relative overflow-hidden border-y border-border-strong bg-surface-tint">
       <AmbientMap tone="light" region="dc" />
       <Container className="relative py-5">
         <ul className="grid grid-cols-2 gap-x-6 gap-y-4 sm:gap-x-8 md:grid-cols-4">

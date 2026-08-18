@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-18",
-    "currentTask": "P3-W4: token hardening (awaiting owner reading clarification + Yoga leg)",
+    "currentTask": "W5: motion system (nexo-motion skill, C4 fix + I20, motion-safe architecture)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -359,10 +359,10 @@
       "id": "W4",
       "phase": "P3",
       "title": "Color hardening (C3): does the jade survive a cheap monitor",
-      "status": "in-progress",
+      "status": "done",
       "date": "2026-08-18",
-      "note": "BENCH DELIVERED, OWNER MACHINE READINGS PENDING. docs/color-bench/index.html + docs/COLOR_BENCH.md. Six generated ladders (68 specimens) as multiples of each live token delta so 1.00x = CURRENT by construction, plus text ramps with computed ratios and three danger-pair reproductions each with ONE hardened proposal. Globally unique specimen IDs (A04, C1-07, E2-04, D-L02) so a reading survives being read aloud over a phone. IMPECCABLE RUN FOR REAL, two independent assessments: 22/40, 10 findings, 7 fixed including a BLOCKER - the instrument was mislabelling its own steps (unclamped mix fed to ratio() while the hex was clamped, printing impossible ratios up to 71.39:1 against a 21:1 physical ceiling) and a P0 - the bench canvas was --bg #fafbfc, the exact value of the flagship CURRENT specimen, so it had no ground to separate from. Re-verified: 48 rungs, zero arithmetic mismatches, max 8.690:1. Three findings recorded NOT DONE with reasons (composite ratios for the glass ladders, reduced-motion block, sub-13px bench chrome). NEXT: owner readings on a good monitor as control, then the old and cheap machines - those write the thresholds.",
-      "fixlogRef": "2026-08-18 - Task #15"
+      "note": "HARDENED PER D23; owner on-device confirmation pending as the closing check. Owner read the bench on two machines (high-end display as control, standard laptop as the OPERATIVE floor) and returned floors A06 / B06 / E1-07 / E2-05, glass 0.75 and 0.60, D-L04 exempt (WCAG 1.4.3), F1+F3 collapsing. Twelve token values moved, each converted through the bench's own mix(from,to,k) at the read rung rather than re-invented: bg fafbfc->f5f7f9, surface-hover f3f5f8->e7ebf1, surface-tint f4f9f7->e9f3ef, surface-alt f5f7fa->ebeff5, input-bg f7f9fb->eff3f7, border ebedf1->c3c9d5, border-strong dcdfe4->969fae, surface-tint-border dbeae3->93c0ab, ink-surface 12201b->192b24, on-ink-border 35504a->405e58, on-ink-border-strong 4a6b60->5b8275, ink-hover 264035->2e4d40. THREE JUDGMENT CALLS, all recorded in docs/COLOR_BENCH.md section 6. (1) ink-hover is the one token no reading set, and forcing B06's 2.0x onto it produced a REAL AA FAILURE - on-ink-muted fell 5.85:1 to 3.15:1 - because it is a nav-row hover FILL WITH TEXT ON IT, not the raised card the B ladder measured. Re-derived from its own two constraints instead: text 4.85:1 with margin AND separation RISES to 1.59:1 from 1.50:1. Where a floor and AA conflict, AA wins. (2) Glass HELD and F1 adopted only in half: the C1 floor 0.75 sits BELOW the shipped 0.90, so the alpha already cleared its floor and floors-only-rise gives no mandate to move it; the fragment's collapse was the EDGE, so the edge moved (divider tier -> card tier on a token itself hardened, so 2.85:1 -> 3.47:1 vs the surface it actually sits on - the 'strong' tier finally meets the 3:1 floor it is NAMED for and had never met there). (3) F3's rule half shipped to all 15 section and sticky-chrome boundaries while the 34 CARD edges stayed on --border; the band half was deliberately NOT a blanket swap, because the site already alternates --bg against --surface-tint and tinting every --bg section would leave EVERY section tinted and destroy the white register the tonal map is built on. WATCH: --accent on --surface-tint is 4.54:1, the tightest margin in the palette, 0.04 above AA - darkening the tint fails accent text on it.",
+      "fixlogRef": "2026-08-18 - Task #18"
     },
     {
       "id": "W5",
@@ -462,6 +462,15 @@
       "date": "2026-08-18",
       "note": "THE 301: next.config.mjs gains a host-conditional redirect, statusCode 301 EXPLICITLY (not permanent:true, which emits 308 - the Task #8 spec is law). Host literals are the first outside site.ts:15 because .mjs cannot import the TS constant; documented as deliberate duplication. JSON-LD: MedicalBusiness -> Organization, with the reasoning in a code comment (MedicalBusiness is a LocalBusiness subtype expecting a postal address we deliberately omit, and it connotes direct clinical care we do not provide; under D1/D15 providers operate the vehicles and we manage the service). METADATA: HOME_TITLE now carries the national CATEGORY per D18 ('Medical Transportation Management'); home, platform, mcos and about descriptions rewritten to the management-organization identity; OG_IMAGE.alt no longer names the company AS the transportation. HERO_LEDE replaced with the owner-approved sentence AND THE SERVICE_AREA_PROSE INTERPOLATION PRESERVED - the approved wording contains 'built for the DMV' verbatim, which is exactly the flag's pre-launch value, so approved copy and flag mechanism coexist with neither bent. GREP: 6 occurrences of the old identity in src/ before, ZERO after. I19: raw-request host-redirect invariant wired into run.mjs beside the stale-build preflight and folded into the exit code. KEY FINDING: fetch() CANNOT test this - Host is a forbidden header in the fetch spec, so undici drops it, the request arrives as localhost, returns 200 and looks like a broken redirect. The first version of I19 used fetch and reported a FALSE FAILURE against a working redirect. node:http is required, which is exactly why Task #8 called it the raw-request lane. I14/I16 needed NO expectation changes: I14 asserts title-non-empty + apex canonical + og presence, I16 asserts email addresses; neither encodes identity strings.",
       "fixlogRef": "2026-08-18 - Task #17"
+    },
+    {
+      "id": "W4-owner-check",
+      "phase": "P3",
+      "title": "Owner scrolls the hardened build on the standard laptop - the closing proof",
+      "status": "todo",
+      "date": "2026-08-18",
+      "note": "THE CLOSING PROOF, AND IT IS NOT MINE TO GIVE. Every value in D23 was DERIVED from the owner's readings and verified by arithmetic, a 234-cell cube and my own eye on this machine - but the machine that set the floor has not yet seen the result. What to check on the standard laptop: do white cards now LIFT off the page background; do the hairlines EXIST (card edges and section rules); does the scrolled-nav bottom edge read as a boundary between chrome and page; does the ink card separate from the ink field; and the craft question the numbers cannot answer - does it still feel PREMIUM rather than heavy, particularly --border-strong at 2.67:1 on white, which is the single largest jump in the set (1.34:1 before). A re-read of docs/color-bench/index.html should now find the first visible step AT OR BELOW 1.00x; if it does not, the floor RISES again (floors-only-rise, D23). If anything reads chunky, that is a real finding and the fix is a lower multiplier on that ladder ONLY - never a softening of a floor that was read.",
+      "fixlogRef": "2026-08-18 - Task #18"
     }
   ],
   "decisions": [
@@ -727,8 +736,8 @@
     {
       "id": "DISC-20",
       "date": "2026-08-18",
-      "status": "open",
-      "text": "NO hardcoded-HEX guard exists. nexo-brand section 0 bans hex outside globals.css, but nothing enforces it - scripts/qa/ contains routes.mjs, run.mjs, sweep.mjs and the new static-type-check.mjs, and none checks colour literals. Task #14 deliberately did NOT build one (out of scope; the task said record it). W4 is the natural home because W4 is the colour workstream: build a hex guard on the same pattern as static-type-check.mjs (zero-dep, file+line, same sanctioned-exemption list plus src/lib/email/ which must hardcode colours for the same reason it hardcodes families). Note the type guard already proves the pattern works and is negative-tested."
+      "status": "resolved",
+      "text": "NO hardcoded-HEX guard exists. nexo-brand section 0 bans hex outside globals.css, but nothing enforces it - scripts/qa/ contains routes.mjs, run.mjs, sweep.mjs and the new static-type-check.mjs, and none checks colour literals. Task #14 deliberately did NOT build one (out of scope; the task said record it). W4 is the natural home because W4 is the colour workstream: build a hex guard on the same pattern as static-type-check.mjs (zero-dep, file+line, same sanctioned-exemption list plus src/lib/email/ which must hardcode colours for the same reason it hardcodes families). Note the type guard already proves the pattern works and is negative-tested. RESOLVED 2026-08-18 (Task #18): scripts/qa/static-hex-check.mjs is live, siblinged to the type guard rather than merged into it so each guard stays single-purpose, and wired through the existing qa:static script so BOTH seams (the qa:sweep prelude and the CI check job) pick it up with one edit. Two rules: hex literals (3/4/6/8 digits, negative-lookahead so route anchors like #dispatch are not colours) and literal rgb()/hsl() (var()-composed forms are the SANCTIONED way to add alpha to a token and are correctly not flagged). Same sanctioned exemptions as the type guard, for the same documented reason - mail clients strip <style> and ignore var(), so email surfaces MUST hardcode. SWEEP: 57 files scanned, 0 literals needing migration; all 37 pre-existing literals sit in the two already-sanctioned email files (src/lib/email/chrome.ts 23, src/app/email-preview/preview-client.tsx 14) and ZERO rgb/hsl literals exist outside globals.css. Negative-tested in all four directions: planted hex fails naming file+line, planted literal rgb fails, var()-composed rgb passes, clean tree passes."
     },
     {
       "id": "DISC-21",
@@ -740,8 +749,8 @@
   "gates": {
     "tsc": {
       "state": "green",
-      "date": "2026-08-17",
-      "note": "npx tsc --noEmit TRUE 0"
+      "date": "2026-08-18",
+      "note": "npx tsc --noEmit TRUE 0 after the hardening"
     },
     "ci": {
       "state": "green",
@@ -848,6 +857,10 @@
     {
       "date": "2026-08-18",
       "summary": "Task #17 W8 part 1: D15 metadata and JSON-LD rewrite (Organization, not MedicalBusiness), the owner-approved hero lede with its flag interpolation preserved, the www->apex 301 at statusCode 301, and I19 as a raw-request invariant. Old identity phrases 6 -> 0 in src/. Also closed the two pinned W8 debts with the D18 payer query classes and the completed internal-linking spec."
+    },
+    {
+      "date": "2026-08-18",
+      "summary": "Task #18 P3-W4 token hardening (D23). Owner perception-floor readings converted to 12 hardened token values through the bench's own mix formula; F1 (scrolled-nav edge to the card tier) and F3 (15 section/chrome boundary rules to --border-strong) adopted; hex guard built and wired, closing DISC-20; bench re-mirrored with PREVIOUS rows as its own before/after receipt; ground truth to v1.5 with the floors-only-rise law. Caught and corrected one self-inflicted AA failure: extrapolating the ink-card floor onto --ink-hover, a fill with text on it, would have shipped on-ink-muted at 3.15:1."
     }
   ]
 }

@@ -319,7 +319,12 @@ export function Navbar() {
         className={cn(
           // always the dark nav-glass; the border is the only scroll-state change.
           "nav-glass sticky top-0 z-40 transition-colors duration-200",
-          scrolled ? "border-b border-on-ink-border" : "border-b border-transparent"
+          // D23/F1: the scrolled edge moves from the DIVIDER tier to the CARD tier. At the old
+          // --on-ink-border the boundary between chrome and page collapsed on a standard panel;
+          // --on-ink-border-strong is also itself hardened (E2-05), so the edge gains twice over.
+          // The page-top no-border state is unchanged BY DESIGN (the bench recorded it as the
+          // harder case and the reading did not ask for a border there).
+          scrolled ? "border-b border-on-ink-border-strong" : "border-b border-transparent"
         )}
       >
         <Container>

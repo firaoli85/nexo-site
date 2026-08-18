@@ -58,7 +58,7 @@ export default function AboutPage() {
       </section>
 
       {/* STORY — white; the operator's story (FOUNDER_REF only, never a name/prior company). */}
-      <Section className="relative overflow-hidden border-t border-border bg-bg">
+      <Section className="relative overflow-hidden border-t border-border-strong bg-bg">
         <AmbientMap tone="light" region="wide" gutter={false} />
         <Container className="relative">
           <div className="max-w-prose space-y-5 text-lg leading-relaxed text-muted">
@@ -82,7 +82,7 @@ export default function AboutPage() {
       </Section>
 
       {/* PRINCIPLES — tint. */}
-      <Section className="relative overflow-hidden border-t border-border bg-surface-tint">
+      <Section className="relative overflow-hidden border-t border-border-strong bg-surface-tint">
         <AmbientMap tone="light" region="wide" gutter={false} />
         <Container className="relative">
           <h2 className="max-w-2xl font-display text-2xl font-heading tracking-heading text-default sm:text-3xl">
@@ -103,7 +103,7 @@ export default function AboutPage() {
       </Section>
 
       {/* COMPANY FACTS — white section, a quiet tint card. */}
-      <Section className="relative overflow-hidden border-t border-border bg-bg">
+      <Section className="relative overflow-hidden border-t border-border-strong bg-bg">
         <AmbientMap tone="light" region="wide" gutter={false} />
         <Container className="relative">
           <div className="max-w-2xl rounded-2xl border border-surface-tint-border bg-surface-tint p-6 sm:p-8">
@@ -131,7 +131,7 @@ export default function AboutPage() {
       </Section>
 
       {/* CTA — tint bookend; wide composite. */}
-      <section className="relative overflow-hidden border-t border-border bg-surface-tint">
+      <section className="relative overflow-hidden border-t border-border-strong bg-surface-tint">
         <AmbientMap tone="light" region="wide" />
         <Container className="relative py-16 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-2xl text-center">

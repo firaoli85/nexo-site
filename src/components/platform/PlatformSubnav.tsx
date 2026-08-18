@@ -118,7 +118,7 @@ export function PlatformSubnav() {
   return (
     <nav
       aria-label="Platform sections"
-      className="sticky top-16 z-30 border-b border-border bg-surface"
+      className="sticky top-16 z-30 border-b border-border-strong bg-surface"
     >
       <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-6 lg:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {LINKS.map((l) => {

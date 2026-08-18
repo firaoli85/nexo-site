@@ -94,3 +94,78 @@ same scan fires 4 findings on the sibling type bench. **Assessment A: 22/40.**
 Per machine: the **first visible step number** in A, B, C1, C2, E1, E2; any **D row that becomes hard to
 read**; any **F fragment where CURRENT loses structure**. **Good monitor first as the control, then the old
 and cheap machines — those second readings are the data.**
+
+---
+
+## 6. RESOLUTION — readings taken, palette hardened (2026-08-18, D23)
+
+**Readings** (two devices: a high-end display as the control, a standard laptop as the OPERATIVE floor —
+the floor is always the worse machine):
+
+| Ladder | What it measured | Floor read | Multiplier |
+|---|---|---|---|
+| A | light surface vs a white card | **A06** | 2.0× |
+| B | raised ink card vs the ink field | **B06** | 2.0× |
+| C1 | nav glass alpha | **≈0.75** | — |
+| C2 | ink-card glass alpha | **≈0.60** | — |
+| E1 | light hairline on white | **E1-07** | 3.0× |
+| E2 | on-ink border on the ink card | **E2-05** | 1.3× |
+| D | text ramps | **D-L04 exempt** (`--text-disabled`, WCAG 1.4.3) | — |
+| F | composed fragments | **F1 + F3 CURRENT collapse on both devices** | PROPOSED adopted |
+
+**Applied** — every value is this bench's own `mix(from, to, k)` at the read rung, converted rather than
+re-invented:
+
+| Token | OLD | NEW | Rung |
+|---|---|---|---|
+| `--bg` | `#fafbfc` | `#f5f7f9` | A06 |
+| `--surface-hover` | `#f3f5f8` | `#e7ebf1` | A06 |
+| `--surface-tint` | `#f4f9f7` | `#e9f3ef` | A06 |
+| `--surface-alt` | `#f5f7fa` | `#ebeff5` | A06 (extension) |
+| `--input-bg` | `#f7f9fb` | `#eff3f7` | A06 (extension) |
+| `--border` | `#ebedf1` | `#c3c9d5` | E1-07 |
+| `--border-strong` | `#dcdfe4` | `#969fae` | E1-07 |
+| `--surface-tint-border` | `#dbeae3` | `#93c0ab` | E1-07 |
+| `--ink-surface` | `#12201b` | `#192b24` | B06 |
+| `--on-ink-border` | `#35504a` | `#405e58` | E2-05 |
+| `--on-ink-border-strong` | `#4a6b60` | `#5b8275` | E2-05 |
+| `--ink-hover` | `#264035` | `#2e4d40` | **re-derived, not a rung** |
+
+### The three judgment calls, stated plainly
+
+**1. `--ink-hover` is the one token a reading did NOT set, and forcing one on it created a real AA failure.**
+The B ladder measured `--ink-surface`, a raised *card*. `--ink-hover` is a nav-row hover *fill with text on
+it*. Carrying B06's 2.0× across gave `#416b58`, which dropped `--on-ink-muted` from 5.85:1 to **3.15:1** —
+below AA, caused entirely by extrapolating a reading past what it measured. It is derived instead from its
+own two constraints (muted text ≥ 4.5:1; visibly lighter than `--ink-surface`), landing at 1.30×: text
+**4.85:1** with margin, and separation **rises** to 1.59:1 from 1.50:1. The hover reads *more* than before
+while its text got *safer*. **Where a perception floor and AA conflict, AA wins.**
+
+**2. Glass was held, and F1 was adopted only in half.** F1's PROPOSED pane raised the nav alpha 0.90 → 0.96
+*and* promoted its edge. But the C1 reading put the alpha floor at **0.75 — below the shipped 0.90**, so the
+alpha already cleared its own floor and floors-only-rise gives no mandate to move it. The fragment's collapse
+was the **edge**, and the edge is what moved (divider tier → card tier, on a token that is itself hardened, so
+it gains twice: 2.85:1 → **3.47:1** against the surface it actually sits on, finally clearing the 3:1 floor
+the "strong" tier is *named* for and had never met there). The page-top no-border state is unchanged by design.
+
+**3. F3's band half was deliberately not applied as a blanket swap.** The rule half shipped everywhere: all
+**15** section and sticky-chrome boundaries moved to `--border-strong`, while the **34** card edges stayed on
+`--border` (a card edge is a different tier from a section boundary). The band half — "swap `--bg` for
+`--surface-tint`" — was *not* applied globally, because the site already alternates `--bg` against
+`--surface-tint`; turning every `--bg` section into tint would leave **every** section tinted and destroy the
+white register the tonal map (nexo-brand §1) is built on. The band half is satisfied by hardening instead:
+both bands are A06-lifted, so the alternation reads without collapsing a register.
+
+### Watch item
+
+`--accent` on `--surface-tint` is **4.54:1** — the tightest margin in the palette, 0.04 above AA. Darkening
+`--surface-tint` any further fails accent text on it. Recompute that pairing before touching the value.
+
+### Status of this bench
+
+**Re-mirrored to the hardened palette** (`docs/color-bench/index.html`): every CURRENT marker and ladder
+anchor is now the post-hardening token, each mirrored token carries its pre-hardening value as **PREVIOUS**,
+and a banner states that pre-2026-08-18 readings were taken against the PREVIOUS column. A re-read on the same
+laptop should now find the first visible step **at or below 1.00×**; if it does not, the floor rises again.
+Finding 8 from §4 (section C prints alpha but no ratio) **remains open** — glass was held this task, so the
+worst-case composite ratio it asked for was not needed to decide anything, and it is still worth building.
