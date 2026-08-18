@@ -2,8 +2,8 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-17",
-    "currentTask": "P1c: SEO and indexing plan (docs/SEO_PLAN.md)",
-    "activePhase": "P1",
+    "currentTask": "P2: sitemap freeze + ratification session (design-in-chat with owner)",
+    "activePhase": "P2",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
   },
@@ -22,7 +22,7 @@
     {
       "id": "P1",
       "title": "Research (timeboxed: ends when the sitemap can be frozen)",
-      "status": "todo",
+      "status": "done",
       "items": [
         "P1-A",
         "P1-B",
@@ -134,10 +134,28 @@
       "id": "P1-C",
       "phase": "P1",
       "title": "SEO / indexing strategy -> docs/SEO_PLAN.md",
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "docs/SEO_PLAN.md delivered. LIVE AUDIT (VERIFIED 2026-08-17): apex and www both return 200 with IDENTICAL Etag 13x53aqr78w4r74 and byte-identical length, zero redirects between hosts; cross-host rel=canonical is CORRECT on both hosts including deep pages; robots.txt and the 13-URL sitemap are apex-consistent; SSR is GREEN (tested by stripping every script tag - real rendered HTML, not RSC-flight-only, and Googlebot UA returns byte-identical markup). POSITIONING CONFIRMED DRIFTED (DISC-7): the stem 'manage' appears ZERO times across the entire indexed metadata surface of all three audited pages, and one byte-identical MedicalBusiness JSON-LD block asserts 'Nexo Access is a technology-first NEMT company built for the DMV' on all 13 routes. DIAGNOSIS, adversarially reviewed: the www hypothesis was REFUTED as the cause (the 'Alternate page with proper canonical tag' rows are the documented signature of canonicalization SUCCEEDING, and crawl budget does not apply at 13 URLs); the authority hypothesis was rated OVERSTATED because site age and backlinks are unmeasured. Honest verdict: CAUSE UNRESOLVED, collapsible by one owner URL Inspection reading (item P1-C1). The 301 is still specified, but for durability (canonical is a hint, not a rule), NOT as a rescue. Specs delivered: www->apex 301 (three options costed, next.config.mjs redirects() with statusCode 301 recommended, plus proposed harness invariant I19), metadata/JSON-LD rewrite to D1/D15 with the exact blast radius mapped (HERO_LEDE is a COPY GATE event - it is both JSON-LD description and visible hero copy), provider-resource-center organic architecture, and an E-E-A-T posture built entirely from honest signals.",
+      "fixlogRef": "2026-08-17 - Task #8"
+    },
+    {
+      "id": "P1-C1",
+      "phase": "P1",
+      "title": "OWNER READING (5 min): URL Inspection on the homepage - the datum that ends the indexing UNRESOLVED",
       "status": "todo",
       "date": "",
-      "note": "Diagnose the homepage indexing issue, www->apex redirect, metadata/JSON-LD rewrite for the new positioning, provider-guide pages as the organic engine.",
-      "fixlogRef": ""
+      "note": "GATE ITEM, blocking the P4 SEO work. We have NO Search Console access, so this is the one fact we cannot obtain ourselves. Owner opens Search Console > URL Inspection > https://nexoaccess.com/ and reports three fields VERBATIM: (1) the coverage status string, (2) Google-selected canonical, (3) User-declared canonical. Each possible status ('Discovered - currently not indexed', 'Crawled - currently not indexed', 'Duplicate without user-selected canonical', or a Google-selected canonical differing from ours) implies a DIFFERENT cause and a different fix, so this single reading converts SEO_PLAN section 2.1 from UNRESOLVED to diagnosed. Do NOT touch the five www 'Alternate page with proper canonical tag' rows - Google documents that status as 'there is nothing you need to do' (SEO_PLAN section 1.6).",
+      "fixlogRef": "2026-08-17 - Task #8"
+    },
+    {
+      "id": "P2-AGENDA",
+      "phase": "P2",
+      "title": "P2 ratification agenda (what the owner must rule on at the freeze session)",
+      "status": "todo",
+      "date": "",
+      "note": "Standing agenda, assembled from P1 output. (1) PERFORMANCE BAR: ratify <=600KB transfer, <=150KB JS, <=1200ms DCL, <=60 requests, Lighthouse >=98 (DESIGN_RESEARCH section 10). (2) NEXO-MOTION CANDIDATES: nexo-drift, nexo-shape, nexo-settle, nexo-accent-card (section 11c) — approve, defer or reject each. (3) STANDING RULE for any future canvas/WebGL work: gate the GPU request behind failIfMajorPerformanceCaveat:true, ship a named art-directed static asset as the resting state, never put the gamble in a hero (section 8.0). (4) ELEVENLABS MOTION-SAFE PATTERN: evaluate inverting the Tailwind config so motion is opt-in via motion-safe: rather than opt-out (section 11d). (5) IMAGERY STRATEGY (owner theme T3): premium photography vs custom illustration vs animation-as-imagery, decided not defaulted; real user feedback says the site lacks pictures. (6) PAGE INVENTORY FREEZE: the draft 24-page V2 inventory (section 6e) — the frozen list only shrinks. Owner taste receipts and themes T1-T5 are recorded in DESIGN_RESEARCH section 13 as input to items 2, 4 and 5 and to all of P3.",
+      "fixlogRef": "2026-08-17 - Task #8"
     },
     {
       "id": "P2-1",
@@ -498,6 +516,12 @@
       "date": "2026-08-17",
       "text": "58 OWNER QUESTIONS are pending an owner review pass across the three P1b chapters. His answers get recorded as OWNER-VERIFIED and still require a primary source before site publication.",
       "status": "scheduled"
+    },
+    {
+      "id": "DISC-17",
+      "date": "2026-08-17",
+      "text": "Owner taste receipts recorded; the Railway convergence argues harden-and-evolve. DESIGN_RESEARCH section 13 records seven owner-chosen references with his stated reasons (OWNER-STATED tier) and five themes T1-T5. Key verified finding: the owner picked Railway on feel alone, and src/app/globals.css already credits Railway in FIVE places (palette line 5, borders 21, shadows 76, motion 194, press feedback 204). His eye returned to his own token file's ancestor without knowing it, which is the strongest available argument for harden-and-evolve over a from-scratch visual rebuild. Tension recorded honestly: the Railway traits he likes (very subtle borders, gentle elevation) are the same traits C3 suspects of vanishing on cheap monitors, and T4 borderless full-bleed collides with both. P5 measures C3; P3 rules on T4. T1 (combination over cloning) and T5 (keep the van and the monuments) are binding on P3.",
+      "status": "open"
     }
   ],
   "gates": {
@@ -571,6 +595,10 @@
     {
       "date": "2026-08-17",
       "summary": "Task #7 P1a craft lane: Stripe and Linear dissection (DESIGN_RESEARCH part 2), the WebGL degradation question answered with instrumented evidence, performance bar proposed, four nexo-motion candidates; D17 publish boundary added to the ground truth and the OWNER-REPORTED block added to the provider research."
+    },
+    {
+      "date": "2026-08-17",
+      "summary": "Task #8 P1c SEO plan: live audit of nexoaccess.com (apex/www duplicate-host state, canonicals, robots, sitemap, metadata, JSON-LD, SSR), adversarially-reviewed indexing diagnosis that REFUTED the www-redirect hypothesis and landed on an honest UNRESOLVED, www->apex 301 and D15 metadata rewrite specs, provider-resource-center organic architecture, and a YMYL E-E-A-T posture. Plus DESIGN_RESEARCH section 13 owner taste receipts and the P2 ratification agenda."
     }
   ]
 }

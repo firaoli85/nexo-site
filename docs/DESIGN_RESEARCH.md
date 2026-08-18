@@ -2162,3 +2162,108 @@ here is published to the site. The performance bar is proposed for P2 ratificati
 **Standing rule added by this pass.** Any future canvas or WebGL work on this site must follow the Stripe
 ladder: gate the GPU request behind `failIfMajorPerformanceCaveat: true`, ship a named art-directed static
 asset as the resting state, and never place the gamble in a hero.
+
+---
+
+# §13 OWNER TASTE RECEIPTS — 2026-08-17 (P3 ranking pending; nothing rejected)
+
+**Evidence tier: OWNER-STATED.** This section records the owner's own taste, in his words, lightly cleaned
+from voice-to-text with meaning preserved. It is not a measurement and it is not a research finding. It sits
+in its own tier for the same reason §5b of the provider research does: owner judgment is real input and must
+never be silently promoted to a verified fact or to an approved decision.
+
+**Status: NOTHING HERE IS RANKED AND NOTHING IS REJECTED.** P3 ranks these. A reference appearing below is a
+receipt of what the owner responded to, not a commitment to build it.
+
+## 13a. The candidate list
+
+| # | Reference | Link | Why the owner picked it |
+|---|---|---|---|
+| 1 | **Greptile** | `mobbin.com/sites/greptile-02f7f385-cda0-48df-97cf-369a65a163b2/8aeb813a-2a94-4f34-8183-c24951b5d81e/preview` | Heavy technical register. The font and the technological confidence: "seems like they know what they're doing." He likes the animation and the technology feel even if this is not the final choice. |
+| 2 | **Autosend** | `mobbin.com/sites/autosend-bdddcd67-7fe6-4128-b071-880d3d552c49/26abdd8b-4f28-4865-95af-7516342cbf15/preview` | The simplistic approach. The simplicity itself is the appeal, not a by-product of it. |
+| 3 | **Amplemarket** | `mobbin.com/sites/amplemarket-40514184-d6e8-4d9c-898c-5ee5a56948d3/d2d1b0fc-24ac-4ec7-9aee-a1ea6a6f36db/preview` | A Stripe-adjacent skeleton made distinct by aggressive colour choice plus simplicity. |
+| 4 | **Flighty** | `mobbin.com/sites/flighty-96152d40-1521-4e8e-995f-375d2fd13781/4ab7ed4d-2072-439f-a037-7d59bba7782a/preview` | The borderless feel: no visible containment, broad and flexible. He actively dislikes the visible-border convention he sees everywhere. |
+| 5 | **Mercury** | `mobbin.com/sites/mercury-b76b83da-80e8-408c-a49f-7991b331735b/6ffa382b-213b-4cc4-a087-fb5c1e199b70/preview` | Good, simple. No explanation needed. |
+| 6 | **Railway** | `mobbin.com/sites/railway-45b631c3-5efb-43bb-904c-cfeb03060fec/ba883b62-3d6c-456d-8916-2f9fa3f668be/preview` | A pure feel pick, chosen without reference to the codebase. |
+| 7 | **Jasper** | `mobbin.com/sites/jasper-809ccfa6-b4b5-4f2c-8859-b83d2b680bca/1c1563ca-69a8-4c9a-b06d-5e5eb21c88c0/preview` | Looks good. A supporting reference rather than a lead. |
+
+### The Railway convergence — VERIFIED, and larger than stated
+
+The owner picked Railway on feel alone. **V1's design tokens are already documented as Railway-derived**, and
+the dependency is deeper than the palette. Verified in `src/app/globals.css` on 2026-08-17:
+
+| Line | What it credits to Railway |
+|---|---|
+| 5 | `/* ── Design tokens — refined Railway-inspired universal LIGHT theme` |
+| 21 | `/* Borders — soft, low-contrast (Railway uses very subtle borders) */` |
+| 76 | `/* Soft depth — gentle elevation, not heavy (Railway uses subtle shadows) */` |
+| 194 | `/* ── Motion — Railway-informed micro-interactions` |
+| 204 | `/* Press feedback — the control dips when actively pressed (Railway-style tactility). */` |
+
+**The owner's eye independently returned to his own token file's ancestor**, across five separate systems
+(colour, borders, elevation, motion, tactility) rather than one. He did not know he was doing it.
+
+**This is the strongest available receipt for HARDEN-AND-EVOLVE over REPLACE.** The existing visual foundation
+is not an accident he has outgrown; it is a foundation he still independently prefers when shown it cold and
+unlabelled. A V2 that discards the token system would be discarding something that just passed a blind test.
+
+**Ties to C3.** C3 on the consistency-defects register (SITE_GROUND_TRUTH §9) is *"subtle palette on cheap
+monitors"*, awaiting P5 measurement. Note the tension honestly: the very Railway traits the owner is drawn to
+(**"very subtle borders"**, **"gentle elevation, not heavy"**) are the traits C3 suspects of disappearing on a
+low-quality display. **The taste receipt and the defect register are pointing at the same property from
+opposite sides.** P5 measures it; P3 must not resolve it by guessing. The likely shape of the answer is
+*keep the subtlety and raise the floor* — that is, preserve the Railway restraint while ensuring every
+boundary that carries meaning still clears WCAG 1.4.11 at 3:1 on a bad screen, which our `--border-control`
+token already does for controls and does not yet do everywhere.
+
+## 13b. Themes — owner rulings for P2 and P3
+
+> These are the owner's rulings, recorded verbatim in spirit. T1 and T5 are binding constraints on P3. T2, T3
+> and T4 are workstreams and open decisions, not settled outcomes.
+
+**T1 — COMBINATION OVER CLONING.** The industry has converged on one look. We synthesise pieces from many
+references into something that is ours. **Copying any single site is banned.** This governs every reference in
+13a and every verdict in Part 2: those documents are quarries, not blueprints. It also raises the bar on
+Part 2's §11 candidates, which must be recombined rather than imported wholesale.
+
+**T2 — FONTS ARE A WOUND.** The owner has never been satisfied with any font choice the site has had. His
+words: *not bold enough*. He is drawn to the technical register he saw in Greptile. **P3 must include a
+dedicated type-specimen workstream**, and it must be judged the way our §8 visual-verification law already
+demands: candidates compared as **rendered screens at real sizes and weights**, never as names in a list.
+Scope: heavier display weights than we currently ship, and a possible **mono or technical accent layer** as a
+third voice. **The current pair (Bricolage Grotesque + Hanken Grotesk) competes as the incumbent, not as the
+default winner.** Cross-reference Part 2 §11b, which found light-weight display at 300 correlating across
+Stripe and ElevenLabs — that finding now sits in direct tension with "not bold enough", and the specimen pass
+is where the tension gets resolved by eye rather than by argument.
+
+**T3 — THE IMAGERY GAP IS REAL USER FEEDBACK.** People have told the owner the site lacks pictures. That is
+unsolicited feedback from outside the build, which makes it the most valuable signal in this section.
+**Opened as a P2 decision, "IMAGERY STRATEGY"**, with three options: premium photography (licensed or
+commissioned), custom illustration, or animation-as-imagery. **The owner's stated lean is aggressive animation
+over photographs**, but the lean does not close the decision: the gap must be answered deliberately, because
+"we chose animation" and "we never got round to imagery" look identical to a visitor. Constraints that hold
+whichever way it goes: high quality only, **no PHI and no real members**, and any sample or staged content
+labelled as such (§7 copy gate).
+
+**T4 — BORDERLESS FULL-BLEED.** A candidate layout language for P3, from the Flighty reference: sections that
+breathe without visible containment; mobile-friendly without looking mobile-first. Note the direct collision
+with 13a's Railway convergence, which is a *bordered* (if subtly bordered) system, and with C3. **Not
+resolved here.** P3 decides whether borderless is the language, a treatment for particular sections, or a
+rejected direction.
+
+**T5 — KEEP OUR CREATIVITY.** The van, the DMV monuments and landmarks, and the signature details stay. This
+is already law (§6.1 atmosphere systems, and the Stage-6.5/6.6 landmark vocabulary). **Aggressive animation
+raises the ceiling; it does not replace the identity.** Anything P3 proposes under T2, T3 or T4 that would
+cost us the van or the map is out of scope by this ruling.
+
+## 13c. What P2 and P3 owe against this section
+
+1. **P3 type-specimen workstream** (T2) — rendered-screen comparison, incumbent pair included, heavier display
+   weights and a mono/technical accent evaluated.
+2. **P2 decision: IMAGERY STRATEGY** (T3) — photography vs illustration vs animation-as-imagery, decided, not
+   defaulted.
+3. **P3 layout-language ruling** (T4) — borderless full-bleed adopted, scoped, or rejected, with the C3 and
+   Railway-convergence tension addressed rather than ignored.
+4. **P3 harden-and-evolve stance** (13a) — the Railway convergence is the argument against a from-scratch
+   visual rebuild; if P3 rebuilds anyway, it must say why this receipt was overridden.
+5. **T1 and T5 are binding on all of the above.**
