@@ -31,7 +31,7 @@ export type SolutionCta = {
 };
 
 const eyebrowPill =
-  "inline-flex items-center gap-1.5 rounded-full border border-surface-tint-border bg-surface px-3 py-1 text-xs font-medium tracking-wide text-accent";
+  "inline-flex items-center gap-1.5 rounded-full border border-surface-tint-border bg-surface px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent";
 
 // The light MockCard atom (Stage-2 demo grammar) — the per-page vignettes re-dress this. Always
 // hints "Sample data" so a reader never mistakes a mock for a real record (copy gate).
@@ -92,10 +92,10 @@ export function SolutionPage({
               <Eyebrow className="h-3.5 w-3.5" aria-hidden="true" />
               {eyebrow}
             </span>
-            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.08] tracking-tight text-default sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 font-display text-4xl font-hero leading-[1.08] tracking-hero text-default sm:text-5xl lg:text-6xl">
               {h1}
             </h1>
-            <p className="mt-5 max-w-prose text-xl leading-relaxed text-muted">{subline}</p>
+            <p className="mt-5 max-w-prose text-xl leading-relaxed tracking-lede text-muted">{subline}</p>
           </div>
         </Container>
       </section>
@@ -122,7 +122,7 @@ export function SolutionPage({
                   ) : null}
                   <h2
                     className={cn(
-                      "font-display text-2xl font-bold tracking-tight text-default sm:text-3xl",
+                      "font-display text-2xl font-heading tracking-heading text-default sm:text-3xl",
                       s.kicker && "mt-2"
                     )}
                   >
@@ -149,7 +149,7 @@ export function SolutionPage({
         <AmbientMap tone="light" region={region} />
         <Container className="relative py-16 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-tight text-default sm:text-4xl">
+            <h2 className="font-display text-3xl font-heading leading-[1.1] tracking-heading text-default sm:text-4xl">
               {cta.heading}
             </h2>
             {cta.body ? (

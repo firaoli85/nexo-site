@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-18",
-    "currentTask": "Task #14: modular type implementation (first v2 code; full cube)",
+    "currentTask": "P3-W4: color hardening bench (C3 - jade vs the cheap monitor; carries the owed C3 cheap-panel leg)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -345,6 +345,15 @@
       "date": "2026-08-17",
       "note": "CLOSED by D21. Owner tested both finalist systems on multiple machines and ruled 'both close, B'. System B: Bricolage Grotesque display at heavy cuts (headings 700, hero 800), Hanken Grotesk body, IBM Plex Mono accent. Bench-measured tracking becomes law (hero -0.030em, heading -0.022em, lede -0.008em, mono +0.035em). THE VERDICT WAS CLOSE, NOT OBVIOUS - which is evidence the context bench worked: the specimen round had made the systems look more different than they are, and real anatomy with an equalised body measure showed two credible systems rather than a winner and a loser. B is also the zero-retypeset path, disclosed in the bench before the decision. The owner's modularity requirement is encoded as the MODULAR TYPE LAW (D21, ground truth section 8): no component may declare a font family. Commit-and-close (D-pre21b) is now active: type is CLOSED until post-launch. STILL OWED: the cheap-panel leg of the C3 protocol - every screen used across both bench rounds was a good one - which lands in W4, not in a reopened W3.",
       "fixlogRef": "2026-08-18 - Task #13"
+    },
+    {
+      "id": "P3-W3-IMPL",
+      "phase": "P3",
+      "title": "D21 modular type implementation (first code on v2)",
+      "status": "done",
+      "date": "2026-08-18",
+      "note": "TOKEN BLOCK in globals.css is now the single type source (families wired to the next/font *-src variables, --weight-hero 800 / --weight-heading 700, tracking --track-hero -0.030em / --track-heading -0.022em / --track-lede -0.008em / --track-mono 0.035em). IBM Plex Mono added via next/font at 400/500 only (both weights genuinely used: eyebrow pills are font-medium 500, ProductDemo identifiers inherit 400); display:\"optional\" kept consistent with the pair, C1 deliberately untouched as P5 measurement. FONT PAYLOAD DELTA: +65,516 bytes (64.0 KB) across 10 files for the mono - IBM Plex Mono is NOT variable so each weight is separate, unlike Bricolage (3 files) and Hanken (4). Bricolage already loaded 500/600/700/800 so NO widening was needed and it contributed zero delta. Tailwind maps family/weight/tracking ONCE. APPLICATION SWEEP: 53 edits across 19 files (8 hero h1 to font-hero+tracking-hero, 24 headings to font-heading+tracking-heading, 11 eyebrow/kicker labels to mono+tracking-mono, 4 ProductDemo data labels to mono, 6 ledes to tracking-lede); zero leftover font-bold or tracking-tight on any display heading. ENFORCEMENT: app code was ALREADY family-clean - 0 genuine violations. All 16 pre-existing hardcoded-family hits are in src/lib/email/ and src/app/email-preview/, where hardcoding is MANDATORY because mail clients strip <style> and ignore var(); those paths are sanctioned exemptions in the guard, not debt. STATIC GUARD scripts/qa/static-type-check.mjs added (zero-dep, fails exit 1 with file+line) and wired BOTH into qa:sweep as a fail-fast prelude AND into the CI check job before typecheck. Negative-tested: planted violation produced exit 1 naming Button.tsx:4 with the correct rule and text; plant removed, exit 0 restored, git diff clean.",
+      "fixlogRef": "2026-08-18 - Task #14"
     },
     {
       "id": "W4",
@@ -696,6 +705,12 @@
       "date": "2026-08-17",
       "text": "RESOLVED 2026-08-17: packet analyzed; evidence memo in project knowledge. The owner's historical broker/payer documents (Healthway era) were reviewed and PHI-scanned clean, establishing the OWNER-DOC-VERIFIED tier (D22). HANDLING: the documents and the memo live in Claude project knowledge ONLY - no figures, broker names or contract terms enter this repo, and site publication still requires public primary sources (D17). WHAT IT SETTLED INTERNALLY: OR-3 and the two Sexual Abuse and Molestation coverage entries in PROVIDER_REQUIREMENTS_RESEARCH are now internally verified at the broker-contract tier (annotated in place; public-tier status deliberately unchanged). WHAT IT EXPLAINED: the largest open gap from the J3 resolution - that NEMT-specific provider insurance minimums were never located in public sources - is now understood rather than merely open. The operative floor lives in a private broker agreement, so no amount of public-source research would ever have surfaced it. That structural fact IS publishable (no figures), and it is recorded in the publish map as the LAYER-MODEL CONFIRMATION.",
       "status": "resolved"
+    },
+    {
+      "id": "DISC-20",
+      "date": "2026-08-18",
+      "status": "open",
+      "text": "NO hardcoded-HEX guard exists. nexo-brand section 0 bans hex outside globals.css, but nothing enforces it - scripts/qa/ contains routes.mjs, run.mjs, sweep.mjs and the new static-type-check.mjs, and none checks colour literals. Task #14 deliberately did NOT build one (out of scope; the task said record it). W4 is the natural home because W4 is the colour workstream: build a hex guard on the same pattern as static-type-check.mjs (zero-dep, file+line, same sanctioned-exemption list plus src/lib/email/ which must hardcode colours for the same reason it hardcodes families). Note the type guard already proves the pattern works and is negative-tested."
     }
   ],
   "gates": {
@@ -712,9 +727,9 @@
     "cube": {
       "state": "green",
       "cells": 234,
-      "checks": 3175,
-      "date": "2026-08-17",
-      "note": "13 routes x 6 profiles x 3 engines. 0 failures, 0 retries, 0 console errors. Also closed the Stage 16.1 CLS verification gap."
+      "checks": "13 routes x 6 profiles x 3 engines; all three engines reported GREEN",
+      "date": "2026-08-18",
+      "note": "Full cube re-run after the D21 type implementation. ZERO failures, zero FAIL artifacts. FIRST RUN WAS INVALID AND WAS DISCARDED: a stale next start from an earlier session was still holding :3300, run.mjs reused it, and it served HTML referencing CSS hash 667effaa182fb03f which returned 400 while .next-check on disk held 709e3d23b1dd55e6 - every page rendered completely unstyled and 185 cells failed. That is the recorded never-rebuild-under-a-running-server gotcha, an ENVIRONMENT failure, not a site regression; proven by fetching the CSS link and getting 400 with a hash mismatch. Killed the server, cleaned 212 bogus artifacts, rebuilt into a fresh .next-check, re-ran. Second run had 1 flaky cell (chromium/w1920/home) which passed in isolation on retry; a third full run came back CUBE ALL GREEN with zero failures."
     },
     "perfBudget": {
       "state": "not-built",
@@ -793,6 +808,10 @@
     {
       "date": "2026-08-18",
       "summary": "Task #13 ledger lock: D21 type ruling (System B, modular type law, commit-and-close) and D22 private evidence tier (OWNER-DOC-VERIFIED). Tier annotations placed on OR-3 and the two SAM entries as notes only - no figures, broker names or contract terms entered the repo. Layer-model confirmation added to the publish map as a publishable structural statement. W3 done; next is the first code on v2."
+    },
+    {
+      "date": "2026-08-18",
+      "summary": "Task #14 D21 modular type implementation - FIRST CODE ON v2. Token block, hero 700->800 weight raise, bench-measured tracking, IBM Plex Mono accent layer on label surfaces, static type guard wired into qa:sweep and CI, nexo-brand section 2 synced. Full cube ALL GREEN after discarding an invalid first run caused by a stale server serving a mismatched build."
     }
   ]
 }

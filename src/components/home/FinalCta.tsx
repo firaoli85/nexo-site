@@ -11,7 +11,7 @@ export function FinalCta() {
       <AmbientMap tone="light" region="md" />
       <Container className="relative">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-display text-3xl font-bold leading-[1.08] tracking-tight text-default sm:text-4xl lg:text-5xl">
+          <h2 className="font-display text-3xl font-heading leading-[1.08] tracking-heading text-default sm:text-4xl lg:text-5xl">
             Ready when your members are.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-xl leading-relaxed text-muted">

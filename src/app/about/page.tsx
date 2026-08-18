@@ -10,7 +10,7 @@ import { SERVICE_AREA_LINE, SERVICE_AREA_PROSE } from "@/lib/launch";
 export const metadata = pageMeta(ROUTE_META.about);
 
 const eyebrowPill =
-  "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 text-xs font-medium tracking-wide text-accent";
+  "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent";
 
 // PRINCIPLES — three commitments in the certified proof grammar (icon chip + title + line). No scale
 // claims, no theater; §7.1 dignity language on the member principle.
@@ -47,10 +47,10 @@ export default function AboutPage() {
         <Container className="relative py-16 sm:py-20 lg:py-24">
           <div className="max-w-2xl">
             <span className={eyebrowPill}>About Nexo Access</span>
-            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.08] tracking-tight text-default sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 font-display text-4xl font-hero leading-[1.08] tracking-hero text-default sm:text-5xl lg:text-6xl">
               Built by an operator.
             </h1>
-            <p className="mt-5 max-w-prose text-xl leading-relaxed text-muted">
+            <p className="mt-5 max-w-prose text-xl leading-relaxed tracking-lede text-muted">
               The person who built this platform spent years dispatching these trips.
             </p>
           </div>
@@ -85,7 +85,7 @@ export default function AboutPage() {
       <Section className="relative overflow-hidden border-t border-border bg-surface-tint">
         <AmbientMap tone="light" region="wide" gutter={false} />
         <Container className="relative">
-          <h2 className="max-w-2xl font-display text-2xl font-bold tracking-tight text-default sm:text-3xl">
+          <h2 className="max-w-2xl font-display text-2xl font-heading tracking-heading text-default sm:text-3xl">
             What we hold ourselves to.
           </h2>
           <ul className="mt-10 grid gap-8 lg:grid-cols-3 lg:gap-10">
@@ -135,7 +135,7 @@ export default function AboutPage() {
         <AmbientMap tone="light" region="wide" />
         <Container className="relative py-16 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-tight text-default sm:text-4xl">
+            <h2 className="font-display text-3xl font-heading leading-[1.1] tracking-heading text-default sm:text-4xl">
               Let’s talk about your trips.
             </h2>
             <div className="mt-8 flex flex-wrap justify-center gap-3">

@@ -9,7 +9,7 @@ import { AmbientMap } from "@/components/home/AmbientMap";
 // an `effectiveNote` only when the owner has set a real date.
 
 const eyebrowPill =
-  "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 text-xs font-medium tracking-wide text-accent";
+  "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent";
 
 // Shared inline-link style for legal body copy. PERSISTENT underline (not hover-only) so an inline link
 // is distinguishable from body text without relying on color (WCAG 1.4.1); visible focus ring on the
@@ -45,7 +45,7 @@ export function LegalPage({
         <Container className="relative py-14 sm:py-16 lg:py-20">
           <div className="max-w-prose">
             <span className={eyebrowPill}>{eyebrow}</span>
-            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.1] tracking-tight text-default sm:text-5xl">
+            <h1 className="mt-4 font-display text-4xl font-hero leading-[1.1] tracking-hero text-default sm:text-5xl">
               {title}
             </h1>
             {lead ? <p className="mt-5 text-lg leading-relaxed text-muted">{lead}</p> : null}
@@ -63,7 +63,7 @@ export function LegalPage({
             <div className="space-y-10">
               {sections.map((s, i) => (
                 <section key={s.heading}>
-                  <h2 className="font-display text-xl font-bold tracking-tight text-default">
+                  <h2 className="font-display text-xl font-heading tracking-heading text-default">
                     <span className="text-subtle">{i + 1}.</span> {s.heading}
                   </h2>
                   <div className="mt-3 space-y-4 text-lg leading-relaxed text-muted">{s.body}</div>

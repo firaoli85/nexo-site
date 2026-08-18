@@ -21,10 +21,10 @@ export function AudienceTriage() {
     <Section className="bg-bg">
       <Container>
         <div className="max-w-2xl">
-          <span className="inline-flex items-center rounded-full border border-surface-tint-border bg-surface-tint px-3 py-1 text-xs font-medium tracking-wide text-accent">
+          <span className="inline-flex items-center rounded-full border border-surface-tint-border bg-surface-tint px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent">
             Who it’s for
           </span>
-          <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-default sm:text-4xl">
+          <h2 className="mt-4 font-display text-3xl font-heading tracking-heading text-default sm:text-4xl">
             Built for everyone in the trip.
           </h2>
         </div>

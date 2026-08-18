@@ -24,16 +24,16 @@ export function Hero() {
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
           {/* Headline block — server-rendered static; the LCP content. */}
           <div className="lg:col-span-5">
-            <span className="ink-glass inline-flex items-center gap-1.5 rounded-full border border-on-ink-border-strong px-3 py-1 text-xs font-medium tracking-wide text-accent-on-ink">
+            <span className="ink-glass inline-flex items-center gap-1.5 rounded-full border border-on-ink-border-strong px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent-on-ink">
               <span className="h-1.5 w-1.5 rounded-full bg-accent-on-ink" aria-hidden="true" />
               Non-emergency medical transportation · DC, MD &amp; VA
             </span>
-            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.05] tracking-tight text-on-ink sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 font-display text-4xl font-hero leading-[1.05] tracking-hero text-on-ink sm:text-5xl lg:text-6xl">
               {HEADLINE.before}
               <span className="text-accent-on-ink">{HEADLINE.accent}</span>
               {HEADLINE.after}
             </h1>
-            <p className="mt-5 max-w-prose text-xl leading-snug text-on-ink-muted">
+            <p className="mt-5 max-w-prose text-xl leading-snug tracking-lede text-on-ink-muted">
               {HERO_LEDE} Every driver is credential-verified before dispatch, and
               every claim is checked automatically before it’s billed.
             </p>

@@ -35,7 +35,7 @@ import { cn } from "@/utils/cn";
 export const metadata = pageMeta(ROUTE_META.platform);
 
 const eyebrowPill =
-  "inline-flex items-center gap-1.5 rounded-full border border-surface-tint-border bg-surface px-3 py-1 text-xs font-medium tracking-wide text-accent";
+  "inline-flex items-center gap-1.5 rounded-full border border-surface-tint-border bg-surface px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent";
 
 // ── the four deep-section vignettes (light MockCard demo grammar, "Sample data" hinted) ──────────
 
@@ -233,10 +233,10 @@ export default function PlatformPage() {
           <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
             <div className="lg:col-span-5">
               <span className={eyebrowPill}>The platform</span>
-              <h1 className="mt-4 font-display text-4xl font-bold leading-[1.08] tracking-tight text-default sm:text-5xl lg:text-6xl">
+              <h1 className="mt-4 font-display text-4xl font-hero leading-[1.08] tracking-hero text-default sm:text-5xl lg:text-6xl">
                 The whole trip, in one system.
               </h1>
-              <p className="mt-5 max-w-prose text-xl leading-relaxed text-muted">
+              <p className="mt-5 max-w-prose text-xl leading-relaxed tracking-lede text-muted">
                 The platform for non-emergency medical transportation (NEMT): dispatch, claims,
                 compliance, and oversight in one system, from the first booking to a checked,
                 billable claim.
@@ -272,7 +272,7 @@ export default function PlatformPage() {
               <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
                 <div className={cn("max-w-xl", flip && "lg:order-2")}>
                   <span className={KICKER}>{s.kicker}</span>
-                  <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-default sm:text-3xl">
+                  <h2 className="mt-2 font-display text-2xl font-heading tracking-heading text-default sm:text-3xl">
                     {s.claim}
                   </h2>
                   <p className="mt-3 text-lg leading-relaxed text-muted">{s.subline}</p>
@@ -290,7 +290,7 @@ export default function PlatformPage() {
         <AmbientMap tone="light" region="wide" />
         <Container className="relative py-16 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-tight text-default sm:text-4xl">
+            <h2 className="font-display text-3xl font-heading leading-[1.1] tracking-heading text-default sm:text-4xl">
               See it with your own trips in mind.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-muted">

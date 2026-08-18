@@ -7,7 +7,7 @@ import { ApplyForm } from "@/components/leads/ApplyForm";
 export const metadata = pageMeta(ROUTE_META.apply);
 
 const eyebrowPill =
-  "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 text-xs font-medium tracking-wide text-accent";
+  "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent";
 
 // What happens next — process, not promises. No time/SLA, no volume, no earnings (nexo-brand §7 + §7.2).
 const STEPS = [
@@ -34,10 +34,10 @@ export default function ApplyPage() {
         <Container className="relative py-16 sm:py-20 lg:py-24">
           <div className="max-w-2xl">
             <span className={eyebrowPill}>For transport providers</span>
-            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.08] tracking-tight text-default sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 font-display text-4xl font-hero leading-[1.08] tracking-hero text-default sm:text-5xl lg:text-6xl">
               Run trips with us.
             </h1>
-            <p className="mt-5 max-w-prose text-xl leading-relaxed text-muted">
+            <p className="mt-5 max-w-prose text-xl leading-relaxed tracking-lede text-muted">
               Work from one honest system, with clear credentialing and claims checked before they’re
               billed. Tell us about your operation and we’ll take it from there.
             </p>
@@ -59,13 +59,13 @@ export default function ApplyPage() {
       <Section className="relative overflow-hidden border-t border-border bg-surface-tint">
         <AmbientMap tone="light" region="md" />
         <Container className="relative">
-          <h2 className="max-w-2xl font-display text-2xl font-bold tracking-tight text-default sm:text-3xl">
+          <h2 className="max-w-2xl font-display text-2xl font-heading tracking-heading text-default sm:text-3xl">
             What happens next
           </h2>
           <ol className="mt-10 grid gap-8 lg:grid-cols-3 lg:gap-10">
             {STEPS.map((step, i) => (
               <li key={step.title}>
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-subtle font-display text-lg font-bold text-accent">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-subtle font-display text-lg font-heading text-accent">
                   {i + 1}
                 </span>
                 <h3 className="mt-4 text-lg font-semibold text-default">{step.title}</h3>

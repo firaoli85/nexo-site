@@ -104,6 +104,33 @@
      clears AA on it at 5.11:1. */
   --ink-hover:       #264035;
 
+  /* ══════════════════════════════════════════════════════════════════════════
+     D21 MODULAR TYPE LAW — the only place type is defined. Bench-measured
+     tracking (docs/TYPE_BENCH.md). Change type here + run the full cube;
+     nowhere else.
+     ══════════════════════════════════════════════════════════════════════════
+     Families are wired to the next/font CSS variables emitted in layout.tsx.
+     No component may declare a font family — scripts/qa/static-type-check.mjs
+     fails the build if one does. */
+  --font-display: var(--font-display-src), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-body:    var(--font-body-src),    ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono:    var(--font-mono-src),    ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Weights. D21 raised the hero to 800; headings sit at 700. */
+  --weight-hero:    800;
+  --weight-heading: 700;
+  --weight-body:    400;
+  --weight-body-medium: 500;
+  --weight-body-semibold: 600;
+
+  /* Tracking — measured on the context bench, not guessed. Bricolage is a
+     tightly-fitted grotesque, so it needs less negative pull than a geometric
+     would; these are the values System B was judged at. */
+  --track-hero:    -0.030em;
+  --track-heading: -0.022em;
+  --track-lede:    -0.008em;
+  --track-mono:     0.035em;
+
   /* Soft jade tint (~4% toward jade from white) — section bands, eyebrow pill,
      chip fills. text-muted = 5.5:1, text-accent = 4.7:1 on it. */
   --surface-tint:        #f4f9f7;
@@ -158,7 +185,8 @@ body {
   background: var(--bg);
   color: var(--text);
   /* --font-body is set by next/font on <html>; clean system sans as fallback */
-  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* D21: the token carries its own fallback chain — do not repeat it here. */
+  font-family: var(--font-body);
 }
 
 /* Glass surface for INK stages only (Stage 4.5 doctrine amendment). Default is a

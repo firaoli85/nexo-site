@@ -11,7 +11,7 @@ import { SERVICE_AREA_LINE, PORTAL_LIVE } from "@/lib/launch";
 export const metadata = pageMeta(ROUTE_META.contact);
 
 const eyebrowPill =
-  "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 text-xs font-medium tracking-wide text-accent";
+  "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent";
 
 const routeLink =
   "group mt-4 inline-flex items-center gap-1.5 rounded-sm text-sm font-semibold text-accent transition-colors hover:text-accent-hover " +
@@ -32,10 +32,10 @@ export default function ContactPage() {
         <Container className="relative py-16 sm:py-20 lg:py-24">
           <div className="max-w-2xl">
             <span className={eyebrowPill}>Contact</span>
-            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.08] tracking-tight text-default sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 font-display text-4xl font-hero leading-[1.08] tracking-hero text-default sm:text-5xl lg:text-6xl">
               Tell us about your program.
             </h1>
-            <p className="mt-5 max-w-prose text-xl leading-relaxed text-muted">
+            <p className="mt-5 max-w-prose text-xl leading-relaxed tracking-lede text-muted">
               If you run a transportation benefit or book rides for the people in your care, tell us
               about the trips you cover, and we’ll show you how Nexo Access handles them.
             </p>
@@ -78,7 +78,7 @@ export default function ContactPage() {
       <Section className="relative overflow-hidden border-t border-border bg-surface-tint">
         <AmbientMap tone="light" region="dc" />
         <Container className="relative">
-          <h2 className="max-w-2xl font-display text-2xl font-bold tracking-tight text-default sm:text-3xl">
+          <h2 className="max-w-2xl font-display text-2xl font-heading tracking-heading text-default sm:text-3xl">
             Looking for something else?
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2">

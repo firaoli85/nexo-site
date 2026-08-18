@@ -13,6 +13,8 @@ description: The design law for the Nexo Access site (Next.js NEMT healthcare ma
 > **CHANGELOG**
 > - 2026-08-17: operating model decided (D1/D15) and design precedence updated (registry audit);
 >   synchronized both copies.
+> - 2026-08-18: §2 aligned to D21 (System B heavy + mono accent + modular type law);
+>   synchronized both copies.
 
 Premium, calm, credible marketing site for a **medical transportation management organization** working
 DC / Maryland / Virginia. (Nexo Access delivers trips through a **credentialed provider network**:
@@ -95,10 +97,31 @@ Rules: **never ink → white without a tint buffer.** New dark sections must jus
 chapter or use tint instead. The ink hero extends UP behind the transparent nav (`-mt-16` +
 compensating top padding) so the page-top nav sits over ink, not the body white.
 
-## 2. TYPE SYSTEM
-- **Display:** Bricolage Grotesque (`--font-display`, `font-display`) — headings only.
+## 2. TYPE SYSTEM (D21 — System B)
+
+> **THIS SECTION DESCRIBES; THE TOKEN BLOCK DEFINES.** Families, weights and tracking are consumed from
+> the `src/app/globals.css` token block per **D21's MODULAR TYPE LAW**. No component may declare a font
+> family — `scripts/qa/static-type-check.mjs` fails the build if one does (wired into `qa:sweep` and
+> the CI check job). Changing type = edit that one block + run the full cube. Nowhere else.
+
+**The system (ruled at D21 after a two-round bench; see `docs/TYPE_BENCH.md`):**
+- **Display:** Bricolage Grotesque (`--font-display`, `font-display`) — headings only, at **HEAVY CUTS**.
+  **Hero = 800** (`font-hero` / `--weight-hero`), **headings = 700** (`font-heading` / `--weight-heading`).
+  The raise answers the owner's standing "not bold enough" note (T2); the family did not change, the weight did.
 - **Body:** Hanken Grotesk (`--font-body`, `font-sans`) — a warm humanist grotesque on a contrast
   axis with Bricolage. Never Inter/Roboto/Arial/system, never a second grotesque for body.
+- **Mono accent layer:** IBM Plex Mono (`--font-mono`, `font-mono`), cuts **400/500 only**.
+  **SCOPE IS DELIBERATELY NARROW:** eyebrow/kicker labels and ProductDemo data labels (trip and claim
+  identifiers). It is a *label* voice, not a body or heading voice. Broader use is page work, decided per
+  surface — never applied by reflex because a thing looks technical.
+- **TRACKING IS LAW, and it was measured, not guessed** (context bench, `docs/TYPE_BENCH.md`):
+  **hero `-0.030em`** (`tracking-hero`), **heading `-0.022em`** (`tracking-heading`),
+  **lede `-0.008em`** (`tracking-lede`), **mono `+0.035em`** (`tracking-mono`).
+  These supersede the older blanket "display tracking ≥ -0.04em (`tracking-tight`)" guidance below:
+  Bricolage is tightly fitted and does not want the extra pull. **Use the utilities, never a raw value.**
+- **COMMIT-AND-CLOSE (D-pre21b):** type is **CLOSED until post-launch**. It is not re-litigated mid-build.
+  The one check still owed is the **cheap-panel leg of the C3 protocol** — every screen the bench was
+  judged on was a good one — and it belongs to **W4**, not to a reopened type question.
   - **§2 NOTE — font-display posture (Stage 16.1 owner ruling, 2026-07-16).** The "never
     Inter/Roboto/Arial/system" rule governs the typeface **CHOICE** — the faces stay Bricolage + Hanken.
     Both load via `next/font` with **`display: "optional"`** (NOT `swap`): on an uncached first paint that
@@ -110,7 +133,8 @@ compensating top padding) so the page-top nav sits over ink, not the body white.
     is enforced per engine × profile — see §10.1.)
 - **Scale:** marketing body **17–18px** (`text-lg`), hero/section **subline one step up**
   (`text-xl`), display headings large (`text-4xl … text-6xl`), measure **65–75ch**
-  (`max-w-prose`), line-height 1.5–1.75, display tracking ≥ `-0.04em` (`tracking-tight`).
+  (`max-w-prose`), line-height 1.5–1.75. (Display tracking is now the D21 token set above — this
+  bullet no longer sets it.)
 - **Small-text tier ≥ 14px** (Stage 6 raised it one step): spine proof points, card sublines, demo
   scene captions, dropdown descriptions, footer links are `text-sm`/`text-[15px]`, not `text-[12/13px]`.
   CONSOLE FLOOR (Stage 6.4 — the older-reader pass OVERRULES the former console-sim exemption):

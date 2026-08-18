@@ -27,7 +27,7 @@ export function ContactForm() {
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-subtle text-accent">
           <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
         </span>
-        <h2 className="mt-4 font-display text-xl font-bold tracking-tight text-default sm:text-2xl">
+        <h2 className="mt-4 font-display text-xl font-heading tracking-heading text-default sm:text-2xl">
           Thanks, we’ve got your message.
         </h2>
         <p className="mt-2 text-base leading-relaxed text-muted">
@@ -55,7 +55,7 @@ export function ContactForm() {
       <h2
         ref={headingRef}
         tabIndex={-1}
-        className="rounded-sm font-display text-xl font-bold tracking-tight text-default outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface sm:text-2xl"
+        className="rounded-sm font-display text-xl font-heading tracking-heading text-default outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface sm:text-2xl"
       >
         Send us a message
       </h2>

@@ -68,7 +68,7 @@ function Wordmark({ onClick }: { onClick?: () => void }) {
       href="/"
       onClick={onClick}
       className={cn(
-        "rounded-sm font-display text-lg font-bold tracking-tight transition-opacity duration-200 hover:opacity-70 focus-visible:outline-none focus-visible:ring-2",
+        "rounded-sm font-display text-lg font-heading tracking-heading transition-opacity duration-200 hover:opacity-70 focus-visible:outline-none focus-visible:ring-2",
         NT.wordmark,
         NT.ring
       )}

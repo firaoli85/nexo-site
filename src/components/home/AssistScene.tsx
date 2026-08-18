@@ -52,7 +52,7 @@ export function AssistScene() {
           </span>
           {/* h4: this scene is DOM-nested inside Stop 3 (whose claim is h3), so the sequential/
               outline-precise level is h4 — size comes from the classes, never from the tag. */}
-          <h4 className="mt-4 font-display text-2xl font-bold tracking-tight text-on-ink sm:text-3xl">
+          <h4 className="mt-4 font-display text-2xl font-heading tracking-heading text-on-ink sm:text-3xl">
             Bariatric &amp; two-person assist.
           </h4>
           <p className="mt-3 max-w-md text-lg leading-relaxed text-on-ink-muted">

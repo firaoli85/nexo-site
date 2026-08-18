@@ -99,9 +99,25 @@ const config: Config = {
 
       // Typography — distinctive pairing loaded via next/font (see app/layout.tsx).
       // font-sans (default body) → Hanken Grotesk; font-display → Bricolage Grotesque.
+      // D21 MODULAR TYPE LAW — mapped ONCE, from the globals.css token block.
+      // The tokens already carry their own fallback chains, so nothing is repeated here.
       fontFamily: {
-        sans:    ["var(--font-body)", "ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
-        display: ["var(--font-display)", "ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
+        sans:    ["var(--font-body)"],
+        display: ["var(--font-display)"],
+        mono:    ["var(--font-mono)"],
+      },
+
+      // Weight + tracking bound to the same token block. Components use these
+      // utilities; they never write a raw value.
+      fontWeight: {
+        hero:    "var(--weight-hero)",
+        heading: "var(--weight-heading)",
+      },
+      letterSpacing: {
+        hero:    "var(--track-hero)",
+        heading: "var(--track-heading)",
+        lede:    "var(--track-lede)",
+        mono:    "var(--track-mono)",
       },
 
       // Soft elevation tokens (values in globals.css :root)

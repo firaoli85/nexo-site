@@ -43,7 +43,7 @@ function ScheduleScene() {
     <div>
       <div className="flex items-center gap-2">
         <span className="text-[13px] font-medium text-on-ink-muted">New trip</span>
-        <span className="text-[13px] tabular-nums text-on-ink-muted">NX-1042</span>
+        <span className="font-mono text-[13px] tabular-nums tracking-mono text-on-ink-muted">NX-1042</span>
         <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-on-ink-border px-2 py-0.5 text-[13px] font-medium text-on-ink-muted">
           <span className="h-1.5 w-1.5 rounded-full bg-on-ink-muted" aria-hidden="true" />
           Pending assignment
@@ -144,7 +144,7 @@ function CompleteScene() {
     <div>
       <div className="flex items-center gap-2">
         <span className="text-[13px] font-medium text-on-ink-muted">Trip status</span>
-        <span className="text-[13px] tabular-nums text-on-ink-muted">NX-1042</span>
+        <span className="font-mono text-[13px] tabular-nums tracking-mono text-on-ink-muted">NX-1042</span>
       </div>
       <div className="mt-5 flex">
         {STATUS.map((label, i) => (
@@ -205,8 +205,8 @@ function BillScene() {
     <div>
       <div className="flex items-center gap-2">
         <span className="text-[13px] font-medium text-on-ink-muted">Claim review</span>
-        <span className="text-[13px] tabular-nums text-on-ink-muted">CLM-3390</span>
-        <span className="ml-auto text-[13px] tabular-nums text-on-ink-muted">Trip NX-1042</span>
+        <span className="font-mono text-[13px] tabular-nums tracking-mono text-on-ink-muted">CLM-3390</span>
+        <span className="ml-auto font-mono text-[13px] tabular-nums tracking-mono text-on-ink-muted">Trip NX-1042</span>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-2">
         {SCRUB_CHECKS.map((label, i) => (

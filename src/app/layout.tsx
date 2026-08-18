@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, Hanken_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/chrome/Navbar";
 import { Footer } from "@/components/chrome/Footer";
@@ -23,13 +23,26 @@ import { organizationSchema, schemaJson } from "@/lib/schema";
 const fontDisplay = Bricolage_Grotesque({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-display",
+  variable: "--font-display-src",
   display: "optional",
 });
 const fontBody = Hanken_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-body",
+  variable: "--font-body-src",
+  display: "optional",
+});
+
+// D21 mono accent layer — eyebrow/kicker labels and ProductDemo data labels only.
+// CUTS: 400 (label body) and 500 (the medium weight those labels already use). No 600/700:
+// nothing in the sanctioned mono surfaces is bold, and every unused cut is dead payload.
+// C1 IS DELIBERATELY UNTOUCHED: display:"optional" is kept consistent with the pair. Whether
+// slow machines should keep the metric-matched fallback is P5's measurement question (C1),
+// not this task's — see nexo-brand §2 and SITE_GROUND_TRUTH §9.
+const fontMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono-src",
   display: "optional",
 });
 
@@ -67,7 +80,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fontDisplay.variable} ${fontBody.variable}`}>
+    <html lang="en" className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable}`}>
       <body className="flex min-h-svh flex-col antialiased">
         {/* Organization JSON-LD (one MedicalBusiness, site-wide). Safely serialized (escapes </script>). */}
         <script

@@ -336,7 +336,7 @@ function Stop({ index }: { index: number }) {
               </span>
               <h3
                 className={cn(
-                  "mt-4 font-display text-2xl font-bold tracking-tight sm:text-3xl",
+                  "mt-4 font-display text-2xl font-heading tracking-heading sm:text-3xl",
                   ink ? "text-on-ink" : "text-default"
                 )}
               >
@@ -391,12 +391,12 @@ export function RouteSpine() {
       <Section className="pb-4 lg:pb-6">
         <Container>
           <div className="max-w-2xl">
-            <span className="inline-flex items-center rounded-full border border-surface-tint-border bg-surface-tint px-3 py-1 text-xs font-medium tracking-wide text-accent">
+            <span className="inline-flex items-center rounded-full border border-surface-tint-border bg-surface-tint px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent">
               How a trip runs on Nexo
             </span>
             <h2
               id="spine-heading"
-              className="mt-4 font-display text-3xl font-bold tracking-tight text-default sm:text-4xl"
+              className="mt-4 font-display text-3xl font-heading tracking-heading text-default sm:text-4xl"
             >
               From request to clean claim.
             </h2>

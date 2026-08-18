@@ -48,7 +48,7 @@ export function ProofBand() {
             <div key={s.figure} className="proof-stat text-center">
               <div
                 className={cn(
-                  "font-display text-5xl font-bold leading-none tracking-tight text-accent sm:text-6xl",
+                  "font-display text-5xl font-heading leading-none tracking-heading text-accent sm:text-6xl",
                   s.num && "tabular-nums"
                 )}
               >

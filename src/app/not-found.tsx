@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 const eyebrowPill =
-  "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 text-xs font-medium tracking-wide text-accent";
+  "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent";
 
 export default function NotFound() {
   return (
@@ -22,7 +22,7 @@ export default function NotFound() {
       <Container className="relative py-24 sm:py-28 lg:py-32">
         <div className="mx-auto max-w-xl text-center">
           <span className={eyebrowPill}>404</span>
-          <h1 className="mt-4 font-display text-4xl font-bold leading-[1.1] tracking-tight text-default sm:text-5xl">
+          <h1 className="mt-4 font-display text-4xl font-hero leading-[1.1] tracking-hero text-default sm:text-5xl">
             This page took a wrong turn.
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-muted">

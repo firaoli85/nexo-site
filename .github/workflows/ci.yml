@@ -19,6 +19,8 @@ jobs:
           cache: npm
       - name: Install dependencies (exact lockfile)
         run: npm ci
+      - name: Static type guard (D21 modular type law)
+        run: npm run qa:static
       - name: Typecheck (tsc must be TRUE 0)
         run: npx tsc --noEmit
       - name: Production build

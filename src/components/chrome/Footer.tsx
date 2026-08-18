@@ -88,7 +88,7 @@ export function Footer() {
           <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-md">
               <TerminusMotif />
-              <p className="terminus-wordmark font-display text-5xl font-bold tracking-tight text-on-ink sm:text-6xl lg:text-7xl">
+              <p className="terminus-wordmark font-display text-5xl font-heading tracking-heading text-on-ink sm:text-6xl lg:text-7xl">
                 {SITE.name}
               </p>
               <p className="terminus-mission mt-5 text-lg leading-relaxed text-on-ink-muted">{MISSION}</p>
