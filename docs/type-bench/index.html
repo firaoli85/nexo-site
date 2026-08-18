@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nexo Access — Type Specimen Bench (P3-W3)</title>
+
+<!--
+  ============================================================================
+  BENCH-ONLY FONT LOADING. NOT A PRODUCTION PATTERN. DO NOT COPY INTO THE APP.
+  ============================================================================
+  These CDN <link>s exist so this file opens from file:// with zero build step
+  and zero install. Production loading strategy is a SEPARATE, LATER decision
+  tied to C1 (fonts-optional: slow machines keep system fonts) and is decided at
+  implementation, not here. The app self-hosts through next/font with
+  display:"optional"; nothing on this page reflects how the site will ship.
+
+  Every candidate below is free for self-hosted commercial web use. Licenses are
+  recorded per candidate in docs/TYPE_BENCH.md.
+  ============================================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+
+<!-- Incumbents: Bricolage Grotesque (display), Hanken Grotesk (body) -->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<!-- Display challengers -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Space+Grotesk:wght@300..700&family=Sora:wght@100..800&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&display=swap" rel="stylesheet">
+<!-- Body challengers -->
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap" rel="stylesheet">
+<!-- Mono / technical accents -->
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<!-- Satoshi (Fontshare, free commercial license) -->
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
+
+<style>
+  /* Brand tokens mirrored from src/app/globals.css. Mirrored, not imported —
+     the bench must stay a single self-contained file. */
+  :root {
+    --bg: #fafbfc;
+    --surface: #ffffff;
+    --border: #ebedf1;
+    --text: #0c1512;
+    --text-muted: #42544c;
+    --text-subtle: #4b5c53;
+    --accent: #0b7d56;
+    --ink: #0b1512;
+    --ink-surface: #12201b;
+    --on-ink: #e9f1ee;
+    --on-ink-muted: #adbfb8;
+    --on-ink-border: #35504a;
+    --accent-on-ink: #46d6a0;
+    --surface-tint: #f4f9f7;
+    --surface-tint-border: #dbeae3;
+
+    /* Per-block faces, overridden on each .block */
+    --display: "Bricolage Grotesque";
+    --body: "Hanken Grotesk";
+    --mono: "JetBrains Mono";
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body), system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ── Sticky legend ─────────────────────────────────────────────────────── */
+  .legend {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgb(250 251 252 / 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  @supports not (backdrop-filter: blur(12px)) {
+    .legend { background: var(--bg); }
+  }
+  .legend-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 14px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 18px;
+  }
+  .legend-title {
+    font-family: var(--mono), ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+    margin-right: 4px;
+  }
+  .legend a {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 1px;
+    transition: color 160ms cubic-bezier(0.23, 1, 0.32, 1),
+                border-color 160ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .legend a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  }
+  .legend a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .legend a b { font-weight: 700; color: var(--text); }
+
+  /* ── Page frame ────────────────────────────────────────────────────────── */
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+  .intro { padding: 72px 0 40px; max-width: 68ch; }
+  .intro h1 {
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    margin: 0 0 14px;
+    line-height: 1.2;
+  }
+  .intro p { margin: 0 0 12px; color: var(--text-muted); font-size: 16px; }
+  .intro code {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.88em;
+    background: var(--surface-tint);
+    border: 1px solid var(--surface-tint-border);
+    border-radius: 4px;
+    padding: 1px 5px;
+  }
+
+  /* ── Candidate block ───────────────────────────────────────────────────── */
+  .block {
+    padding: 88px 0 0;
+    border-top: 1px solid var(--border);
+    scroll-margin-top: 68px;
+  }
+  .block:first-of-type { border-top: none; }
+
+  .block-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px 16px;
+    margin-bottom: 52px;
+  }
+  .num {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--surface-tint);
+    border: 1px solid var(--surface-tint-border);
+    border-radius: 999px;
+    padding: 3px 11px;
+    letter-spacing: 0.04em;
+  }
+  .face-name {
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .face-meta {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--text-subtle);
+    letter-spacing: 0.02em;
+  }
+  .tag {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text-subtle);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 7px;
+  }
+  .tag--control { color: var(--accent); border-color: var(--surface-tint-border); background: var(--surface-tint); }
+
+  /* Specimen rows */
+  .row { margin-bottom: 56px; }
+  .row-label {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-subtle);
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* (i) hero scale — real hero size */
+  .hero-line {
+    font-family: var(--display), system-ui, sans-serif;
+    font-size: clamp(2.75rem, 6.2vw, 4.5rem);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    margin: 0 0 6px;
+    color: var(--text);
+  }
+  .hero-line .accent { color: var(--accent); }
+  .hero-line--medium { font-weight: var(--w-med, 600); }
+  .hero-line--heavy  { font-weight: var(--w-heavy, 800); }
+  .weight-tick {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-subtle);
+    letter-spacing: 0.06em;
+    margin: 0 0 26px;
+  }
+  .register-line {
+    font-family: var(--display), system-ui, sans-serif;
+    font-weight: var(--w-med, 600);
+    font-size: clamp(1.25rem, 2.1vw, 1.6rem);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: var(--text-muted);
+    margin: 22px 0 0;
+    max-width: 30ch;
+  }
+
+  /* (ii) section-heading scale */
+  .h2-line {
+    font-family: var(--display), system-ui, sans-serif;
+    font-weight: var(--w-heavy, 800);
+    font-size: clamp(1.9rem, 3.2vw, 2.5rem);
+    line-height: 1.14;
+    letter-spacing: -0.035em;
+    margin: 0 0 14px;
+  }
+  .h3-line {
+    font-family: var(--display), system-ui, sans-serif;
+    font-weight: var(--w-med, 600);
+    font-size: 1.35rem;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  /* (iii) body paragraph at a real 65–75ch measure */
+  .body-copy {
+    font-family: var(--body), system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    max-width: 68ch;
+    color: var(--text);
+    margin: 0 0 14px;
+  }
+  .body-copy + .body-copy { color: var(--text-muted); }
+  .measure-tick {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-subtle);
+    letter-spacing: 0.06em;
+    margin-top: 10px;
+  }
+
+  /* (iv) eyebrow / label + mono accent */
+  .eyebrow {
+    font-family: var(--body), system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--accent);
+    margin: 0 0 20px;
+  }
+  .label-sm {
+    font-family: var(--body), system-ui, sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0 0 20px;
+  }
+  .mono-line {
+    font-family: var(--mono), ui-monospace, monospace;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    background: var(--surface-tint);
+    border: 1px solid var(--surface-tint-border);
+    border-radius: 6px;
+    padding: 11px 15px;
+    display: inline-block;
+    margin: 0;
+  }
+  .mono-tick {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-subtle);
+    letter-spacing: 0.06em;
+    margin-top: 12px;
+  }
+
+  /* (v) ink strip — our pages end on ink; a face must survive both registers */
+  .ink-strip {
+    background: var(--ink);
+    border-radius: 14px;
+    padding: 52px 44px;
+    margin-bottom: 88px;
+  }
+  .ink-strip .ink-eyebrow {
+    font-family: var(--mono), ui-monospace, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    color: var(--accent-on-ink);
+    margin: 0 0 18px;
+  }
+  .ink-strip .ink-head {
+    font-family: var(--display), system-ui, sans-serif;
+    font-weight: var(--w-heavy, 800);
+    font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    color: var(--on-ink);
+    margin: 0 0 16px;
+  }
+  .ink-strip .ink-body {
+    font-family: var(--body), system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.62;
+    color: var(--on-ink-muted);
+    max-width: 62ch;
+    margin: 0 0 22px;
+  }
+  .ink-strip .ink-mono {
+    font-family: var(--mono), ui-monospace, monospace;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--on-ink);
+    border: 1px solid var(--on-ink-border);
+    border-radius: 6px;
+    padding: 9px 13px;
+    display: inline-block;
+  }
+
+  /* ── Final A/B stack ───────────────────────────────────────────────────── */
+  .stack { padding: 88px 0 40px; border-top: 1px solid var(--border); }
+  .stack-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 18px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .stack-row:last-child { border-bottom: none; }
+  .stack-num {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 34px;
+  }
+  .stack-line {
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    margin: 0;
+    flex: 1 1 340px;
+  }
+  .stack-face {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-subtle);
+    letter-spacing: 0.05em;
+    flex: 0 0 auto;
+  }
+
+  footer.bench-foot {
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+    padding: 40px 0 90px;
+    color: var(--text-subtle);
+    font-size: 14px;
+  }
+
+  /* Font-load verification readout, filled by the script at the bottom. */
+  #verify {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 28px 0 0;
+    white-space: pre-wrap;
+  }
+  #verify .ok { color: var(--accent); font-weight: 700; }
+  #verify .bad { color: #b3261e; font-weight: 700; }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 0 20px; }
+    .legend-inner { padding: 12px 20px; gap: 6px 12px; }
+    .block { padding-top: 60px; }
+    .ink-strip { padding: 34px 24px; border-radius: 12px; }
+    .block-head { margin-bottom: 36px; }
+    .row { margin-bottom: 42px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="legend">
+  <div class="legend-inner">
+    <span class="legend-title">Candidates</span>
+    <a href="#c1"><b>1</b> Bricolage (incumbent)</a>
+    <a href="#c2"><b>2</b> Bricolage HEAVY (control)</a>
+    <a href="#c3"><b>3</b> Archivo</a>
+    <a href="#c4"><b>4</b> Space Grotesk</a>
+    <a href="#c5"><b>5</b> Satoshi</a>
+    <a href="#c6"><b>6</b> Sora</a>
+    <a href="#c7"><b>7</b> Fraunces</a>
+    <a href="#stack"><b>A/B</b> All heavy</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="intro">
+    <h1>Type specimen bench — P3-W3</h1>
+    <p>Every block shows the <strong>same real copy from the live site</strong> at the same sizes. Only the
+    typeface changes. React by <strong>candidate number</strong>.</p>
+    <p><strong>Block 1</strong> is the incumbent exactly as it ships today. <strong>Block 2</strong> is the
+    control that matters: the same incumbent family pushed to its heavy cuts, testing whether
+    <em>weight</em> — not <em>family</em> — was the wound.</p>
+    <p>The mono accent rotates across blocks so all three technical faces get seen; each is labelled.
+    Every block ends on an <code>--ink</code> strip, because our pages end on ink and a face has to survive
+    both registers.</p>
+    <p><strong>Fonts here load from a CDN for bench purposes only.</strong> Production loading is a separate
+    later decision tied to C1 and is made at implementation, not here.</p>
+    <div id="verify">Font-load verification runs on load…</div>
+  </div>
+</div>
+
+<div class="wrap" id="blocks">
+
+  <!-- ══ 1 · INCUMBENT AS-IS ══════════════════════════════════════════════ -->
+  <section class="block" id="c1" data-display="Bricolage Grotesque" data-body="Hanken Grotesk" data-mono="JetBrains Mono"
+           style="--display:'Bricolage Grotesque'; --body:'Hanken Grotesk'; --mono:'JetBrains Mono'; --w-med:600; --w-heavy:700;">
+    <div class="block-head">
+      <span class="num">01</span>
+      <h2 class="face-name">Bricolage Grotesque + Hanken Grotesk</h2>
+      <span class="face-meta">display 600/700 · body Hanken · mono JetBrains Mono</span>
+      <span class="tag tag--control">Incumbent, as shipped</span>
+    </div>
+
+    <div class="row">
+      <div class="row-label">i · Hero scale</div>
+      <p class="hero-line hero-line--medium">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 600 — medium cut</p>
+      <p class="hero-line hero-line--heavy">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 700 — heavy cut</p>
+      <p class="register-line">Medical transportation management for the DMV.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">ii · Section heading scale</div>
+      <p class="h2-line">Checked before it&rsquo;s billed.</p>
+      <p class="h3-line">We manage, providers drive.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iii · Body paragraph</div>
+      <p class="body-copy">Step four, bill: running the resulting claim through four automated scrubbing checks and seven adjudication checks before it is billed to the plan that covered the member.</p>
+      <p class="body-copy">Trips are delivered through our credentialed network of transport providers, on our platform, under our standards, and we take responsibility for every trip.</p>
+      <p class="measure-tick">17px · line-height 1.65 · measure 68ch</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iv · Eyebrow, label, mono accent</div>
+      <p class="eyebrow">Non-emergency medical transportation · DC, MD &amp; VA</p>
+      <p class="label-sm">Three service levels, with bariatric and two-person assist available on any of them.</p>
+      <p class="mono-line">TRIP NX-1042 · WHEELCHAIR · 9:30 AM</p>
+      <p class="mono-tick">mono accent: JetBrains Mono</p>
+    </div>
+
+    <div class="ink-strip">
+      <p class="ink-eyebrow">v · On ink</p>
+      <p class="ink-head">Every trip, accounted for.</p>
+      <p class="ink-body">Credential-gated dispatch and claims checked before billing, so the transportation benefit stands up to scrutiny.</p>
+      <p class="ink-mono">CLAIM CLM-3390 · 13 FROZEN FIELDS</p>
+    </div>
+  </section>
+
+  <!-- ══ 2 · INCUMBENT HEAVY — THE CONTROL ════════════════════════════════ -->
+  <section class="block" id="c2" data-display="Bricolage Grotesque" data-body="Hanken Grotesk" data-mono="IBM Plex Mono"
+           style="--display:'Bricolage Grotesque'; --body:'Hanken Grotesk'; --mono:'IBM Plex Mono'; --w-med:700; --w-heavy:800;">
+    <div class="block-head">
+      <span class="num">02</span>
+      <h2 class="face-name">Bricolage Grotesque — HEAVY CUTS</h2>
+      <span class="face-meta">display 700/800 · body Hanken · mono IBM Plex Mono</span>
+      <span class="tag tag--control">THE CONTROL — weight, not family</span>
+    </div>
+
+    <div class="row">
+      <div class="row-label">i · Hero scale</div>
+      <p class="hero-line hero-line--medium">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 700</p>
+      <p class="hero-line hero-line--heavy">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 800 — Bricolage&rsquo;s heaviest cut</p>
+      <p class="register-line">Medical transportation management for the DMV.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">ii · Section heading scale</div>
+      <p class="h2-line">Checked before it&rsquo;s billed.</p>
+      <p class="h3-line">We manage, providers drive.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iii · Body paragraph</div>
+      <p class="body-copy">Step four, bill: running the resulting claim through four automated scrubbing checks and seven adjudication checks before it is billed to the plan that covered the member.</p>
+      <p class="body-copy">Trips are delivered through our credentialed network of transport providers, on our platform, under our standards, and we take responsibility for every trip.</p>
+      <p class="measure-tick">17px · line-height 1.65 · measure 68ch</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iv · Eyebrow, label, mono accent</div>
+      <p class="eyebrow">Non-emergency medical transportation · DC, MD &amp; VA</p>
+      <p class="label-sm">Three service levels, with bariatric and two-person assist available on any of them.</p>
+      <p class="mono-line">TRIP NX-1042 · WHEELCHAIR · 9:30 AM</p>
+      <p class="mono-tick">mono accent: IBM Plex Mono</p>
+    </div>
+
+    <div class="ink-strip">
+      <p class="ink-eyebrow">v · On ink</p>
+      <p class="ink-head">Every trip, accounted for.</p>
+      <p class="ink-body">Credential-gated dispatch and claims checked before billing, so the transportation benefit stands up to scrutiny.</p>
+      <p class="ink-mono">CLAIM CLM-3390 · 13 FROZEN FIELDS</p>
+    </div>
+  </section>
+
+  <!-- ══ 3 · ARCHIVO ══════════════════════════════════════════════════════ -->
+  <section class="block" id="c3" data-display="Archivo" data-body="Hanken Grotesk" data-mono="Space Mono"
+           style="--display:'Archivo'; --body:'Hanken Grotesk'; --mono:'Space Mono'; --w-med:600; --w-heavy:800;">
+    <div class="block-head">
+      <span class="num">03</span>
+      <h2 class="face-name">Archivo</h2>
+      <span class="face-meta">display 600/800 · body Hanken · mono Space Mono</span>
+      <span class="tag">Technical grotesque</span>
+    </div>
+
+    <div class="row">
+      <div class="row-label">i · Hero scale</div>
+      <p class="hero-line hero-line--medium">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 600</p>
+      <p class="hero-line hero-line--heavy">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 800</p>
+      <p class="register-line">Medical transportation management for the DMV.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">ii · Section heading scale</div>
+      <p class="h2-line">Checked before it&rsquo;s billed.</p>
+      <p class="h3-line">We manage, providers drive.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iii · Body paragraph</div>
+      <p class="body-copy">Step four, bill: running the resulting claim through four automated scrubbing checks and seven adjudication checks before it is billed to the plan that covered the member.</p>
+      <p class="body-copy">Trips are delivered through our credentialed network of transport providers, on our platform, under our standards, and we take responsibility for every trip.</p>
+      <p class="measure-tick">17px · line-height 1.65 · measure 68ch</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iv · Eyebrow, label, mono accent</div>
+      <p class="eyebrow">Non-emergency medical transportation · DC, MD &amp; VA</p>
+      <p class="label-sm">Three service levels, with bariatric and two-person assist available on any of them.</p>
+      <p class="mono-line">TRIP NX-1042 · WHEELCHAIR · 9:30 AM</p>
+      <p class="mono-tick">mono accent: Space Mono</p>
+    </div>
+
+    <div class="ink-strip">
+      <p class="ink-eyebrow">v · On ink</p>
+      <p class="ink-head">Every trip, accounted for.</p>
+      <p class="ink-body">Credential-gated dispatch and claims checked before billing, so the transportation benefit stands up to scrutiny.</p>
+      <p class="ink-mono">CLAIM CLM-3390 · 13 FROZEN FIELDS</p>
+    </div>
+  </section>
+
+  <!-- ══ 4 · SPACE GROTESK ════════════════════════════════════════════════ -->
+  <section class="block" id="c4" data-display="Space Grotesk" data-body="Hanken Grotesk" data-mono="JetBrains Mono"
+           style="--display:'Space Grotesk'; --body:'Hanken Grotesk'; --mono:'JetBrains Mono'; --w-med:500; --w-heavy:700;">
+    <div class="block-head">
+      <span class="num">04</span>
+      <h2 class="face-name">Space Grotesk</h2>
+      <span class="face-meta">display 500/700 · body Hanken · mono JetBrains Mono</span>
+      <span class="tag">Technical grotesque — the Greptile register</span>
+    </div>
+
+    <div class="row">
+      <div class="row-label">i · Hero scale</div>
+      <p class="hero-line hero-line--medium">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 500</p>
+      <p class="hero-line hero-line--heavy">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 700 — Space Grotesk&rsquo;s heaviest cut</p>
+      <p class="register-line">Medical transportation management for the DMV.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">ii · Section heading scale</div>
+      <p class="h2-line">Checked before it&rsquo;s billed.</p>
+      <p class="h3-line">We manage, providers drive.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iii · Body paragraph</div>
+      <p class="body-copy">Step four, bill: running the resulting claim through four automated scrubbing checks and seven adjudication checks before it is billed to the plan that covered the member.</p>
+      <p class="body-copy">Trips are delivered through our credentialed network of transport providers, on our platform, under our standards, and we take responsibility for every trip.</p>
+      <p class="measure-tick">17px · line-height 1.65 · measure 68ch</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iv · Eyebrow, label, mono accent</div>
+      <p class="eyebrow">Non-emergency medical transportation · DC, MD &amp; VA</p>
+      <p class="label-sm">Three service levels, with bariatric and two-person assist available on any of them.</p>
+      <p class="mono-line">TRIP NX-1042 · WHEELCHAIR · 9:30 AM</p>
+      <p class="mono-tick">mono accent: JetBrains Mono</p>
+    </div>
+
+    <div class="ink-strip">
+      <p class="ink-eyebrow">v · On ink</p>
+      <p class="ink-head">Every trip, accounted for.</p>
+      <p class="ink-body">Credential-gated dispatch and claims checked before billing, so the transportation benefit stands up to scrutiny.</p>
+      <p class="ink-mono">CLAIM CLM-3390 · 13 FROZEN FIELDS</p>
+    </div>
+  </section>
+
+  <!-- ══ 5 · SATOSHI ══════════════════════════════════════════════════════ -->
+  <section class="block" id="c5" data-display="Satoshi" data-body="Public Sans" data-mono="IBM Plex Mono"
+           style="--display:'Satoshi'; --body:'Public Sans'; --mono:'IBM Plex Mono'; --w-med:700; --w-heavy:900;">
+    <div class="block-head">
+      <span class="num">05</span>
+      <h2 class="face-name">Satoshi <span style="font-weight:400;color:var(--text-subtle)">+ Public Sans body</span></h2>
+      <span class="face-meta">display 700/900 · body Public Sans · mono IBM Plex Mono</span>
+      <span class="tag">Confident geometric · body swap</span>
+    </div>
+
+    <div class="row">
+      <div class="row-label">i · Hero scale</div>
+      <p class="hero-line hero-line--medium">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 700</p>
+      <p class="hero-line hero-line--heavy">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 900 — black</p>
+      <p class="register-line">Medical transportation management for the DMV.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">ii · Section heading scale</div>
+      <p class="h2-line">Checked before it&rsquo;s billed.</p>
+      <p class="h3-line">We manage, providers drive.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iii · Body paragraph <span style="text-transform:none;letter-spacing:0;color:var(--accent)">— body face is Public Sans, not Hanken</span></div>
+      <p class="body-copy">Step four, bill: running the resulting claim through four automated scrubbing checks and seven adjudication checks before it is billed to the plan that covered the member.</p>
+      <p class="body-copy">Trips are delivered through our credentialed network of transport providers, on our platform, under our standards, and we take responsibility for every trip.</p>
+      <p class="measure-tick">17px · line-height 1.65 · measure 68ch · BODY CANDIDATE: Public Sans</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iv · Eyebrow, label, mono accent</div>
+      <p class="eyebrow">Non-emergency medical transportation · DC, MD &amp; VA</p>
+      <p class="label-sm">Three service levels, with bariatric and two-person assist available on any of them.</p>
+      <p class="mono-line">TRIP NX-1042 · WHEELCHAIR · 9:30 AM</p>
+      <p class="mono-tick">mono accent: IBM Plex Mono</p>
+    </div>
+
+    <div class="ink-strip">
+      <p class="ink-eyebrow">v · On ink</p>
+      <p class="ink-head">Every trip, accounted for.</p>
+      <p class="ink-body">Credential-gated dispatch and claims checked before billing, so the transportation benefit stands up to scrutiny.</p>
+      <p class="ink-mono">CLAIM CLM-3390 · 13 FROZEN FIELDS</p>
+    </div>
+  </section>
+
+  <!-- ══ 6 · SORA ═════════════════════════════════════════════════════════ -->
+  <section class="block" id="c6" data-display="Sora" data-body="Instrument Sans" data-mono="Space Mono"
+           style="--display:'Sora'; --body:'Instrument Sans'; --mono:'Space Mono'; --w-med:600; --w-heavy:800;">
+    <div class="block-head">
+      <span class="num">06</span>
+      <h2 class="face-name">Sora <span style="font-weight:400;color:var(--text-subtle)">+ Instrument Sans body</span></h2>
+      <span class="face-meta">display 600/800 · body Instrument Sans · mono Space Mono</span>
+      <span class="tag">Confident geometric · body swap</span>
+    </div>
+
+    <div class="row">
+      <div class="row-label">i · Hero scale</div>
+      <p class="hero-line hero-line--medium">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 600</p>
+      <p class="hero-line hero-line--heavy">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 800 — Sora&rsquo;s heaviest cut</p>
+      <p class="register-line">Medical transportation management for the DMV.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">ii · Section heading scale</div>
+      <p class="h2-line">Checked before it&rsquo;s billed.</p>
+      <p class="h3-line">We manage, providers drive.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iii · Body paragraph <span style="text-transform:none;letter-spacing:0;color:var(--accent)">— body face is Instrument Sans, not Hanken</span></div>
+      <p class="body-copy">Step four, bill: running the resulting claim through four automated scrubbing checks and seven adjudication checks before it is billed to the plan that covered the member.</p>
+      <p class="body-copy">Trips are delivered through our credentialed network of transport providers, on our platform, under our standards, and we take responsibility for every trip.</p>
+      <p class="measure-tick">17px · line-height 1.65 · measure 68ch · BODY CANDIDATE: Instrument Sans</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iv · Eyebrow, label, mono accent</div>
+      <p class="eyebrow">Non-emergency medical transportation · DC, MD &amp; VA</p>
+      <p class="label-sm">Three service levels, with bariatric and two-person assist available on any of them.</p>
+      <p class="mono-line">TRIP NX-1042 · WHEELCHAIR · 9:30 AM</p>
+      <p class="mono-tick">mono accent: Space Mono</p>
+    </div>
+
+    <div class="ink-strip">
+      <p class="ink-eyebrow">v · On ink</p>
+      <p class="ink-head">Every trip, accounted for.</p>
+      <p class="ink-body">Credential-gated dispatch and claims checked before billing, so the transportation benefit stands up to scrutiny.</p>
+      <p class="ink-mono">CLAIM CLM-3390 · 13 FROZEN FIELDS</p>
+    </div>
+  </section>
+
+  <!-- ══ 7 · FRAUNCES — THE WILDCARD ══════════════════════════════════════ -->
+  <section class="block" id="c7" data-display="Fraunces" data-body="Hanken Grotesk" data-mono="JetBrains Mono"
+           style="--display:'Fraunces'; --body:'Hanken Grotesk'; --mono:'JetBrains Mono'; --w-med:600; --w-heavy:900;">
+    <div class="block-head">
+      <span class="num">07</span>
+      <h2 class="face-name">Fraunces</h2>
+      <span class="face-meta">display 600/900 · body Hanken · mono JetBrains Mono</span>
+      <span class="tag">WILDCARD — variable serif</span>
+    </div>
+
+    <div class="row">
+      <div class="row-label">i · Hero scale</div>
+      <p class="hero-line hero-line--medium">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 600</p>
+      <p class="hero-line hero-line--heavy">Every trip, <span class="accent">accounted</span> for.</p>
+      <p class="weight-tick">weight 900 — black</p>
+      <p class="register-line">Medical transportation management for the DMV.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">ii · Section heading scale</div>
+      <p class="h2-line">Checked before it&rsquo;s billed.</p>
+      <p class="h3-line">We manage, providers drive.</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iii · Body paragraph</div>
+      <p class="body-copy">Step four, bill: running the resulting claim through four automated scrubbing checks and seven adjudication checks before it is billed to the plan that covered the member.</p>
+      <p class="body-copy">Trips are delivered through our credentialed network of transport providers, on our platform, under our standards, and we take responsibility for every trip.</p>
+      <p class="measure-tick">17px · line-height 1.65 · measure 68ch</p>
+    </div>
+
+    <div class="row">
+      <div class="row-label">iv · Eyebrow, label, mono accent</div>
+      <p class="eyebrow">Non-emergency medical transportation · DC, MD &amp; VA</p>
+      <p class="label-sm">Three service levels, with bariatric and two-person assist available on any of them.</p>
+      <p class="mono-line">TRIP NX-1042 · WHEELCHAIR · 9:30 AM</p>
+      <p class="mono-tick">mono accent: JetBrains Mono</p>
+    </div>
+
+    <div class="ink-strip">
+      <p class="ink-eyebrow">v · On ink</p>
+      <p class="ink-head">Every trip, accounted for.</p>
+      <p class="ink-body">Credential-gated dispatch and claims checked before billing, so the transportation benefit stands up to scrutiny.</p>
+      <p class="ink-mono">CLAIM CLM-3390 · 13 FROZEN FIELDS</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- ══ FINAL A/B STACK ════════════════════════════════════════════════════ -->
+<div class="wrap">
+  <section class="stack" id="stack">
+    <div class="block-head">
+      <span class="num">A/B</span>
+      <h2 class="face-name">All display faces, heavy cut, one line each</h2>
+      <span class="face-meta">direct scanning — same string, same size, heaviest weight per face</span>
+    </div>
+
+    <div class="stack-row">
+      <span class="stack-num">01</span>
+      <p class="stack-line" style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;">Every trip, accounted for.</p>
+      <span class="stack-face">Bricolage 700 (as shipped)</span>
+    </div>
+    <div class="stack-row">
+      <span class="stack-num">02</span>
+      <p class="stack-line" style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;">Every trip, accounted for.</p>
+      <span class="stack-face">Bricolage 800 (control)</span>
+    </div>
+    <div class="stack-row">
+      <span class="stack-num">03</span>
+      <p class="stack-line" style="font-family:'Archivo',system-ui,sans-serif;font-weight:800;">Every trip, accounted for.</p>
+      <span class="stack-face">Archivo 800</span>
+    </div>
+    <div class="stack-row">
+      <span class="stack-num">04</span>
+      <p class="stack-line" style="font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;">Every trip, accounted for.</p>
+      <span class="stack-face">Space Grotesk 700</span>
+    </div>
+    <div class="stack-row">
+      <span class="stack-num">05</span>
+      <p class="stack-line" style="font-family:'Satoshi',system-ui,sans-serif;font-weight:900;">Every trip, accounted for.</p>
+      <span class="stack-face">Satoshi 900</span>
+    </div>
+    <div class="stack-row">
+      <span class="stack-num">06</span>
+      <p class="stack-line" style="font-family:'Sora',system-ui,sans-serif;font-weight:800;">Every trip, accounted for.</p>
+      <span class="stack-face">Sora 800</span>
+    </div>
+    <div class="stack-row">
+      <span class="stack-num">07</span>
+      <p class="stack-line" style="font-family:'Fraunces',Georgia,serif;font-weight:900;">Every trip, accounted for.</p>
+      <span class="stack-face">Fraunces 900</span>
+    </div>
+  </section>
+
+  <footer class="bench-foot">
+    Nexo Access type bench · P3-W3 · docs/type-bench/index.html · not shipped site code.
+    React by candidate number. Production font loading is decided at implementation (C1), not here.
+  </footer>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────────────────
+   FONT-LOAD VERIFICATION.
+   A silent CDN failure makes every block fall back to a system font — the
+   bench would then render beautifully and lie. Two independent checks:
+
+   1. document.fonts.check() — the browser's own answer.
+   2. WIDTH-DELTA vs a sentinel. The same string is measured in
+      "<family>, monospace" and in bare "monospace". A real webfont has
+      different metrics from monospace, so equal widths mean the family never
+      loaded and the text silently fell through to the sentinel.
+
+   Check 2 is the load-bearing one: fonts.check() can report true for a
+   family the browser merely knows about. Both are reported per family.
+   ───────────────────────────────────────────────────────────────────────── */
+(function () {
+  var FAMILIES = [
+    ["Bricolage Grotesque", 700], ["Hanken Grotesk", 400],
+    ["Archivo", 800], ["Space Grotesk", 700], ["Satoshi", 900],
+    ["Sora", 800], ["Fraunces", 900],
+    ["Public Sans", 400], ["Instrument Sans", 400],
+    ["JetBrains Mono", 500], ["IBM Plex Mono", 400], ["Space Mono", 400]
+  ];
+  var SENTINEL = "monospace";
+  var PROBE = "Every trip, accounted for. NX-1042 WHEELCHAIR 0123456789";
+
+  function widthIn(stack, weight) {
+    var s = document.createElement("span");
+    s.textContent = PROBE;
+    s.style.cssText = "position:absolute;left:-9999px;top:-9999px;white-space:nowrap;" +
+      "font-size:72px;font-weight:" + weight + ";font-family:" + stack + ";";
+    document.body.appendChild(s);
+    var w = s.getBoundingClientRect().width;
+    s.remove();
+    return w;
+  }
+
+  function run() {
+    var base = {};
+    var out = [];
+    var loaded = 0;
+    FAMILIES.forEach(function (pair) {
+      var fam = pair[0], wt = pair[1];
+      if (base[wt] === undefined) base[wt] = widthIn(SENTINEL, wt);
+      var w = widthIn("'" + fam + "'," + SENTINEL, wt);
+      var delta = Math.abs(w - base[wt]);
+      var apiSays = false;
+      try { apiSays = document.fonts.check(wt + " 72px '" + fam + "'"); } catch (e) {}
+      var ok = delta > 1;
+      if (ok) loaded++;
+      out.push(
+        (ok ? "<span class='ok'>LOADED  </span>" : "<span class='bad'>FALLBACK</span>") +
+        "  " + fam.padEnd(22) +
+        " w=" + w.toFixed(1).padStart(7) +
+        "  sentinel=" + base[wt].toFixed(1).padStart(7) +
+        "  delta=" + delta.toFixed(1).padStart(7) +
+        "  fonts.check=" + (apiSays ? "true" : "false")
+      );
+    });
+    document.getElementById("verify").innerHTML =
+      "FONT-LOAD VERIFICATION — width-delta vs monospace sentinel, probe at 72px\n" +
+      "PASS = delta > 1px (family metrics differ from the sentinel it would fall back to)\n\n" +
+      out.join("\n") +
+      "\n\n" + loaded + " / " + FAMILIES.length + " families loaded.";
+    document.documentElement.setAttribute("data-fonts-loaded", loaded);
+    document.documentElement.setAttribute("data-fonts-total", FAMILIES.length);
+    window.__fontReport = out.map(function (l) { return l.replace(/<[^>]+>/g, ""); });
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { setTimeout(run, 250); });
+  } else {
+    window.addEventListener("load", function () { setTimeout(run, 800); });
+  }
+})();
+</script>
+
+</body>
+</html>

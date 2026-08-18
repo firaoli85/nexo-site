@@ -42,6 +42,8 @@ reversible by an owner ruling that supersedes it.
 | J5 | **`**gated**` is undefined by the matrix legend** (rows #26, #34 — built and hidden behind `PORTAL_LIVE`) | **Gated is a DEPLOY state, not a content gap.** It becomes **W7**, a flag flip, not build work | Normalising it to "partial" would put build effort in the plan where a flag flip belongs |
 | J6 | **Matrix #38 (per-jurisdiction pages) is filed under "facility / company-general" but routes to three provider pages** | **The state pages are PROVIDER-ONLY** | `SEO`'s query classes for B22–B24 assume provider intent throughout. Mixing a facility audience into a licensing page serves neither |
 
+**OWNER RATIFIED 2026-08-17: J1–J6 stand. Not-shippable rulings stand with unblock conditions: /faq unblocks only on real questions (owner pass + provider history + live contact inbox; invented FAQs banned); /notices is laid out by us, authored only from counsel/authority sources; /providers/credentialing merges into /providers/requirements at P4 unless the owner pass yields distinct content. Still-blocked items may shrink out at P6 per the freeze law.**
+
 **Twelve places the corpus is silent** are recorded per-page below as `GROUNDING: THIN` or `ABSENT`. **A
 frozen plan that promises content the research cannot support is the failure mode**, so those pages are
 scoped to what can honestly be built, not to what would be nice.

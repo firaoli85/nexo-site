@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-17",
-    "currentTask": "P3-W3: type-specimen bench",
+    "currentTask": "P3-W3: owner type reactions (bench on owner screens)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -341,10 +341,10 @@
       "id": "W3",
       "phase": "P3",
       "title": "Type-specimen bench (T2) - P3 OPENS HERE",
-      "status": "todo",
-      "date": "",
-      "note": "Incumbent pair (Bricolage + Hanken) vs challengers, decided on RENDERED SCREENS at real sizes and weights, never names in a list. Scope: heavier display weights and a possible technical/mono accent layer. THE UNRESOLVED TENSION IS THE POINT: DESIGN_RESEARCH found light display weight (300) correlating across Stripe and ElevenLabs as the strongest premium signal in the sample, while the owner's own words are 'not bold enough'. The corpus flags it and does not resolve it; neither does the frozen plan.",
-      "fixlogRef": "2026-08-17 - Task #9"
+      "status": "in-progress",
+      "date": "2026-08-17",
+      "note": "BENCH DELIVERED, OWNER REACTIONS PENDING. docs/type-bench/index.html (single self-contained file, zero build step, opens from file://) plus docs/TYPE_BENCH.md. 7 display blocks: 01 incumbent Bricolage as shipped, 02 THE CONTROL (Bricolage at 700/800 - tests whether WEIGHT not FAMILY was the wound), 03 Archivo, 04 Space Grotesk (closest to the Greptile register but caps at 700), 05 Satoshi + Public Sans body, 06 Sora + Instrument Sans body, 07 Fraunces (wildcard variable serif, answers T1 since the whole category converged on grotesques). 3 mono accents rotated and labelled: JetBrains Mono, IBM Plex Mono, Space Mono. Every block shows identical real site copy at identical sizes across five rows including a dark-on-ink strip, plus a final A/B stack of all seven heavy cuts. VERIFIED 12/12 families render distinct from THEIR OWN fallback chain and 7/7 blocks render distinct display widths, by three independent checks (width-delta vs actual fallback, document.fonts.check, and fonts registry enumeration); screenshots viewed at 1440 and 390. Decision protocol: owner reacts BY CANDIDATE NUMBER on at least two machines/monitors (C3 protocol, because a face that reads confident on a good display can read thin on a cheap panel); the ruling becomes D21 in a follow-up task; production loading (C1) is decided at implementation, not here.",
+      "fixlogRef": "2026-08-17 - Task #10"
     },
     {
       "id": "W4",
@@ -408,6 +408,33 @@
       "date": "",
       "note": "Every string passes the section 7 honesty gate and D15 vocabulary. B15 (/faq) and B16 (/notices) depend on this workstream PLUS outside input: /faq needs real inbound to source questions from, /notices needs supplied legal text we do not author.",
       "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W8-a",
+      "phase": "P4",
+      "title": "D18 payer-half SEO query classes (national/category queries) - spec before P4 metadata work",
+      "status": "todo",
+      "date": "",
+      "note": "PINNED SO IT CANNOT BE LOST. SEO_PLAN section 3.3 assigns target query classes to SIX provider pages and NONE to any payer-facing surface, while D18 requires payer surfaces to read as a national-grade management organization. The national-legibility decision therefore has no SEO plan behind it. Spec the category-level and national query classes for /solutions/mcos, /platform and the homepage BEFORE the W8 metadata rewrite lands, so the D15 rewrite and the payer query targets are authored together rather than the rewrite shipping first and the targets being retrofitted.",
+      "fixlogRef": "2026-08-17 - Task #10"
+    },
+    {
+      "id": "W8-b",
+      "phase": "P4",
+      "title": "Internal-linking spec completion beyond the five bullets",
+      "status": "todo",
+      "date": "",
+      "note": "PINNED SO IT CANNOT BE LOST. SEO_PLAN section 3.3's internal-linking spine gives five bullets (hub at /solutions/providers, lateral state links, up-links to /providers/requirements, editorial in-body links not just footer, descriptive anchor text) and then stops. ABSENT and owed: the actual anchor-text strings, per-page link counts, in-page placement rules, and any rule for linking from the homepage or /platform into the provider center. Measured starting condition: the header contributes only 2 crawlable links because Radix unmounts closed menus, /solutions/mcos has exactly 1 in-body internal link and /about has 3, so today every page is equidistant from every other and nothing signals importance.",
+      "fixlogRef": "2026-08-17 - Task #10"
+    },
+    {
+      "id": "P4-prep",
+      "phase": "P4",
+      "title": "Resolve J2 (COMAR 20.95.01.18.B primary text) and J3 (jurisdiction attribution) before the contradiction page",
+      "status": "todo",
+      "date": "",
+      "note": "SCHEDULED RESEARCH MICRO-ITEM. J2: PROVIDER_REQUIREMENTS_RESEARCH section 2e L311 and section 4c L688 give TWO different Maryland 16+ passenger PSC insurance figure sets, BOTH labelled VERIFIED, from two different sources (one omits the property-damage component, one includes $100,000). The frozen plan ruled that row UNPUBLISHABLE; resolve it against the COMAR 20.95.01.18.B primary text and record which cell was wrong. J3: the '$100,000 GL / 25-50-25' figure set is attributed to MARYLAND by PROVIDER section 2e (which orders DO NOT PUBLISH OR RELY ON THE SECONDARY FIGURES) and to VIRGINIA by SEO_PLAN section 3.3, which builds strongest-opening #1 (the insurance-contradiction page) on it. Both may be true if the same vendor boilerplate circulates for both states, but that is plausible and unproven. A page whose entire premise is correcting a jurisdictional error cannot itself get the jurisdiction wrong, so this blocks the contradiction page specifically, not the whole provider center.",
+      "fixlogRef": "2026-08-17 - Task #10"
     }
   ],
   "decisions": [
@@ -726,6 +753,10 @@
     {
       "date": "2026-08-17",
       "summary": "Task #9 P2 FREEZE: docs/SITE_BUILD_PLAN.md frozen (24 pages, 10 workstreams, 15 roadmap items, 6 judgment calls, 12 grounding gaps); ground truth v1.3 with D18 broad legibility, D19 imagery strategy, D20 technical ratification. Owner Search Console reading closed the P1-C1 gate: both inspected URLs indexed, Google-selected canonical = declared apex, so the historical homepage indexing issue is closed as resolved-or-misread."
+    },
+    {
+      "date": "2026-08-17",
+      "summary": "Task #10 P3-W3 type-specimen bench: docs/type-bench/index.html + docs/TYPE_BENCH.md, 7 display candidates incl. the incumbent-heavy control, verified font rendering per block by three independent methods. Plus the freeze ratification line (J1-J6 stand, with unblock conditions for the three not-shippable routes) and three pinned items so the W8 obligations and the J2/J3 research cannot be lost."
     }
   ]
 }
