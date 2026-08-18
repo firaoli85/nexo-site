@@ -4,6 +4,7 @@
 // non-zero if any invariant fails — so it gates a stage report per the nexo-brand regression rule.
 import { spawn } from "node:child_process";
 import { runSweep, printMatrix } from "./sweep.mjs";
+import { checkBuildIdentity, failStale } from "./preflight-build-identity.mjs";
 
 const PORT = process.env.QA_PORT || "3300";
 const DIST = process.env.NEXT_DIST_DIR || ".next-check";
@@ -37,6 +38,20 @@ if (!alreadyUp) {
 } else {
   console.log(`Reusing server already answering on :${PORT}.`);
 }
+
+// ── STALE-BUILD PREFLIGHT (Task #15, paying the Task #14 debt) ──────────────────────
+// Runs for BOTH paths — a server we started and a server we reused. We start ours with the right
+// NEXT_DIST_DIR so it should always pass, but checking both means the guard also catches a dist
+// dir rebuilt underneath a server we own. The REUSE path is where Task #14 broke.
+const identity = await checkBuildIdentity({ base: BASE, dist: DIST });
+if (!identity.ok) {
+  if (server) {
+    if (process.platform === "win32") spawn("taskkill", ["/pid", String(server.pid), "/T", "/F"], { shell: true, stdio: "ignore" });
+    else server.kill("SIGTERM");
+  }
+  failStale(identity, { port: PORT, dist: DIST });
+}
+console.log(`Build identity OK — :${PORT} is serving ${DIST} (BUILD_ID ${identity.disk}).`);
 
 let failures = 1;
 try {

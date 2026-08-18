@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nexo Access — Color Hardening Bench (P3-W4 / C3)</title>
+
+<!--
+  ============================================================================
+  BENCH-ONLY. docs/ TOOLING. NEVER SHIPPED, NEVER IN THE APP BUNDLE.
+  ============================================================================
+  Fonts load from a CDN so this opens from file:// with zero build step.
+  Production loading is next/font self-hosted with display:"optional" (C1).
+  This bench DOGFOODS the D21 type system: the same three families, the same
+  weight and tracking tokens, consumed the same way.
+
+  COLOR TOKENS BELOW ARE MIRRORED FROM src/app/globals.css, NOT IMPORTED —
+  the bench must stay one self-contained file. Values copied 2026-08-18.
+  IF THE TOKENS CHANGE, RE-MIRROR THEM: the CURRENT markers are only honest
+  while they match.
+  ============================================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* ── MIRRORED FROM globals.css (2026-08-18) ───────────────────────────── */
+    --bg: #fafbfc;
+    --surface: #ffffff;
+    --surface-hover: #f3f5f8;
+    --surface-tint: #f4f9f7;
+    --surface-tint-border: #dbeae3;
+    --border: #ebedf1;
+    --border-strong: #dcdfe4;
+    --border-control: #7e8d86;
+    --text: #0c1512;
+    --text-muted: #42544c;
+    --text-subtle: #4b5c53;
+    --text-disabled: #b6c2ba;
+    --accent: #0b7d56;
+    --accent-subtle: #e8f8f1;
+    --ink: #0b1512;
+    --ink-surface: #12201b;
+    --ink-hover: #264035;
+    --on-ink: #e9f1ee;
+    --on-ink-muted: #adbfb8;
+    --on-ink-border: #35504a;
+    --on-ink-border-strong: #4a6b60;
+    --accent-on-ink: #46d6a0;
+    --ink-glass: rgb(22 42 34 / 0.70);
+    --nav-glass: rgb(12 23 19 / 0.90);
+
+    /* BENCH CANVAS — deliberately OFF-PALETTE. It was --bg #fafbfc, which is the
+       exact value of section-a step 04 (CURRENT), so the flagship specimen had no
+       ground to separate from and the reading measured the frame. This grey appears
+       on no ladder in this bench. */
+    --bench-canvas: #c9ced3;
+
+    /* ── D21 TYPE TOKENS (dogfooded) ──────────────────────────────────────── */
+    --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+    --font-body: "Hanken Grotesk", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+    --weight-hero: 800;
+    --weight-heading: 700;
+    --track-hero: -0.030em;
+    --track-heading: -0.022em;
+    --track-lede: -0.008em;
+    --track-mono: 0.035em;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { background: var(--bench-canvas); scroll-padding-top: 150px; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bench-canvas); color: var(--text);
+    font-family: var(--font-body); font-size: 17px; line-height: 1.6;
+    letter-spacing: var(--track-lede); -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── chrome ─────────────────────────────────────────────────────────────── */
+  .bar {
+    position: sticky; top: 0; z-index: 30;
+    background: rgb(201 206 211 / 0.94); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-strong);
+  }
+  @supports not (backdrop-filter: blur(12px)) { .bar { background: var(--bench-canvas); } }
+  .bar-in { max-width: 1240px; margin: 0 auto; padding: 12px 32px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; }
+  .bar a {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: var(--track-mono);
+    color: var(--text-muted); text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 1px;
+    transition: color 160ms var(--ease-out), border-color 160ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) { .bar a:hover { color: var(--accent); border-bottom-color: var(--accent); } }
+  .bar a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  .bar b { font-weight: 700; color: var(--text); }
+
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+
+  h1 { font-family: var(--font-display); font-weight: var(--weight-hero); letter-spacing: var(--track-hero);
+       font-size: clamp(2rem, 4vw, 2.9rem); line-height: 1.06; margin: 56px 0 14px; text-wrap: balance; }
+  h2 { font-family: var(--font-display); font-weight: var(--weight-heading); letter-spacing: var(--track-heading);
+       font-size: clamp(1.5rem, 2.6vw, 2rem); line-height: 1.14; margin: 0 0 8px; text-wrap: balance; }
+  .sec { padding: 60px 0 12px; border-top: 1px solid var(--border-strong); margin-top: 44px; scroll-margin-top: 150px; }
+  .sec:first-of-type { border-top: none; }
+  .kicker { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--accent); margin: 0 0 10px; }
+  .lede { color: var(--text-muted); max-width: 62ch; margin: 0 0 30px; text-wrap: pretty; }
+
+  /* ── protocol box ───────────────────────────────────────────────────────── */
+  .protocol {
+    background: var(--surface); border: 1px solid var(--border-control);
+    border-radius: 12px; padding: 24px 26px; margin: 26px 0 8px;
+  }
+  .protocol h2 { font-size: 1.25rem; margin-bottom: 12px; }
+  .protocol ol { margin: 0; padding-left: 22px; }
+  .protocol li { margin-bottom: 9px; }
+  .protocol strong { color: var(--text); }
+  .protocol .order { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+                     font-weight: 600; color: var(--accent); }
+
+  /* ── step grids ─────────────────────────────────────────────────────────── */
+  .steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 16px; }
+  .step { border-radius: 10px; overflow: hidden; }
+  .step-num {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: var(--track-mono);
+    color: var(--text-subtle); margin-bottom: 6px; display: flex; justify-content: space-between; gap: 8px;
+  }
+  .step-num .cur { color: var(--accent); font-weight: 700; }
+  .step-meta { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-subtle); margin-top: 6px; line-height: 1.5; }
+
+  /* a card-on-background fragment — real UI shapes, not bare swatches */
+  .frag { padding: 16px; border-radius: 10px; }
+  .frag .card { border-radius: 8px; padding: 13px 14px; }
+  .frag .card h3 { font-family: var(--font-display); font-weight: var(--weight-heading);
+                   letter-spacing: var(--track-heading); font-size: 15px; margin: 0 0 5px; }
+  .frag .card p { font-size: 13px; margin: 0; line-height: 1.5; }
+  .frag .rule { height: 1px; margin: 11px 0; }
+
+  /* NO outline here. A ring around the specimen being judged donates the edge the
+     specimen is being tested for — it biased section a most, where CURRENT is 1.036:1.
+     CURRENT is marked in the number row only. */
+  .cur-ring { }
+  .step-num .cur { color: var(--accent); font-weight: 700; }
+
+  /* ── busy backdrop for the glass ladders ────────────────────────────────── */
+  .backdrop {
+    position: relative; border-radius: 12px; overflow: hidden; padding: 22px;
+    background:
+      repeating-linear-gradient(115deg, #0e1c17 0 22px, #162a22 22px 44px),
+      var(--ink);
+  }
+  .backdrop-real {
+    background-color: var(--ink);
+    background-image:
+      radial-gradient(circle at 18% 30%, rgb(70 214 160 / 0.16) 0 12%, transparent 42%),
+      radial-gradient(circle at 78% 68%, rgb(70 214 160 / 0.10) 0 10%, transparent 38%),
+      linear-gradient(115deg, rgb(255 255 255 / 0.05) 0 12px, transparent 12px 26px);
+    background-size: auto, auto, 34px 34px;
+  }
+  .glass-panel {
+    border: 1px solid var(--on-ink-border-strong); border-radius: 10px;
+    padding: 13px 15px; backdrop-filter: blur(10px);
+  }
+  .glass-panel h3 { font-family: var(--font-display); font-weight: var(--weight-heading);
+                    letter-spacing: var(--track-heading); font-size: 15px; margin: 0 0 4px; color: var(--on-ink); }
+  .glass-panel p { margin: 0; font-size: 13px; color: var(--on-ink-muted); }
+
+  /* ── ramp rows ──────────────────────────────────────────────────────────── */
+  .ramp { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+  .ramp.on-ink { border-color: var(--on-ink-border); }
+  .ramp-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding: 13px 18px; }
+  .ramp-row + .ramp-row { border-top: 1px solid var(--border); }
+  .ramp.on-ink .ramp-row + .ramp-row { border-top-color: var(--on-ink-border); }
+  .ramp-n { font-family: var(--font-mono); font-size: 11px; letter-spacing: var(--track-mono);
+            min-width: 34px; color: var(--text-subtle); }
+  .ramp.on-ink .ramp-n { color: var(--on-ink-muted); }
+  .ramp-t { flex: 1 1 380px; font-size: 16px; }
+  .ramp-x { font-family: var(--font-mono); font-size: 11px; color: var(--text-subtle); }
+  .ramp.on-ink .ramp-x { color: var(--on-ink-muted); }
+  .ratio-bad { color: #c81e2c; font-weight: 700; }
+  .ramp.on-ink .ratio-bad { color: #f87171; }
+
+  /* ── danger pairs ───────────────────────────────────────────────────────── */
+  .pairs { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); }
+  .pair-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.09em; margin: 0 0 8px; }
+  .pair-h.cur { color: var(--text-subtle); }
+  .pair-h.pro { color: var(--text-subtle); } /* neutral — the bench must not pre-endorse its own proposal */
+  .pair-note { font-size: 13px; color: var(--text-muted); margin: 9px 0 0; max-width: 52ch; }
+
+  footer { border-top: 1px solid var(--border-strong); margin-top: 60px; padding: 30px 0 90px;
+           color: var(--text-subtle); font-size: 14px; }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 0 18px; }
+    .bar-in { padding: 10px 18px; }
+    .pairs { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <a href="#protocol"><b>READ FIRST</b></a>
+    <a href="#a"><b>a</b> Light staircase</a>
+    <a href="#b"><b>b</b> Ink staircase</a>
+    <a href="#c"><b>c</b> Glass alphas</a>
+    <a href="#d"><b>d</b> Text ramps</a>
+    <a href="#e"><b>e</b> Hairlines</a>
+    <a href="#f"><b>f</b> Danger pairs</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <h1>Color hardening bench — C3</h1>
+  <p class="lede">One question: <strong>which of these distinctions survive on your worst screen?</strong>
+  Identity is not in question — the palette is Railway-derived and you re-picked it blind. <strong>Deltas
+  are.</strong> Every specimen is numbered so a reading converts to a value.</p>
+
+  <div class="protocol" id="protocol">
+    <h2>Reading protocol</h2>
+    <ol>
+      <li>In sections <strong>a</strong>, <strong>b</strong>, <strong>c</strong> and <strong>e</strong>:
+          note the <strong>FIRST VISIBLE step number</strong> — the lowest number where you can see the
+          distinction at all.</li>
+      <li>In section <strong>d</strong>: note any <strong>text-ramp row that becomes hard to read</strong>.</li>
+      <li>In section <strong>f</strong>: note any fragment where <strong>CURRENT loses structure</strong> —
+          where the shape stops reading as a card, a bar, or an edge.</li>
+    </ol>
+    <p class="order">Good monitor first, then the old and cheap machines. Those second readings write the
+    thresholds — the good-monitor pass is only the control.</p>
+  </div>
+
+  <!-- ══ a · LIGHT SURFACE STAIRCASE ══════════════════════════════════════ -->
+  <section class="sec" id="a">
+    <p class="kicker">Section a</p>
+    <h2>Light surface staircase</h2>
+    <p class="lede">A card on a page background, stepping the background away from pure white. The card
+    stays <code>#ffffff</code>. <strong>At which number does the card first separate from the page?</strong></p>
+    <div class="steps" id="steps-a"></div>
+  </section>
+
+  <!-- ══ b · INK STAIRCASE ════════════════════════════════════════════════ -->
+  <section class="sec" id="b">
+    <p class="kicker">Section b</p>
+    <h2>Ink staircase</h2>
+    <p class="lede">The same instrument at the dark end: a raised card on the ink field, stepping the card
+    away from the ink. <strong>At which number does the card first lift off the background?</strong></p>
+    <div class="steps" id="steps-b"></div>
+  </section>
+
+  <!-- ══ c · GLASS ALPHA LADDERS ══════════════════════════════════════════ -->
+  <section class="sec" id="c">
+    <p class="kicker">Section c</p>
+    <h2>Glass alpha ladders</h2>
+    <p class="lede">Both glass registers over a deliberately busy backdrop — the worst case the real nav and
+    the real ink cards have to survive. <strong>At which number does the panel first hold its own shape
+    against what is behind it?</strong></p>
+    <h3 style="font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);color:var(--text-subtle);margin:22px 0 10px;">NAV-GLASS ladder</h3>
+    <div class="steps" id="steps-c1"></div>
+    <h3 style="font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);color:var(--text-subtle);margin:30px 0 10px;">INK-GLASS ladder</h3>
+    <div class="steps" id="steps-c2"></div>
+  </section>
+
+  <!-- ══ d · TEXT RAMP ROWS ═══════════════════════════════════════════════ -->
+  <section class="sec" id="d">
+    <p class="kicker">Section d</p>
+    <h2>Text ramps, both registers</h2>
+    <p class="lede">Real sentences, not lorem. Computed contrast ratio printed per row.
+    <strong>Note any row that becomes hard to read</strong> — the ratio passing is not the same as the row
+    being comfortable, and on this site the reader may be elderly or low-vision.</p>
+    <div class="ramp" id="ramp-light" style="background:var(--surface)"></div>
+    <div style="height:18px"></div>
+    <div class="ramp on-ink" id="ramp-ink" style="background:var(--ink)"></div>
+  </section>
+
+  <!-- ══ e · BORDER / HAIRLINE LADDER ═════════════════════════════════════ -->
+  <section class="sec" id="e">
+    <p class="kicker">Section e</p>
+    <h2>Border and hairline ladder</h2>
+    <p class="lede">Card edges and dividers, stepped, on both registers. A border that vanishes takes the
+    card's shape with it. <strong>First visible number, each register.</strong></p>
+    <h3 style="font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);color:var(--text-subtle);margin:22px 0 10px;">ON LIGHT</h3>
+    <div class="steps" id="steps-e1"></div>
+    <h3 style="font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);color:var(--text-subtle);margin:30px 0 10px;">ON INK</h3>
+    <div class="steps" id="steps-e2"></div>
+  </section>
+
+  <!-- ══ f · DANGER-PAIR REPRODUCTIONS ════════════════════════════════════ -->
+  <section class="sec" id="f">
+    <p class="kicker">Section f</p>
+    <h2>Danger pairs — current vs one hardened proposal</h2>
+    <p class="lede">The actual V1 fragments the recon flagged, rebuilt as styled. <strong>One proposal each,
+    no more.</strong> This bench measures perception; it does not redesign. Note any fragment where CURRENT
+    loses structure on your screen.</p>
+    <div class="pairs" id="pairs"></div>
+  </section>
+
+  <footer>
+    Nexo Access color bench · P3-W4 / C3 · <code>docs/color-bench/index.html</code> · not shipped site code.<br>
+    Readings go back in chat by section letter and step number. Identity is settled; deltas are the question.
+  </footer>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────────────────
+   All staircases are GENERATED so every label carries exact computed values —
+   a reading of "step 6" converts to a hex and a contrast ratio without anyone
+   re-deriving it. Steps are multiples of the CURRENT token's own delta, so
+   "1.00x = CURRENT" is true by construction rather than by eyeballing.
+   ───────────────────────────────────────────────────────────────────────── */
+const hex2rgb = (h) => { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
+const rgb2hex = (r) => "#" + r.map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("");
+const lin = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+const L = (rgb) => 0.2126 * lin(rgb[0]) + 0.7152 * lin(rgb[1]) + 0.0722 * lin(rgb[2]);
+const ratio = (a, b) => { const l1 = L(a), l2 = L(b); const hi = Math.max(l1, l2), lo = Math.min(l1, l2); return (hi + 0.05) / (lo + 0.05); };
+// CLAMPED AND ROUNDED AT THE SOURCE. Previously the ratio was computed from the raw
+// float mix while the hex was clamped+rounded, so a rung could print a hex and a ratio
+// that did not describe each other — and past 8x the unclamped values produced ratios
+// above the 21:1 physical ceiling. An instrument that mislabels its own steps is worse
+// than no instrument. Everything downstream now reads the same integer triple.
+const mix = (from, to, k) => from.map((v, i) => Math.max(0, Math.min(255, Math.round(v + (to[i] - v) * k))));
+const MULT = [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 6.5, 8, 10];
+// The on-ink border ladder needs its own ceiling: --on-ink-border is already well up
+// the ramp, so 10x clamps past white and leaves the brand family. 3.2x is the last
+// rung that is still a jade-cast border rather than a grey one.
+const MULT_INK_BORDER = [0.25, 0.5, 0.75, 1, 1.3, 1.6, 1.9, 2.2, 2.5, 2.8, 3.0, 3.2];
+
+function stepCard(n, mult, isCurrent, meta, inner, prefix) {
+  const cur = isCurrent ? '<span class="cur">← CURRENT</span>' : `<span>${mult}×</span>`;
+  return `<div${isCurrent ? ' class="cur-ring"' : ""}>
+    <div class="step-num"><span>${prefix}${String(n).padStart(2, "0")}</span>${cur}</div>
+    ${inner}
+    <div class="step-meta">${meta}</div>
+  </div>`;
+}
+
+/* ── a · light surface staircase ── */
+{
+  const white = hex2rgb("#ffffff"), curBg = hex2rgb("#fafbfc");
+  document.getElementById("steps-a").innerHTML = MULT.map((m, i) => {
+    const bg = mix(white, curBg, m), hex = rgb2hex(bg);
+    const r = ratio(bg, white);
+    return stepCard(i + 1, m, m === 1,
+      `bg ${hex}<br>vs #ffffff card · ratio ${r.toFixed(3)}:1`,
+      `<div class="frag step" style="background:${hex}">
+         <div class="card" style="background:var(--surface)">
+           <h3>Credential-gated dispatch</h3>
+           <p style="color:var(--text-muted)">Every driver is verified before a trip is assigned.</p>
+         </div>
+       </div>`, "A");
+  }).join("");
+}
+
+/* ── b · ink staircase ── */
+{
+  const ink = hex2rgb("#0b1512"), curCard = hex2rgb("#12201b");
+  document.getElementById("steps-b").innerHTML = MULT.map((m, i) => {
+    const card = mix(ink, curCard, m), hex = rgb2hex(card);
+    const r = ratio(card, ink);
+    return stepCard(i + 1, m, m === 1,
+      `card ${hex}<br>vs #0b1512 ink · ratio ${r.toFixed(3)}:1`,
+      `<div class="frag step" style="background:var(--ink)">
+         <div class="card" style="background:${hex}">
+           <h3 style="color:var(--on-ink)">Trip lifecycle</h3>
+           <p style="color:var(--on-ink-muted)">Status changes validated by a state machine.</p>
+         </div>
+       </div>`, "B");
+  }).join("");
+}
+
+/* ── c · glass alpha ladders ── */
+{
+  const ALPHAS_NAV = [0.50, 0.60, 0.70, 0.75, 0.80, 0.85, 0.90, 0.93, 0.96, 1.00];
+  const ALPHAS_INK = [0.35, 0.45, 0.55, 0.60, 0.65, 0.70, 0.78, 0.86, 0.93, 1.00];
+  const mk = (id, base, alphas, current, label, idPrefix) => {
+    document.getElementById(id).innerHTML = alphas.map((a, i) => {
+      const isCur = Math.abs(a - current) < 0.001;
+      return stepCard(i + 1, "\u03b1 " + a.toFixed(2), isCur,
+        `${label} alpha ${a.toFixed(2)}`,
+        `<div class="backdrop backdrop-real step" style="padding:16px">
+           <div class="glass-panel" style="background:rgb(${base} / ${a})">
+             <h3>Platform</h3>
+             <p>Dispatch · Claims &amp; billing · Compliance</p>
+           </div>
+         </div>`, idPrefix);
+    }).join("");
+  };
+  mk("steps-c1", "12 23 19", ALPHAS_NAV, 0.90, "nav-glass", "C1-");
+  mk("steps-c2", "22 42 34", ALPHAS_INK, 0.70, "ink-glass", "C2-");
+}
+
+/* ── d · text ramps ── */
+{
+  const SENT = "Every trip is delivered through our credentialed network of transport providers.";
+  const light = [
+    ["--text", "#0c1512", "primary body"],
+    ["--text-muted", "#42544c", "secondary / lede"],
+    ["--text-subtle", "#4b5c53", "captions, meta"],
+    ["--text-disabled", "#b6c2ba", "disabled only \u2014 WCAG 1.4.3 EXEMPT, not a failure"],
+    ["--accent", "#0b7d56", "links, eyebrows"],
+  ];
+  const ink = [
+    ["--on-ink", "#e9f1ee", "primary on ink"],
+    ["--on-ink-muted", "#adbfb8", "secondary on ink"],
+    ["--accent-on-ink", "#46d6a0", "links / status on ink"],
+  ];
+  const row = (n, tok, hex, use, bgHex, pfx) => {
+    const r = ratio(hex2rgb(hex), hex2rgb(bgHex));
+    const bad = r < 4.5 && !/EXEMPT/.test(use);
+    return `<div class="ramp-row">
+      <span class="ramp-n">${pfx}${String(n).padStart(2, "0")}</span>
+      <span class="ramp-t" style="color:${hex}">${SENT}</span>
+      <span class="ramp-x">${tok} ${hex} · ${use} · <span class="${bad ? "ratio-bad" : ""}">${r.toFixed(2)}:1${bad ? " ✗ under 4.5" : ""}</span></span>
+    </div>`;
+  };
+  document.getElementById("ramp-light").innerHTML = light.map((x, i) => row(i + 1, x[0], x[1], x[2], "#ffffff", "D-L")).join("");
+  document.getElementById("ramp-ink").innerHTML = ink.map((x, i) => row(i + 1, x[0], x[1], x[2], "#0b1512", "D-I")).join("");
+}
+
+/* ── e · border ladders ── */
+{
+  const mkBorders = (id, surfaceHex, fromHex, toHex, isInk, mults) => {
+    const from = hex2rgb(fromHex), to = hex2rgb(toHex);
+    document.getElementById(id).innerHTML = (mults || MULT).map((m, i) => {
+      const b = mix(from, to, m), hex = rgb2hex(b);
+      const r = ratio(b, hex2rgb(surfaceHex));
+      const weak = r < 3;
+      return stepCard(i + 1, m, m === 1,
+        `border ${hex}<br>vs surface · <span class="${weak ? "ratio-bad" : ""}">${r.toFixed(2)}:1${weak ? " under 3" : ""}</span>`,
+        `<div class="frag step" style="background:${isInk ? "var(--ink)" : "#ffffff"}">
+           <div class="card" style="background:${surfaceHex};border:1px solid ${hex}">
+             <h3 style="color:${isInk ? "var(--on-ink)" : "var(--text)"}">Claim CLM-3390</h3>
+             <div class="rule" style="background:${hex}"></div>
+             <p style="color:${isInk ? "var(--on-ink-muted)" : "var(--text-muted)"}">13 fields frozen at submission.</p>
+           </div>
+         </div>`, isInk ? "E2-" : "E1-");
+    }).join("");
+  };
+  mkBorders("steps-e1", "#ffffff", "#ffffff", "#ebedf1", false, MULT);
+  mkBorders("steps-e2", "#12201b", "#12201b", "#35504a", true, MULT_INK_BORDER);
+}
+
+/* ── f · danger pairs ── */
+{
+  const navBar = (glass, borderCol) => `
+    <div class="backdrop backdrop-real" style="padding:0">
+      <div style="background:${glass};backdrop-filter:blur(12px);border-bottom:1px solid ${borderCol};padding:13px 18px;display:flex;gap:20px;align-items:center;">
+        <span style="font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);color:var(--on-ink);font-size:16px">Nexo Access</span>
+        <span style="color:var(--on-ink-muted);font-size:14px">Platform</span>
+        <span style="color:var(--on-ink-muted);font-size:14px">Solutions</span>
+        <span style="margin-left:auto;background:var(--accent-on-ink);color:var(--ink);font-weight:600;font-size:13px;padding:7px 13px;border-radius:7px">Apply as provider</span>
+      </div>
+      <div style="height:88px"></div>
+    </div>`;
+
+  const inkCard = (bg, border) => `
+    <div class="backdrop backdrop-real">
+      <div style="background:${bg};backdrop-filter:blur(10px);border:1px solid ${border};border-radius:11px;padding:16px 17px">
+        <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:var(--track-mono);color:var(--accent-on-ink);margin-bottom:7px">TRIP NX-1042</div>
+        <div style="font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);color:var(--on-ink);font-size:16px;margin-bottom:5px">Wheelchair · 9:30 AM</div>
+        <div style="color:var(--on-ink-muted);font-size:13px">Credentials current. Scrub checks 4 of 4 passed.</div>
+      </div>
+    </div>`;
+
+  const boundary = (topBg, botBg, ruleCol) => `
+    <div style="border-radius:11px;overflow:hidden;border:1px solid var(--border)">
+      <div style="background:${topBg};padding:20px 18px">
+        <div style="font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);font-size:16px;margin-bottom:4px">Built for everyone in the trip.</div>
+        <div style="color:var(--text-muted);font-size:13px">Four audiences, one platform.</div>
+      </div>
+      <div style="height:1px;background:${ruleCol}"></div>
+      <div style="background:${botBg};padding:20px 18px">
+        <div style="font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);font-size:16px;margin-bottom:4px">Run trips with us.</div>
+        <div style="color:var(--text-muted);font-size:13px">Transparent credentialing and clean claims.</div>
+      </div>
+    </div>`;
+
+  const PAIRS = [
+    ["F1 · Nav over ink",
+      navBar("rgb(12 23 19 / 0.90)", "var(--on-ink-border)"),
+      navBar("rgb(12 23 19 / 0.96)", "var(--on-ink-border-strong)"),
+      "CURRENT is the SCROLLED nav as Navbar.tsx ships it (glass 0.90, --on-ink-border edge); at page top the real nav has no border at all, which is the harder case. PROPOSED raises the glass to 0.96 and the edge to the card tier."],
+    ["F2 · Ink-glass card",
+      inkCard("rgb(22 42 34 / 0.70)", "var(--on-ink-border)"),
+      inkCard("rgb(22 42 34 / 0.82)", "var(--on-ink-border-strong)"),
+      "PROPOSED raises ink-glass 0.70 → 0.82 and moves the edge from the divider tier (2.12:1) to the card tier (3.15:1). NOTE: globals.css currently pairs .ink-glass with --on-ink-border deliberately, so this is a proposed CHANGE to that pairing, not a fix to a misapplication."],
+    ["F3 · Subtle section boundary",
+      boundary("var(--surface)", "var(--bg)", "var(--border)"),
+      boundary("var(--surface)", "var(--surface-tint)", "var(--border-strong)"),
+      "PROPOSED swaps the second band from --bg (a ~1.6 L* step off white) to --surface-tint, and the rule from --border to --border-strong. The tint carries the brand hue, so the band reads as intentional rather than as a rendering artifact."],
+  ];
+
+  document.getElementById("pairs").innerHTML = PAIRS.map(([title, cur, pro, note]) => `
+    <div>
+      <div class="step-num"><span>${title}</span></div>
+      <p class="pair-h cur">CURRENT</p>
+      ${cur}
+      <p class="pair-h pro" style="margin-top:16px">PROPOSED</p>
+      ${pro}
+      <p class="pair-note">${note}</p>
+    </div>`).join("");
+}
+
+/* ── font-load verification (the Task #12 amended standing check) ── */
+(function () {
+  const FAMS = [["Bricolage Grotesque", 800, "system-ui,sans-serif"], ["Hanken Grotesk", 400, "system-ui,sans-serif"], ["IBM Plex Mono", 500, "ui-monospace,monospace"]];
+  const PROBE = "Every trip, accounted for. NX-1042 0123456789";
+  const w = (stack, wt) => {
+    const s = document.createElement("span");
+    s.textContent = PROBE;
+    s.style.cssText = "position:absolute;left:-9999px;white-space:nowrap;font-size:72px;font-weight:" + wt + ";font-family:" + stack;
+    document.body.appendChild(s); const x = s.getBoundingClientRect().width; s.remove(); return x;
+  };
+  // PRIME FIRST — a family declared but not currently rendered is never downloaded
+  // and reports a FALSE fallback (amendment recorded in TYPE_BENCH.md §3, Task #12).
+  const prime = () => Promise.all(FAMS.map((f) => document.fonts.load(f[1] + " 72px '" + f[0] + "'").catch(() => {})));
+  const run = () => {
+    const out = FAMS.map((f) => {
+      const a = w("'" + f[0] + "'," + f[2], f[1]), b = w(f[2], f[1]);
+      return { fam: f[0], delta: +(Math.abs(a - b)).toFixed(1), loaded: Math.abs(a - b) > 1, api: document.fonts.check(f[1] + " 72px '" + f[0] + "'") };
+    });
+    window.__fontReport = out;
+    document.documentElement.setAttribute("data-fonts-loaded", out.filter((o) => o.loaded).length);
+  };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(prime).then(() => document.fonts.ready).then(() => setTimeout(run, 200));
+})();
+</script>
+</body>
+</html>

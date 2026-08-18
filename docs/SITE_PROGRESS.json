@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-18",
-    "currentTask": "P3-W4: color hardening bench (C3 - jade vs the cheap monitor; carries the owed C3 cheap-panel leg)",
+    "currentTask": "P3-W4: owner color readings (good + cheap machines — the owed C3 leg)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -359,10 +359,10 @@
       "id": "W4",
       "phase": "P3",
       "title": "Color hardening (C3): does the jade survive a cheap monitor",
-      "status": "todo",
-      "date": "",
-      "note": "Direction evidence: the Railway convergence - the owner picked Railway on feel alone and globals.css already credits Railway in five places (palette L5, borders L21, shadows L76, motion L194, press feedback L204). Likely shape: keep the subtlety, raise the floor, so every boundary that carries meaning clears WCAG 1.4.11 at 3:1 on a bad screen. P5 measures; W4 must not resolve C3 by guessing.",
-      "fixlogRef": "2026-08-17 - Task #9"
+      "status": "in-progress",
+      "date": "2026-08-18",
+      "note": "BENCH DELIVERED, OWNER MACHINE READINGS PENDING. docs/color-bench/index.html + docs/COLOR_BENCH.md. Six generated ladders (68 specimens) as multiples of each live token delta so 1.00x = CURRENT by construction, plus text ramps with computed ratios and three danger-pair reproductions each with ONE hardened proposal. Globally unique specimen IDs (A04, C1-07, E2-04, D-L02) so a reading survives being read aloud over a phone. IMPECCABLE RUN FOR REAL, two independent assessments: 22/40, 10 findings, 7 fixed including a BLOCKER - the instrument was mislabelling its own steps (unclamped mix fed to ratio() while the hex was clamped, printing impossible ratios up to 71.39:1 against a 21:1 physical ceiling) and a P0 - the bench canvas was --bg #fafbfc, the exact value of the flagship CURRENT specimen, so it had no ground to separate from. Re-verified: 48 rungs, zero arithmetic mismatches, max 8.690:1. Three findings recorded NOT DONE with reasons (composite ratios for the glass ladders, reduced-motion block, sub-13px bench chrome). NEXT: owner readings on a good monitor as control, then the old and cheap machines - those write the thresholds.",
+      "fixlogRef": "2026-08-18 - Task #15"
     },
     {
       "id": "W5",
@@ -444,6 +444,15 @@
       "date": "2026-08-17",
       "note": "RESOLVED 2026-08-17 from primary sources. J2: the Maryland PSC 16-or-more tier DOES carry $100,000 property damage — COMAR 20.95.01.18B(3)(a) quoted verbatim from regs.maryland.gov and law.cornell.edu (both HTTP 200) and independently restated in the PSC own Form-28 packet. Cell B (Cornell mirror) was RIGHT; Cell A (regs.maryland.gov) was WRONG via a mid-clause transcription elision — the cited host DOES contain the figure. The two lower tiers were re-checked and are correct. CITATION VERIFIED: Title 20 PSC > Subtitle 95 TRANSPORTATION > Chapter 20.95.01 General > Reg .18; adopt pinpoint form 20.95.01.18B(3)(a) without the period. TWO STANDING LESSONS: the provenance heuristic (primary host beats mirror) would have picked the WRONG cell, and repairing regulatory cells BY SYMMETRY would have inflated the per-person leg from $75,000 to $100,000 and published a fabricated figure — the tier is genuinely non-monotonic. J3: BOTH-GENERIC. 25/50/25 matches NEITHER state (MD is 30/60/15; VA is 50/100/25 since Jan 1 2025, 30/60/20 before; VA pre-2022 was 25/50/20 — close but PD was $20k). No MD or VA government or broker primary document states $100,000 GL: the Cardinal Care SFY2026 contract has ZERO occurrences of general liability across 1.83M chars. MediRoutes publishes the identical uncited sentence on MD, VA, TX and CA pages (all fetched) and ~10 states total. The contradiction page is UNBLOCKED ON JURISDICTION but must be RE-PREMISED — its original thesis was false in premise since Virginia never stated the figure. P1-B1 and D17 still apply. LARGEST REMAINING GAP: the NEMT-specific provider insurance minimums for MD/VA/DC are still not located, so no page may state one.",
       "fixlogRef": "2026-08-17 - Task #11"
+    },
+    {
+      "id": "QA-STALE-GUARD",
+      "phase": "P5",
+      "title": "Stale-build preflight guard (pays the Task #14 debt)",
+      "status": "done",
+      "date": "2026-08-18",
+      "note": "scripts/qa/preflight-build-identity.mjs, wired into scripts/qa/run.mjs at the server-reuse seam - the exact place Task #14 broke. TWO SIGNALS: (1) BUILD_ID probe, requesting /_next/static/<diskBuildId>/_buildManifest.js, which asks the server directly whether it is running THIS build (one request, no HTML parsing, nothing to rot when markup changes); (2) CSS-asset probe, parsing the served HTML for its stylesheet href and confirming it resolves - the exact Task #14 signature, which catches a torn build where the BUILD_ID directory survived but assets did not. Either disagreeing is fatal. NEGATIVE-TESTED WITH A REAL REPRODUCTION, not a synthetic one: built, left the server running, rebuilt underneath it so BUILD_IDs diverged (08rKY2wIdtQDHn4zHuk4A -> nEfCzgjuuXnuFOdF42ezN), ran the preflight -> exit 1 naming BOTH identities and the kill-and-rerun fix; then killed the server and ran the wired path clean -> Build identity OK ... GREEN, exit 0.",
+      "fixlogRef": "2026-08-18 - Task #15"
     }
   ],
   "decisions": [
@@ -812,6 +821,10 @@
     {
       "date": "2026-08-18",
       "summary": "Task #14 D21 modular type implementation - FIRST CODE ON v2. Token block, hero 700->800 weight raise, bench-measured tracking, IBM Plex Mono accent layer on label surfaces, static type guard wired into qa:sweep and CI, nexo-brand section 2 synced. Full cube ALL GREEN after discarding an invalid first run caused by a stale server serving a mismatched build."
+    },
+    {
+      "date": "2026-08-18",
+      "summary": "Task #15: stale-build preflight guard (negative-tested with a real rebuild-under-server reproduction) + the W4 colour hardening bench. Impeccable caught a blocker in the bench arithmetic and a P0 in its own canvas; both fixed and re-verified."
     }
   ]
 }
