@@ -2301,3 +2301,32 @@ with **T1 (combination over cloning)** and it is the direct reason the next roun
 rather than more specimens. Judging a face in isolation cannot answer a question about combination, so the
 finalists are now shown inside real page anatomy — hero, light content section, ink terminus — with
 everything else held identical.
+
+## 13e. D21 DECISION — 2026-08-17
+
+**W3 is closed.** The owner tested both systems on multiple machines and ruled: **"both close, B."**
+
+**System B** — Bricolage Grotesque display at heavy cuts (headings 700, hero 800), Hanken Grotesk body,
+IBM Plex Mono accent layer. Bench-measured tracking becomes law: hero **-0.030em**, heading **-0.022em**,
+lede **-0.008em**, mono **+0.035em**.
+
+**Two things are worth recording about how this landed.**
+
+**The verdict was "close," not "obvious."** That matters, because it means the context bench did its job: the
+specimen round had made the systems look more different than they are, and seeing them on real anatomy — with
+identical sizes, an equalised body measure, and simultaneous body/mono pairs — showed two credible systems
+rather than a winner and a loser. **A close call honestly reached is a better foundation than a decisive one
+reached on a confound.** The bench also disclosed that B is the zero-retypeset path, and the owner had that
+fact in hand when deciding.
+
+**The owner stated a modularity requirement, and it is now law.** His concern was not which face wins but
+whether the choice could be revisited cheaply if it turns out wrong on a surface nobody has tested yet. That
+is encoded as the **MODULAR TYPE LAW (D21, §8)**: type follows the colour single-source architecture — one
+token block for families, weights and tracking; font loading in one file; Tailwind mapped once; **no component
+may declare a font family**. A future swap is one block edit plus a full cube run.
+
+**Commit-and-close is now active (D-pre21b).** Type is **CLOSED until post-launch**; it is not re-litigated
+mid-build. The one thing still owed is the **cheap-panel leg of the C3 protocol** — every screen used across
+both bench rounds was a good one, which is the opposite of the condition C3 exists to catch. **That check
+lands in W4, not in a reopened W3.**
+

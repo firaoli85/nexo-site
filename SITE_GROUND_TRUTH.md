@@ -8,7 +8,7 @@ Read this first, every session, before touching anything.
 | **Owner** | Firaoli ("Oli") Seboka, solo founder, FC Nexo LLC dba Nexo Access |
 | **Status** | V1 live at nexoaccess.com. V2 rebuild starting: research-first, on the `v2` branch. |
 | **Horizon** | Built to hold for 2 to 3 years of solo operation. Oli will be running the business, not rebuilding the site. |
-| **Version** | v1.3 — August 17, 2026 |
+| **Version** | v1.4 — August 17, 2026 |
 
 ---
 
@@ -72,6 +72,8 @@ Append-only. A decision changes only with a new dated entry stating from where, 
 | D19 | 2026-08-17 | **Imagery strategy (closes T3).** Primary imagery = animation + custom illustration in our own visual language. Stock people-photography permanently banned (fake patients read as fake trust). Real photography deferred until real operations exist, then added as truth. The hero receives a new signature animated centerpiece; the current hero is on record as hard to grasp (owner + user feedback). Concept proposed by Claude in P3 as rendered comparisons; owner reacts before build. SafeRide-style flow explanations are built as animation, not video, within this ruling. |
 | D20 | 2026-08-17 | **P2 technical ratification.** (a) Performance bar adopted as ceiling: ≤600KB transfer, ≤150KB JS, ≤1200ms DCL, ≤60 requests on the default profile; P5 measurement may tighten, never loosen. (b) Stripe's decline-don't-degrade rule is standing law for any canvas/GPU work (failIfMajorPerformanceCaveat: true; never render slowly). (c) motion-safe: architecture adopted for V2: motion is switched ON by capability classes, never patched off. (d) The four nexo-motion candidates (nexo-drift, nexo-shape, nexo-settle, nexo-accent-card) approved for P3 exploration and encoding into the nexo-motion skill. |
 | D-pre21 | 2026-08-17 | **Type process rulings (D21 pending finalist pick).** (a) Premium purchase declined for now; ROADMAP door: if at P6 the type feels insufficient on the real site, evaluate ONE premium face, one-time license only, never subscription, bench rerun required. (b) Commit-and-close law: once D21 locks the finalist, type is CLOSED until post-launch; no re-litigating mid-build. (c) J3 contradiction page names no vendors (trade-libel: the pattern is the story); owner veto open. |
+| D21 | 2026-08-17 | **Type ruling (W3 closed; commit-and-close in force).** System B: Bricolage Grotesque display at heavy cuts (headings 700, hero 800), Hanken Grotesk body, IBM Plex Mono accent layer (stat lines, eyebrows, codes). Bench-measured tracking is law: hero -0.030em, heading -0.022em, lede -0.008em, mono +0.035em. Owner verdict on two good screens: systems close; B chosen; B is also the zero-retypeset path (bench-disclosed). MODULAR TYPE LAW: type follows the color single-source architecture — one token block (families, weights, tracking), font loading in one file, Tailwind mapped once, zero hardcoded font families in components; a future swap = one block edit + full cube. Type is CLOSED until post-launch. Cheap-panel C3 leg still owed → W4. |
+| D22 | 2026-08-17 | **Private evidence tier: OWNER-DOC-VERIFIED.** Facts confirmed from the owner's historical broker/payer documents (Healthway era; PHI-scanned clean) carry internal-verification weight. HANDLING LAW: the source documents and the evidence memo live in Claude project knowledge ONLY; no figures, broker names, or contract terms enter any repo; site publication still requires public primary sources (D17). Chat-side memo creation was the deliberate exception to the Claude-Code-creates-docs law: private material cannot pass through a public repo. |
 
 ## 5. SITE FACTS (verified 2026-08-17, recon receipt: docs/SITE_RECON_2026-08-17.md)
 
@@ -123,6 +125,7 @@ Each phase produces documents before code. A phase is done when its documents ex
 - **Skills law:** every prompt uses and combines relevant installed skills; visual work always includes the design skills (frontend-design, emil-design-eng, impeccable, ui-ux-pro-max, frontend-a11y, ui-styling, design-system, design-is, huashu-design); code/perf work uses react-patterns, react-performance, security-review, tdd-workflow; never cite ui-design:* namespace, javascript-testing-patterns, auth-implementation-patterns. FIXLOG records SKILLS USED per task.
 - **Prompt format law:** every Claude Code prompt is explicit numbered steps (nothing implied), begins with the FIXLOG read-first line, ends with FIXLOG append + progress/board update + the git steps (D7: one commit, descriptive message, push to `v2`, never force-push, never touch `main`).
 - **Instruction-to-Oli law:** anything the owner must do by hand arrives as a short numbered list, one action per line.
+- **Modular type law (D21):** no component may declare a font family; type flows from the token block only.
 - **Publish-boundary law (D17):** resource content states requirements with citations and dates; advice-shaped content is banned; disclaimers and verification dates are mandatory on resource pages.
 - **Transfer-verdict law (D16):** every design-decision task appends its verdict to docs/PLATFORM_DESIGN_HANDOFF.md in the same task.
 - **Positioning language law (D15):** public copy never negates the transportation role; §1 wording is canonical.
@@ -130,4 +133,4 @@ Each phase produces documents before code. A phase is done when its documents ex
 
 ## 9. CURRENT STATE (update every session)
 
-**As of August 17, 2026:** P1 complete (industry + provider + craft + SEO research, all receipted). P2 complete: SITE_BUILD_PLAN.md frozen (24 pages + workstreams; only shrinks). D18-D20 locked. Open gates: P1-B1 (owner pass on provider questions before P4 provider pages). P1-C1 closed 2026-08-17 with owner Search Console reading. NEXT: P3 design system, opening with the type-specimen bench (T2), then the hero signature concept (D19).
+**As of August 17, 2026:** P3-W3 CLOSED (D21). Owner document packet analyzed 2026-08-17 → OWNER-DOC-VERIFIED tier (D22); evidence memo in project knowledge. NEXT: Task #14 — modular type implementation (first code on v2; full cube). Then W4 color hardening (carries the cheap-panel C3 leg).

@@ -1,8 +1,8 @@
 {
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
-    "updatedAt": "2026-08-17",
-    "currentTask": "P3-W3: owner finalist pick (A/B)",
+    "updatedAt": "2026-08-18",
+    "currentTask": "Task #14: modular type implementation (first v2 code; full cube)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -127,7 +127,7 @@
       "title": "Owner-verified pass on the 58 provider-research questions (before P4 provider pages)",
       "status": "todo",
       "date": "",
-      "note": "GATE ITEM. docs/PROVIDER_REQUIREMENTS_RESEARCH.md carries 58 open owner questions plus the section 5b OWNER-REPORTED block (OR-1 WMATC scope, OR-2 DC workers' comp >3 workers, OR-3 DC GL $1.5M-$2M). Under D17 nothing UNRESOLVED or merely REPORTED/OWNER-REPORTED is publishable, so the provider pages in P4 are BLOCKED until the owner rules on these. This item is the gate.",
+      "note": "GATE ITEM. docs/PROVIDER_REQUIREMENTS_RESEARCH.md carries 58 open owner questions plus the section 5b OWNER-REPORTED block (OR-1 WMATC scope, OR-2 DC workers' comp >3 workers, OR-3 DC GL $1.5M-$2M). Under D17 nothing UNRESOLVED or merely REPORTED/OWNER-REPORTED is publishable, so the provider pages in P4 are BLOCKED until the owner rules on these. This item is the gate. TIER UPDATE 2026-08-17 (D22): OR-3 and the two SAM-coverage entries are now annotated OWNER-DOC-VERIFIED - internally settled from the owner's historical documents. This does NOT unblock them for publication: an OWNER-DOC-VERIFIED fact still requires an independent public primary source under D17. It does mean they must not be re-opened as internal unknowns.",
       "fixlogRef": "2026-08-17 - Task #7"
     },
     {
@@ -341,10 +341,10 @@
       "id": "W3",
       "phase": "P3",
       "title": "Type-specimen bench (T2) - P3 OPENS HERE",
-      "status": "in-progress",
+      "status": "done",
       "date": "2026-08-17",
-      "note": "CONTEXT BENCH DELIVERED, FINALIST PICK PENDING. docs/type-bench/context.html supersedes the specimen bench for the D21 decision: System A (Sora / Instrument Sans / Space Mono) vs System B (Bricolage Grotesque / Hanken Grotesk / IBM Plex Mono) on real page anatomy - ink hero, light content section, ink terminus - one set of markup toggled by native radios, plus TWO simultaneous 390px pairs (body+mono first, display second). Per-face letter-spacing recorded and justified (Sora set 12 percent wider on an identical probe, so tracking each face to the same optical colour is the only fair comparison). VERIFIED 6/6 families loaded at both 1440 and 390 and 14/14 elements swap family with no fragment left un-toggled; zero overflow at five widths; every contrast pairing clears AA on real composited backgrounds. THE STANDING FONT CHECK CAUGHT A REAL DEFECT: Hanken read as FALLBACK because the page opens in System A and a browser never downloads a webfont no element is using - fixed by priming with document.fonts.load(), and the standing check is amended accordingly. IMPECCABLE WAS RUN FOR REAL this task (Task #10 recorded honestly that it was not): two independent assessments, score 22/40, detector 0 findings verified non-vacuous. 12 findings, all addressed. The most important was one I missed entirely - the bench never disclosed that System B is what the site already ships, so the two options were presented as symmetric when B costs nothing and A costs 13 pages re-typeset plus the CLS work. Now stated in the control bar. Also fixed: chrome was hardcoded to System B own mono (fairness defect), 68ch measure gave 95 chars in A vs 85 in B (a second uncontrolled variable, now a shared 560px giving both ~57 chars), body and mono were memory-only comparisons, clipped focus ring, 34.8px touch targets, no reduced-motion guard, setSystem desync, eyebrow specificity collision. NOT ADOPTED with reasons: pinning the hero to equal line count (the 3-vs-2 line difference is genuinely face-caused and is now labelled rather than hidden) and splitting into three role toggles (good idea, changes the question, recorded for the D21 conversation).",
-      "fixlogRef": "2026-08-17 - Task #12"
+      "note": "CLOSED by D21. Owner tested both finalist systems on multiple machines and ruled 'both close, B'. System B: Bricolage Grotesque display at heavy cuts (headings 700, hero 800), Hanken Grotesk body, IBM Plex Mono accent. Bench-measured tracking becomes law (hero -0.030em, heading -0.022em, lede -0.008em, mono +0.035em). THE VERDICT WAS CLOSE, NOT OBVIOUS - which is evidence the context bench worked: the specimen round had made the systems look more different than they are, and real anatomy with an equalised body measure showed two credible systems rather than a winner and a loser. B is also the zero-retypeset path, disclosed in the bench before the decision. The owner's modularity requirement is encoded as the MODULAR TYPE LAW (D21, ground truth section 8): no component may declare a font family. Commit-and-close (D-pre21b) is now active: type is CLOSED until post-launch. STILL OWED: the cheap-panel leg of the C3 protocol - every screen used across both bench rounds was a good one - which lands in W4, not in a reopened W3.",
+      "fixlogRef": "2026-08-18 - Task #13"
     },
     {
       "id": "W4",
@@ -568,6 +568,18 @@
       "date": "2026-08-17",
       "title": "Type process rulings (D21 pending finalist pick)",
       "summary": "(a) Premium purchase declined for now; ROADMAP door: if at P6 the type feels insufficient on the real site, evaluate ONE premium face, one-time license only, never subscription, bench rerun required. (b) Commit-and-close law: once D21 locks the finalist, type is CLOSED until post-launch; no re-litigating mid-build. (c) J3 contradiction page names no vendors (trade-libel: the pattern is the story); owner veto open."
+    },
+    {
+      "id": "D21",
+      "date": "2026-08-17",
+      "title": "Type ruling (W3 closed; commit-and-close in force)",
+      "summary": "System B: Bricolage Grotesque display at heavy cuts (headings 700, hero 800), Hanken Grotesk body, IBM Plex Mono accent layer (stat lines, eyebrows, codes). Bench-measured tracking is law: hero -0.030em, heading -0.022em, lede -0.008em, mono +0.035em. Owner verdict on two good screens: systems close; B chosen; B is also the zero-retypeset path (bench-disclosed). MODULAR TYPE LAW: type follows the color single-source architecture - one token block (families, weights, tracking), font loading in one file, Tailwind mapped once, zero hardcoded font families in components; a future swap = one block edit + full cube. Type is CLOSED until post-launch. Cheap-panel C3 leg still owed to W4."
+    },
+    {
+      "id": "D22",
+      "date": "2026-08-17",
+      "title": "Private evidence tier: OWNER-DOC-VERIFIED",
+      "summary": "Facts confirmed from the owner's historical broker/payer documents (Healthway era; PHI-scanned clean) carry internal-verification weight. HANDLING LAW: the source documents and the evidence memo live in Claude project knowledge ONLY; no figures, broker names, or contract terms enter any repo; site publication still requires public primary sources (D17). Chat-side memo creation was the deliberate exception to the Claude-Code-creates-docs law: private material cannot pass through a public repo."
     }
   ],
   "discoveries": [
@@ -682,8 +694,8 @@
     {
       "id": "DISC-19",
       "date": "2026-08-17",
-      "text": "Owner may hold historical broker credentialing packets (Healthway era) - internal verification gold if they exist; publication still requires public primary sources (D17); owner answer pending. WHY THIS MATTERS: Task #11 closed J2 and J3 but left the largest gap open - the NEMT-specific provider insurance minimums for DC/MD/VA are still not located, because what actually binds a provider lives in the broker contract and the state Medicaid provider agreement, and those are private. Historical packets would let us VERIFY INTERNALLY what the real credentialing bar looks like, which is worth a great deal for building the provider pages correctly even though D17 bars publishing anything sourced only that way. Treat them as a private check on our own accuracy, never as a citation.",
-      "status": "open"
+      "text": "RESOLVED 2026-08-17: packet analyzed; evidence memo in project knowledge. The owner's historical broker/payer documents (Healthway era) were reviewed and PHI-scanned clean, establishing the OWNER-DOC-VERIFIED tier (D22). HANDLING: the documents and the memo live in Claude project knowledge ONLY - no figures, broker names or contract terms enter this repo, and site publication still requires public primary sources (D17). WHAT IT SETTLED INTERNALLY: OR-3 and the two Sexual Abuse and Molestation coverage entries in PROVIDER_REQUIREMENTS_RESEARCH are now internally verified at the broker-contract tier (annotated in place; public-tier status deliberately unchanged). WHAT IT EXPLAINED: the largest open gap from the J3 resolution - that NEMT-specific provider insurance minimums were never located in public sources - is now understood rather than merely open. The operative floor lives in a private broker agreement, so no amount of public-source research would ever have surfaced it. That structural fact IS publishable (no figures), and it is recorded in the publish map as the LAYER-MODEL CONFIRMATION.",
+      "status": "resolved"
     }
   ],
   "gates": {
@@ -777,6 +789,10 @@
     {
       "date": "2026-08-17",
       "summary": "Task #12 P3-W3 context bench: System A vs System B on real page anatomy with simultaneous body/mono pairs; impeccable critique run for real (22/40, 12 findings, all addressed incl. the incumbent-disclosure P0). Plus type-bench reactions receipt, D-pre21 process rulings, premium-face ROADMAP door, and the Healthway credentialing-packets discovery."
+    },
+    {
+      "date": "2026-08-18",
+      "summary": "Task #13 ledger lock: D21 type ruling (System B, modular type law, commit-and-close) and D22 private evidence tier (OWNER-DOC-VERIFIED). Tier annotations placed on OR-3 and the two SAM entries as notes only - no figures, broker names or contract terms entered the repo. Layer-model confirmation added to the publish map as a publishable structural statement. W3 done; next is the first code on v2."
     }
   ]
 }

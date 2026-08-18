@@ -43,3 +43,7 @@ docs/SITE_BOARD.html
 
 # Working screenshots from research tasks (P1a and later). The documents are the receipt.
 scripts/qa/artifacts/research/
+
+# Impeccable's working backlog. It is tool state, not a receipt —
+# FIXLOG.md is the record of what was found and what changed.
+.impeccable/critique/
