@@ -2,8 +2,8 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-17",
-    "currentTask": "P2: sitemap freeze + ratification session (design-in-chat with owner)",
-    "activePhase": "P2",
+    "currentTask": "P3-W3: type-specimen bench",
+    "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
   },
@@ -33,7 +33,7 @@
     {
       "id": "P2",
       "title": "Sitemap freeze",
-      "status": "todo",
+      "status": "done",
       "items": [
         "P2-1"
       ]
@@ -142,29 +142,29 @@
     {
       "id": "P1-C1",
       "phase": "P1",
-      "title": "OWNER READING (5 min): URL Inspection on the homepage - the datum that ends the indexing UNRESOLVED",
-      "status": "todo",
-      "date": "",
-      "note": "GATE ITEM, blocking the P4 SEO work. We have NO Search Console access, so this is the one fact we cannot obtain ourselves. Owner opens Search Console > URL Inspection > https://nexoaccess.com/ and reports three fields VERBATIM: (1) the coverage status string, (2) Google-selected canonical, (3) User-declared canonical. Each possible status ('Discovered - currently not indexed', 'Crawled - currently not indexed', 'Duplicate without user-selected canonical', or a Google-selected canonical differing from ours) implies a DIFFERENT cause and a different fix, so this single reading converts SEO_PLAN section 2.1 from UNRESOLVED to diagnosed. Do NOT touch the five www 'Alternate page with proper canonical tag' rows - Google documents that status as 'there is nothing you need to do' (SEO_PLAN section 1.6).",
-      "fixlogRef": "2026-08-17 - Task #8"
+      "title": "OWNER READING (CLOSED 2026-08-17): URL Inspection on the homepage",
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "GATE CLOSED 2026-08-17 by owner Search Console reading. https://nexoaccess.com/ : 'URL is on Google', page IS indexed, last crawl Aug 9 2026 11:14 PM (Googlebot smartphone), crawl allowed, fetch successful, indexing allowed, user-declared canonical https://nexoaccess.com/ and GOOGLE-SELECTED CANONICAL = Inspected URL (Google agrees with the apex). https://nexoaccess.com/platform : 'URL is on Google', indexed, last crawl Aug 5 2026 6:44 PM, Google-selected canonical = Inspected URL, referring pages include the www variant which is consistent with correct alternate handling. CONSEQUENCE: the historical 'homepage indexing issue' is CLOSED as resolved-or-misread, and the Task #8 adversarial refutation is confirmed by outcome - the Alternate-page rows were canonicalization SUCCEEDING. The www->apex 301 stays in W8 as durability work, never as rescue. Recorded in SEO_PLAN section 2.7. NOTE: only 2 of 13 routes were inspected.",
+      "fixlogRef": "2026-08-17 - Task #9"
     },
     {
       "id": "P2-AGENDA",
       "phase": "P2",
       "title": "P2 ratification agenda (what the owner must rule on at the freeze session)",
-      "status": "todo",
-      "date": "",
-      "note": "Standing agenda, assembled from P1 output. (1) PERFORMANCE BAR: ratify <=600KB transfer, <=150KB JS, <=1200ms DCL, <=60 requests, Lighthouse >=98 (DESIGN_RESEARCH section 10). (2) NEXO-MOTION CANDIDATES: nexo-drift, nexo-shape, nexo-settle, nexo-accent-card (section 11c) — approve, defer or reject each. (3) STANDING RULE for any future canvas/WebGL work: gate the GPU request behind failIfMajorPerformanceCaveat:true, ship a named art-directed static asset as the resting state, never put the gamble in a hero (section 8.0). (4) ELEVENLABS MOTION-SAFE PATTERN: evaluate inverting the Tailwind config so motion is opt-in via motion-safe: rather than opt-out (section 11d). (5) IMAGERY STRATEGY (owner theme T3): premium photography vs custom illustration vs animation-as-imagery, decided not defaulted; real user feedback says the site lacks pictures. (6) PAGE INVENTORY FREEZE: the draft 24-page V2 inventory (section 6e) — the frozen list only shrinks. Owner taste receipts and themes T1-T5 are recorded in DESIGN_RESEARCH section 13 as input to items 2, 4 and 5 and to all of P3.",
-      "fixlogRef": "2026-08-17 - Task #8"
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "RATIFIED 2026-08-17 as D18/D19/D20 plus the P2 freeze. Perf bar adopted as a ceiling (D20a); decline-don't-degrade standing law (D20b); motion-safe architecture adopted (D20c); four nexo-motion candidates approved for P3 (D20d); imagery strategy closed as D19 (animation + custom illustration; stock people-photography permanently banned); page inventory frozen in docs/SITE_BUILD_PLAN.md.",
+      "fixlogRef": "2026-08-17 - Task #9"
     },
     {
       "id": "P2-1",
       "phase": "P2",
       "title": "Freeze the sitemap -> docs/SITE_BUILD_PLAN.md (numbered items)",
-      "status": "todo",
-      "date": "",
-      "note": "Hypothesis to be corrected by research: current 12 public pages + Sign-in + provider resource center (per-state guides + PDFs) + security/trust page + FAQ. The frozen list only shrinks; new ideas go to the roadmap section.",
-      "fixlogRef": ""
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "Hypothesis to be corrected by research: current 12 public pages + Sign-in + provider resource center (per-state guides + PDFs) + security/trust page + FAQ. The frozen list only shrinks; new ideas go to the roadmap section. CLOSED by the Task #9 freeze: docs/SITE_BUILD_PLAN.md holds 24 pages (B1-B24), 10 workstreams (W1-W10), 15 roadmap items, 6 recorded judgment calls (J1-J6) and 12 honest grounding gaps. FREEZE LAW: the list only shrinks; new scope goes to ROADMAP.",
+      "fixlogRef": "2026-08-17 - Task #9"
     },
     {
       "id": "P3-1",
@@ -309,6 +309,105 @@
       "date": "2026-08-17",
       "note": "Stripe full anatomy (13 sections, nav, footer, /enterprise deep page, type), Linear motion only. PRIORITY QUESTION ANSWERED: the stripe.com hero is NOT WebGL today; it is an art-directed <picture> whose assets Stripe itself names wave-fallback-{desktop,tablet,mobile}.png. The live capability gate was captured with a getContext interceptor: WebGL is requested with failIfMajorPerformanceCaveat:true and DECLINED on a software rasterizer, then experimental-webgl, then a granted 2d context. A control canvas in the same document proves the flag is the discriminator (plain webgl true, with-flag false). Standing rule recorded for any future canvas/WebGL work. Performance bar proposed (<=600KB transfer, <=150KB JS, <=1200ms DCL, <=60 requests, Lighthouse >=98) for P2 ratification. Four nexo-motion candidates: nexo-drift, nexo-shape, nexo-settle, nexo-accent-card. Two exemplar defects recorded as what-not-to-copy: Stripe /enterprise ships 20 h1 elements; Linear ships no first-party prefers-reduced-motion CSS (1 of 1359 rules, and it belongs to the sonner toast library) with 103 animations still running under reduced motion. ElevenLabs motion-safe: inversion flagged as the strongest adoption candidate in the sample.",
       "fixlogRef": "2026-08-17 - Task #7"
+    },
+    {
+      "id": "P2-FREEZE",
+      "phase": "P2",
+      "title": "SITE_BUILD_PLAN.md frozen (24 pages + 10 workstreams; only shrinks)",
+      "status": "done",
+      "date": "2026-08-17",
+      "note": "The frozen scope. 24 pages B1-B24 (13 existing + 11 new), each with route, audience, one-line purpose, a REQUIRED CONTENT checklist drawn from research, deliverables, gates and source citations. 10 workstreams W1-W10. 15 roadmap items. SIX JUDGMENT CALLS recorded where the corpus contradicted itself (J1 owner-question count 58 not 70; J2 the Maryland 16+ insurance tier is UNPUBLISHABLE because two cells labelled VERIFIED disagree; J3 the '$100,000 GL / 25-50-25' figure set is attributed to two different states and must be resolved before the insurance-contradiction page is written; J4 matrix headline arithmetic corrected to 8 full / 4 partial / 2 gated / 29 absent; J5 'gated' is a deploy state not a content gap, so the sign-in surface is W7 a flag flip not build work; J6 the three state pages are provider-only). TWELVE GROUNDING GAPS recorded rather than papered over - most serious: /providers/credentialing carries a 'CARRY (priority)' label with ZERO publish-map rows behind it and an unmakeable duration claim in its query targets (reserved route, ships only after operations exist); /faq has no question list anywhere in the corpus (reserved until real inbound exists); /notices is a legal instrument with no legal source (layout deliverable awaiting supplied text, we do not author it). Also recorded: the payer half of D18 has no SEO query classes behind it, and the internal-linking spec stops after five bullets - both owed by W8.",
+      "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W1",
+      "phase": "P3",
+      "title": "Chrome evolution: nav panel shape-morph, terminus footer, T4 borderless exploration",
+      "status": "todo",
+      "date": "",
+      "note": "KEEP one nav landmark / sticky header / real button triggers / ink terminus footer (logged divergence from Stripe's light 85-link footer). ADOPT the panel shape morph (clip-path + height interpolation, 200ms shape / 250ms contents) - highest-value nav upgrade available. REJECT 33-links-per-panel density. EXPLORE T4 borderless full-bleed, noting its live collision with the Railway convergence (a bordered system) and with C3 (subtle borders may vanish on cheap monitors); W1 and W4 resolve that together. Open question: a footer jurisdiction control.",
+      "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W2",
+      "phase": "P3",
+      "title": "THE HERO SIGNATURE PIECE (D19): concept as rendered comparisons, owner reacts before build",
+      "status": "todo",
+      "date": "",
+      "note": "Lands on B1 home and nowhere else; the current hero is on record as hard to grasp (owner + user feedback). CONSTRAINTS BOX: perf bar D20a (<=600KB / <=150KB JS / <=1200ms DCL / <=60 requests); reduced-motion static-complete (must stop dead, not slow down); decline-don't-degrade D20b (failIfMajorPerformanceCaveat true, named art-directed static resting asset, never put the gamble in a hero); motion-safe architecture D20c; D19 imagery law (animation + custom illustration, stock people-photography banned); T5 (the van and the monuments stay); zero CLS; WCAG AA.",
+      "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W3",
+      "phase": "P3",
+      "title": "Type-specimen bench (T2) - P3 OPENS HERE",
+      "status": "todo",
+      "date": "",
+      "note": "Incumbent pair (Bricolage + Hanken) vs challengers, decided on RENDERED SCREENS at real sizes and weights, never names in a list. Scope: heavier display weights and a possible technical/mono accent layer. THE UNRESOLVED TENSION IS THE POINT: DESIGN_RESEARCH found light display weight (300) correlating across Stripe and ElevenLabs as the strongest premium signal in the sample, while the owner's own words are 'not bold enough'. The corpus flags it and does not resolve it; neither does the frozen plan.",
+      "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W4",
+      "phase": "P3",
+      "title": "Color hardening (C3): does the jade survive a cheap monitor",
+      "status": "todo",
+      "date": "",
+      "note": "Direction evidence: the Railway convergence - the owner picked Railway on feel alone and globals.css already credits Railway in five places (palette L5, borders L21, shadows L76, motion L194, press feedback L204). Likely shape: keep the subtlety, raise the floor, so every boundary that carries meaning clears WCAG 1.4.11 at 3:1 on a bad screen. P5 measures; W4 must not resolve C3 by guessing.",
+      "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W5",
+      "phase": "P3",
+      "title": "Motion system: the nexo-motion skill from the four approved candidates + motion-safe architecture",
+      "status": "todo",
+      "date": "",
+      "note": "D20d approved nexo-drift (per-cell AmbientMap dot cycle, 2400-3200ms, static grid under reduced motion), nexo-shape (nav panel size interpolation, 200/250ms, instant swap under reduced motion), nexo-settle (existing play-once settle grammar formalised as a primitive, <=300ms), nexo-accent-card (local dark card on a light section, static - closes a real gap in the tonal system). Governing rules: will-change for imminent transitions only; ambient motion is slow; transform and opacity only; every candidate ships its static end-state first. nexo-shape recommended first.",
+      "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W6",
+      "phase": "P3",
+      "title": "Illustration and animation imagery system (D19)",
+      "status": "todo",
+      "date": "",
+      "note": "Primary imagery = animation + custom illustration in our own visual language. Stock people-photography permanently banned (fake patients read as fake trust). Real photography deferred until real operations exist, then added as truth. SafeRide-style flow explanations built as animation, not video.",
+      "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W7",
+      "phase": "P4",
+      "title": "Sign-in un-gate (D3) + launch.ts stale-comment cleanup",
+      "status": "todo",
+      "date": "",
+      "note": "A FLAG FLIP, NOT BUILD WORK (judgment call J5): the surface is already built and hidden behind PORTAL_LIVE, which is a deploy state rather than a content gap. Three customer doors (Member/Provider/Care portal); admin excluded from every public surface per section 7.4; any attempt returns 'no account found, contact support'; no sign-up path (B2B). Also clears the stale 'operating model UNDECIDED' comment in src/lib/launch.ts, superseded by D1.",
+      "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W8",
+      "phase": "P4",
+      "title": "Metadata / JSON-LD / redirect implementation (SEO_PLAN specs)",
+      "status": "todo",
+      "date": "",
+      "note": "D15 rewrite (HERO_LEDE is a COPY GATE event - one string is both JSON-LD description and visible hero copy, and must keep its SERVICE_AREA_PROSE interpolation; plus HOME_DESCRIPTION, 12 interior descriptions, OG_IMAGE.alt; close the homepage pageMeta asymmetry). www->apex 301 via next.config.mjs redirects() with statusCode 301, NOT permanent:true which emits 308 - durability work, not rescue, since P1-C1 closed with both inspected URLs indexed. Schema assignments: WebSite, BreadcrumbList on the provider center, FAQPage only where Q&As visibly render, contactPoint; decide MedicalBusiness vs Organization (recommendation Organization); build the per-page schema seam, which does not exist today. OWED BY THE FREEZE: the payer-side query-class pass (D18's payer half has no SEO plan behind it) and the rest of the internal-linking spec (anchor text, counts, placement).",
+      "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W9",
+      "phase": "P5",
+      "title": "QA extension: throttled old-device profile, visual diffing, perf budget as gate, I19",
+      "status": "todo",
+      "date": "",
+      "note": "Perf budget becomes a GATE at the D20a ceiling. I19 host-redirect invariant must issue a raw request with an explicit Host / X-Forwarded-Host header, because the sweep addresses localhost:3300 by port and cannot otherwise exercise a host rule. Also measures C1-C4.",
+      "fixlogRef": "2026-08-17 - Task #9"
+    },
+    {
+      "id": "W10",
+      "phase": "P6",
+      "title": "COPY_DECK - written last, per 'copy is cheap'",
+      "status": "todo",
+      "date": "",
+      "note": "Every string passes the section 7 honesty gate and D15 vocabulary. B15 (/faq) and B16 (/notices) depend on this workstream PLUS outside input: /faq needs real inbound to source questions from, /notices needs supplied legal text we do not author.",
+      "fixlogRef": "2026-08-17 - Task #9"
     }
   ],
   "decisions": [
@@ -418,6 +517,24 @@
       "date": "2026-08-17",
       "title": "Publish boundary for the resource center: requirements, never advice",
       "summary": "Resource pages state requirements with citations and verification dates. NEVER business-formation, ownership, legal, or financial guidance (\"form an LLC\" and its relatives are banned). Every resource page carries an informational-only disclaimer and its verification date. Nothing UNRESOLVED or merely REPORTED/OWNER-REPORTED is publishable."
+    },
+    {
+      "id": "D18",
+      "date": "2026-08-17",
+      "title": "Broad legibility, local operations (refines D2, does not reverse it)",
+      "summary": "MCO evaluators contract nationally; the site must read as a national-grade medical transportation management organization whose current operating footprint is the DMV, never as a local-only shop. SEO targets category queries alongside geo queries. Provider resource pages remain state-specific (providers are local); payer-facing surfaces speak nationally. Owner insight on record: the evaluator searching from New York or California must not scroll past us."
+    },
+    {
+      "id": "D19",
+      "date": "2026-08-17",
+      "title": "Imagery strategy (closes T3)",
+      "summary": "Primary imagery = animation + custom illustration in our own visual language. Stock people-photography permanently banned (fake patients read as fake trust). Real photography deferred until real operations exist, then added as truth. The hero receives a new signature animated centerpiece; the current hero is on record as hard to grasp (owner + user feedback). Concept proposed by Claude in P3 as rendered comparisons; owner reacts before build. SafeRide-style flow explanations are built as animation, not video, within this ruling."
+    },
+    {
+      "id": "D20",
+      "date": "2026-08-17",
+      "title": "P2 technical ratification",
+      "summary": "(a) Performance bar adopted as ceiling: <=600KB transfer, <=150KB JS, <=1200ms DCL, <=60 requests on the default profile; P5 measurement may tighten, never loosen. (b) Stripe's decline-don't-degrade rule is standing law for any canvas/GPU work (failIfMajorPerformanceCaveat: true; never render slowly). (c) motion-safe: architecture adopted for V2: motion is switched ON by capability classes, never patched off. (d) The four nexo-motion candidates (nexo-drift, nexo-shape, nexo-settle, nexo-accent-card) approved for P3 exploration and encoding into the nexo-motion skill."
     }
   ],
   "discoveries": [
@@ -522,6 +639,12 @@
       "date": "2026-08-17",
       "text": "Owner taste receipts recorded; the Railway convergence argues harden-and-evolve. DESIGN_RESEARCH section 13 records seven owner-chosen references with his stated reasons (OWNER-STATED tier) and five themes T1-T5. Key verified finding: the owner picked Railway on feel alone, and src/app/globals.css already credits Railway in FIVE places (palette line 5, borders 21, shadows 76, motion 194, press feedback 204). His eye returned to his own token file's ancestor without knowing it, which is the strongest available argument for harden-and-evolve over a from-scratch visual rebuild. Tension recorded honestly: the Railway traits he likes (very subtle borders, gentle elevation) are the same traits C3 suspects of vanishing on cheap monitors, and T4 borderless full-bleed collides with both. P5 measures C3; P3 rules on T4. T1 (combination over cloning) and T5 (keep the van and the monuments) are binding on P3.",
       "status": "open"
+    },
+    {
+      "id": "DISC-18",
+      "date": "2026-08-17",
+      "text": "LOW PRIORITY. Sitemaps report showed 'temporary processing error' on homepage inspection - verify in the Sitemaps section at the owner's next Search Console visit; pages are indexed, not blocking. Adjacent reading from the same session: /platform showed 'No referring sitemaps detected', which mildly corroborates the flat-footer internal-linking observation in SEO_PLAN section 1.5.",
+      "status": "open"
     }
   ],
   "gates": {
@@ -599,6 +722,10 @@
     {
       "date": "2026-08-17",
       "summary": "Task #8 P1c SEO plan: live audit of nexoaccess.com (apex/www duplicate-host state, canonicals, robots, sitemap, metadata, JSON-LD, SSR), adversarially-reviewed indexing diagnosis that REFUTED the www-redirect hypothesis and landed on an honest UNRESOLVED, www->apex 301 and D15 metadata rewrite specs, provider-resource-center organic architecture, and a YMYL E-E-A-T posture. Plus DESIGN_RESEARCH section 13 owner taste receipts and the P2 ratification agenda."
+    },
+    {
+      "date": "2026-08-17",
+      "summary": "Task #9 P2 FREEZE: docs/SITE_BUILD_PLAN.md frozen (24 pages, 10 workstreams, 15 roadmap items, 6 judgment calls, 12 grounding gaps); ground truth v1.3 with D18 broad legibility, D19 imagery strategy, D20 technical ratification. Owner Search Console reading closed the P1-C1 gate: both inspected URLs indexed, Google-selected canonical = declared apex, so the historical homepage indexing issue is closed as resolved-or-misread."
     }
   ]
 }

@@ -265,6 +265,46 @@ Report back three fields verbatim: **(1)** the coverage status string, **(2)** *
 **(3)** *User-declared canonical*. **That single reading converts §2.1 from UNRESOLVED to diagnosed**, and it
 determines whether candidate 2 is live. It is recorded as a blocking input in `SITE_PROGRESS.json`.
 
+### 2.7 ADDENDUM 2026-08-17 — OWNER READING (P1-C1): THE GATE IS CLOSED
+
+**ADDENDUM 2026-08-17 — OWNER READING (P1-C1): the homepage IS indexed and canonical selection is confirmed
+(Google-selected = declared apex). The historical "homepage indexing issue" is CLOSED as resolved-or-misread;
+the Alternate-page rows were canonicalization succeeding. The www→apex 301 (W8) remains durability work, not
+rescue. Sitemap "temporary processing error" logged for a later Sitemaps-report glance; not blocking.**
+
+**The readings, verbatim (OWNER-RELAYED, Search Console URL Inspection, 2026-08-17):**
+
+| Field | `https://nexoaccess.com/` | `https://nexoaccess.com/platform` |
+|---|---|---|
+| Verdict | **"URL is on Google"** | **"URL is on Google"** |
+| Indexed | **Yes** | **Yes** |
+| Last crawl | **Aug 9, 2026, 11:14 PM** (Googlebot smartphone) | **Aug 5, 2026, 6:44 PM** |
+| Crawl allowed | Yes | — |
+| Fetch | Successful | — |
+| Indexing allowed | Yes | — |
+| User-declared canonical | `https://nexoaccess.com/` | — |
+| **Google-selected canonical** | **Inspected URL — Google agrees with the apex** | **Inspected URL** |
+| Referring pages | — | **include the www variant, consistent with correct alternate handling** |
+
+**Minor observations, recorded and not acted on:** the homepage inspection showed Sitemaps **"Temporary
+processing error"**; `/platform` showed **"No referring sitemaps detected"**. Neither blocks anything — both
+pages are indexed. Logged for a glance at the Sitemaps report on the owner's next visit.
+
+**What this resolves, and what it does not.**
+
+- **§2.1's UNRESOLVED verdict is now closed.** There was no diagnosable defect to find, which is why the
+  evidence refused to support a cause chain. **§2.2's refutation is confirmed by the outcome:** the www rows
+  were canonicalization succeeding, exactly as Google's documentation said. Google selected the apex on both
+  inspected URLs.
+- **§2.3 stands unchanged.** The 301 was never justified as a rescue, and it is not weakened by good news —
+  `rel=canonical` remains a hint Google may override, and a 301 removes that discretion permanently. **W8
+  ships it as durability work.**
+- **Candidate 3 (thin in-body linking) and candidate 4 (positioning drift) are untouched by this reading.**
+  Both remain real and independently worth fixing; neither was ever an indexing claim. **`/platform` showing
+  "No referring sitemaps detected" is a mild corroboration of the flat-footer linking observation in §1.5.**
+- **Two inspected URLs are not thirteen.** This reading covers `/` and `/platform`. The indexing state of
+  the other eleven routes remains **unread**.
+
 ---
 
 ## 3. THE FIX PLAN — specifications, not code
@@ -597,10 +637,10 @@ the identified threat to the §3.3 window.
 
 | # | Item | Status |
 |---|---|---|
-| 1 | The actual homepage indexing **status string** | **UNRESOLVED** — no Search Console access. §4.1 is the fix |
+| 1 | The actual homepage indexing **status string** | **CLOSED 2026-08-17** — owner reading: "URL is on Google", indexed, Google-selected canonical = apex (§2.7) |
 | 2 | Whether the five www rows expose a Validate Fix affordance | **UNRESOLVED** — UI not inspected. Substance is settled (§1.6): leave them alone |
-| 3 | Site age, backlink profile, referring domains | **UNMEASURED** — no backlink tool |
-| 4 | Whether any page is currently indexed | **UNRESOLVED** — `index, follow` permits indexing; permission is not the same as being indexed |
+| 3 | Site age, backlink profile, referring domains | **UNMEASURED** — no backlink tool. Now moot as an indexing explanation (§2.7), still unmeasured as a ranking factor |
+| 4 | Whether any page is currently indexed | **PARTIALLY CLOSED** — `/` and `/platform` VERIFIED indexed 2026-08-17 (§2.7). The other **11 routes remain unread** |
 | 5 | `MedicalBusiness` vs `Organization` | **P4 decision**, recommendation recorded (§3.2) |
 | 6 | Title-pattern consistency (home vs interior) | **P4 decision**, flagged (§3.2) |
 | 7 | All live-site evidence | Single-fetch, **2026-08-17**. Re-verify before acting on any specific value |

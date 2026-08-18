@@ -8,7 +8,7 @@ Read this first, every session, before touching anything.
 | **Owner** | Firaoli ("Oli") Seboka, solo founder, FC Nexo LLC dba Nexo Access |
 | **Status** | V1 live at nexoaccess.com. V2 rebuild starting: research-first, on the `v2` branch. |
 | **Horizon** | Built to hold for 2 to 3 years of solo operation. Oli will be running the business, not rebuilding the site. |
-| **Version** | v1.2 — August 17, 2026 |
+| **Version** | v1.3 — August 17, 2026 |
 
 ---
 
@@ -68,6 +68,9 @@ Append-only. A decision changes only with a new dated entry stating from where, 
 | D15 | 2026-08-17 | **Positioning language refinement (amends D1's expression, not its substance).** Public framing never negates: no "we do not drive," no "nothing to do with transportation." We deliver transportation through a credentialed provider network and take responsibility for every trip; providers operate the vehicles, Nexo Access manages and answers for the service. §1 carries the canonical wording. |
 | D16 | 2026-08-17 | **Handoff-in-parallel protocol (extends D4).** docs/PLATFORM_DESIGN_HANDOFF.md is maintained WHILE building, never retrospectively: every design decision receives a transfer verdict at decision time — TRANSFERS (identity-level) / ADAPTS (platform reworks it) / SITE-ONLY (marketing furniture) — with reason and date. Two different products, one identity: neither wholesale copying nor from-scratch. Cross-project checkpoints (D5) continue. |
 | D17 | 2026-08-17 | **Publish boundary for the resource center: requirements, never advice.** The site states what the rules ARE (insurance tiers, driver/vehicle requirements, WMATC authority, workers' comp thresholds) with citation and verification date. NEVER business-formation, ownership, legal, or financial guidance ("form an LLC" and its relatives are banned). Every resource page carries an informational-only disclaimer and its verification date. Nothing UNRESOLVED or merely REPORTED/OWNER-REPORTED is publishable. |
+| D18 | 2026-08-17 | **Broad legibility, local operations (refines D2, does not reverse it).** MCO evaluators contract nationally; the site must read as a national-grade medical transportation management organization whose current operating footprint is the DMV, never as a local-only shop. SEO targets category queries alongside geo queries. Provider resource pages remain state-specific (providers are local); payer-facing surfaces speak nationally. Owner insight on record: the evaluator searching from New York or California must not scroll past us. |
+| D19 | 2026-08-17 | **Imagery strategy (closes T3).** Primary imagery = animation + custom illustration in our own visual language. Stock people-photography permanently banned (fake patients read as fake trust). Real photography deferred until real operations exist, then added as truth. The hero receives a new signature animated centerpiece; the current hero is on record as hard to grasp (owner + user feedback). Concept proposed by Claude in P3 as rendered comparisons; owner reacts before build. SafeRide-style flow explanations are built as animation, not video, within this ruling. |
+| D20 | 2026-08-17 | **P2 technical ratification.** (a) Performance bar adopted as ceiling: ≤600KB transfer, ≤150KB JS, ≤1200ms DCL, ≤60 requests on the default profile; P5 measurement may tighten, never loosen. (b) Stripe's decline-don't-degrade rule is standing law for any canvas/GPU work (failIfMajorPerformanceCaveat: true; never render slowly). (c) motion-safe: architecture adopted for V2: motion is switched ON by capability classes, never patched off. (d) The four nexo-motion candidates (nexo-drift, nexo-shape, nexo-settle, nexo-accent-card) approved for P3 exploration and encoding into the nexo-motion skill. |
 
 ## 5. SITE FACTS (verified 2026-08-17, recon receipt: docs/SITE_RECON_2026-08-17.md)
 
@@ -126,4 +129,4 @@ Each phase produces documents before code. A phase is done when its documents ex
 
 ## 9. CURRENT STATE (update every session)
 
-**As of August 17, 2026:** P0 complete (Tasks 1–3: machine founded, skills audited + cube baseline ALL GREEN 234 cells / 3,175 checks, board live). Task #4 committed the law updates (D14–D16, PRODUCT.md, nexo-brand amendment, handoff scaffold). NEXT: P1a — exemplar + competitor teardown into docs/DESIGN_RESEARCH.md.
+**As of August 17, 2026:** P1 complete (industry + provider + craft + SEO research, all receipted). P2 complete: SITE_BUILD_PLAN.md frozen (24 pages + workstreams; only shrinks). D18-D20 locked. Open gates: P1-B1 (owner pass on provider questions before P4 provider pages). P1-C1 closed 2026-08-17 with owner Search Console reading. NEXT: P3 design system, opening with the type-specimen bench (T2), then the hero signature concept (D19).
