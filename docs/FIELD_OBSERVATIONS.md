@@ -286,8 +286,152 @@ box-shadow:none`) fails naming `MONOTONIC, strength 0.00`, restored passes again
 
 ### Status
 
+> **CLOSED IN FIELD ON BOTH MACHINES 2026-08-18** — work machine: distinct edge; Yoga: subtle edge,
+> which is as designed (the seam is a hairline, not a slab). FO-2 needs nothing further.
+>
 > **F1 edge: FIXED on v2 (Task #20). The cause was contrast polarity, not pixel geometry — recorded
 > so nobody re-opens the DPR theory.** The D23 floors were NOT softened and the `/platform` rule was
 > NOT demoted; both were confirmed working by measurement. **Owner field re-test owed** at a verified
 > commit, and it is the closing proof — this is verified by instrument and by eye on a dev-class
 > machine, not yet on the laptop that reported the failure.
+
+---
+
+## FO-3 — The van ignores the terminus curve on Yoga-class hardware
+
+| | |
+|---|---|
+| **Date** | 2026-08-18 |
+| **Machine class** | Lenovo Yoga 7 class · Windows — the same machine that reported FO-1 |
+| **Build observed** | **Circumstantially ≥ Task #20 (`9d2e2e3`).** See the fingerprint below. |
+| **Register** | Homepage, desktop, motion allowed, at the terminus curve |
+
+### Provenance — established by FINGERPRINT, not by assertion
+
+FO-1's re-test was blocked because the build's commit was unknown, and screenshots of an unknown build
+can neither confirm nor refute a fix. This report is different: **the owner saw the scrolled-nav seam
+over light content.** That seam does not exist before Task #20 — it is `--nav-seam`, added in
+`9d2e2e3`, and before that commit the edge measured MONOTONIC / strength 0.00 over light content on
+every engine and every DSF. **A feature that only exists after a commit, observed on the machine,
+dates the build to at or after that commit.** This is circumstantial rather than a hash, and it is
+recorded as circumstantial — but it is evidence, and it is why FO-1's fixes can be treated as PRESENT
+in this observation where they could not be in the last one.
+
+### Symptom as reported
+
+- FO-1's fixes are **verified working on a dev-class machine**.
+- On the Yoga, the van **tracks the straight leg correctly** and then **IGNORES THE TERMINUS CURVE** —
+  it continues straight down while the drawn line turns toward the footer motif.
+
+### Why this is a NEW mode, not a return of FO-1
+
+Both Task #19 modes measure **0.00px** on dev hardware after the fix, and the identity-CTM
+construction makes the mode-1 shear unrepresentable. A defect that appears **only at the curve** and
+**only on that machine** is a third mechanism. The signature is precise and useful: **an error that is
+invisible on the straight leg and grows through the curve is an error proportional to the path's
+x-coordinate**, because x is constant in the gutter and only grows as the path bends toward `motifX`.
+
+### Suspects (to be settled by instruments, not by argument)
+
+- **PRIME — page zoom ≠ 100%, or zoom × fractional-DPR interaction.** Browser zoom scales the rendered
+  SVG through its CTM but has a history of not applying identically to `offset-path: path()` pixel
+  coordinates. The resulting error would be proportional to x — exactly the observed signature — and
+  Windows laptops of this class commonly sit at a non-default zoom without the user knowing.
+- **SECOND — the `offset-path` value rejected or stale on that machine.** The assignment is wrapped in
+  a `try/catch` that silently swallows a parse failure, and `@supports (offset-path: path("M0 0"))`
+  tests a *trivial* path, so a long generated `d` could be rejected while the gate still passes.
+- **SECOND — engine-specific `offset-distance` behaviour** through the curve segment.
+
+### INVESTIGATED — NOT REPRODUCED, NOT CONVICTED (Task #21, 2026-08-19)
+
+**FO-3 did not reproduce in any lane tried.** 51 samples: **4 emulation lanes × 3 engines × 3 scroll
+positions**, every one within 1px of agreement.
+
+| Lane | What it emulates | 1.10 | 1.25 | 1.50 |
+|---|---|---|---|---|
+| `deviceScaleFactor` | DPR / display scaling | — | ≤0.07px | ≤0.07px |
+| `Emulation.setPageScaleFactor` | compositor pinch-zoom | ≤0.05px | ≤0.05px | ≤0.07px |
+| `Emulation.setDeviceMetricsOverride` | closest to real browser zoom | ≤0.09px | ≤0.18px | n/a (viewport drops below `lg`, overlay tears down — correct behaviour) |
+| CSS `zoom` on `<html>` | what Chromium browser zoom resembles | ≤0.12px | ≤0.03px | ≤0.06px |
+
+WebKit and Firefox were also swept at DSF 1 / 1.25 / 1.5: worst **0.224px** (webkit), **0.007px**
+(firefox), and in every case the error was **constant**, not growing through the curve.
+
+**THE ∝x PREDICTION FAILED, AND THAT IS THE INFORMATIVE PART.** The reported signature — invisible on
+the straight leg, appearing at the curve — implies an error proportional to the path's x-coordinate.
+Every sample records `dxFromGutter` alongside the error, so the prediction was directly testable. At
+`dxFromGutter = 0` (straight leg) and at `dxFromGutter = 172` (deep in the curve) the error is the
+same and it is ~zero. **The prime suspect is not convicted.** `offset-path` was never rejected either —
+the computed value was read at every sample and was always a valid path.
+
+### The architectural fix was attempted, MEASURED, and REJECTED
+
+`offset-path: url(#route-path)` — pointing the van at the *rendered path element* instead of a copied
+string — was the obvious way to remove the remaining duplication by construction. It priced well:
+supported and accepted in **all three engines**, switching a positioned van from `path()` to `url()`
+moved it **0.00px**, and it costs nothing per frame (versus per-frame `getPointAtLength`, measured at
+**19µs** chromium / **44µs** webkit / **102µs** firefox on a dev box — real work added to every frame,
+on the machine class that already struggles, to fix a defect that was never reproduced).
+
+**It shipped into the cube and I20 failed it.** `url()` has a **stale-reference invalidation bug in
+Chromium and WebKit**: when the referenced path element's `d` changes, the van keeps using the OLD
+geometry. Measured after a document reflow — geometry correctly updated (path length 6039 → 4839,
+host height 6027 → 4827) and yet:
+
+| Engine | delta after reflow, +0ms | +50ms | +400ms | +1500ms |
+|---|---|---|---|---|
+| chromium | 0 | **978px** | **978px** | **978px** |
+| webkit | 0 | 0 | **977.9px** | **977.9px** |
+| firefox | 0 | 0 | 0 | 0 |
+
+**Persistent, not transient.** That is a worse version of the very class it was meant to remove, and it
+is precisely the "van on a different path from the line" symptom FO-3 describes. **Reverted.** The
+shipped `path()` assignment is correct *because* it is re-assigned on every geometry change, which
+forces the invalidation `url()` skips — so `url()` would have to be re-assigned too, buying nothing
+and carrying an engine bug. **Do not re-attempt `url()` without re-testing this specific case.**
+
+### What DID ship
+
+**The I20 zoom leg.** I20 previously only ever looked at zoom 1, so the entire zoom class was
+unmeasured either way. The leg asserts van/line agreement **mid-curve** under CSS `zoom` 1.25/1.5 and
+device-metrics 1.25 — chromium-only, because zoom is not emulable in the webkit/firefox lanes, and it
+**says so in its own output** so a green I20 is never mistaken for "zoom verified everywhere".
+Measured worst mid-curve delta **0.156px** against a 1px tolerance. Negative-tested: handing the van
+its own shifted copy of the geometry fails the leg naming the zoom context and the offset.
+
+### THE NEXT INSTRUMENT IS A FIELD CONSOLE PROBE — this is the actionable next step
+
+The dev-class machine cannot see this defect, so the next measurement has to come from the machine
+that can. On the Yoga, at the terminus curve where the van is visibly wrong, paste into DevTools:
+
+```js
+(() => {
+  const r = document.querySelector('.route-overlay'), p = document.querySelector('.route-path'), v = document.querySelector('.route-van');
+  if (!r || !p || !v) return 'no route nodes (below lg, or reduced-motion)';
+  const prog = parseFloat(getComputedStyle(r).getPropertyValue('--route-progress'));
+  const m = p.getScreenCTM(), L = p.getTotalLength(), q = p.getPointAtLength(prog * L), q0 = p.getPointAtLength(0);
+  const hx = m.a*q.x + m.c*q.y + m.e, hy = m.b*q.x + m.d*q.y + m.f, b = v.getBoundingClientRect();
+  return {
+    progress: +prog.toFixed(4),
+    dxFromGutter: +(q.x - q0.x).toFixed(1),          // >20 means we are IN the curve
+    errorPx: +Math.hypot(b.left + b.width/2 - hx, b.top + b.height/2 - hy).toFixed(1),
+    errX: +(b.left + b.width/2 - hx).toFixed(1), errY: +(b.top + b.height/2 - hy).toFixed(1),
+    ctm: [+m.a.toFixed(3), +m.d.toFixed(3)],         // both should be 1
+    dpr: window.devicePixelRatio, zoom: (window.outerWidth / window.innerWidth).toFixed(3),
+    offsetPath: getComputedStyle(v).offsetPath.slice(0, 60),
+  };
+})()
+```
+
+`errorPx` is the whole question. If it is ~0 while the van *looks* wrong, the defect is in what is
+being painted rather than where the element is positioned, and the hunt moves to compositing. If it is
+large, `errX`/`errY` and `dxFromGutter` say which axis and how far into the curve, `ctm` says whether a
+scale crept in, and `zoom`/`dpr` capture the machine state that no emulation lane reproduced.
+
+### Status
+
+> **FO-3: HELD — reproduced by nobody but the owner, on one machine, and not by any instrument here.**
+> No fix is claimed and none shipped: the one candidate architecture was measured and rejected because
+> it broke I20 in two engines. **What shipped is coverage, not a cure** — the I20 zoom leg, so the
+> class is instrumented from now on. **The next move is the field console probe above**, run on the
+> Yoga at the curve. Do not paper this over as fixed.

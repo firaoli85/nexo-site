@@ -582,6 +582,137 @@ export async function checkVanRidesLine(page, route, width) {
   return { pass: problems.length === 0, detail: problems.slice(0, 3).join("; ") };
 }
 
+// ── I20 ZOOM LEG (Task #21, FO-3) ───────────────────────────────────────────────────────────────
+// FO-3 reported the van ignoring the terminus curve on a Yoga-class machine, with page zoom as the
+// prime suspect. Instruments did NOT convict it — four emulation lanes across three engines all
+// measured under 1px, and the "error proportional to path x" prediction did not hold. But I20 as
+// shipped only ever looked at zoom 1, so it was BLIND to the whole class either way, and a blind
+// spot a field report has already pointed at is worth closing whether or not this particular report
+// turns out to live there.
+//
+// CHROMIUM-ONLY, AND IT SAYS SO IN ITS OWN OUTPUT. Page zoom is not emulable in the webkit and
+// firefox lanes (no CDP, and Playwright exposes no zoom control), so this leg covers one engine.
+// A visible partial is honest; an invisible gap is not — the detail string always names the coverage
+// so nobody reads a green I20 as "zoom verified everywhere".
+//
+// It samples MID-CURVE deliberately. The reported signature is invisible on the straight leg, where
+// the path's x is constant, and only expresses as x grows through the terminus curve — so a sample
+// taken anywhere else would be a sample taken where the defect is defined not to appear.
+const I20_ZOOM_PROBE = () => {
+  const root = document.querySelector(".route-overlay");
+  const path = document.querySelector(".route-path");
+  const van = document.querySelector(".route-van");
+  if (!root || !path || !van) return { absent: "no route/van nodes (below lg, or torn down)" };
+  const cs = getComputedStyle(van);
+  if (cs.display === "none") return { absent: "van hidden (@supports / not armed)" };
+  if (!cs.offsetPath || cs.offsetPath === "none") return { absent: "offset-path rejected" };
+  const p = parseFloat(getComputedStyle(root).getPropertyValue("--route-progress"));
+  const m = path.getScreenCTM();
+  const L = path.getTotalLength();
+  const q = path.getPointAtLength(p * L);
+  const q0 = path.getPointAtLength(0);
+  const hx = m.a * q.x + m.c * q.y + m.e, hy = m.b * q.x + m.d * q.y + m.f;
+  const r = van.getBoundingClientRect();
+  return {
+    p: +p.toFixed(4),
+    dxFromGutter: +(q.x - q0.x).toFixed(1),
+    delta: +Math.hypot(r.left + r.width / 2 - hx, r.top + r.height / 2 - hy).toFixed(3),
+  };
+};
+
+export async function checkVanRidesLineZoom({ base = BASE, sabotage = false } = {}) {
+  const LANES = [
+    { name: "css-zoom", factor: 1.25 },
+    { name: "css-zoom", factor: 1.5 },
+    { name: "device-metrics", factor: 1.25 },
+  ];
+  const browser = await chromium.launch();
+  const problems = [], samples = [];
+  try {
+    for (const lane of LANES) {
+      const tag = lane.name + "@" + lane.factor;
+      const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+      const page = await ctx.newPage();
+      const cdp = await ctx.newCDPSession(page);
+      try {
+        await page.goto(base + "/", { waitUntil: "networkidle" });
+        await page.waitForTimeout(600);
+        if (lane.name === "device-metrics") {
+          await cdp.send("Emulation.setDeviceMetricsOverride", {
+            width: Math.round(1440 / lane.factor), height: Math.round(900 / lane.factor),
+            deviceScaleFactor: lane.factor, mobile: false,
+          });
+        } else {
+          await page.evaluate((z) => { document.documentElement.style.zoom = String(z); }, lane.factor);
+        }
+        await page.waitForTimeout(700);
+        if (sabotage) {
+          // Break agreement the way a stale or duplicated path representation would: hand the van
+          // its OWN copy of the geometry, shifted. That is exactly what the pre-url() architecture
+          // made possible, and what offset-path: url(#id) removes by construction.
+          await page.evaluate(() => {
+            const d = document.querySelector(".route-path").getAttribute("d");
+            // Shift EVERY coordinate, not just the start. An earlier version shifted only the M
+            // command, which left the path's END unmoved — so the samples that land at p=1 saw no
+            // divergence and the sabotage slipped past its own test.
+            const shifted = d.replace(/[\d.]+/g, (n) => (parseFloat(n) + 25).toFixed(1));
+            document.querySelector(".route-van").style.offsetPath = 'path("' + shifted + '")';
+          });
+          await page.waitForTimeout(250);
+        }
+        const max = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+        const seen = [];
+        let absent = null;
+        // Sweep the whole descent rather than stopping at the first curved hit: zoom shrinks the
+        // layout viewport, so the page bottom arrives sooner and the naive early-exit landed on
+        // p=1 (the terminus ENDPOINT) instead of a genuinely mid-curve point.
+        for (const f of [0.4, 0.6, 0.8, 0.86, 0.9, 0.93, 0.96, 0.985, 1]) {
+          await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), Math.round(max * f));
+          await page.waitForTimeout(240);
+          const o = await page.evaluate(I20_ZOOM_PROBE);
+          if (o.absent) { absent = o.absent; continue; }
+          seen.push({ ...o, f });
+        }
+        if (!seen.length) {
+          samples.push({ tag, skipped: absent || "no samples" });
+        } else {
+          const control = seen.find((o) => o.dxFromGutter < 1);
+          // prefer a point genuinely INSIDE the curve over the endpoint at p=1
+          const curved = seen.find((o) => o.dxFromGutter > 20 && o.p < 0.999) || seen.find((o) => o.dxFromGutter > 20);
+          if (curved) samples.push({ tag, ...curved });
+          else problems.push(tag + ": never reached a curved sample (dxFromGutter never exceeded 20)");
+          if (control) samples.push({ tag: tag + " straight-control", ...control });
+          // ASSERT ON EVERY SAMPLE, not only the curved one. The first version of this leg checked
+          // the tolerance on the curved sample alone, so a 16px error on the straight leg passed —
+          // its own negative test is what caught that.
+          for (const o of seen) {
+            if (o.delta > I20_TOL) {
+              problems.push(tag + ": van is " + o.delta + "px off the drawn head at p=" + o.p +
+                " (dxFromGutter " + o.dxFromGutter + ", tolerance " + I20_TOL + "px)");
+              break;
+            }
+          }
+        }
+      } catch (e) {
+        problems.push(tag + ": lane error " + String(e.message).slice(0, 60));
+      }
+      await ctx.close();
+    }
+  } finally { await browser.close(); }
+  const measured = samples.filter((x) => !x.skipped);
+  const curvedOnes = measured.filter((x) => x.dxFromGutter > 20);
+  const worst = measured.length ? measured.reduce((a, c) => (c.delta > a.delta ? c : a)) : null;
+  return {
+    pass: problems.length === 0 && curvedOnes.length > 0,
+    detail: problems.length
+      ? problems.slice(0, 3).join("; ")
+      : "chromium only (zoom is not emulable in the webkit/firefox lanes) — " + measured.length +
+        " samples across css-zoom 1.25/1.5 + device-metrics 1.25, " + curvedOnes.length +
+        " of them MID-CURVE, worst delta " + (worst ? worst.delta : "n/a") + "px against a " + I20_TOL + "px tolerance",
+    samples,
+  };
+}
+
 // ── the cube: engines × profiles (Stage 16) ──────────────────────────────────────────────────────
 const ENGINE_BY_NAME = { chromium, webkit, firefox };
 

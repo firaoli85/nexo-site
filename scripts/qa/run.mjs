@@ -3,7 +3,7 @@
 // it (so you can `npm run build:check && npm run start` in one terminal and sweep from another). Exits
 // non-zero if any invariant fails — so it gates a stage report per the nexo-brand regression rule.
 import { spawn } from "node:child_process";
-import { runSweep, printMatrix } from "./sweep.mjs";
+import { runSweep, printMatrix, checkVanRidesLineZoom } from "./sweep.mjs";
 import { checkBuildIdentity, failStale } from "./preflight-build-identity.mjs";
 import { checkHostRedirect } from "./i19-host-redirect.mjs";
 import { checkNavSeam } from "./i21-nav-seam.mjs";
@@ -70,6 +70,12 @@ console.log(`I19 host redirect: ${i19.pass ? "\u2713" : "\u2717"} ${i19.detail}`
 const i21 = await checkNavSeam({ base: BASE });
 console.log(`I21 nav seam: ${i21.pass ? "✓" : "✗"} ${i21.detail}`);
 
+// I20 ZOOM LEG (Task #21, FO-3). The per-cell I20 only ever looks at zoom 1; this covers the
+// zoom class, mid-curve, where the FO-3 signature is defined to appear. Chromium-only by
+// necessity and it says so in its own output rather than letting a partial read as full coverage.
+const i20z = await checkVanRidesLineZoom({ base: BASE });
+console.log(`I20 zoom leg: ${i20z.pass ? "✓" : "✗"} ${i20z.detail}`);
+
 let failures = 1;
 try {
   const out = await runSweep({ base: BASE });
@@ -80,4 +86,4 @@ try {
     else server.kill("SIGTERM");
   }
 }
-process.exit(failures === 0 && i19.pass && i21.pass ? 0 : 1);
+process.exit(failures === 0 && i19.pass && i21.pass && i20z.pass ? 0 : 1);

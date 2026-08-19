@@ -1,8 +1,8 @@
 {
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
-    "updatedAt": "2026-08-18",
-    "currentTask": "owner combined field re-test, then W5 part 2 (nexo-motion + motion-safe)",
+    "updatedAt": "2026-08-19",
+    "currentTask": "owner FO-3 field confirmation, then W5 part 2 (nexo-motion + motion-safe)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -466,11 +466,11 @@
     {
       "id": "W4-owner-check",
       "phase": "P3",
-      "title": "Owner combined field re-test: nav edge + van glue, at a verified commit, prod lane",
+      "title": "Owner field probes: FO-3 console probe at the curve (Yoga) + FO-1 van glue re-test",
       "status": "todo",
-      "date": "2026-08-18",
-      "note": "COMBINED FIELD RE-TEST OWED, AND IT IS THE CLOSING PROOF FOR BOTH FO-1 AND FO-2. Three things now need the owner's standard laptop, and they must be checked on a build whose COMMIT IS KNOWN to contain them - the previous round's screenshots could not be used because the build provenance was unestablished (dev server, commit unknown), and screenshots of an unknown build can neither confirm nor refute a fix. (1) FO-2 nav edge: scroll down and confirm the bar now separates from the page over LIGHT sections, which is the register that failed; it already worked over the ink chapters. (2) FO-1 van glue: the route line and the livery van must stay together at every scroll position, including through the U-turn at the terminus. (3) D23 palette unchanged: the card and grid hairlines and the /platform rule must still read as they did - this task deliberately softened NOTHING, so any change there is a regression. Everything above is verified by instrument and by eye on a dev-class machine; the machine that reported both failures has not yet seen either fix.",
-      "fixlogRef": "2026-08-18 - Task #20"
+      "date": "2026-08-19",
+      "note": "FO-2 IS CLOSED IN FIELD on both machines (work: distinct edge; Yoga: subtle edge, which is as designed). TWO THINGS REMAIN, and the first is now the priority because nothing here can advance it. (1) FO-3 CONSOLE PROBE, and this is the closing proof for FO-3: on the Yoga, scroll to the terminus curve where the van is visibly wrong and paste the snippet recorded in docs/FIELD_OBSERVATIONS.md FO-3 into DevTools. errorPx is the whole question - if it is about zero while the van LOOKS wrong, the defect is in what is painted rather than where the element is positioned and the hunt moves to compositing; if it is large, errX/errY and dxFromGutter say which axis and how far into the curve, ctm says whether a scale crept in, and zoom/dpr capture the machine state that no emulation lane here could reproduce. The Ctrl+0 result is worth recording alongside it. (2) FO-1 VAN GLUE re-test at a verified commit, still owed. NOTE: Task #21 shipped NO fix for FO-3 - the one candidate architecture was measured and rejected because it broke I20 in two engines. What shipped is coverage, not a cure.",
+      "fixlogRef": "2026-08-19 - Task #21"
     },
     {
       "id": "W5-1",
@@ -489,6 +489,15 @@
       "date": "2026-08-18",
       "fixlogRef": "2026-08-18 - Task #20",
       "note": "A field report that the instruments DISAGREED with, and the disagreement was the finding. The reported suspects were all about the edge not being painted; measurement showed it was painted everywhere, at the exact token colour, on 3 engines x 4 DSFs, armed every time. The real cause was perceptual polarity - a monotonic mid-step inside a 13:1 dark-to-light transition is read as antialiasing however correct its contrast ratio is - and it explains BOTH of the owner's observations with one mechanism: the /platform rule they called crisp is a local extremum, the nav edge was not. It also explains why the D23 bench missed it: the F1 fragment was titled 'Nav over ink', and over ink the edge always worked. TWO INSTRUMENT FAULTS were found and recorded, because each nearly produced a false finding: a smooth-scroll artifact (scroll-behavior:smooth means scrollTo animates, and frames captured mid-flight show the sticky bar unrepositioned - the seam appeared MISSING at three of four scroll positions until every scroll was made behavior:'instant'), and an extremum detector that was wrong twice (comparing the global minimum against the plateaus fails because at this seam the global minimum IS the bar; comparing against immediate neighbours fails because at DSF 2 a 1px border is two identical rows and neither is a STRICT extremum). Both lessons are written into the invariant file."
+    },
+    {
+      "id": "W-FO3",
+      "phase": "P3",
+      "title": "FO-3 investigation: zoom-class reproduction attempt + I20 zoom leg (no fix - held)",
+      "status": "done",
+      "date": "2026-08-19",
+      "fixlogRef": "2026-08-19 - Task #21",
+      "note": "The task is DONE; the DEFECT is HELD, and those are different things. What this task delivered: a 51-sample reproduction attempt that failed to convict the prime suspect and disproved its central prediction, a measured rejection of the one candidate architecture, and the I20 zoom leg so the class is instrumented from now on. THE INVARIANT CAUGHT MY OWN REGRESSION BEFORE IT SHIPPED, which is the single most valuable thing that happened here: offset-path url() looked correct by every static measure - accepted in all three engines, 0.00px on switch, zero per-frame cost - and I20's perturbation leg failed it at 978px in chromium and webkit because url() does not invalidate when the referenced path's d changes. Without that leg (built in Task #19 for a different reason) this would have shipped as an improvement and become a new field defect. Also fixed two faults in my own zoom leg that its negative test exposed: it asserted the tolerance only on the curved sample, so a 16px error on the straight leg passed; and its sabotage shifted only the path's M command, leaving the endpoint unmoved so samples that land at p=1 saw no divergence and the sabotage slipped past its own test."
     }
   ],
   "decisions": [
@@ -768,13 +777,19 @@
       "date": "2026-08-18",
       "status": "resolved",
       "text": "FO-2: the scrolled-nav bottom edge did not exist on the owner's standard laptop - the OPERATIVE device that set the D23 floors - even though it shipped at --on-ink-border-strong, the owner's own E2-05 floor. Two passes in the same session isolated it: card and grid hairlines EXIST (D23 holds) and the /platform sticky sub-nav rule reads CRISP (no demotion warranted). RESOLVED 2026-08-18 (Task #20). ALL THREE PRIME SUSPECTS WERE ACQUITTED BY MEASUREMENT: the edge was rendered at DSF 1 / 1.25 / 1.5 / 2 on chromium, webkit and firefox and the seam pixel-sampled from the PNG (zero-dep decode via node:zlib), and in all 12 cells the state was ARMED and the painted row matched the token at distance ZERO. Not fractional-DPR erasure, not a failure to arm, not the glass layer swallowing it. THE ACTUAL MECHANISM IS CONTRAST POLARITY: a line is seen when it is a LOCAL EXTREMUM, different from the nearest different value on BOTH sides. Over ink the edge is a local MAX (~4.0) and reads - which is exactly the case the F1 bench fragment tested, since that fragment was titled 'Nav over ink'. Over LIGHT content the same edge sits MONOTONICALLY between a dark bar (L 0.025) and a bright page (L 0.928) at L 0.195, so the eye folds it into the boundary ramp and reads it as antialiasing; measured strength 0.00 at all four DSFs. The owner supplied the control for free: the /platform rule they called CRISP measures as a LOCAL MIN at strength 2.36. THICKENING DOES NOT WORK AND THAT IS MEASURED, NOT ARGUED: a 2px border scores 0.00 on the light side at all four DSFs, because thickness cannot create an extremum that polarity denies. FIX: a --nav-seam token (rgb(11 21 18 / 0.75)) painted as a hard 0-blur box-shadow hairline below the bar, armed by the same scrolled condition so the page-top no-border design is untouched. Light-side strength 1.92-2.31, comparable to the /platform rule the owner already calls crisp; ink side preserved at 4.27/3.19/2.16/4.26. The border token was NOT changed and the D23 floors were NOT softened."
+    },
+    {
+      "id": "DISC-23",
+      "date": "2026-08-19",
+      "status": "open",
+      "text": "FO-3: on a Yoga-class laptop the van tracks the straight leg and then IGNORES THE TERMINUS CURVE, continuing straight down while the drawn line turns. Build provenance established by FINGERPRINT rather than by hash: the owner saw the scrolled-nav seam over light content, which does not exist before Task #20, so the build is at or after 9d2e2e3 and FO-1's fixes were PRESENT. HELD, NOT RESOLVED (Task #21). NOT REPRODUCED in any lane: 51 samples across 4 emulation lanes (deviceScaleFactor, Emulation.setPageScaleFactor, Emulation.setDeviceMetricsOverride, CSS zoom on html) x 3 engines x 3 scroll positions, every one within 1px. THE PRIME SUSPECT WAS NOT CONVICTED AND THE PREDICTION FAILED: the reported signature implies an error proportional to the path x-coordinate, and every sample records dxFromGutter alongside the error - at dxFromGutter 0 and at dxFromGutter 172 the error is the same and it is about zero. offset-path was never rejected; the computed value was read at every sample and was always valid. THE CANDIDATE FIX WAS MEASURED AND REJECTED: offset-path url(#route-path), pointing the van at the rendered path element instead of a copied string, priced well (accepted in all three engines, 0.00px position change on switch, zero per-frame cost against 19us chromium / 44us webkit / 102us firefox for per-frame getPointAtLength) - but it SHIPPED INTO THE CUBE AND I20 FAILED IT. url() has a stale-reference invalidation bug in Chromium and WebKit: when the referenced path element's d changes, the van keeps the OLD geometry, measured at 978px off and PERSISTENT through 1500ms, while firefox invalidates correctly. That is a worse version of the class it was meant to remove, and it is exactly the symptom FO-3 describes. Reverted. The shipped path() assignment is correct BECAUSE it is re-assigned on every geometry change, which forces the invalidation url() skips. NEXT INSTRUMENT: a field console probe (recorded verbatim in docs/FIELD_OBSERVATIONS.md FO-3) to be run on the Yoga at the curve - errorPx is the whole question, and dxFromGutter / errX / errY / ctm / zoom / dpr capture the machine state no emulation lane reproduced."
     }
   ],
   "gates": {
     "tsc": {
       "state": "green",
-      "date": "2026-08-18",
-      "note": "npx tsc --noEmit TRUE 0 after the nav-seam change"
+      "date": "2026-08-19",
+      "note": "npx tsc --noEmit TRUE 0 (RouteOverlay reverted to the shipped path() assignment)"
     },
     "ci": {
       "state": "green",
@@ -784,9 +799,9 @@
     "cube": {
       "state": "green",
       "cells": 234,
-      "checks": "13 routes x 6 profiles x 3 engines = 234 cells; chromium, webkit and firefox each GREEN; zero failures, zero FAIL artifacts. Plus the once-per-sweep lanes: stale-build preflight, I19 host redirect (4/4) and the new I21 nav seam (16/16 across DSF 1/1.25/1.5/2 x w1440/w390 x light+ink, weakest 1.92 against a 1.5 floor), all folded into the exit code",
-      "date": "2026-08-18",
-      "note": "Full cube after the FO-2 nav-seam change (shared chrome, so every route is affected). Invariant set is now I1-I21. I21 runs as a targeted probe rather than cube columns because device scale factor cannot be varied inside an existing cube cell and re-running 234 cells at 4 DSFs would cost 936 to answer a question about one element - the tradeoff is stated in scripts/qa/i21-nav-seam.mjs."
+      "checks": "13 routes x 6 profiles x 3 engines = 234 cells; 3412 checks; chromium, webkit and firefox each GREEN; zero failures. Once-per-sweep lanes folded into the exit code: stale-build preflight, I19 host redirect (4/4), I21 nav seam (16/16), and the NEW I20 zoom leg (chromium-only by necessity and it says so, 6 samples across css-zoom 1.25/1.5 + device-metrics 1.25, 3 of them mid-curve, worst 0.156px against a 1px tolerance)",
+      "date": "2026-08-19",
+      "note": "Invariant set is I1-I21 plus the I20 zoom leg. THIS CUBE WENT RED FIRST AND THAT WAS THE POINT: the Task #21 candidate fix (offset-path url(#route-path)) passed every static measure and then failed I20s perturbation leg at 978px in chromium and webkit, because url() does not invalidate when the referenced paths d changes. The change was reverted and the cube re-run green on the reverted build. RouteOverlay.tsx is byte-identical to Task #19."
     },
     "perfBudget": {
       "state": "not-built",
@@ -893,6 +908,10 @@
     {
       "date": "2026-08-18",
       "summary": "Task #20 FO-2: the scrolled-nav edge was invisible on the owner's laptop. Instruments acquitted all three prime suspects - the edge was painted, armed and token-exact on 3 engines x 4 DSFs. The cause was contrast POLARITY: over light content the edge sits monotonically inside a 13:1 dark-to-light step and reads as antialiasing, while over ink (the register the F1 bench actually tested) it is a local extremum and always worked. Thickening measured 0.00 at every DSF and was rejected on evidence; a dark hairline below the bar supplies the missing polarity. I21 asserts a painted local extremum at 4 DSFs x 2 widths x both registers."
+    },
+    {
+      "date": "2026-08-19",
+      "summary": "Task #21 FO-3: the van reportedly ignores the terminus curve on a Yoga-class laptop. NOT REPRODUCED - 51 samples across 4 zoom/scale emulation lanes and 3 engines, all within 1px, and the error-proportional-to-x prediction failed outright. The candidate fix (offset-path url() referencing the rendered path) was measured and REJECTED: I20's perturbation leg failed it at 978px in chromium and webkit because url() does not invalidate when the referenced path changes. Reverted. Shipped the I20 zoom leg so the class is instrumented, and recorded a field console probe as the next instrument. FO-3 is HELD, not fixed."
     }
   ]
 }
