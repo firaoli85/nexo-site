@@ -319,12 +319,14 @@ export function Navbar() {
         className={cn(
           // always the dark nav-glass; the border is the only scroll-state change.
           "nav-glass sticky top-0 z-40 transition-colors duration-200",
-          // D23/F1: the scrolled edge moves from the DIVIDER tier to the CARD tier. At the old
-          // --on-ink-border the boundary between chrome and page collapsed on a standard panel;
-          // --on-ink-border-strong is also itself hardened (E2-05), so the edge gains twice over.
-          // The page-top no-border state is unchanged BY DESIGN (the bench recorded it as the
-          // harder case and the reading did not ask for a border there).
-          scrolled ? "border-b border-on-ink-border-strong" : "border-b border-transparent"
+          // D23/F1: the scrolled edge sits at the CARD tier (--on-ink-border-strong, itself hardened
+          // by E2-05). FO-2 then showed that edge alone is not enough: it is a local MAXIMUM over the
+          // ink chapters and reads there, but over LIGHT content it sits monotonically between a dark
+          // bar and a bright page and is read as antialiasing. `nav-seam` adds the dark hairline that
+          // supplies the missing polarity on the light side; together they cover both registers.
+          // The page-top no-border state is unchanged BY DESIGN, which is why the seam is armed with
+          // the same `scrolled` condition rather than applied to .nav-glass unconditionally.
+          scrolled ? "border-b border-on-ink-border-strong nav-seam" : "border-b border-transparent"
         )}
       >
         <Container>

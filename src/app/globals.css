@@ -203,6 +203,18 @@
      ≈1.9:1 = clearly visible). Base hue sits a hair above --ink so the bar is near-seamless over the
      ink hero (≈1.1:1) yet clearly jade-green-cast over white. */
   --nav-glass:        rgb(12 23 19 / 0.90);
+  /* NAV SEAM (FO-2). A 1px hairline drawn just BELOW the scrolled nav, and the reason it exists is
+     a perceptual one the colour floors cannot express. A line is SEEN when it is a LOCAL EXTREMUM —
+     different from the nearest different value on BOTH sides. The nav's --on-ink-border-strong edge
+     is a local MAXIMUM over the ink chapters (lighter than the bar above and the ink below) and
+     reads there, which is exactly the case the F1 bench fragment tested: it was titled 'Nav over
+     ink'. But over LIGHT content the same edge sits MONOTONICALLY between a dark bar and a bright
+     page, so the eye integrates it into the boundary ramp and reads it as antialiasing — measured
+     MONOTONIC at DSF 1, 1.25, 1.5 and 2. Making it thicker does NOT help: a 2px border measured
+     MONOTONIC at all four too, because thickness cannot create an extremum that polarity denies.
+     This dark hairline supplies the missing polarity on the light side without touching the ink
+     side. It is a hard 0-blur line, i.e. a rule, not a glow — the flat aesthetic is intact. */
+  --nav-seam:         rgb(11 21 18 / 0.75);
 
   /* Legacy aliases — used by old body{} rule; kept so nothing breaks */
   --background:     var(--bg);
@@ -247,6 +259,8 @@ body {
    Navbar: bg-ink-surface / bg-ink), because a translucent panel over white content both washes out
    and collapses the hover-fill contrast. Still FORBIDDEN: glass cards on the light surfaces. The
    bar falls back to a SOLID dark bg where backdrop-filter is unsupported. Blur is chrome-scale. */
+/* FO-2: applied ONLY in the scrolled state, so the page-top no-border design is untouched. */
+.nav-seam { box-shadow: 0 1px 0 var(--nav-seam); }
 .nav-glass { background-color: var(--ink-surface); }
 @supports ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
   .nav-glass {

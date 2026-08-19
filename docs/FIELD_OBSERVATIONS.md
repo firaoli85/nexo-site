@@ -148,5 +148,146 @@ reduced-motion, no `offset-path`) are **skips that assert the absence**, never f
 > **The live V1 defect on `main` remains until v2 deploys** — the recorded default ruling was the v2/W5
 > path, not a `main` hotfix. **Field re-check on the Yoga-class machine is owed at the v2 deploy**: this fix
 > is verified by reproduction and by a green cube on a dev-class box, not yet on the machine that showed it.
+> **FIELD RE-CHECK OF THE C4 FIX IS PENDING AT A VERIFIED COMMIT >= b58925f.** Owner screenshots dated
+> 2026-08-18 show mode-2-signature divergence, but the build provenance is UNESTABLISHED (dev server,
+> commit unknown), and screenshots of an unknown build cannot confirm or refute a fix. **No verdict is
+> recorded either way** — not "still broken", not "fixed". The re-test must be run on a build whose
+> commit is known to contain the fix.
 > The bluish colour cast reported alongside is C3-class and separate; it is addressed by the D23 hardening
 > (Task #18) and also awaits an on-device reading.
+
+---
+
+## FO-2 — Scrolled-nav bottom edge does not exist on standard hardware (F1)
+
+| | |
+|---|---|
+| **Date** | 2026-08-18 |
+| **Machine class** | Standard laptop (the OPERATIVE device that set the D23 perception floors) |
+| **Build observed** | **v2, post-Task-#18.** The D23 hardening is confirmed PRESENT: the owner's screenshots show the card and grid hairlines that only exist after #18. **Exact commit UNKNOWN — a dev server, not a verified prod build.** |
+| **Evidence** | Owner screenshots + direct field check |
+| **Register** | Homepage, desktop, scrolled state, motion allowed |
+
+### Field check results — two passes, one failure
+
+- **PASS — cards and grid hairlines EXIST.** D23 holds on the machine that set its floors. The token
+  hardening did what it was measured to do.
+- **PASS — the `/platform` sticky sub-nav rule reads CRISP.** Recorded explicitly as a pass, and it matters:
+  it is the same `--border-strong` promotion F3 shipped, on the same machine, in the same session.
+  **No demotion of that rule is warranted or implied by this report.**
+- **FAIL — the scrolled-nav bottom edge DOES NOT EXIST.** Not faint, not marginal: absent. This is despite
+  F1 shipping at `--on-ink-border-strong`, which is the owner's **own E2-05 floor** and measures 3.47:1
+  against `--ink-surface`.
+
+### Why this is a different class from C3
+
+**The colour floors cannot catch this and were never able to.** D23 measured *what colour a line must be to
+be perceptible*. It assumed a line would be painted at all. This report says the line is not there — which
+is a **pixel-geometry** failure, not a contrast failure. A correct colour rendered into zero physical pixels
+is invisible at every contrast ratio. **The two passes above are the control**: hairlines elsewhere on the
+same screen in the same session prove the palette is fine and isolate the fault to this specific edge.
+
+### Suspects (to be settled by instruments, not by argument)
+
+- **(a) Fractional `devicePixelRatio`.** Windows display scaling at 125% / 150% is the default on a
+  laptop of this class. A 1px CSS border at DSF 1.25 is 1.25 physical pixels; depending on the snapping
+  rule applied to the border box it can round to zero rows of full-opacity paint, or smear to a
+  sub-threshold alpha that reads as nothing.
+- **(b) The scrolled state never arms.** `scrolled` is React state driven by a scroll listener; if it does
+  not flip, the element keeps `border-transparent` and there is simply no edge to see.
+- **(c) Paint order / stacking against the glass layer.** `.nav-glass` paints a translucent background with
+  a `backdrop-filter`; a border painted underneath or composited into that layer could be swallowed.
+
+### DIAGNOSED AND FIXED (Task #20, 2026-08-18)
+
+**ALL THREE PRIME SUSPECTS WERE ACQUITTED BY DIRECT MEASUREMENT.** The edge was rendered at four
+device scale factors on three engines, and a vertical strip of the seam was pixel-sampled from the
+PNG (zero-dep decode via `node:zlib`, so the physical rows are read, not inferred):
+
+| Engine | DSF 1 | DSF 1.25 | DSF 1.5 | DSF 2 |
+|---|---|---|---|---|
+| chromium | painted, token exact | painted, token exact | painted, token exact | painted, token exact |
+| webkit | painted, token exact | painted (border computes 0.8px) | painted (0.667px) | painted, token exact |
+| firefox | painted, token exact | painted, token exact | painted, token exact | painted, token exact |
+
+In all 12 cells the scrolled state was **armed** (`border-bottom: 1px solid rgb(91,130,117)`) and the
+painted row matched the token at **distance 0**. So: **(a) fractional-DPR erasure — NOT GUILTY.
+(b) the scrolled state not arming — NOT GUILTY. (c) the glass layer swallowing the border — NOT
+GUILTY.** The edge existed the whole time, everywhere.
+
+### THE ACTUAL MECHANISM — contrast POLARITY, not pixel geometry
+
+**A line is seen when it is a LOCAL EXTREMUM** — different from the nearest different value on BOTH
+sides. A line whose luminance sits *monotonically* between its neighbours is folded by the visual
+system into the boundary ramp and read as antialiasing, no matter how correct its contrast ratio is.
+
+**The owner supplied the control for free.** They reported the `/platform` sub-nav rule as CRISP in
+the same session, on the same machine. Measured: `rgb(150,159,174)` between white above and tint
+below — a **LOCAL MIN**, strength **2.36**. It is an extremum, so it reads.
+
+The scrolled nav over **light** content measured, at every DSF: nav `rgb(35,45,42)` →
+edge `rgb(91,130,117)` → page `rgb(245,247,249)`. Luminance **0.025 → 0.195 → 0.928**: strictly
+increasing. **MONOTONIC, strength 0.00.** The edge is a mid-step inside a 13:1 dark-to-light
+transition and carries no signal. Over **ink** content the same edge is a **LOCAL MAX (≈4.0)** and
+reads perfectly — **which is exactly the case the F1 bench fragment tested: it was titled "Nav over
+ink".** The field failure lives in the register F1 never benched.
+
+### Candidate comparison — four DSFs × both registers (strength; 0 = no line)
+
+| Candidate | light DSF1 | 1.25 | 1.5 | 2 | ink DSF1 | 1.25 | 1.5 | 2 |
+|---|---|---|---|---|---|---|---|---|
+| A 1px border, token (shipped before) | **0** | **0** | **0** | **0** | 4.27 | 3.03 | 2.16 | 3.98 |
+| B 2px border, token | **0** | **0** | **0** | **0** | 4.27 | 2.13 | 3.97 | 3.98 |
+| C border + 1px underline @0.55 | **0** | 1.29 | 1.17 | **0** | 4.27 | 3.15 | 2.16 | 4.19 |
+| D border + soft shadow @0.20 | **0** | **0** | **0** | **0** | 4.27 | 3.07 | 2.16 | 4.07 |
+| **E border + 1px underline @0.75 — CHOSEN** | **1.99** | **1.92** | **2.31** | **1.99** | 4.27 | 3.19 | 2.16 | 4.26 |
+
+**Thickening the border does not work, and that is a measured result, not an opinion:** candidate B
+scores **0 at all four DSFs** on the light side. Thickness cannot create an extremum that polarity
+denies. The soft shadow (D) is too weak to register at all. Only **E** produces a painted extremum in
+**both** registers at **every** DSF, and its light-side strength (1.92–2.31) is comparable to the
+`/platform` rule the owner already calls crisp (2.36).
+
+**Shipped:** `--nav-seam: rgb(11 21 18 / 0.75)` with `.nav-seam { box-shadow: 0 1px 0 var(--nav-seam) }`,
+armed by the same `scrolled` condition as the border so the **page-top no-border state is untouched**.
+The border token is **unchanged** — D23 was not softened, and nothing about the E2-05 floor was
+revisited. It is a hard 0-blur rule, not a glow; the flat aesthetic holds.
+
+**Contrast re-verified against the composited nav background:** border vs nav-over-light **3.31:1**,
+vs nav-over-tint **3.32:1**, vs nav-over-ink **4.27:1**; seam vs the page below **7.97:1**. Nav text is
+untouched and unchanged — on-ink **12.35:1**, on-ink-muted **7.38:1**, accent-on-ink **7.69:1**.
+
+### TWO INSTRUMENT FAULTS FOUND WHILE DIAGNOSING — recorded because they nearly produced false findings
+
+1. **A smooth-scroll artifact almost got reported as a site defect.** `html { scroll-behavior: smooth }`
+   means `window.scrollTo` animates; screenshots taken before it settled captured frames where the
+   sticky bar had not been repositioned, and the seam appeared to be MISSING at three of four scroll
+   positions. Every scroll in these probes must be `behavior:"instant"`. With that fixed the edge is
+   present at cssY 64 at every position.
+2. **The extremum detector was wrong twice and had to be fixed before it could convict anything.**
+   First it compared the global minimum against the two plateaus — but at a dark-bar/light-page seam
+   the global minimum IS the bar, so a real 1px dip scored MONOTONIC. Then it compared against
+   immediate neighbours — which fails whenever the edge is thicker than one physical row, because at
+   DSF 2 a 1px border is two identical rows and neither is a *strict* extremum, so a plainly visible
+   edge scored MONOTONIC. The working version collapses equal runs first, then scans runs. Both
+   lessons are written into `scripts/qa/i21-nav-seam.mjs` so the next reader does not repeat them.
+
+### I21 — live
+
+**"The nav edge exists."** Asserts a painted local extremum at the seam across **DSF 1 / 1.25 / 1.5 / 2
+× w1440 / w390 × light and ink registers = 16 samples**, floor **1.5** (measured worst on the fixed
+build is 1.92; the failure mode scores exactly 0). It deliberately asserts **no colour, token, or
+border width** — all of those were perfectly correct while the edge was invisible, which is precisely
+how FO-2 happened. Runs once per sweep like I19 and is folded into the same exit code; the tradeoff
+is stated in the file (re-running the 234-cell cube at four DSFs would cost 936 cells to answer a
+question about one element, and DSF cannot be varied inside an existing cube cell).
+**Self-tested in 3 legs:** healthy passes 16/16, sabotage (`border-bottom-color:transparent;
+box-shadow:none`) fails naming `MONOTONIC, strength 0.00`, restored passes again.
+
+### Status
+
+> **F1 edge: FIXED on v2 (Task #20). The cause was contrast polarity, not pixel geometry — recorded
+> so nobody re-opens the DPR theory.** The D23 floors were NOT softened and the `/platform` rule was
+> NOT demoted; both were confirmed working by measurement. **Owner field re-test owed** at a verified
+> commit, and it is the closing proof — this is verified by instrument and by eye on a dev-class
+> machine, not yet on the laptop that reported the failure.
