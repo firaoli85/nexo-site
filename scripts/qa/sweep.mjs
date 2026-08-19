@@ -1,4 +1,4 @@
-// The QA sweep (Stage 12). Asserts the site's structural invariants (I1–I14) against the PROD build
+// The QA sweep (Stage 12). Asserts the site's structural invariants (I1–I20) against the PROD build
 // for every route × viewport, and writes a pass/fail matrix + failure screenshots. Standing
 // infrastructure — invariants are only ADDED, never weakened (nexo-brand regression rule).
 //
@@ -461,6 +461,127 @@ async function checkOverlap(page, route, width) {
   return { pass: !detail, detail };
 }
 
+// ── I20 THE VAN RIDES THE LINE (Task #19 — the FO-1 receipt) ────────────────────────────────────
+// C4/FO-1: the drawn route and the livery van used to be two coordinate systems reading one path
+// string, and nothing re-measured on content reflow. Both are fixed; this is the invariant that
+// keeps them fixed. It asserts AGREEMENT, not appearance: the van's centre must sit on the point
+// the drawn path reaches at the current --route-progress.
+//
+// TOLERANCE = 1.0px, calibrated rather than guessed. Measured agreement on the fixed build across
+// chromium/webkit/firefox x 1024/1440/1920 x 5 scroll positions (45 samples) was max 0.11px, p95
+// 0.048px, median 0.003px. The SMALLEST divergence reproduced on the unfixed build was 1.52px (a
+// scrollbar-width drift). 1.0px therefore sits ~9x above the worst observed sub-pixel noise and
+// below the smallest real defect — it cannot flake, and it cannot miss the bug it exists for.
+const I20_TOL = 1.0;
+
+const I20_PROBE = () => {
+  const root = document.querySelector(".route-overlay");
+  const path = document.querySelector(".route-path");
+  const van = document.querySelector(".route-van");
+  if (!root || !path || !van) return { absent: true, why: "no route/van nodes" };
+  if (getComputedStyle(van).display === "none") return { absent: true, why: "van display:none (@supports / not armed)" };
+  if (getComputedStyle(van).offsetPath === "none") return { absent: true, why: "offset-path unsupported or rejected" };
+  const p = parseFloat(getComputedStyle(root).getPropertyValue("--route-progress"));
+  if (!isFinite(p)) return { bad: "--route-progress is not a number" };
+  const m = path.getScreenCTM();
+  const L = path.getTotalLength();
+  const q = path.getPointAtLength(p * L);
+  const hx = m.a * q.x + m.c * q.y + m.e;
+  const hy = m.b * q.x + m.d * q.y + m.f;
+  const r = van.getBoundingClientRect();
+  const seam = document.querySelector("[data-route-seam]");
+  return {
+    p: +p.toFixed(4),
+    // SINGLE-TRUTH RECEIPT: an identity CTM is what makes the line and the van one coordinate
+    // system. If someone reinstates h-full/w-full or preserveAspectRatio on that svg, this moves
+    // off 1 and the detail string says so by name.
+    ctmA: +m.a.toFixed(4), ctmD: +m.d.toFixed(4),
+    delta: +Math.hypot(r.left + r.width / 2 - hx, r.top + r.height / 2 - hy).toFixed(3),
+    // HANDOFF — the gap between the route END and the footer card, which is the mode-2 metric.
+    // Both terms MUST be in the same coordinate space: map the path end through the CTM to get a
+    // viewport y, and compare with the seam rect (also viewport). An earlier version mixed spaces
+    // by adding root.style.top (which is HOST-relative, not document-relative) and reported a
+    // constant ~65px error on a healthy build; the negative test is what caught it.
+    handoff: (() => {
+      if (!seam) return null;
+      const e = path.getPointAtLength(L);
+      const ey = m.b * e.x + m.d * e.y + m.f;
+      return Math.round(seam.getBoundingClientRect().top - ey);
+    })(),
+  };
+};
+
+export async function checkVanRidesLine(page, route, width) {
+  // DELIBERATE ABSENCES ARE SKIPS, NOT FAILURES — the van is homepage-only, lg+, motion-only, and
+  // gated on @supports (offset-path). Where it is absent BY DESIGN we assert the absence instead.
+  if (route !== "/") {
+    const n = await page.evaluate(() => document.querySelectorAll(".route-van").length);
+    return { pass: n === 0, detail: n ? `I20: interior route rendered ${n} van node(s)` : "" };
+  }
+  if (width < 1024) {
+    const vis = await page.evaluate(() => {
+      const v = document.querySelector(".route-van");
+      return !!v && getComputedStyle(v).display !== "none";
+    });
+    return { pass: !vis, detail: vis ? "I20: van visible below lg (should be torn down)" : "" };
+  }
+  if (await page.evaluate(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+    const vis = await page.evaluate(() => {
+      const v = document.querySelector(".route-van");
+      return !!v && getComputedStyle(v).display !== "none";
+    });
+    return { pass: !vis, detail: vis ? "I20: van visible under reduced-motion (must be hidden)" : "" };
+  }
+
+  const problems = [];
+  const sample = async (label) => {
+    const o = await page.evaluate(I20_PROBE);
+    if (o.absent) return o; // engine without offset-path → skip, recorded in the detail
+    if (o.bad) { problems.push(`${label}: ${o.bad}`); return o; }
+    if (Math.abs(o.ctmA - 1) > 0.001 || Math.abs(o.ctmD - 1) > 0.001)
+      problems.push(`${label}: route svg CTM is not identity (a=${o.ctmA} d=${o.ctmD}) — the line can scale away from the van; check for h-full/w-full or preserveAspectRatio on the route svg`);
+    if (o.delta > I20_TOL)
+      problems.push(`${label}: van is ${o.delta}px off the drawn head at p=${o.p} (tolerance ${I20_TOL}px)`);
+    return o;
+  };
+
+  // (a) CORE — several scrolled positions, including one deep in the terminus curve where the
+  // path's x-coordinate is largest and any horizontal shear is therefore biggest.
+  let sawVan = false;
+  for (const f of [0.35, 0.65, 0.9]) {
+    await page.evaluate((fr) => window.scrollTo({ top: Math.round((document.documentElement.scrollHeight - window.innerHeight) * fr), behavior: "instant" }), f);
+    await page.waitForTimeout(260);
+    const o = await sample(`scroll ${f}`);
+    if (o.absent) return { pass: true, detail: `I20 skip: ${o.why}` };
+    sawVan = true;
+  }
+  if (!sawVan) return { pass: true, detail: "I20 skip: van never rendered" };
+
+  // (b) PERTURBATION — the FO-1 trigger encoded forever. Grow the document AFTER mount with no
+  // window resize (the fonts-settling / late-content case) and re-assert. Before the fix this left
+  // the route terminating 1536px above the footer seam; the ResizeObserver must now re-measure.
+  await page.evaluate(() => {
+    const seam = document.querySelector("[data-route-seam]") || document.querySelector("footer");
+    const d = document.createElement("div");
+    d.id = "i20-perturb";
+    d.style.height = "1200px";
+    seam.parentNode.insertBefore(d, seam);
+  });
+  await page.waitForTimeout(500); // ResizeObserver → rAF → measure → render → offset-path
+  await page.evaluate(() => window.scrollTo({ top: Math.round((document.documentElement.scrollHeight - window.innerHeight) * 0.65), behavior: "instant" }));
+  await page.waitForTimeout(300);
+  const after = await sample("after +1200px reflow");
+  if (!after.absent && after.handoff != null && Math.abs(after.handoff - 36) > 8)
+    problems.push(`after reflow the route ends ${after.handoff}px above the footer seam, not the 36px handoff (stale band — the reflow re-measure did not fire)`);
+
+  await page.evaluate(() => document.getElementById("i20-perturb")?.remove());
+  await page.waitForTimeout(400);
+  await sample("after reflow removed");
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+
+  return { pass: problems.length === 0, detail: problems.slice(0, 3).join("; ") };
+}
+
 // ── the cube: engines × profiles (Stage 16) ──────────────────────────────────────────────────────
 const ENGINE_BY_NAME = { chromium, webkit, firefox };
 
@@ -582,6 +703,8 @@ async function sweepOneEngine(browser, engineName, profiles, base, routes) {
         // terminus). Interior routes must contain ZERO van/route nodes; the homepage van must never
         // intersect the footer or any text block.
         res.I.I15 = await checkOverlap(page, route, width);
+        // I20 (Task #19) — the van rides the line, INCLUDING after a post-mount reflow (FO-1).
+        res.I.I20 = await checkVanRidesLine(page, route, width);
         // I16 CANONICAL EMAIL (Stage 13) — zero admin@ anywhere in the rendered page; every rendered
         // @nexoaccess.com address is info@ (the one public identity).
         res.I.I16 = await page.evaluate(() => {
@@ -671,7 +794,11 @@ export async function runSweep({ base = BASE, engines = ENGINES, profiles = PROF
 }
 
 export function printMatrix({ perEngine, failures }) {
-  const INV = ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I12", "I13", "I14", "I15", "I16", "I17", "I18"];
+  // NOTE: this list is the REPORT, not the gate — every key in res.I is folded into the pass/fail
+  // count whether or not it is printed. I20 shipped invisible for exactly one run because it was
+  // missing here: it was running and could have failed the build, but a reader could not see that
+  // it had run. An invariant that cannot be seen to have run is not a receipt. Keep this in sync.
+  const INV = ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I12", "I13", "I14", "I15", "I16", "I17", "I18", "I20"];
   for (const eng of perEngine) {
     console.log(`\n\n════════════ ENGINE: ${eng.engineName.toUpperCase()} ════════════`);
     console.log("ROUTE                     PROFILE      " + INV.join(" "));

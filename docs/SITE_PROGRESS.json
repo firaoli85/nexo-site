@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-18",
-    "currentTask": "W5: motion system (nexo-motion skill, C4 fix + I20, motion-safe architecture)",
+    "currentTask": "W5 part 2: motion-safe architecture + nexo-motion skill (P3 motion exploration)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -368,10 +368,10 @@
       "id": "W5",
       "phase": "P3",
       "title": "Motion system: the nexo-motion skill from the four approved candidates + motion-safe architecture",
-      "status": "todo",
-      "date": "",
-      "note": "D20d approved nexo-drift (per-cell AmbientMap dot cycle, 2400-3200ms, static grid under reduced motion), nexo-shape (nav panel size interpolation, 200/250ms, instant swap under reduced motion), nexo-settle (existing play-once settle grammar formalised as a primitive, <=300ms), nexo-accent-card (local dark card on a light section, static - closes a real gap in the tonal system). Governing rules: will-change for imminent transitions only; ambient motion is slow; transform and opacity only; every candidate ships its static end-state first. nexo-shape recommended first.",
-      "fixlogRef": "2026-08-17 - Task #9"
+      "status": "in-progress",
+      "date": "2026-08-18",
+      "note": "D20d approved nexo-drift (per-cell AmbientMap dot cycle, 2400-3200ms, static grid under reduced motion), nexo-shape (nav panel size interpolation, 200/250ms, instant swap under reduced motion), nexo-settle (existing play-once settle grammar formalised as a primitive, <=300ms), nexo-accent-card (local dark card on a light section, static - closes a real gap in the tonal system). Governing rules: will-change for imminent transitions only; ambient motion is slow; transform and opacity only; every candidate ships its static end-state first. nexo-shape recommended first. || TASK #19 DELIVERED THE C4 FIX + I20 ONLY; the motion system proper is untouched and W5 stays in progress. Shipped: single-truth route geometry (pixel-sized svg, identity CTM) + reflow re-measure (ResizeObserver, rAF-debounced, equality-guarded) closing FO-1's two modes, and I20 'the van rides the line' with a perturbation leg. STILL OPEN: the four nexo-motion candidates (nexo-drift, nexo-shape, nexo-settle, nexo-accent-card) are NOT built, the nexo-motion skill is NOT authored, and the motion-safe conversion has NOT started. nexo-shape remains the recommended first candidate.",
+      "fixlogRef": "2026-08-18 - Task #19"
     },
     {
       "id": "W6",
@@ -471,6 +471,15 @@
       "date": "2026-08-18",
       "note": "THE CLOSING PROOF, AND IT IS NOT MINE TO GIVE. Every value in D23 was DERIVED from the owner's readings and verified by arithmetic, a 234-cell cube and my own eye on this machine - but the machine that set the floor has not yet seen the result. What to check on the standard laptop: do white cards now LIFT off the page background; do the hairlines EXIST (card edges and section rules); does the scrolled-nav bottom edge read as a boundary between chrome and page; does the ink card separate from the ink field; and the craft question the numbers cannot answer - does it still feel PREMIUM rather than heavy, particularly --border-strong at 2.67:1 on white, which is the single largest jump in the set (1.34:1 before). A re-read of docs/color-bench/index.html should now find the first visible step AT OR BELOW 1.00x; if it does not, the floor RISES again (floors-only-rise, D23). If anything reads chunky, that is a real finding and the fix is a lower multiplier on that ladder ONLY - never a softening of a floor that was read.",
       "fixlogRef": "2026-08-18 - Task #18"
+    },
+    {
+      "id": "W5-1",
+      "phase": "P3",
+      "title": "W5 part 1: C4 fix (single-truth route geometry + reflow re-measure) + I20",
+      "status": "done",
+      "date": "2026-08-18",
+      "fixlogRef": "2026-08-18 - Task #19",
+      "note": "REPRODUCED BEFORE FIXED (systematic-debugging law): mode 1 divergence 1.52/6.08/31.67px -> 0.00px, svg CTM 0.8611 -> 1.0000; mode 2 stale band 1536px -> 36px handoff. I20 tolerance is 1.0px and was CALIBRATED, not guessed: agreement on the fixed build across chromium/webkit/firefox x 1024/1440/1920 x 5 scroll positions (45 samples) measured max 0.11px / p95 0.048px / median 0.003px, and the smallest divergence reproduced on the unfixed build was 1.52px, so 1.0px sits about 9x above the worst observed noise and below the smallest real defect. I20 asserts the svg CTM is identity BY NAME so a future h-full/w-full or preserveAspectRatio regression fails with an instruction rather than a number, samples three scroll positions including one deep in the terminus curve where any shear is largest, and carries a PERTURBATION LEG that grows the document post-mount and re-asserts - the FO-1 trigger encoded forever. Deliberate absences (interior routes, sub-lg, reduced-motion, no offset-path) are skips that ASSERT the absence rather than failures. Negative-tested in 7 legs via scripts/qa/i20-negative-test.mjs, which drives the real exported check against broken page states including one that stubs out ResizeObserver to recreate mode 2 exactly. TWO SELF-INFLICTED ERRORS THE PROCESS CAUGHT: the negative test found my own I20 handoff maths mixed coordinate spaces (root.style.top is host-relative, the seam is document-relative) and reported a constant ~65px error on a healthy build; and I20 shipped INVISIBLE for one full cube run because the printed column list is hardcoded separately from the gate - it was running and could have failed the build, but no reader could see it had run. Both fixed, and the column list now carries a comment saying why it must stay in sync."
     }
   ],
   "decisions": [
@@ -742,15 +751,15 @@
     {
       "id": "DISC-21",
       "date": "2026-08-18",
-      "status": "scheduled",
-      "text": "FO-1: C4 OBSERVED on the LIVE production site (main @ f0de3c9) on a Lenovo Yoga 7 class Windows machine with basic dedicated graphics - the route line and the livery van sit at visibly different positions at the same scroll, and in one frame the van renders with no line nearby. Owner also reports a bluish panel cast (C3-class, panel-level; a screenshot cannot capture it, so the colour-bench readings on that machine remain the instrument and are pending). MECHANISM NAMED AND SOURCE-VERIFIED in docs/FIELD_OBSERVATIONS.md - git diff f0de3c9..HEAD on RouteOverlay.tsx is EMPTY, so live V1 and current v2 are identical here. One path string serves two renderers in two coordinate systems: the line as SVG path with pathLength=1 inside viewBox 0 0 geo.w geo.h, the van via CSS offset-path in raw pixels. measure() runs on mount and window.resize ONLY (grep-confirmed: no ResizeObserver, no MutationObserver), so docStart/docSpan go stale. THE SOURCE CORRECTED THE CHAT DIAGNOSIS: the SVG carries preserveAspectRatio=none while the host height is FROZEN inline at geo.h and the width is LIVE at w-full, so the axes scale independently - a live-width change (a scrollbar appearing as document height changes) stretches the path NON-UNIFORMLY, which changes arc-length parameterisation, so the line head (dashoffset on the stretched normalised path) and the van (offset-distance on the raw path) are different points, expressing vertically on a long mostly-vertical route. That is the desync. The frozen height is a SEPARATE failure producing the stale band and the van-with-no-line frame. SCHEDULED: W5, with invariant I20 shipping in the same task per D12. NOT ESTABLISHED: which failure dominates on that machine - needs measurement on the machine, not reasoning from source."
+      "status": "resolved",
+      "text": "FO-1: C4 OBSERVED on the LIVE production site (main @ f0de3c9) on a Lenovo Yoga 7 class Windows machine with basic dedicated graphics - the route line and the livery van sit at visibly different positions at the same scroll, and in one frame the van renders with no line nearby. Owner also reports a bluish panel cast (C3-class, panel-level; a screenshot cannot capture it, so the colour-bench readings on that machine remain the instrument and are pending). MECHANISM NAMED AND SOURCE-VERIFIED in docs/FIELD_OBSERVATIONS.md - git diff f0de3c9..HEAD on RouteOverlay.tsx is EMPTY, so live V1 and current v2 are identical here. One path string serves two renderers in two coordinate systems: the line as SVG path with pathLength=1 inside viewBox 0 0 geo.w geo.h, the van via CSS offset-path in raw pixels. measure() runs on mount and window.resize ONLY (grep-confirmed: no ResizeObserver, no MutationObserver), so docStart/docSpan go stale. THE SOURCE CORRECTED THE CHAT DIAGNOSIS: the SVG carries preserveAspectRatio=none while the host height is FROZEN inline at geo.h and the width is LIVE at w-full, so the axes scale independently - a live-width change (a scrollbar appearing as document height changes) stretches the path NON-UNIFORMLY, which changes arc-length parameterisation, so the line head (dashoffset on the stretched normalised path) and the van (offset-distance on the raw path) are different points, expressing vertically on a long mostly-vertical route. That is the desync. The frozen height is a SEPARATE failure producing the stale band and the van-with-no-line frame. SCHEDULED: W5, with invariant I20 shipping in the same task per D12. NOT ESTABLISHED: which failure dominates on that machine - needs measurement on the machine, not reasoning from source. RESOLVED 2026-08-18 (Task #19). BOTH failure modes were REPRODUCED on the unfixed prod build before anything was changed, deterministically and with no window resize, and re-measured after. Mode 1 (divergence) trigger: change the overlay host's rendered width post-mount, which is what a scrollbar appearing or disappearing does; van-to-drawn-curve distance went 1.52px / 6.08px / 31.67px (at -15 / -60 / -200px) to 0.00px, and the svg CTM went 0.8611 to 1.0000. Mode 2 (stale band) trigger: inject 1500px of document height post-mount; the route's end sat 1536px above the footer seam instead of the intended 36px handoff, and now sits at 36px. ARCHITECTURE: both halves shipped, because the measurements showed the two failures need different medicine. The route svg is now sized in PIXELS (width/height plus inline style equal to geo.w/geo.h, preserveAspectRatio removed, viewBox carrying the same two numbers) so its CTM is forced to identity and the van's raw-pixel offset-path reads the same coordinate system - a stretch is no longer representable. A rAF-debounced ResizeObserver on the document element, the measured region and the host keeps that geometry current on reflows that never resize the window, with an equality guard so an unchanged geometry never re-renders (which also stops the observer feeding itself). The spec's getPointAtLength variant was REJECTED on a perf reading: it would have added a geometry read to every frame to fix the SMALLER of the two failures, while the pixel-sizing route costs nothing per frame and the scroll handler's budget (one rAF, one var write, zero per-frame layout reads) is doctrine. A MEASUREMENT CORRECTED THE FO-1 RECORD: the divergence is a PURE HORIZONTAL shear (vertical component stayed within 0.09px in every sample, tracking (1 - ctm.a) * pathX exactly), NOT the arc-length reparameterisation recorded there - the browser parameterises the dash in user space and applies the CTM afterwards. Since this path's x never exceeds ~228, mode 1 is bounded near 32px even for a 200px width error, so mode 2 is the DOMINANT field failure and the only measured mechanism with vertical magnitude."
     }
   ],
   "gates": {
     "tsc": {
       "state": "green",
       "date": "2026-08-18",
-      "note": "npx tsc --noEmit TRUE 0 after the hardening"
+      "note": "npx tsc --noEmit TRUE 0 after the RouteOverlay geometry change"
     },
     "ci": {
       "state": "green",
@@ -760,9 +769,9 @@
     "cube": {
       "state": "green",
       "cells": 234,
-      "checks": "13 routes x 6 profiles x 3 engines; chromium, webkit and firefox each reported GREEN",
+      "checks": "13 routes x 6 profiles x 3 engines = 234 cells; 3410 individual checks (up from 3176 - exactly +234, one I20 per cell); chromium, webkit and firefox each GREEN; zero failures, zero FAIL artifacts",
       "date": "2026-08-18",
-      "note": "Full cube after the W8 part-1 metadata, JSON-LD, hero-lede and 301 changes. Zero failures, zero FAIL artifacts. Run also carried the stale-build preflight (Build identity OK) and the new I19 host-redirect invariant (4/4: 301 to apex, path and query preserved, apex host unaffected), with I19 folded into the exit code. Cube re-run a second time after Hero.tsx changed, because the human-eye pass found the new lede was being followed by a hardcoded tail that repeated its own claim."
+      "note": "Full cube after the C4 fix. Invariant set is now I1-I20 with I20 (the van rides the line) live and PRINTED in the results table. The run also carried the stale-build preflight (Build identity OK) and I19 (4/4). RUN TWICE DELIBERATELY: the first run was green but I20 was missing from the hardcoded printed column list, so it was gating the build invisibly - it could have failed the run with no reader able to see it had run. The column list was fixed and the whole cube re-run so the reported result actually shows I20."
     },
     "perfBudget": {
       "state": "not-built",
@@ -861,6 +870,10 @@
     {
       "date": "2026-08-18",
       "summary": "Task #18 P3-W4 token hardening (D23). Owner perception-floor readings converted to 12 hardened token values through the bench's own mix formula; F1 (scrolled-nav edge to the card tier) and F3 (15 section/chrome boundary rules to --border-strong) adopted; hex guard built and wired, closing DISC-20; bench re-mirrored with PREVIOUS rows as its own before/after receipt; ground truth to v1.5 with the floors-only-rise law. Caught and corrected one self-inflicted AA failure: extrapolating the ink-card floor onto --ink-hover, a fill with text on it, would have shipped on-ink-muted at 3.15:1."
+    },
+    {
+      "date": "2026-08-18",
+      "summary": "Task #19 W5 part 1: reproduced both FO-1 failure modes on the unfixed build, then killed both - the route svg is pixel-sized so its CTM is forced to identity (line and van are one coordinate system) and a rAF-debounced ResizeObserver keeps the geometry current on reflow. Divergence 31.67px -> 0.00px, stale band 1536px -> 36px. I20 'the van rides the line' ships with the fix at a calibrated 1.0px tolerance, with a perturbation leg and a 7-leg negative test. A measurement corrected FO-1: the divergence is horizontal, not vertical, so mode 2 is the dominant field failure."
     }
   ]
 }

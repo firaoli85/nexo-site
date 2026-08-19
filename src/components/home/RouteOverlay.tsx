@@ -15,9 +15,39 @@ const FOOTER_HANDOFF = 36; // px the line + van stop short of the footer seam (t
 // start, down through the proof band / audience triage / provider teaser / final CTA, curving gently
 // through the left gutter, and ARRIVING at the footer seam aligned to the terminus motif. The trip
 // visibly completes at the footer. Promoted from the section-bound SpineRail to a page-level overlay:
-// it measures the geometry in PIXELS (mount + resize only), builds one path, and a livery van rides
-// its FULL length. Perf: one passive scroll listener → one rAF → one CSS var (--route-progress);
-// bounds cached, zero layout reads per frame. Desktop only (lg+); reduced-motion / mobile → the CSS
+// it measures the geometry in PIXELS, builds one path, and a livery van rides its FULL length.
+// Perf: one passive scroll listener → one rAF → one CSS var (--route-progress); bounds cached,
+// zero layout reads per frame.
+//
+// C4 / FO-1 FIX (Task #19) — the line and the van consume ONE geometry, and that geometry stays
+// current. Two independent failures were measured on the unfixed build and both are closed here:
+//
+//   1. DIVERGENCE (line vs van). The SVG used to be sized by CSS (h-full w-full) with
+//      preserveAspectRatio="none", so its CTM scaled X by rendered/geo.w while the van's
+//      CSS offset-path consumed the SAME path string as RAW pixels with no CTM at all. Any drift
+//      between the host's live width and the measured geo.w sheared one against the other.
+//      MEASURED: the shear is (1 - ctm.a) * pathX and is PURELY HORIZONTAL — dy stayed within
+//      0.09px at every scroll position and every width delta tested. That corrects the
+//      arc-length-reparameterisation reasoning recorded in FO-1: the browser parameterises the
+//      dash in USER space, so a non-uniform stretch cannot express vertically.
+//      FIX: the SVG is now sized in PIXELS (width/height + inline style = geo.w/geo.h) and
+//      preserveAspectRatio is gone. The viewBox matches those dimensions exactly, so the CTM is
+//      forced to identity and NO stretch is representable. The divergence class is removed rather
+//      than narrowed, and it costs nothing per frame — which is why this was chosen over driving
+//      the van from getPointAtLength(), which would have added a geometry read to every frame to
+//      fix the SMALLER of the two failures.
+//
+//   2. STALE BAND (the dominant field failure). measure() ran on mount and window.resize ONLY, so
+//      any post-mount reflow that does not resize the window — fonts settling under
+//      display:"optional", images landing, content toggling — left geo.h, geo.top and the
+//      docStart/docSpan progress mapping describing a page that no longer exists.
+//      MEASURED: a post-mount document growth left the route terminating 1536px above the footer
+//      seam instead of the intended 36px handoff. That is the only measured mechanism with
+//      vertical magnitude, and it is machine-speed dependent exactly as FO-1 reports — a fast box
+//      settles before the mount measurement is stale, a slow one does not.
+//      FIX: a ResizeObserver on the document element, the measured region and the host re-measures
+//      on reflow, rAF-debounced, with an equality guard so an unchanged geometry never re-renders
+//      (which also stops the observer feeding itself). Desktop only (lg+); reduced-motion / mobile → the CSS
 // default (fully drawn, no van). Decorative (aria-hidden). Reuses the spine-* CSS by arming
 // data-spine-live on BOTH the region (stop reveals + mock micro-animations) and this overlay
 // (path draw + nodes); the van + curve are route-specific.
@@ -37,6 +67,15 @@ type Geo = {
   docStart: number;
   docSpan: number;
 };
+
+function sameGeo(a: Geo, b: Geo) {
+  return (
+    a.w === b.w && a.h === b.h && a.top === b.top && a.d === b.d &&
+    a.gutterX === b.gutterX && a.inkY0 === b.inkY0 && a.inkY1 === b.inkY1 &&
+    a.docStart === b.docStart && a.docSpan === b.docSpan &&
+    a.nodes.length === b.nodes.length && a.nodes.every((n, i) => n.y === b.nodes[i].y && n.ink === b.nodes[i].ink)
+  );
+}
 
 export function RouteOverlay() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -140,7 +179,11 @@ export function RouteOverlay() {
 
       const g: Geo = { w, h, top, d, gutterX, nodes, inkY0, inkY1, docStart, docSpan };
       geoRef.current = g;
-      setGeo(g);
+      // Only re-render when the geometry ACTUALLY changed. The ResizeObserver below can fire for
+      // reasons that do not move the route, and an unconditional setGeo would re-render (and
+      // re-assign offset-path) on every one of them — and, because a render can itself change
+      // layout, would risk the observer retriggering itself indefinitely.
+      setGeo((prev) => (prev && sameGeo(prev, g) ? prev : g));
     };
 
     let ticking = false;
@@ -197,6 +240,29 @@ export function RouteOverlay() {
     };
     window.addEventListener("resize", onResize);
 
+    // CONTENT REFLOW (FO-1 mode 2). window.resize covers the viewport changing; it does NOT cover
+    // the document reflowing underneath a viewport that never moved, which is the failure actually
+    // observed in the field. Debounced through rAF so a burst of mutations costs one measure, and
+    // measure() itself does no work per frame — it only runs on reflow.
+    let roRaf = 0;
+    const scheduleRemeasure = () => {
+      if (roRaf) return;
+      roRaf = requestAnimationFrame(() => {
+        roRaf = 0;
+        measure();
+        if (reduce) root.style.setProperty("--route-progress", "1");
+        else update();
+      });
+    };
+    const ro = new ResizeObserver(scheduleRemeasure);
+    // documentElement catches page-height changes (the stale docStart/docSpan mapping); the region
+    // catches the measured band changing shape; the host catches the width drift that used to shear
+    // the line against the van. offsetParent is re-read because it is null below lg.
+    ro.observe(document.documentElement);
+    ro.observe(region);
+    const hostEl = root.offsetParent as HTMLElement | null;
+    if (hostEl && hostEl !== document.documentElement) ro.observe(hostEl);
+
     // Stop content reveal + node lighting (play-once) — unchanged behaviour.
     const io = new IntersectionObserver(
       (entries) => {
@@ -214,8 +280,10 @@ export function RouteOverlay() {
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
+      if (roRaf) cancelAnimationFrame(roRaf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
+      ro.disconnect();
       io.disconnect();
       region.removeAttribute("data-spine-live");
       root.removeAttribute("data-spine-live");
@@ -251,10 +319,20 @@ export function RouteOverlay() {
     >
       {geo ? (
         <>
+          {/* SIZED IN PIXELS, NOT IN PERCENTAGES. The width/height attributes AND the inline style
+              both pin the SVG to exactly the measured geometry, and the viewBox carries the same
+              two numbers, so the CTM is the identity matrix and a stretch is not representable.
+              preserveAspectRatio is deliberately ABSENT: there is no aspect ratio left to preserve
+              or override, and its old "none" value was what allowed X and Y to scale independently.
+              The van consumes this same path as raw CSS pixels via offset-path, so with an identity
+              CTM the two renderers are reading one coordinate system. h-full/w-full must NOT come
+              back — CSS beats presentation attributes and would reintroduce the shear. */}
           <svg
-            className="absolute inset-0 h-full w-full overflow-visible"
+            className="absolute left-0 top-0 overflow-visible"
+            width={geo.w}
+            height={geo.h}
+            style={{ width: geo.w, height: geo.h }}
             viewBox={`0 0 ${geo.w} ${geo.h}`}
-            preserveAspectRatio="none"
             fill="none"
             focusable="false"
             aria-hidden="true"

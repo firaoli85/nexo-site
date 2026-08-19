@@ -449,6 +449,39 @@ tolerance**. Runs across the engines and profiles where the van actually renders
 absent** — those must be skips, not failures. **The invariant is the receipt: without I20 the fix is
 unverifiable on the machines that exhibit the bug, and per D12 the fix is incomplete without it.**
 
+**DELIVERED 2026-08-18 (Task #19) — C4 FIX + I20.** Neither Option A nor Option B alone: the measurements
+showed the two failures need different medicine, so **both halves shipped**. Reproduced first, on the
+unfixed prod build, with no window resize.
+
+- **Option B for the divergence class** — the route SVG is sized in **pixels** (width/height + inline style
+  = `geo.w`/`geo.h`; `preserveAspectRatio` removed; viewBox carrying the same two numbers), forcing an
+  identity CTM so the van's raw-pixel `offset-path` and the drawn line are one coordinate system and a
+  stretch is not representable. **Chosen over the spec's `getPointAtLength()` sketch on a perf reading:**
+  that variant would have added a geometry read to **every frame** to fix the *smaller* of the two failures,
+  and the scroll handler's budget (one rAF, one var write, zero per-frame layout reads) is doctrine. The
+  pixel-sizing route costs **nothing** per frame.
+- **Option A for the stale band** — a rAF-debounced `ResizeObserver` on the document element, the measured
+  region and the host, alongside the existing mount + `window.resize` path, with an **equality guard** so an
+  unchanged geometry never re-renders (which also stops the observer feeding itself).
+
+**Measured, before → after:** divergence **1.52 / 6.08 / 31.67px → 0.00px** (at −15 / −60 / −200px host
+width), CTM `a` **0.8611 → 1.0000**, stale band **1536px → 36px** handoff. **The spec's warning that a
+re-measure "narrows the window rather than closing it" is why the coordinate collapse shipped too** — with
+the identity CTM, even a geometry that *is* momentarily stale keeps the line and van glued to each other.
+
+**A measurement corrected FO-1's stated mechanism:** the divergence is a **pure horizontal shear**
+(vertical component ≤0.09px in every sample), not the arc-length reparameterisation recorded there, so
+**mode 2 — not mode 1 — is the dominant field failure**. Recorded in `docs/FIELD_OBSERVATIONS.md`.
+
+**I20 "the van rides the line" is live** — 1.0px calibrated tolerance, three scroll positions, an explicit
+identity-CTM assertion, and a **perturbation leg** that grows the document post-mount and re-asserts.
+Negative-tested in 7 legs. **This closes the D12 receipt for FO-1.**
+
+**STILL OPEN IN W5 — this task delivered the C4 fix only.** The motion system proper is untouched: the four
+`nexo-motion` candidates above are **not** built, the skill is **not** authored, and the motion-safe
+conversion has **not** started. W5 remains in progress.
+
+
 ### W6 — Illustration / animation imagery system (D19)
 
 Primary imagery = animation + custom illustration in our own visual language. **Stock people-photography
