@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-19",
-    "currentTask": "owner Yoga field re-test (FO-3 closing proof), then W5 part 2 (nexo-motion + motion-safe)",
+    "currentTask": "owner two-machine field proof (FO-3), then W5 part 2",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -466,11 +466,11 @@
     {
       "id": "W4-owner-check",
       "phase": "P3",
-      "title": "Owner Yoga field re-test at the curve — the closing proof for FO-3",
+      "title": "Owner TWO-MACHINE field proof at the curve — the closing proof for FO-3",
       "status": "todo",
       "date": "2026-08-19",
-      "note": "FO-2 is CLOSED in field on both machines. FO-3 is FIXED IN ARCHITECTURE AND PENDING FIELD PROOF, and that distinction is the whole point: the Chromium-internal invalidation path was never reproducible in lab, so it was never instrumented and is deliberately NOT claimed as diagnosed - what shipped removes the CLASS (there is no second renderer left to desync) rather than the bug. WHAT TO DO: on the Yoga, at the terminus curve, re-run the console probe recorded in docs/FIELD_OBSERVATIONS.md FO-3. errY should now read about 0 at every scroll position and at every zoom level - the previous reading was 2945.6 with progress 0. Worth repeating the zoom ladder too (100 / 90 / 80 percent), because the old defect scaled with the effective fractional scale and vanished at a whole number; if the ladder is now flat, that is the mechanism confirmed dead. ALSO STILL OWED: FO-1's van glue re-test at a verified commit.",
-      "fixlogRef": "2026-08-19 - Task #22"
+      "note": "THE PROTOCOL IS NOW TWO MACHINES, AND EACH MUST BE TESTED AT THE SETTING THAT USED TO FAIL IT - a different setting on each. The work machine supplied the other half of the curve: it is PERFECT at 100 percent (effective scale 1.00) and BROKEN at 80 percent (effective scale 0.80), the mirror image of the Yoga, which is broken at 1.25 and perfect at 1.00. UNIFIED LAW: the pre-Task-22 dual-renderer architecture fails whenever the EFFECTIVE SCALE is not 1.0, in EITHER direction - two machines failing on opposite sides of unity and both perfect exactly at unity is the class-level conviction, and it retires the last 'it is just that laptop' reading. RUN, both on a build at or after Task #22 (432958c): (1) Yoga at browser zoom 100 percent, (2) work machine at browser zoom 80 percent. Testing both at 100 percent would pass on the work machine for the WRONG REASON, because 100 percent was never its failing case. Use the console probe recorded in docs/FIELD_OBSERVATIONS.md FO-3 at the terminus curve: errY should read about 0 and the zoom ladder should be FLAT rather than scaling with distance from 1.0. ALSO STILL OWED: FO-1's van glue re-test at a verified commit.",
+      "fixlogRef": "2026-08-19 - Task #23"
     },
     {
       "id": "W5-1",
@@ -507,6 +507,15 @@
       "date": "2026-08-19",
       "fixlogRef": "2026-08-19 - Task #22",
       "note": "POSITIONING IS A PRECOMPUTED LUT: at each geometry change the rendered path is sampled at N=256 points into two Float32Arrays; per frame update() interpolates two entries and writes ONE transform attribute. Zero per-frame geometry reads, zero per-frame layout reads - the scroll handler is still one passive listener, one rAF, one CSS var write. MEASURED: LUT build 15.3ms chromium / 12ms webkit / 30ms firefox, paid once per geometry change and never per frame; per-frame 4.9us / 3.7us / 13.8us against a 16667us frame, i.e. 0.02 to 0.08 percent of budget. N WAS CHOSEN BY MEASUREMENT: the straight leg interpolates exactly so error exists only in the terminus curve, where chord error is about s^2/(8R) = 19^2/(8*460) = 0.10px, 10x under I20's 1px tolerance and measured at 0.095-0.106px. N=512 halved the error to 0.03px (imperceptible) while costing 144ms on firefox per rebuild - a visible main-thread stall on a reflow mid-scroll, bought with accuracy nobody can see. MOTION PARITY VERIFIED IN ALL THREE ENGINES, not hoped: three nested groups each own exactly one transform so none of them fight (.route-van the per-frame translate as a presentation ATTRIBUTE so no CSS rule may set transform on it, .route-van-lane the +/-12px lane at 450ms, .route-van-nose the +/-90deg facing at 200ms); rotation displaces the van centre by 0.00px, the leg flip moves it by exactly -24.00px, nose matrices exactly +/-90deg. Eye pass at zoom 1: worst delta 0.09px over 30 slow steps and 0.01px on hard jumps with no settle - BETTER than the Task #19 baseline of 0.227/0.08. Handoff holds at 36px through the curve, the U-turn, the manual reflow trigger and its removal; I15 gap 21px unchanged. SUPPORT GAINED: the @supports (offset-path) gate used to HIDE THE VAN ENTIRELY on engines without offset-path; SVG transforms need no gate, so the van now renders wherever the svg does. A MEASUREMENT SUBTLETY that looked like a 12px regression and was not: getBoundingClientRect on a <g> INCLUDES its children's transforms, so it folds in the deliberate lane offset - the old HTML parent's border box excluded it for free. I20 now measures van.getScreenCTM(), the group's own origin, which is the point that rides the path."
+    },
+    {
+      "id": "W-D24",
+      "phase": "P3",
+      "title": "D24: impact-check law + design suggestion register (seeded and dispositioned)",
+      "status": "done",
+      "date": "2026-08-19",
+      "fixlogRef": "2026-08-19 - Task #23",
+      "note": "Documentation-only: no site code, no cube. Ground truth to v1.6 with D24 appended to the section-4 ledger and the impact-check law added to section 8. docs/DESIGN_SUGGESTIONS.md created with the schema, the six dispositions, and 11 seeded entries. THE ONE THAT MATTERS MOST IS THE REJECTION: the external audit's 'remove drop shadows, crisp 1px borders only' is a COLLISION with the F1 nav seam (Task #20), which is a box-shadow hairline that exists because the scrolled-nav edge was invisible on the owner's own laptop, and which I21 guards at four device scale factors. Rejected as a blanket rule; the card-shadow half survives as TEST-FIRST for one variant, to be judged on the D23-hardened palette rather than the V1 palette the audit actually saw. S-011 records the external FO-3 theory as EVALUATED-REJECTED with five independent pieces of evidence, because its prescription is to restore the exact condition (preserveAspectRatio=none) that was present when the defect was first reported."
     }
   ],
   "decisions": [
@@ -652,6 +661,12 @@
       "date": "2026-08-17",
       "title": "Private evidence tier: OWNER-DOC-VERIFIED",
       "summary": "Facts confirmed from the owner's historical broker/payer documents (Healthway era; PHI-scanned clean) carry internal-verification weight. HANDLING LAW: the source documents and the evidence memo live in Claude project knowledge ONLY; no figures, broker names, or contract terms enter any repo; site publication still requires public primary sources (D17). Chat-side memo creation was the deliberate exception to the Claude-Code-creates-docs law: private material cannot pass through a public repo."
+    },
+    {
+      "id": "D24",
+      "date": "2026-08-19",
+      "title": "Impact-check law + design suggestion register",
+      "summary": "(a) Every future build prompt carries an IMPACT CHECK step before implementation: map the planned change against the section-4 ledger, the FIXLOG AUDIT GUIDANCE lines, and the invariant set; name every collision and how it is resolved. An unresolvable collision is a STOP-and-surface-to-owner fork, never a silent override. (b) All design and feature suggestions from any source - owner, Claude, external AI reviews, user feedback - are captured in docs/DESIGN_SUGGESTIONS.md with source, date, disposition (ADOPTED / ALREADY-LAW / TEST-FIRST / LATER / REJECTED-with-reason / OWNER-DIRECTIVE) and impact notes citing D-numbers and invariants. Nothing is implemented from suggestion lists directly: register first, impact-check at adoption time. WHY THIS LAW EXISTS NOW: the external design audit that prompted it reviewed the LIVE V1 site, and one of its prescriptions - remove all drop shadows - collides head-on with the F1 nav seam shipped in Task #20, which IS a box-shadow hairline fixing a field failure and is guarded by I21. A plausible-sounding suggestion applied without an impact check would have re-opened a closed field defect and failed an invariant."
     }
   ],
   "discoveries": [
@@ -792,6 +807,12 @@
       "date": "2026-08-19",
       "status": "resolved",
       "text": "FO-3: on a Yoga-class laptop the van tracks the straight leg and then IGNORES THE TERMINUS CURVE, continuing straight down while the drawn line turns. Build provenance established by FINGERPRINT rather than by hash: the owner saw the scrolled-nav seam over light content, which does not exist before Task #20, so the build is at or after 9d2e2e3 and FO-1's fixes were PRESENT. HELD, NOT RESOLVED (Task #21). NOT REPRODUCED in any lane: 51 samples across 4 emulation lanes (deviceScaleFactor, Emulation.setPageScaleFactor, Emulation.setDeviceMetricsOverride, CSS zoom on html) x 3 engines x 3 scroll positions, every one within 1px. THE PRIME SUSPECT WAS NOT CONVICTED AND THE PREDICTION FAILED: the reported signature implies an error proportional to the path x-coordinate, and every sample records dxFromGutter alongside the error - at dxFromGutter 0 and at dxFromGutter 172 the error is the same and it is about zero. offset-path was never rejected; the computed value was read at every sample and was always valid. THE CANDIDATE FIX WAS MEASURED AND REJECTED: offset-path url(#route-path), pointing the van at the rendered path element instead of a copied string, priced well (accepted in all three engines, 0.00px position change on switch, zero per-frame cost against 19us chromium / 44us webkit / 102us firefox for per-frame getPointAtLength) - but it SHIPPED INTO THE CUBE AND I20 FAILED IT. url() has a stale-reference invalidation bug in Chromium and WebKit: when the referenced path element's d changes, the van keeps the OLD geometry, measured at 978px off and PERSISTENT through 1500ms, while firefox invalidates correctly. That is a worse version of the class it was meant to remove, and it is exactly the symptom FO-3 describes. Reverted. The shipped path() assignment is correct BECAUSE it is re-assigned on every geometry change, which forces the invalidation url() skips. NEXT INSTRUMENT: a field console probe (recorded verbatim in docs/FIELD_OBSERVATIONS.md FO-3) to be run on the Yoga at the curve - errorPx is the whole question, and dxFromGutter / errX / errY / ctm / zoom / dpr capture the machine state no emulation lane reproduced. CONVICTED AND FIXED 2026-08-19 (Task #22). The owner ran the console probe on the Yoga at the curve, at browser zoom 100% on Windows 125% scaling (dpr 1.25), build fingerprint preserveAspect=null proving the build was at or after Task #19. It returned progress 0, errX 0.0, errY 2945.6, vvScale 1, svgW 1521px, winW 1536. Read that carefully because it names the mechanism: the shared --route-progress variable read ZERO, the LINE rendered that honestly (undrawn, matching the owner screenshot showing no line), and the VAN, reading the same variable through a different renderer, sat 2945.6px along the route holding a value the variable no longer had. errX 0.0 means the two agree perfectly on the horizontal axis and the entire disagreement is distance ALONG the route. Not paint, not geometry - STATE: one variable, two renderers, one of them no longer listening. The owner zoom ladder correlates exactly with the EFFECTIVE fractional scale: 100 percent x 1.25 = 1.25 large gap, 90 x 1.25 = 1.125 small gap, 80 x 1.25 = 1.00 perfect - a rasterisation-boundary signature. THE CHROMIUM-INTERNAL INVALIDATION PATH REMAINS DELIBERATELY UNPROVEN: it was never reproducible in lab (Task #21, 51 samples, 4 emulation lanes, 3 engines, all within 1px), so it could not be instrumented, so claiming to have diagnosed it would be worse than saying so. THE FIX IS ARCHITECTURAL - the class was removed instead. The van is now a <g> INSIDE the route svg, in the same user space, positioned per frame by an SVG transform written from the same number in the same frame as the line's dash. offset-path, offset-distance, offset-rotate, offset-anchor, the imperative offsetPath assignment and the @supports display gate are all gone. There is no second renderer left to desync."
+    },
+    {
+      "id": "DISC-24",
+      "date": "2026-08-19",
+      "status": "resolved",
+      "text": "SUGGESTION INTAKE HAD NO DOOR. Design input was arriving as prose - owner ideas in chat, an external AI audit, Claude's own proposals - with no record of what was decided about it or why, and no step that checks a proposal against the ledger before it becomes code. RESOLVED 2026-08-19 (Task #23) by D24: docs/DESIGN_SUGGESTIONS.md is now the sole intake, seeded with 11 entries carrying honest dispositions, and every build prompt from Task #24 onward carries an IMPACT CHECK step. The register's value showed up immediately in the seeding: of 11 entries only ONE is adopted work (the owner's directive), two were ALREADY-LAW (the audit was reading V1 and flagged things D21/D23 had already settled on v2), four are TEST-FIRST routed to a bench rather than to code, one is a VALID CONCERN folded into the D23 floors watch, one is LATER behind D19, and two are rejections - a blanket rule declined on a collision, plus one EVALUATED-REJECTED WITH A FIVE-POINT RECEIPT so a future session does not relitigate an external FO-3 theory that has measurements against it."
     }
   ],
   "gates": {
@@ -925,6 +946,10 @@
     {
       "date": "2026-08-19",
       "summary": "Task #22 FO-3 FIX: the owner's field probe convicted a dual-renderer state desync (progress 0 while the van sat 2945.6px along the route; errX 0.0, so the whole disagreement was distance along the path). The van moved INSIDE the route svg as a <g> positioned per frame from a 256-point LUT, and the entire offset-path system was removed - there is no second renderer left to desync. Per-frame cost 4.9-13.8us; motion parity verified in all three engines (rotation displaces the centre 0.00px, leg flip exactly -24.00px). The Chromium-internal path is deliberately unproven; the class was removed instead."
+    },
+    {
+      "date": "2026-08-19",
+      "summary": "Task #23 documentation-only: D24 establishes the impact-check law (every build prompt maps its change against the ledger, the FIXLOG audit guidance and the invariant set before implementing, and an unresolvable collision is a STOP, not a silent override) and makes docs/DESIGN_SUGGESTIONS.md the sole door for outside design input. Register seeded with 11 dispositioned entries. FO-3 gained the unified-scale evidence: the work machine fails at effective scale 0.80 while the Yoga fails at 1.25, so the pre-22 architecture failed away from unity in EITHER direction, and the closing proof is now a two-machine protocol."
     }
   ]
 }

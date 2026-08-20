@@ -513,6 +513,42 @@ deliberate ±12px lane offset. The old HTML parent's border box excluded the chi
 I20 now measures `van.getScreenCTM()` — the group's *own* origin, which is the point that rides the
 path.
 
+### UNIFIED-SCALE EVIDENCE — a second machine, failing on the OTHER side of 1.0 (2026-08-19)
+
+The owner tested the **work machine** (standard display scaling, good monitor) and it behaves as the
+**mirror image** of the Yoga:
+
+| Machine | Display scaling | Browser zoom | **Effective scale** | Result |
+|---|---|---|---|---|
+| Yoga | 125% (dpr 1.25) | 100% | **1.25** | broken — large gap |
+| Yoga | 125% | 90% | **1.125** | broken — small gap |
+| Yoga | 125% | 80% | **1.00** | **perfect** |
+| Work machine | 100% (dpr 1) | 100% | **1.00** | **perfect** |
+| Work machine | 100% | 80% | **0.80** | broken — van absent / off the line |
+
+**THE UNIFIED LAW: the pre-#22 dual-renderer architecture fails whenever the EFFECTIVE SCALE ≠ 1.0, in
+either direction.** Not "at high DPI", not "at fractional DPR" — *away from unity*, above it or below
+it. Each machine on its own reads as a machine-specific quirk; **two machines failing on opposite sides
+of 1.0, and both perfect exactly at 1.0, is the class-level conviction.** The Yoga's own zoom ladder was
+already suggestive (the defect shrank as the effective scale approached 1.00); the work machine supplies
+the other half of the curve and turns a correlation into a law. It also retires the last plausible
+"it's just that laptop" reading: the work machine is the good monitor with standard scaling, and it
+breaks too — it simply needs zoom to *leave* 1.0 rather than to reach it.
+
+This is why the Task #22 fix is architectural rather than a scale-compensation patch. A patch would
+have to know the effective scale and correct for it in both directions; **a single surface has no scale
+to reconcile, because there is only one mapping.**
+
+**CLOSING-PROOF PROTOCOL — extended to two machines, both on a build ≥ Task #22 (`432958c`):**
+
+1. **Yoga at browser zoom 100%** (effective scale 1.25 — its known-broken point).
+2. **Work machine at browser zoom 80%** (effective scale 0.80 — its known-broken point).
+
+Each machine must be tested at **the setting that used to fail it**, which is a different setting on
+each. Testing both at 100% would pass on the work machine for the wrong reason — 100% was never its
+failing case. Run the console probe recorded above at the terminus curve on both: **`errY` should read
+~0**, and the zoom ladder should be **flat** rather than scaling with distance from 1.0.
+
 ### Status
 
 > **FO-3: FIXED on v2 (Task #22) by removing the class — there is no second renderer left to desync.**

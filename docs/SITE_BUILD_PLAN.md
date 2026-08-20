@@ -485,6 +485,13 @@ as a <g> positioned per frame from a 256-point LUT. The whole offset-path system
 internal path is deliberately UNPROVEN — it was never reproducible in lab, so the class was removed
 rather than the bug diagnosed. Owner Yoga re-test is the closing proof and is pending.
 
+**W5 PART-2 SCOPE NOW INCLUDES S-001 (owner directive, 2026-08-19):** rich CARD MOTION — "cards that
+move, a lot of animation but not noisy, implemented smartly." The four D20d candidates do not currently
+contain a card-motion pattern (`nexo-accent-card` is a STATIC treatment), so this is genuinely new
+scope, bounded by the D20 perf bar, the motion-safe static-end-state rule, and reduced-motion
+static-completeness. "Not noisy" reads as density of CRAFT, not density of movement. Registered with
+its full constraint list in `docs/DESIGN_SUGGESTIONS.md`.
+
 **STILL OPEN IN W5 — this task delivered the C4 fix only.** The motion system proper is untouched: the four
 `nexo-motion` candidates above are **not** built, the skill is **not** authored, and the motion-safe
 conversion has **not** started. W5 remains in progress.
