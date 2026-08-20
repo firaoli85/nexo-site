@@ -234,3 +234,41 @@ hold. Until then the hardened jade palette remains law.
   (`scripts/qa/run.mjs` spawns a local server), the `NEXT_DIST_DIR` build-check seam, and the deploy
   lane (Coolify, per D14). **Not a drop-in.** It belongs after launch, when the build surface is stable
   and a week of friction costs nothing.
+
+---
+
+## S-014 — Owner palette harvest
+
+- **Source:** **Owner**, five hexes supplied directly · **Date:** 2026-08-20
+- **Credit, per the owner's own take-credit-improve rule:** the atmosphere *technique* these colours
+  are poured into is GitLab's, read from their CSS and dissected in `docs/DESIGN_RESEARCH.md §14a`.
+  The hues are the owner's; the construction is credited.
+
+| Hex | Role proposed | Disposition |
+|---|---|---|
+| **#f58f9c** | rose, atmosphere anchor | **ADOPTED as the atmosphere anchor (D25)** |
+| **#f7929a** | rose companion, same family | **ADOPTED** alongside it, used as the low-left companion sun |
+| **#8d6fd3** | violet | **TEST-FIRST**, benched as an atmosphere ingredient only (T2) |
+| **#332750** | deep violet-ink | **LATER / TEST-FIRST** — ink-accent candidate, unadopted |
+| **#522a22** | deep warm-brown ink | **LATER / TEST-FIRST** — ink-accent candidate, unadopted |
+
+**The owner's stated law, recorded verbatim in D25 because it is the constraint that makes the whole
+direction safe:** *warm/pink cannot be an emergency-adjacent signal; incorporate it in backgrounds.*
+That single sentence is why D2 was rulable at all — it converts warmth from an identity question into
+a **background-register** question, which leaves the alarms and the jade accent untouched.
+
+**Impact notes:**
+
+- **The rose pair is adopted as ATMOSPHERE, not as a token with meaning.** It never colours an
+  interactive surface, a status, or a piece of text. That is D25's whole shape.
+- **Violet carries a real collision risk and is deliberately held back.** `--svc-wheel #6d28d9` already
+  owns violet *semantically* in the service-level palette (wheelchair), and `nexo-brand §3` keeps that
+  family deliberately outside the status hues. In T2 the violet sun is held **below** the rose in alpha
+  precisely so it reads as light rather than as a colour. If the owner picks T2, the implementation
+  task must verify that a service-level chip still reads as a *chip* over a violet-tinged field.
+- **The two deep tones are unadopted and were not benched.** They are ink-accent candidates, and the
+  ink register turned out to be the delicate one (see the tuned bench's flagship finding: any glow on
+  ink costs the card its fill separation). Introducing a *third* dark value into that register is a
+  separate question and should not ride along with a temperature pick.
+- **Nothing here is a site token.** These are candidates until the warm-atmosphere implementation task
+  ships them with a full cube and AA re-verification.

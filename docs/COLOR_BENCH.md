@@ -286,3 +286,124 @@ Three further notes for that ruling:
 3. **The bench cannot answer one question and should not pretend to:** whether the warm thesis
    (*neither fully medical nor fully technology*) is worth the status-semantics cost. It renders the
    cost. The judgement is the owner's.
+
+---
+
+## 8. TUNED ROUND — three temperatures on the ruled direction (Task #26, 2026-08-20)
+
+**D25 is ruled: D2 SYNTHESIS.** Jade stays the identity and owns every interactive, primary and status
+surface. Warmth enters as **atmosphere only** and is **semantically silent**. What this round settles is
+**how warm**, and it is the owner's pick.
+
+**Instrument:** `docs/color-direction-bench/tuned.html`, one self-contained `file://` page.
+Three temperatures, four identical fragments each, tokenised so only the glow layer changes. The
+GROUP-BY comparison mode from Task #24 is reused. **Status: OPEN pending the owner's T-pick.**
+
+### The exact radial layers
+
+**T1 · ROSE SOLO** — the quietest reading. One sun off the right edge plus a faint low-left companion
+so the field has direction rather than a single blob.
+
+```
+light: radial-gradient(72% 86% at 104% 50%, rgba(245,143,156,.26) 0, rgba(247,170,180,.15) 28%, rgba(252,214,219,.05) 56%, rgba(255,236,238,0) 74%)
+       radial-gradient(38% 72% at 4% 102%, rgba(247,146,154,.13) 0, rgba(252,214,219,.04) 44%, rgba(255,240,242,0) 72%)
+ink:   radial-gradient(66% 80% at 104% 40%, rgba(245,143,156,.20) 0, rgba(245,143,156,.10) 30%, rgba(245,143,156,.03) 58%, rgba(245,143,156,0) 78%)
+       radial-gradient(48% 62% at -6% 98%, rgba(247,146,154,.13) 0, rgba(247,146,154,.04) 42%, rgba(247,146,154,0) 72%)
+```
+
+**T2 · ROSE + VIOLET** — the two-sun geometry in our hues. Violet is held **below** the rose in alpha on
+purpose: `--svc-wheel` already owns violet semantically, so a violet strong enough to read as *a colour*
+would start competing with a service level.
+
+```
+light: radial-gradient(70% 84% at 104% 46%, rgba(245,143,156,.25) 0, rgba(247,170,180,.14) 28%, rgba(252,214,219,.04) 56%, rgba(255,236,238,0) 74%)
+       radial-gradient(58% 74% at 2% 104%, rgba(141,111,211,.17) 0, rgba(171,148,224,.09) 30%, rgba(214,203,242,.03) 58%, rgba(232,226,248,0) 76%)
+       radial-gradient(30% 64% at 66% 88%, rgba(245,143,156,.07) 0, rgba(255,240,242,0) 70%)
+ink:   radial-gradient(64% 78% at 104% 38%, rgba(245,143,156,.19) 0, rgba(245,143,156,.09) 30%, rgba(245,143,156,.03) 58%, rgba(245,143,156,0) 78%)
+       radial-gradient(54% 66% at -6% 96%, rgba(141,111,211,.16) 0, rgba(141,111,211,.06) 38%, rgba(141,111,211,0) 72%)
+```
+
+**T3 · ROSE + APRICOT** — the Task #24 pairing re-anchored to the owner's rose. Apricot sun right, rose
+sun low-left: GitLab's arrangement in our family, and the warmest of the three.
+
+```
+light: radial-gradient(70% 84% at 104% 50%, rgba(244,168,116,.25) 0, rgba(246,186,146,.15) 28%, rgba(250,214,190,.05) 56%, rgba(255,235,222,0) 74%)
+       radial-gradient(62% 78% at 2% 104%, rgba(245,143,156,.23) 0, rgba(247,170,180,.13) 30%, rgba(252,214,219,.04) 58%, rgba(255,236,238,0) 76%)
+       radial-gradient(28% 62% at 68% 84%, rgba(252,224,205,.10) 0, rgba(255,240,228,0) 70%)
+ink:   radial-gradient(64% 78% at 104% 40%, rgba(244,168,116,.18) 0, rgba(244,168,116,.08) 30%, rgba(244,168,116,.02) 58%, rgba(244,168,116,0) 78%)
+       radial-gradient(52% 64% at -6% 98%, rgba(245,143,156,.17) 0, rgba(245,143,156,.06) 40%, rgba(245,143,156,0) 72%)
+```
+
+Every temperature also carries the **jade grid that ships today**, unchanged, so nothing is lost.
+
+### Measurement method
+
+**Painted pixels, not composited alphas.** D25 makes this law and Task #24 is why: that bench scored a
+theoretical sun core and unfairly failed a direction whose text sits in the falloff. Here the harness
+renders the page, **hides the text while keeping its layout**, screenshots each fragment, and takes the
+**darkest** painted pixel on light registers and the **lightest** on ink — the true worst case in each
+text's own column. Those values are written back into the page.
+
+**One trap worth recording:** the first sampling pass returned `#4d8ec7` (blue) and `#b27e5c` (orange),
+which exist in no atmosphere here. It was reading **subpixel-antialiasing colour fringes on glyph
+edges**. Hiding the text is what makes the sample honest.
+
+| Temperature | light | ink | status | band |
+|---|---|---|---|---|
+| T1 | `#eaeaeb` | `#232220` | `#eaebeb` | `#eaeaeb` |
+| T2 | `#e0e4ee` | `#1b202a` | `#e1e5ef` | `#e0e4ee` |
+| T3 | `#ebe1e3` | `#2a2524` | `#ebe2e4` | `#ebe1e3` |
+
+### THE FLAGSHIP FINDING — the ink register cannot keep the D23 B06 floor under any glow
+
+The ink hero existed because that register had **never been tested for warmth**; the first bench only
+ever put glow on light. It earned its place immediately.
+
+**Pure ink sits at luminance 0.00651. The B06 floor of 1.25 against `--ink-surface` permits at most
+0.00649.** So **any** usable glow lifts the ink past the floor. This is arithmetic, not a tuning error.
+Measured against the shipped `--ink-surface #192b24`: **T1 1.07 · T2 1.10 · T3 1.02**, versus 1.25.
+
+**The bench FAILS that line rather than excusing it**, because D25 says atmosphere may never push a
+delta below its floor. The resolution is to **compensate the pair**, and the compensated values are
+printed passing directly beneath the failure:
+
+- `--ink-surface` **#192b24 → #273a32** (holds **1.32 / 1.34 / 1.25**)
+- `--on-ink-border-strong` **#5b8275 → #688f82** (the lifted surface would otherwise drop the card edge
+  to **2.82**, under its 3:1 tier; #688f82 restores **3.36**)
+- compensated card text holds comfortably: on-ink **10.52**, muted **6.29**, mint **6.55**
+
+**The light register shows the exact inverse**, which is the other half of the finding: the glow makes
+the page slightly darker, so a white card separates **better** than it does today — D23 A06 measured
+**1.28** against the shipped floor of 1.07. **Light has luminance headroom to spare; ink has almost
+none.** A bench that only tested light would have shipped this straight into the flagship register.
+
+### Status row verdict per temperature
+
+Alarms are untouched by construction: warmth is background-only and never enters their colour space.
+Measured, the pills still separate from the painted field in every temperature (refused **1.16**,
+deadline **1.22** at T3, the tightest case) and every pill's own text clears AA on its own fill
+(**5.22 / 4.84 / 4.72**). **T3 carries the most risk to watch by eye**, because apricot sits nearest the
+amber alarm's hue neighbourhood, and that is stated in its own notes strip rather than buried here.
+
+### impeccable — findings and responses
+
+Run against the bench before handoff; **assessment independence: degraded** (sub-agents not used,
+session policy restricts the Agent tool, so A and B ran sequentially per the documented fallback).
+
+| # | Severity | Finding | Response |
+|---|---|---|---|
+| 1 | **P1** | The card explaining the ink-floor failure sat **after** all three temperatures, so the owner met three FAIL lines with no explanation for two screens. Same class as Task #24's protocol placement. | **FIXED** — moved above the temperature sections (index 2590 vs 4420). |
+| 2 | **P2** | `.card-doc` at 82ch and `.notes` at 80ch exceeded the 65–75ch measure cap. | **FIXED** — card capped at 74ch; `.notes` capped by padding rather than width, because capping the width of a full-bleed strip left the background short and a white gap beside it (caught in the eye pass). |
+| 3 | **P2** | Detector: em-dash overuse. | **PARTLY FIXED, partly a false positive, and the split is measured.** Of the 16 the detector counts, **6 are true em-dashes** and **10 are `--` in CSS custom-property names** (`--ink-surface`, `--on-ink-border-strong`) written as prose references. Several true ones were rewritten; the token names stay because renaming them to satisfy a cadence heuristic would make the document wrong. |
+| 4 | **advisory** | Detector: numbered section markers, "Sequence: 02, 07, 08, 09". | **FALSE POSITIVE, verified.** The fragment labels are **roman numerals** (i, ii, iii, iv). The 02/07/08/09 are **gradient alpha stops** (`rgba(…,.07)`) inside the style block. "Fixing" it would mean changing the glow values themselves. |
+
+### PROTOCOL
+
+> **Owner picks T1 / T2 / T3 in chat → the pick's values become the implementation spec for the
+> warm-atmosphere task (full cube, AA re-verification against painted pixels, D23 floors, alarms
+> untouched).**
+
+The implementation task inherits two obligations from this round: the **compensated ink pair** above,
+and a re-measurement of the painted pixels on the real pages rather than on bench fragments.
+**"None of these, warmer or cooler" is a legitimate answer** — the dial is continuous and a fourth
+round costs one task.

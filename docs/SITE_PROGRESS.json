@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-20",
-    "currentTask": "owner colour-direction ruling (D25) + optional FO-3 field confirmation with the executed probe",
+    "currentTask": "owner tuned-bench temperature pick (T1/T2/T3) -> warm-atmosphere implementation task (full cube)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -466,11 +466,11 @@
     {
       "id": "W4-owner-check",
       "phase": "P3",
-      "title": "Owner TWO-MACHINE field proof at the curve — the closing proof for FO-3",
+      "title": "Owner temperature pick (T1/T2/T3) for the ruled warm atmosphere",
       "status": "todo",
-      "date": "2026-08-19",
-      "note": "TWO OWNER READINGS ARE NOW OUTSTANDING AND THEY ARE INDEPENDENT. (1) FO-3 TWO-MACHINE FIELD PROOF, unchanged and still the closing proof for the van fix: Yoga at browser zoom 100 percent and work machine at 80 percent, each at the setting that used to fail IT, both on a build at or after Task #22 (432958c); run the console probe in docs/FIELD_OBSERVATIONS.md FO-3 at the terminus curve and expect errY about 0 with a FLAT zoom ladder. (2) COLOUR DIRECTION READING, new: open docs/color-direction-bench/index.html on BOTH machines and react by direction number; the ruling becomes D25 (adopt, synthesize, or hold). Use the GROUP BY - FRAGMENT control to compare the same fragment across all three directions adjacently rather than from memory. Until D25 the hardened jade palette remains law, and any adoption goes through a full token-implementation task with cube and AA re-verification.",
-      "fixlogRef": "2026-08-19 - Task #23"
+      "date": "2026-08-20",
+      "note": "D25 IS RULED; what is open is HOW WARM. Open docs/color-direction-bench/tuned.html on BOTH machines and reply T1, T2 or T3. Use the GROUP BY FRAGMENT control and spend the attention on fragment ii, THE INK HERO: it is the register that was never tested for warmth and it is where the three differ most. T1 rose solo is the quietest. T2 rose plus violet is the most distinctive, but the violet needs an eye on whether it competes with the service-level violet that already carries a semantic job. T3 rose plus apricot is the warmest and closest to the GitLab feel, and it sits nearest the amber alarm hue. Saying none of these, warmer or cooler is a legitimate answer; the dial is continuous. The pick becomes the implementation spec for a separate full-cube task, which also inherits the compensated ink pair this bench derived. NOTE: the FO-3 field confirmation is no longer blocking, because Task #25 found and fixed the root cause and I20 now guards it.",
+      "fixlogRef": "2026-08-20 - Task #26"
     },
     {
       "id": "W5-1",
@@ -534,6 +534,15 @@
       "date": "2026-08-20",
       "fixlogRef": "2026-08-20 - Task #25",
       "note": "A one-line CSS defect that had been shipping since the route was built, hidden by two engines being permissive. stroke-dashoffset calc(1 - var(...)) is invalid because the property takes a length and a bare number is not one. Blink and WebKit coerce it; Gecko correctly drops the declaration, so the offset falls back to 0 and dasharray 1 paints the whole path. The line rendered fully drawn while the van, positioned by a JS transform that never consults CSS inheritance, sat correctly at mid-route. THE INSTRUMENT THAT FOUND IT WAS THE ONE THAT MEASURED WHAT THE LINE ACTUALLY CLAIMS rather than what the code intends: reading the computed stroke-dashoffset directly. Both previous field probes had assumed their way past this. Fixed by multiplying by 1px; verified in all three engines; I20 now asserts the line agrees with the variable, and a dpr-2 lane was added to the zoom leg. The dpr-2 lead that opened this hunt was a red herring, measured identical in Gecko at dpr 1, 1.5 and 2."
+    },
+    {
+      "id": "W-D25-TUNED",
+      "phase": "P3",
+      "title": "D25 receipts + tuned atmosphere bench (T1/T2/T3, ink-hero flagship)",
+      "status": "done",
+      "date": "2026-08-20",
+      "fixlogRef": "2026-08-20 - Task #26",
+      "note": "Docs-only: no site code, no cube, no token changed. Three temperatures rendered from identical fragments with only the glow layer tokenised. THE FLAGSHIP FRAGMENT EARNED ITSELF IMMEDIATELY: the ink register had never been tested for warmth, and it turns out that ANY usable glow on ink breaks the D23 B06 floor as a matter of arithmetic. Pure ink sits at luminance 0.00651 and the 1.25 floor against --ink-surface permits at most 0.00649. Measured 1.07 / 1.10 / 1.02 against the shipped #192b24. The bench FAILS that line rather than excusing it, and prints the compensated pair passing beneath: --ink-surface #192b24 to #273a32 (holding 1.32 / 1.34 / 1.25) and --on-ink-border-strong #5b8275 to #688f82 (the lifted surface would otherwise drop the card edge to 2.82, under its 3:1 tier; #688f82 restores 3.36). The LIGHT register shows the exact inverse: the glow darkens the page slightly so a white card separates BETTER than today, with D23 A06 measured at 1.28 against the shipped 1.07. Light has luminance headroom to spare and ink has almost none, so a bench that only tested light would have shipped this straight into the flagship register. Measurement is by painted pixels with the text hidden; an earlier sampling pass returned blue and orange values that turned out to be subpixel antialiasing fringes on glyph edges."
     }
   ],
   "decisions": [
@@ -691,6 +700,12 @@
       "date": "2026-08-20",
       "title": "Build-environment integrity law (file sync, field provenance, probe publication)",
       "summary": "D25 is HELD for the pending colour-direction ruling per the bench protocol; this row is numbered D26 so the reserved slot stays open. (a) File sync must never touch build exhaust: a committed .stignore at the repo root excludes .next, node_modules, .git and out. Syncthing reads .stignore from the folder root, so committing it protects every machine automatically after a git pull. The owner syncs the working folder across three machines, which is a live mechanism for stale and mixed builds and the most likely contaminant of two earlier field rounds. (b) FIELD PROVENANCE PROTOCOL: every field test begins with the build-generation probe, and screenshots of unproven builds are not evidence. PROBE PUBLICATION RULE: any field probe published into docs/FIELD_OBSERVATIONS.md must FIRST be executed by the harness against the running local build, with its output shown in the task report, and must be derived from the actual rendered DOM and CSS rather than assumed selectors. Untested probes are banned. Two chat-authored probes were published blind and both failed: one read the progress variable from documentElement when the code sets it on .route-overlay, so it printed 0 on every machine forever; the other crashed on parseFloat of calc(0.72px), which is Blink serialisation of stroke-dashoffset. Both produced numbers that were cited as evidence and were artifacts. (c) Containerization (owner suggestion, S-013) registered for post-launch evaluation."
+    },
+    {
+      "id": "D25",
+      "date": "2026-08-20",
+      "title": "Colour direction ruled: D2 SYNTHESIS (owner)",
+      "summary": "Jade remains the identity and owns all interactive, primary and status surfaces; warmth enters as ATMOSPHERE ONLY - layered CSS radial glows, background register, never carrying semantic meaning and never behind the alarms colour space. Owner-supplied anchor rose #f58f9c with companion #f7929a. Supporting owner picks registered for benched accent use only: violet #8d6fd3 (converges with the existing illustration accent family) and deep tones #332750 and #522a22 (ink-accent candidates, unadopted). OWNER STATED LAW ON RECORD: warm and pink cannot be an emergency-adjacent signal, incorporate it in backgrounds. That sentence is what makes the direction rulable, because it converts warmth from an identity question into a background-register question and leaves the alarms and the jade accent untouched. Implementation law: zero-cost CSS radials per the GitLab dissection, credited; every text-over-glow pairing AA-verified against PAINTED pixels rather than composited alphas; D23 floors bind and floors-only-rise is untouched; the final temperature is the owner pick from the tuned bench; site implementation is a separate full-cube task."
     }
   ],
   "discoveries": [
@@ -994,6 +1009,10 @@
     {
       "date": "2026-08-20",
       "summary": "Task #25 integrity receipts and the FO-3 root cause. Retracted BOTH chat-authored field probes: one read the progress variable from documentElement when the code sets it on .route-overlay and so printed 0 forever; the other crashed on parseFloat of Blink calc() serialisation of stroke-dashoffset. Their numbers had been cited as the Task #22 conviction, which is retracted as evidence while the architecture stands on its own merits. Then found the actual root cause of FO-3: stroke-dashoffset took a bare number, which is invalid CSS, so Gecko dropped the declaration and painted the entire path while the van stayed correct. Fixed with a unit multiply, verified in three engines, and I20 now asserts the line agrees with the variable. D26 adds the file-sync stignore, the field provenance protocol and a ban on publishing probes the harness has not executed."
+    },
+    {
+      "date": "2026-08-20",
+      "summary": "Task #26 D25 receipts and the tuned atmosphere bench. D25 recorded in its reserved ledger slot: jade keeps the identity and all interaction and status, warmth is atmosphere only and semantically silent, anchored on the owner rose #f58f9c. Built three temperatures on identical fragments with the ink hero as the flagship, and it immediately found that any glow on ink breaks the D23 B06 floor as arithmetic rather than tuning, with a compensated ink pair derived and printed passing. The light register shows the inverse and separates better than today. impeccable run: four findings, two fixed and two shown to be false positives with measurements."
     }
   ]
 }

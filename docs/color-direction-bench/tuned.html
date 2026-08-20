@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tuned atmosphere bench — T1 / T2 / T3 (Task #26)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── D21 type tokens, dogfooded exactly as shipped ────────────────────────────────────────────── */
+:root{
+  --font-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --font-body:"Hanken Grotesk",ui-sans-serif,system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --weight-hero:800; --weight-heading:700;
+  --track-hero:-0.030em; --track-heading:-0.022em; --track-lede:-0.008em; --track-mono:0.035em;
+
+  /* ── JADE IDENTITY. Byte-identical to what ships. D25: jade owns interaction and status; the
+        temperatures below change ONLY the atmosphere layer. Nothing here varies by temperature. ── */
+  --bg:#f5f7f9; --surface:#ffffff; --surface-tint:#e9f3ef; --surface-tint-border:#93c0ab;
+  --border:#c3c9d5; --border-strong:#969fae; --border-control:#7e8d86;
+  --text:#0c1512; --text-muted:#42544c; --text-subtle:#4b5c53;
+  --accent:#0b7d56; --accent-hover:#0a6b49; --accent-text:#ffffff;
+  --ink:#0b1512; --ink-surface:#192b24; --on-ink:#e9f1ee; --on-ink-muted:#adbfb8;
+  --on-ink-border-strong:#5b8275; --accent-on-ink:#46d6a0;
+  /* alarms are SEMANTIC and identical everywhere. D25: warmth never enters their colour space. */
+  --danger:#c81e2c; --danger-subtle:#fef2f2;
+  --warning:#b45309; --warning-subtle:#fffbeb;
+  --success:#0b7d56; --success-subtle:#e9f9f1;
+  --bench-canvas:#c9ced3;
+  /* the jade grid that ships today, carried under every temperature so nothing is lost */
+  --grid:
+    repeating-linear-gradient(0deg,rgba(11,125,86,.05) 0 1px,transparent 1px 132px),
+    repeating-linear-gradient(90deg,rgba(11,125,86,.05) 0 1px,transparent 1px 132px);
+}
+
+/* ═══ T1 · ROSE SOLO — one sun, the owner's anchor alone ══════════════════════════════════════
+   The quietest reading of D25. A single rose sun off the right edge plus one faint low-left
+   companion so the field has direction rather than a single blob. */
+[data-temp="t1"]{
+  --atmos-light:
+    radial-gradient(72% 86% at 104% 50%, rgba(245,143,156,.26) 0, rgba(247,170,180,.15) 28%, rgba(252,214,219,.05) 56%, rgba(255,236,238,0) 74%),
+    radial-gradient(38% 72% at 4% 102%, rgba(247,146,154,.13) 0, rgba(252,214,219,.04) 44%, rgba(255,240,242,0) 72%),
+    var(--grid);
+  --atmos-ink:
+    radial-gradient(66% 80% at 104% 40%, rgba(245,143,156,.20) 0, rgba(245,143,156,.10) 30%, rgba(245,143,156,.03) 58%, rgba(245,143,156,0) 78%),
+    radial-gradient(48% 62% at -6% 98%, rgba(247,146,154,.13) 0, rgba(247,146,154,.04) 42%, rgba(247,146,154,0) 72%);
+}
+
+/* ═══ T2 · ROSE + VIOLET — the two-sun geometry, our hues ═════════════════════════════════════
+   Violet is deliberately held BELOW the rose in alpha. It is an atmosphere ingredient here, not a
+   second accent: the illustration accent family already owns violet semantically (service level
+   wheelchair), and a violet strong enough to read as "a colour" would start competing with that. */
+[data-temp="t2"]{
+  --atmos-light:
+    radial-gradient(70% 84% at 104% 46%, rgba(245,143,156,.25) 0, rgba(247,170,180,.14) 28%, rgba(252,214,219,.04) 56%, rgba(255,236,238,0) 74%),
+    radial-gradient(58% 74% at 2% 104%, rgba(141,111,211,.17) 0, rgba(171,148,224,.09) 30%, rgba(214,203,242,.03) 58%, rgba(232,226,248,0) 76%),
+    radial-gradient(30% 64% at 66% 88%, rgba(245,143,156,.07) 0, rgba(255,240,242,0) 70%),
+    var(--grid);
+  --atmos-ink:
+    radial-gradient(64% 78% at 104% 38%, rgba(245,143,156,.19) 0, rgba(245,143,156,.09) 30%, rgba(245,143,156,.03) 58%, rgba(245,143,156,0) 78%),
+    radial-gradient(54% 66% at -6% 96%, rgba(141,111,211,.16) 0, rgba(141,111,211,.06) 38%, rgba(141,111,211,0) 72%);
+}
+
+/* ═══ T3 · ROSE + APRICOT — the Task #24 pairing, re-anchored to the owner's rose ═════════════
+   Closest to the GitLab warmth the owner responded to: an apricot sun right, the rose sun low-left,
+   which is their two-sun arrangement in our family. Warmest of the three. */
+[data-temp="t3"]{
+  --atmos-light:
+    radial-gradient(70% 84% at 104% 50%, rgba(244,168,116,.25) 0, rgba(246,186,146,.15) 28%, rgba(250,214,190,.05) 56%, rgba(255,235,222,0) 74%),
+    radial-gradient(62% 78% at 2% 104%, rgba(245,143,156,.23) 0, rgba(247,170,180,.13) 30%, rgba(252,214,219,.04) 58%, rgba(255,236,238,0) 76%),
+    radial-gradient(28% 62% at 68% 84%, rgba(252,224,205,.10) 0, rgba(255,240,228,0) 70%),
+    var(--grid);
+  --atmos-ink:
+    radial-gradient(64% 78% at 104% 40%, rgba(244,168,116,.18) 0, rgba(244,168,116,.08) 30%, rgba(244,168,116,.02) 58%, rgba(244,168,116,0) 78%),
+    radial-gradient(52% 64% at -6% 98%, rgba(245,143,156,.17) 0, rgba(245,143,156,.06) 40%, rgba(245,143,156,0) 72%);
+}
+
+/* ── page chrome ─────────────────────────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bench-canvas);color:#0c1512;font-family:var(--font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px;}
+h1.bench{font-family:var(--font-display);font-weight:var(--weight-hero);letter-spacing:var(--track-hero);font-size:36px;line-height:1.1;margin:26px 0 8px;text-wrap:balance;}
+.lede{font-size:17px;max-width:74ch;color:#22302b;}
+.bar{position:sticky;top:0;z-index:50;background:#111a17;color:#e9f1ee;padding:9px 20px;font-family:var(--font-mono);font-size:12.5px;letter-spacing:var(--track-mono);}
+.bar a{color:#46d6a0;text-decoration:none;margin-right:16px;} .bar b{color:#fff;}
+.card-doc{scroll-margin-top:54px;background:#fff;border:1px solid #b9c0c6;border-radius:12px;padding:18px 20px;margin:18px 0 26px;max-width:74ch;}
+.card-doc h2{font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);font-size:20px;margin:0 0 8px;}
+.card-doc p{margin:.5em 0;font-size:14.5px;}
+.card-doc code{font-family:var(--font-mono);font-size:12.5px;background:#eef1f4;padding:1px 5px;border-radius:4px;}
+.modebar{display:flex;align-items:center;gap:10px;margin:20px 0 0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:var(--track-mono);}
+.modebar button{font-family:var(--font-mono);font-size:12.5px;letter-spacing:var(--track-mono);padding:7px 14px;border-radius:8px;border:1px solid #7c848b;background:#fff;color:#2b3640;cursor:pointer;}
+.modebar button.on{background:#161f1c;color:#e9f1ee;border-color:#161f1c;}
+.temp{scroll-margin-top:54px;margin:44px 0 0;border-radius:16px;overflow:hidden;border:2px solid #7c848b;background:#fff;}
+.temp-head{padding:14px 20px;background:#161f1c;color:#e9f1ee;}
+.temp-head h2{margin:0;font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);font-size:23px;}
+.temp-head .tag{font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);color:#9fd8c0;}
+.notes{padding:12px 20px;padding-right:max(20px,calc(100% - 76ch));background:#f2f4f6;border-bottom:1px solid #c9ced3;font-size:14px;}
+.notes b{font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);}
+.frag{border-top:1px solid #c9ced3;}
+.frag-label{font-family:var(--font-mono);font-size:11.5px;letter-spacing:var(--track-mono);padding:7px 20px;background:#e4e8eb;color:#3b4750;text-transform:uppercase;}
+.ratios{font-family:var(--font-mono);font-size:11.5px;padding:8px 20px 12px;background:#eef1f4;color:#2b3640;display:flex;flex-wrap:wrap;gap:6px 18px;}
+.ratios .ok::before{content:"PASS ";color:#0b7d56;} .ratios .no::before{content:"FAIL ";color:#c81e2c;font-weight:700;}
+.ratios .info::before{content:"— ";color:#6b7780;}
+.fragrow{margin:44px 0 0;border-radius:16px;overflow:hidden;border:2px solid #7c848b;background:#fff;scroll-margin-top:54px;}
+.fragrow > .rowhead{padding:12px 20px;background:#161f1c;color:#e9f1ee;font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);font-size:19px;}
+.temptag{padding:6px 20px;background:#2b3640;color:#cfe6db;font-family:var(--font-mono);font-size:11.5px;letter-spacing:var(--track-mono);}
+
+/* ── fragments (identical markup under every temperature) ────────────────────────────────────── */
+.stage{background:var(--bg);background-image:var(--atmos-light);background-repeat:no-repeat;background-size:cover;padding:44px 40px;}
+.eyebrow{display:inline-block;font-family:var(--font-mono);font-size:13px;letter-spacing:var(--track-mono);color:var(--accent);background:var(--surface-tint);border:1px solid var(--surface-tint-border);border-radius:999px;padding:5px 13px;}
+.hero-h1{font-family:var(--font-display);font-weight:var(--weight-hero);letter-spacing:var(--track-hero);font-size:52px;line-height:1.06;color:var(--text);margin:16px 0 0;max-width:20ch;text-wrap:balance;}
+.hero-lede{font-size:18px;line-height:1.6;letter-spacing:var(--track-lede);color:var(--text-muted);max-width:56ch;margin:16px 0 0;}
+.btns{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;}
+.btn-p{background:var(--accent);color:var(--accent-text);border:1px solid var(--accent);border-radius:8px;padding:11px 20px;font-weight:600;font-size:16px;}
+.btn-s{background:transparent;color:var(--text);border:1px solid var(--border-control);border-radius:8px;padding:11px 20px;font-weight:600;font-size:16px;}
+
+/* THE INK HERO — the flagship fragment. This register was never tested for warmth: the first bench
+   only ever put glow on light. The glow is anchored OFF-CANVAS so it BLEEDS AT THE EDGES and the
+   centre stays true ink, which is the whole idea (a warm light entering a dark room, not a wash). */
+.inkstage{position:relative;background:var(--ink);background-image:var(--atmos-ink);background-repeat:no-repeat;background-size:cover;padding:52px 40px 56px;}
+.ink-eyebrow{display:inline-block;font-family:var(--font-mono);font-size:13px;letter-spacing:var(--track-mono);color:var(--accent-on-ink);border:1px solid var(--on-ink-border-strong);border-radius:999px;padding:5px 13px;}
+.ink-h1{font-family:var(--font-display);font-weight:var(--weight-hero);letter-spacing:var(--track-hero);font-size:52px;line-height:1.06;color:var(--on-ink);margin:16px 0 0;max-width:20ch;text-wrap:balance;}
+.ink-lede{font-size:18px;line-height:1.6;letter-spacing:var(--track-lede);color:var(--on-ink-muted);max-width:56ch;margin:16px 0 0;}
+.ink-btns{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;}
+.btn-pi{background:var(--accent-on-ink);color:var(--ink);border:1px solid var(--accent-on-ink);border-radius:8px;padding:11px 20px;font-weight:600;font-size:16px;}
+.btn-si{background:transparent;color:var(--on-ink);border:1px solid var(--on-ink-border-strong);border-radius:8px;padding:11px 20px;font-weight:600;font-size:16px;}
+.ink-console{margin-top:30px;background:var(--ink-surface);border:1px solid var(--on-ink-border-strong);border-radius:14px;padding:16px 18px;max-width:520px;}
+.ink-console .row{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:var(--on-ink-muted);padding:6px 0;}
+.ink-console .row b{color:var(--on-ink);font-weight:600;}
+.ink-console .k{font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);color:var(--accent-on-ink);}
+
+.statusrow{background:var(--bg);background-image:var(--atmos-light);background-repeat:no-repeat;background-size:cover;padding:30px 40px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.pill{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600;border:1px solid transparent;}
+.pill .dot{width:8px;height:8px;border-radius:50%;}
+.pill-d{background:var(--danger-subtle);color:var(--danger);border-color:rgba(200,30,44,.3);} .pill-d .dot{background:var(--danger);}
+.pill-w{background:var(--warning-subtle);color:var(--warning);border-color:rgba(180,83,9,.3);} .pill-w .dot{background:var(--warning);}
+.pill-s{background:var(--success-subtle);color:var(--success);border-color:rgba(11,125,86,.3);} .pill-s .dot{background:var(--success);}
+.statusrow .note{font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);color:var(--text-subtle);width:100%;margin-top:4px;}
+
+.band{background:var(--bg);background-image:var(--atmos-light);background-repeat:no-repeat;background-size:cover;padding:34px 40px;}
+.band h3{font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);font-size:24px;color:var(--text);margin:0 0 6px;}
+.band p.sub{color:var(--text-muted);margin:0 0 20px;max-width:56ch;}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.lcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;}
+.lcard h4{font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);font-size:17px;color:var(--text);margin:0 0 6px;}
+.lcard p{font-size:14.5px;color:var(--text-muted);margin:0;}
+.lcard .k{display:block;margin-top:12px;font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);color:var(--accent);}
+@media (max-width:820px){.cards{grid-template-columns:1fr;}.hero-h1,.ink-h1{font-size:36px;}
+  .stage,.inkstage,.statusrow,.band{padding-left:22px;padding-right:22px;}}
+#fontcheck{font-family:var(--font-mono);font-size:12px;padding:10px 20px;background:#111a17;color:#9fd8c0;}
+</style>
+</head>
+<body>
+
+<div class="bar"><b>TUNED ATMOSPHERE</b>
+  <a href="#impact">impact check</a><a href="#t1">T1 rose solo</a><a href="#t2">T2 rose+violet</a>
+  <a href="#t3">T3 rose+apricot</a><a href="#protocol">how to pick</a></div>
+
+<div class="wrap">
+  <h1 class="bench">D25 is ruled. This is the temperature dial.</h1>
+  <p class="lede">Jade stays the identity and owns every interactive, primary and status surface.
+  Warmth is <strong>atmosphere only</strong>, and it is <strong>semantically silent</strong>. What is
+  still open is <strong>how warm</strong>. Three temperatures, identical fragments, and only the glow layer changes. <strong>Read on both machines and reply with T1, T2 or T3.</strong> The pick becomes
+  the implementation spec.</p>
+
+  <div class="card-doc" id="impact">
+    <h2>D24 impact check</h2>
+    <p>· <code>nexo-brand §1</code> is <strong>extended rather than replaced</strong>. Jade identity plus a sanctioned atmosphere layer. The three-register tonal map is untouched.</p>
+    <p>· <code>D23</code> floors <strong>bind</strong>. Atmosphere may never reduce a surface, border or
+    text delta below its floor, and floors-only-rise is untouched. Spot-checks print below.</p>
+    <p>· <strong>Status semantics are preserved by construction</strong>, which is the point of ruling
+    D2 rather than D3: warmth is background-only, so the alarms keep their own colour space and the
+    jade accent stays 164° from the danger red.</p>
+    <p>· <code>D20</code>: the atmosphere is layered CSS radials. <strong>No images, no JS, no
+    animation, zero bytes</strong> — the technique read from GitLab and credited in <code>docs/DESIGN_RESEARCH.md §14a</code>.</p>
+    <p>· <code>D19</code>/<strong>W2</strong> synergy: the ink-hero glow becomes a hero-signature
+    ingredient rather than a decoration bolted on later.</p>
+    <p><b>Docs-only task.</b> No invariant touched, no site token changed, nothing ships from here.</p>
+  </div>
+
+  <div class="card-doc">
+    <h2>How the numbers below were produced</h2>
+    <p>Every ratio marked <strong>MEASURED</strong> comes from <strong>sampling the actual painted
+    pixels</strong> of this page behind the text in question, not from compositing the alphas by hand.
+    That is a Task #24 lesson made law by D25: the first bench scored text against a theoretical sun
+    core and unfairly failed a direction whose text sits in the falloff. Where a value is a plain token
+    pairing with no glow beneath it, it is computed directly and labelled without the MEASURED tag.</p>
+  </div>
+
+  <div class="card-doc">
+    <h2>What the ink hero found, and it changes the implementation spec</h2>
+    <p><strong>A glow on the ink register necessarily costs the ink card its FILL separation, and that
+    is arithmetic rather than a tuning error.</strong> Pure ink sits at luminance 0.00651 and the D23
+    B06 floor of 1.25 against <code>--ink-surface</code> permits at most 0.00649. <em>Any</em> usable
+    glow lifts the ink past that, so the shipped <code>--ink-surface #192b24</code> measures
+    <strong>1.07 / 1.08 / 1.02</strong> against the painted ink in T1 / T2 / T3 instead of 1.25.</p>
+    <p><strong>The bench fails that line rather than excusing it</strong>, because D25 says atmosphere may
+    never push a delta below its floor. The resolution is not to delete the glow but to COMPENSATE the
+    pair, and the bench prints the compensated numbers directly above:</p>
+    <p>· <code>--ink-surface</code> <strong>#192b24 → #273a32</strong> (holds 1.32 / 1.34 / 1.25)<br>
+    · <code>--on-ink-border-strong</code> <strong>#5b8275 → #688f82</strong> (the lifted surface would
+    otherwise drop the card edge to 2.82, under its 3:1 tier; #688f82 restores it to 3.36)</p>
+    <p><strong>These are candidate values, not tokens.</strong> They belong to the warm-atmosphere
+    implementation task, which re-verifies them with the full cube. <strong>This is exactly the kind of
+    thing the flagship fragment existed to find</strong>: the light register hid it completely, because
+    a light page has luminance headroom to spare and ink has almost none.</p>
+  </div>
+
+  <div class="modebar">Group by
+    <button id="byTemp" class="on" type="button">TEMPERATURE</button>
+    <button id="byFrag" type="button">FRAGMENT (compare across temperatures)</button>
+  </div>
+
+  <div id="stage">
+
+  <!-- ═══════════ T1 ═══════════ -->
+  <section class="temp" id="t1" data-temp="t1">
+    <div class="temp-head"><h2>T1 · ROSE SOLO</h2>
+      <span class="tag">one sun, the owner's anchor #f58f9c alone · the quietest reading of D25</span></div>
+    <div class="notes"><b>CHARACTER:</b> a single warm source with a faint low-left companion. Reads as
+    light entering from one side rather than as a coloured page.<br>
+    <b>COST:</b> the least distinctive of the three. At a glance on a small screen it can read as a plain off-white with a blush.</div>
+    <div class="frag"><div class="frag-label">i · light hero at real scale</div>
+      <div class="stage"><span class="eyebrow">Non-emergency medical transportation</span>
+        <h1 class="hero-h1">Every trip, accounted for.</h1>
+        <p class="hero-lede">Nexo Access is a medical transportation management organization built for
+        the DMV. Trips run through credentialed providers on our platform, and every claim is checked
+        before it is billed.</p>
+        <div class="btns"><span class="btn-p">See the platform</span><span class="btn-s">Talk to us</span></div>
+      </div><div class="ratios" data-r="t1-light"></div></div>
+    <div class="frag"><div class="frag-label">ii · THE INK HERO — flagship, glow bleeding at the edges</div>
+      <div class="inkstage"><span class="ink-eyebrow">How a trip runs on Nexo</span>
+        <h1 class="ink-h1">Every trip, accounted for.</h1>
+        <p class="ink-lede">Credential-gated dispatch, seven adjudication checks before a claim is
+        billed, and one validated path from booking to a locked record.</p>
+        <div class="ink-btns"><span class="btn-pi">See the platform</span><span class="btn-si">Talk to us</span></div>
+        <div class="ink-console">
+          <div class="row"><b>J. Sample</b><span class="k">NX-1042</span></div>
+          <div class="row"><span>Riverside Dialysis Center</span><span class="k">09:30</span></div>
+          <div class="row"><span>Credential-gated dispatch</span><b>Ready</b></div>
+        </div></div><div class="ratios" data-r="t1-ink"></div></div>
+    <div class="frag"><div class="frag-label">iii · status row over the atmosphere</div>
+      <div class="statusrow"><span class="pill pill-d"><span class="dot"></span>Refused</span>
+        <span class="pill pill-w"><span class="dot"></span>Timely filing · 4 days</span>
+        <span class="pill pill-s"><span class="dot"></span>Credentials current</span>
+        <span class="note">Do the alarms still read as alarms over this warmth?</span></div>
+      <div class="ratios" data-r="t1-status"></div></div>
+    <div class="frag"><div class="frag-label">iv · light content band + cards (D23 floor spot-checks)</div>
+      <div class="band"><h3>Built around the member.</h3>
+        <p class="sub">Every trip starts from the member: their mobility level, their care needs, and
+        the places they go again and again.</p>
+        <div class="cards">
+          <div class="lcard"><h4>Round trips</h4><p>Outbound and return scheduled around the appointment,
+            including will-call returns.</p><span class="k">13 FROZEN FIELDS</span></div>
+          <div class="lcard"><h4>Checked first</h4><p>Seven adjudication checks run before a claim is
+            billed, not after it is denied.</p><span class="k">7 CHECKS</span></div>
+          <div class="lcard"><h4>One path</h4><p>Completed, cancelled and no-show are final states on a
+            validated machine.</p><span class="k">2 APPEAL LEVELS</span></div>
+        </div></div><div class="ratios" data-r="t1-band"></div></div>
+  </section>
+
+  <!-- ═══════════ T2 ═══════════ -->
+  <section class="temp" id="t2" data-temp="t2">
+    <div class="temp-head"><h2>T2 · ROSE + VIOLET</h2>
+      <span class="tag">two suns, #f58f9c + #8d6fd3 · violet held below rose so it stays atmosphere</span></div>
+    <div class="notes"><b>CHARACTER:</b> the most distinctive. The violet corner gives the field depth and a dusk quality that neither of the other two has.<br>
+    <b>COST, and it is a real one:</b> violet already carries a <em>semantic</em> job in the service-level
+    palette (wheelchair). It is held deliberately below the rose in alpha here so it reads as light and
+    not as a colour, but this is the temperature that most needs your eye on that question.</div>
+    <div class="frag"><div class="frag-label">i · light hero at real scale</div>
+      <div class="stage"><span class="eyebrow">Non-emergency medical transportation</span>
+        <h1 class="hero-h1">Every trip, accounted for.</h1>
+        <p class="hero-lede">Nexo Access is a medical transportation management organization built for
+        the DMV. Trips run through credentialed providers on our platform, and every claim is checked
+        before it is billed.</p>
+        <div class="btns"><span class="btn-p">See the platform</span><span class="btn-s">Talk to us</span></div>
+      </div><div class="ratios" data-r="t2-light"></div></div>
+    <div class="frag"><div class="frag-label">ii · THE INK HERO — flagship, glow bleeding at the edges</div>
+      <div class="inkstage"><span class="ink-eyebrow">How a trip runs on Nexo</span>
+        <h1 class="ink-h1">Every trip, accounted for.</h1>
+        <p class="ink-lede">Credential-gated dispatch, seven adjudication checks before a claim is
+        billed, and one validated path from booking to a locked record.</p>
+        <div class="ink-btns"><span class="btn-pi">See the platform</span><span class="btn-si">Talk to us</span></div>
+        <div class="ink-console">
+          <div class="row"><b>J. Sample</b><span class="k">NX-1042</span></div>
+          <div class="row"><span>Riverside Dialysis Center</span><span class="k">09:30</span></div>
+          <div class="row"><span>Credential-gated dispatch</span><b>Ready</b></div>
+        </div></div><div class="ratios" data-r="t2-ink"></div></div>
+    <div class="frag"><div class="frag-label">iii · status row over the atmosphere</div>
+      <div class="statusrow"><span class="pill pill-d"><span class="dot"></span>Refused</span>
+        <span class="pill pill-w"><span class="dot"></span>Timely filing · 4 days</span>
+        <span class="pill pill-s"><span class="dot"></span>Credentials current</span>
+        <span class="note">Do the alarms still read as alarms over this warmth?</span></div>
+      <div class="ratios" data-r="t2-status"></div></div>
+    <div class="frag"><div class="frag-label">iv · light content band + cards (D23 floor spot-checks)</div>
+      <div class="band"><h3>Built around the member.</h3>
+        <p class="sub">Every trip starts from the member: their mobility level, their care needs, and
+        the places they go again and again.</p>
+        <div class="cards">
+          <div class="lcard"><h4>Round trips</h4><p>Outbound and return scheduled around the appointment,
+            including will-call returns.</p><span class="k">13 FROZEN FIELDS</span></div>
+          <div class="lcard"><h4>Checked first</h4><p>Seven adjudication checks run before a claim is
+            billed, not after it is denied.</p><span class="k">7 CHECKS</span></div>
+          <div class="lcard"><h4>One path</h4><p>Completed, cancelled and no-show are final states on a
+            validated machine.</p><span class="k">2 APPEAL LEVELS</span></div>
+        </div></div><div class="ratios" data-r="t2-band"></div></div>
+  </section>
+
+  <!-- ═══════════ T3 ═══════════ -->
+  <section class="temp" id="t3" data-temp="t3">
+    <div class="temp-head"><h2>T3 · ROSE + APRICOT</h2>
+      <span class="tag">the Task #24 pairing re-anchored to #f58f9c · closest to the GitLab warmth</span></div>
+    <div class="notes"><b>CHARACTER:</b> the warmest and the closest to what you responded to on
+    GitLab — apricot sun right, rose sun low-left, their two-sun arrangement in our family.<br>
+    <b>COST:</b> apricot sits nearest the amber alarm's hue neighbourhood of the three. It is background only and the measurement below says the pills still separate, but this is the temperature where the "warm cannot be an emergency-adjacent signal" law is doing the most work.</div>
+    <div class="frag"><div class="frag-label">i · light hero at real scale</div>
+      <div class="stage"><span class="eyebrow">Non-emergency medical transportation</span>
+        <h1 class="hero-h1">Every trip, accounted for.</h1>
+        <p class="hero-lede">Nexo Access is a medical transportation management organization built for
+        the DMV. Trips run through credentialed providers on our platform, and every claim is checked
+        before it is billed.</p>
+        <div class="btns"><span class="btn-p">See the platform</span><span class="btn-s">Talk to us</span></div>
+      </div><div class="ratios" data-r="t3-light"></div></div>
+    <div class="frag"><div class="frag-label">ii · THE INK HERO — flagship, glow bleeding at the edges</div>
+      <div class="inkstage"><span class="ink-eyebrow">How a trip runs on Nexo</span>
+        <h1 class="ink-h1">Every trip, accounted for.</h1>
+        <p class="ink-lede">Credential-gated dispatch, seven adjudication checks before a claim is
+        billed, and one validated path from booking to a locked record.</p>
+        <div class="ink-btns"><span class="btn-pi">See the platform</span><span class="btn-si">Talk to us</span></div>
+        <div class="ink-console">
+          <div class="row"><b>J. Sample</b><span class="k">NX-1042</span></div>
+          <div class="row"><span>Riverside Dialysis Center</span><span class="k">09:30</span></div>
+          <div class="row"><span>Credential-gated dispatch</span><b>Ready</b></div>
+        </div></div><div class="ratios" data-r="t3-ink"></div></div>
+    <div class="frag"><div class="frag-label">iii · status row over the atmosphere</div>
+      <div class="statusrow"><span class="pill pill-d"><span class="dot"></span>Refused</span>
+        <span class="pill pill-w"><span class="dot"></span>Timely filing · 4 days</span>
+        <span class="pill pill-s"><span class="dot"></span>Credentials current</span>
+        <span class="note">Do the alarms still read as alarms over this warmth?</span></div>
+      <div class="ratios" data-r="t3-status"></div></div>
+    <div class="frag"><div class="frag-label">iv · light content band + cards (D23 floor spot-checks)</div>
+      <div class="band"><h3>Built around the member.</h3>
+        <p class="sub">Every trip starts from the member: their mobility level, their care needs, and
+        the places they go again and again.</p>
+        <div class="cards">
+          <div class="lcard"><h4>Round trips</h4><p>Outbound and return scheduled around the appointment,
+            including will-call returns.</p><span class="k">13 FROZEN FIELDS</span></div>
+          <div class="lcard"><h4>Checked first</h4><p>Seven adjudication checks run before a claim is
+            billed, not after it is denied.</p><span class="k">7 CHECKS</span></div>
+          <div class="lcard"><h4>One path</h4><p>Completed, cancelled and no-show are final states on a
+            validated machine.</p><span class="k">2 APPEAL LEVELS</span></div>
+        </div></div><div class="ratios" data-r="t3-band"></div></div>
+  </section>
+
+  </div>
+
+  <div class="card-doc" id="protocol">
+    <h2>How to pick</h2>
+    <p><b>Read on both machines</b>, then reply with <strong>T1</strong>, <strong>T2</strong> or
+    <strong>T3</strong>. The pick's exact radial values become the implementation spec.</p>
+    <p><b>Use FRAGMENT mode</b> to see the same fragment across all three adjacently. The ink hero is
+    the fragment worth the most attention: it is the register that was never tested for warmth, and it is where the three temperatures differ most.</p>
+    <p><b>What happens next:</b> the pick goes into a separate warm-atmosphere implementation task with
+    a full cube, AA re-verification against painted pixels, D23 floors honoured, and the alarms left
+    exactly as they are. <strong>Nothing ships from a bench.</strong></p>
+    <p><b>Also fair to say "none of these, warmer/cooler"</b> — the dial is continuous, and a fourth
+    round costs one task.</p>
+  </div>
+
+  <div id="fontcheck">checking fonts…</div>
+</div>
+
+<script>
+const hx=h=>{const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255]};
+const lin=c=>{c/=255;return c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4)};
+const L=t=>0.2126*lin(t[0])+0.7152*lin(t[1])+0.0722*lin(t[2]);
+const cr=(a,b)=>{const x=L(typeof a==="string"?hx(a):a),y=L(typeof b==="string"?hx(b):b);
+  const h=Math.max(x,y),l=Math.min(x,y);return (h+0.05)/(l+0.05)};
+
+/* MEASURED painted-pixel backgrounds, sampled from a render of THIS FILE by the harness and written
+   back in. Each value is the DARKEST pixel actually painted in that text's own column, which is the
+   worst case the reader can encounter there. Regenerate with scripts in the Task #26 record if the
+   radial values ever change. */
+const M = {"t1":{"light":"#eaeaeb","ink":"#232220","status":"#eaebeb","band":"#eaeaeb"},"t2":{"light":"#e0e4ee","ink":"#1b202a","status":"#e1e5ef","band":"#e0e4ee"},"t3":{"light":"#ebe1e3","ink":"#2a2524","status":"#ebe2e4","band":"#ebe1e3"}};
+
+const T={
+ t1:{name:"T1"}, t2:{name:"T2"}, t3:{name:"T3"},
+};
+const TOK={bg:"#f5f7f9",text:"#0c1512",muted:"#42544c",accent:"#0b7d56",accentHover:"#0a6b49",
+  tint:"#e9f3ef",border:"#c3c9d5",surface:"#ffffff",
+  ink:"#0b1512",inkSurface:"#192b24",onInk:"#e9f1ee",onInkMuted:"#adbfb8",accentOnInk:"#46d6a0",
+  onInkBorder:"#5b8275",
+  danger:"#c81e2c",dSub:"#fef2f2",warning:"#b45309",wSub:"#fffbeb",success:"#0b7d56",sSub:"#e9f9f1"};
+
+function row(items){return items.map(([label,val,floor])=>{
+  const v=typeof val==="number"?val:NaN;
+  const cls=floor==null?"info":(v>=floor?"ok":"no");
+  const shown=typeof val==="number"?val.toFixed(2)+(floor?" / "+floor:""):val;
+  return '<span class="'+cls+'">'+label+" "+shown+"</span>";}).join("");}
+
+for(const t of ["t1","t2","t3"]){
+  const m=M[t]||{};
+  const lightBg=m.light||TOK.bg, inkBg=m.ink||TOK.ink, statusBg=m.status||TOK.bg, bandBg=m.band||TOK.bg;
+  document.querySelector('[data-r="'+t+'-light"]').innerHTML=row([
+    ["MEASURED bg under the hero text "+lightBg,"",null],
+    ["h1 on painted bg",cr(TOK.text,lightBg),4.5],
+    ["lede on painted bg",cr(TOK.muted,lightBg),4.5],
+    ["eyebrow accent on its tint pill",cr(TOK.accent,TOK.tint),4.5],
+    ["primary button text on jade fill",cr("#ffffff",TOK.accent),4.5],
+    ["(constraint) raw --accent directly ON the glow",cr(TOK.accent,lightBg).toFixed(2)+" — if it ever dips, --accent-hover is the sanctioned substitute (nexo-brand section 3) at "+cr(TOK.accentHover,lightBg).toFixed(2),null],
+  ]);
+  document.querySelector('[data-r="'+t+'-ink"]').innerHTML=row([
+    ["MEASURED ink bg under the hero text "+inkBg,"",null],
+    ["h1 on painted ink",cr(TOK.onInk,inkBg),4.5],
+    ["lede on painted ink",cr(TOK.onInkMuted,inkBg),4.5],
+    ["eyebrow accent-on-ink on painted ink",cr(TOK.accentOnInk,inkBg),4.5],
+    ["console body on ink-surface",cr(TOK.onInkMuted,TOK.inkSurface),4.5],
+    ["console edge vs ink-surface (1.4.11)",cr(TOK.onInkBorder,TOK.inkSurface),3],
+    ["primary button ink-text on mint fill",cr(TOK.ink,TOK.accentOnInk),4.5],
+    ["D23 B06 floor: SHIPPED ink-surface vs painted ink",cr(TOK.inkSurface,inkBg),1.25],
+    ["...with the COMPENSATED surface #273a32",cr("#273a32",inkBg),1.25],
+    ["...and its compensated edge #688f82 on that surface (1.4.11 card tier)",cr("#688f82","#273a32"),3],
+    ["compensated card text: on-ink / muted / mint",cr(TOK.onInk,"#273a32").toFixed(2)+" / "+cr(TOK.onInkMuted,"#273a32").toFixed(2)+" / "+cr(TOK.accentOnInk,"#273a32").toFixed(2)+" (all clear 4.5)",null],
+  ]);
+  document.querySelector('[data-r="'+t+'-status"]').innerHTML=row([
+    ["MEASURED bg behind the pills "+statusBg,"",null],
+    ["refused text on its fill",cr(TOK.danger,TOK.dSub),4.5],
+    ["deadline text on its fill",cr(TOK.warning,TOK.wSub),4.5],
+    ["current text on its fill",cr(TOK.success,TOK.sSub),4.5],
+    ["refused pill separates from the painted field",cr(TOK.dSub,statusBg),1.05],
+    ["deadline pill separates from the painted field",cr(TOK.wSub,statusBg),1.05],
+    ["alarms are untouched by D25: warmth is background-only","",null],
+  ]);
+  document.querySelector('[data-r="'+t+'-band"]').innerHTML=row([
+    ["MEASURED bg in the band "+bandBg,"",null],
+    ["heading on painted bg",cr(TOK.text,bandBg),4.5],
+    ["subline on painted bg",cr(TOK.muted,bandBg),4.5],
+    ["D23 A06: white card vs painted bg",cr(TOK.surface,bandBg).toFixed(2)+" (shipped floor 1.07)",null],
+    ["D23 E1-07: card border on white",cr(TOK.border,TOK.surface).toFixed(2)+" (shipped 1.66)",null],
+    ["card body on the card",cr(TOK.muted,TOK.surface),4.5],
+    ["mono stat on the card",cr(TOK.accent,TOK.surface),4.5],
+  ]);
+}
+
+/* group-by, reused from the Task #24 bench: the job is comparison, so adjacency beats memory */
+(function(){
+  const stage=document.getElementById("stage"); if(!stage) return;
+  const a=document.getElementById("byTemp"), b=document.getElementById("byFrag");
+  const original=stage.innerHTML;
+  const NAME={t1:"T1 ROSE SOLO",t2:"T2 ROSE + VIOLET",t3:"T3 ROSE + APRICOT"};
+  function toFrags(){
+    const src=document.createElement("div"); src.innerHTML=original;
+    const temps=[...src.querySelectorAll("[data-temp]")], groups=[];
+    temps.forEach(tp=>[...tp.querySelectorAll(".frag")].forEach((f,i)=>{
+      (groups[i]=groups[i]||[]).push({t:tp.getAttribute("data-temp"),node:f});}));
+    stage.innerHTML="";
+    groups.forEach(g=>{
+      const row=document.createElement("section"); row.className="fragrow";
+      const lbl=g[0].node.querySelector(".frag-label");
+      const h=document.createElement("div"); h.className="rowhead";
+      h.textContent=lbl?lbl.textContent.trim():"fragment"; row.appendChild(h);
+      g.forEach(({t,node})=>{
+        const w=document.createElement("div"); w.setAttribute("data-temp",t);
+        const tag=document.createElement("div"); tag.className="temptag"; tag.textContent=NAME[t]||t;
+        w.appendChild(tag);
+        const c=node.cloneNode(true); const fl=c.querySelector(".frag-label"); if(fl) fl.remove();
+        w.appendChild(c); row.appendChild(w);});
+      stage.appendChild(row);});
+  }
+  b.addEventListener("click",()=>{toFrags();b.classList.add("on");a.classList.remove("on");});
+  a.addEventListener("click",()=>{stage.innerHTML=original;a.classList.add("on");b.classList.remove("on");});
+})();
+
+/* the standing font check — PRIME first (Task #12 amendment) or an unrendered family reports a
+   false fallback because the browser never downloads a face nothing is using */
+(function(){
+  const F=[["Bricolage Grotesque",800],["Hanken Grotesk",400],["IBM Plex Mono",500]];
+  const P="Every trip, accounted for. NX-1042 0123456789";
+  const w=(stack,wt)=>{const s=document.createElement("span");s.textContent=P;
+    s.style.cssText="position:absolute;left:-9999px;white-space:nowrap;font-size:72px;font-weight:"+wt+";font-family:"+stack;
+    document.body.appendChild(s);const x=s.getBoundingClientRect().width;s.remove();return x;};
+  Promise.all(F.map(f=>document.fonts.load(f[1]+" 72px '"+f[0]+"'").catch(()=>{}))).then(()=>{
+    document.getElementById("fontcheck").textContent="font check (primed) — "+F.map(([fam,wt])=>{
+      const fb=fam==="IBM Plex Mono"?"ui-monospace,monospace":"system-ui,sans-serif";
+      return fam+": "+(Math.abs(w("'"+fam+"',"+fb,wt)-w(fb,wt))>1?"LOADED":"FALLBACK");}).join("  ·  ");});
+})();
+</script>
+</body>
+</html>
