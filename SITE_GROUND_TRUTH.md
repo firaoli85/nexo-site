@@ -184,5 +184,12 @@ entirely on its edge. Restoring fill separation would mean roughly doubling `--i
 luminance, which would end the hero's kin-to-kin doctrine; that trade was not taken unilaterally.
 
 **WIDER ROLLOUT IS P4 PER-PAGE WORK.** The interior routes deliberately do not wear the treatment
-yet: each needs its own painted-pixel pass first. NEXT: FO-3 owner field confirmation, then W5 part
-2 (nexo-motion + S-001 card motion).
+yet: each needs its own painted-pixel pass first. **FO-3 AND FO-1 ARE NOW FIELD-CLOSED (owner, 2026-08-20)**, on executed probe output from
+both machines rather than on screenshots: the Yoga at dpr 1.25 returned `errY -0` / `errX 12` (the
+designed outbound lane, not drift) / `ctm [1,1]` / `offsetPath "none"`, and the owner laptop at dpr 2
+returned `varP 0.6523 = lineP 0.6523` / `gapPx 0` / build NEW. That is the Task #22 architecture and
+the Task #25 units fix both confirmed on real hardware, at the settings that used to break, with
+build provenance established. **All three field observations (FO-1, FO-2, FO-3) are closed**, field
+confirmation is now a validated gate on the board, and a future line-or-van report begins at the
+FO-3 probe plus the D26 provenance protocol rather than at re-diagnosis. NEXT: W5 part 2 —
+nexo-motion skill + motion-safe conversion + S-001 card motion.

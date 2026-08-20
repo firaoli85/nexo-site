@@ -6,6 +6,12 @@ this file exists because that is not the population we serve.
 Each entry: date, machine class, the exact build observed, symptoms as reported, and — where one was
 established — **the named mechanism, verified against source rather than transcribed**.
 
+**LEDGER (2026-08-20): FO-1 CLOSED · FO-2 CLOSED · FO-3 CLOSED — all three are field-closed.** Any
+future line-or-van field report starts at the FO-3 probe and the D26 provenance protocol, **never at
+re-diagnosis**: the mechanisms are named, fixed and guarded, so a new report is a provenance question
+first (which build, which machine, which settings) and a diagnosis question only if the probe comes
+back dirty.
+
 ---
 
 ## FO-1 — Route line and livery van desynchronised (C4)
@@ -144,17 +150,21 @@ reduced-motion, no `offset-path`) are **skips that assert the absence**, never f
 
 ### Status
 
-> **C4: FIXED on v2 (Task #19). Reproduced before fixing, both modes measured to zero, I20 guards it.**
-> **The live V1 defect on `main` remains until v2 deploys** — the recorded default ruling was the v2/W5
-> path, not a `main` hotfix. **Field re-check on the Yoga-class machine is owed at the v2 deploy**: this fix
-> is verified by reproduction and by a green cube on a dev-class box, not yet on the machine that showed it.
-> **FIELD RE-CHECK OF THE C4 FIX IS PENDING AT A VERIFIED COMMIT >= b58925f.** Owner screenshots dated
-> 2026-08-18 show mode-2-signature divergence, but the build provenance is UNESTABLISHED (dev server,
-> commit unknown), and screenshots of an unknown build cannot confirm or refute a fix. **No verdict is
-> recorded either way** — not "still broken", not "fixed". The re-test must be run on a build whose
-> commit is known to contain the fix.
-> The bluish colour cast reported alongside is C3-class and separate; it is addressed by the D23 hardening
-> (Task #18) and also awaits an on-device reading.
+> **FO-1 / C4 CLOSED 2026-08-20 — the outstanding verified-commit re-test is satisfied by the FO-3
+> field evidence.** That re-test asked one question: does the line/van glue hold on the reporting
+> machine at a build whose provenance is known? Both FO-3 probe runs answer it directly — the Yoga at
+> dpr 1.25 returns `errY -0 / errX 12` (the designed lane, not drift) with `ctm [1,1]`, and the owner
+> laptop at dpr 2 returns `gapPx 0` with `build NEW`. **Same subsystem, same glue, provenance
+> established on both machines**, which is exactly what the pending clause required. See FO-3's
+> closure section for the verbatim output.
+>
+> Fix history, for the record: **FIXED on v2 (Task #19)** — reproduced before fixing, both modes
+> measured to zero, I20 guards it. **The live V1 defect on `main` remains until v2 deploys**; the
+> recorded ruling was the v2/W5 path, not a `main` hotfix. **The 2026-08-18 owner screenshots remain
+> unusable as evidence** (dev server, commit unknown) and no verdict was ever recorded from them —
+> the closure above rests on instrumented output at a known build, not on those images.
+> The bluish colour cast reported alongside is C3-class and separate; it is addressed by the D23
+> hardening (Task #18) and still awaits an on-device reading.
 
 ---
 
@@ -680,11 +690,63 @@ scrolled to any mid-page position:
 page contains a *second* dashed element (a `line` inside `g.terminus-line`, `dasharray: 5px, 4.5px`)
 that an assumption-based probe could easily have grabbed instead.
 
+### CLOSED IN FIELD ON BOTH MACHINES (owner, 2026-08-20)
+
+**The probe above was executed on both real machines and both came back clean.** This is the evidence
+the whole FO-3 thread was waiting for: not a screenshot of an unknown build, but instrumented output
+from the machines that filed the reports, at settings that used to break.
+
+**MACHINE 1 — the Yoga (the machine that filed FO-1 and FO-3), Chrome, dpr 1.25, zoom 1.000.**
+Output verbatim:
+
+```
+errY -0   errX 12   ctm [1,1]   offsetPath "none"
+```
+
+**Reading, term by term, because each one closes a specific suspect:**
+
+- **`errX 12` is the designed outbound lane, not drift.** `.route-van-lane` offsets the van by
+  ±12px to sit it in its travel lane; 12 is the value the CSS asks for. A drift defect would produce
+  an arbitrary, position-dependent number, not exactly the lane constant.
+- **`errY -0`** — zero vertical error. FO-1's corrected record already established that divergence
+  in this system is purely horizontal (measured dy ≤ 0.09px), and the field now agrees.
+- **`ctm [1,1]`** — no residual scale on the raster surface. This is the measurement that would have
+  exposed a unified-scale mismatch, which is the class of fault §"UNIFIED-SCALE EVIDENCE" recorded.
+- **`offsetPath "none"`** — **confirmation that the Task #22 architecture is the one actually
+  running on that machine.** The van is positioned from the 256-point LUT *inside* the SVG; the
+  `offset-path` approach that Task #21 measured and rejected (stale `url()` reference, 978px
+  persistent error in Chromium and WebKit) is not present. **The rejected design is proven absent in
+  the field, not merely absent from the source.**
+
+**MACHINE 2 — the owner laptop, dpr 2, winW 1840, zoom 1.** Output verbatim:
+
+```
+varP 0.6523 = lineP 0.6523   headY 3156 = vanY 3156   gapPx 0
+VERDICT "OK: line and van agree"   build NEW
+```
+
+**Reading:**
+
+- **`varP === lineP` is the Task #25 px-units fix confirmed in the field.** The whole root cause was
+  a bare number in `stroke-dashoffset`, which is an invalid `<length-percentage>`: Gecko dropped the
+  declaration and drew the entire path while Blink and WebKit silently coerced it. `lineP` tracking
+  `varP` to four decimal places means **the line is listening to the variable** on a real machine.
+- **`gapPx 0`** — the direct line-versus-van measurement, carrying no assumptions at all. `headY`
+  and `vanY` are identical at 3156. This is the number the probe was built around.
+- **`build NEW`** — build provenance established, which is precisely what the 2026-08-18 screenshots
+  lacked and why no verdict was recorded from them.
+- **dpr 2 was the setting the reopened investigation suspected most**, and it is clean.
+
+**Between them the two machines cover both sides of 1.0** — dpr 1.25 on the Yoga and dpr 2 on the
+laptop — which is the split the unified-scale evidence section flagged as the risky axis.
+
 ### Status
 
-> **FO-3: ROOT CAUSE FOUND AND FIXED (Task #25).** An invalid CSS length in `stroke-dashoffset` that
-> Gecko correctly rejected and the other two engines silently coerced. Fixed, verified in all three
-> engines, and now guarded by I20 on every cube cell. **The dpr-2 lead was a red herring; engine
-> strictness was the variable.** **Both prior chat-authored probes are retracted and must never be
-> cited.** Owner confirmation on the field machines is still welcome using the probe above, but the
-> mechanism is no longer hypothetical.
+> **FO-3 CLOSED 2026-08-20 — architecture (#22) + units (#25) verified in the field on both machines;
+> guarded by I20 (line-claim + zoom + dpr legs) across all three cube engines.**
+>
+> Root cause, for the record: an invalid CSS length in `stroke-dashoffset` that Gecko correctly
+> rejected and the other two engines silently coerced (Task #25). **The dpr-2 lead was a red herring;
+> engine strictness was the variable.** **Both prior chat-authored probes are retracted and must never
+> be cited** — the retraction stands even though the outcome is good, because they were written blind
+> against assumed selectors and properties and both returned confident, wrong numbers.

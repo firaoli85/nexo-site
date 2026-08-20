@@ -53,7 +53,7 @@ const STATUS = {
 const ITEM_STATUSES = Object.keys(STATUS);
 const PHASE_STATUSES = ["todo", "in-progress", "done"];
 const DISCOVERY_STATUSES = ["open", "scheduled", "resolved"];
-const GATE_KEYS = ["tsc", "ci", "cube", "perfBudget"];
+const GATE_KEYS = ["tsc", "ci", "cube", "perfBudget", "fieldConfirmation"];
 
 // ── D12 GUARD: validation ────────────────────────────────────────────────────────────────────────
 function fail(msg) {
@@ -393,6 +393,7 @@ function render(d, fixlog) {
     ${gateTile("CI", d.gates.ci)}
     ${gateTile("QA cube", d.gates.cube)}
     ${gateTile("perf budget", d.gates.perfBudget)}
+    ${gateTile("field confirmation", d.gates.fieldConfirmation)}
   </div>
 
   <h2>Skills</h2>
