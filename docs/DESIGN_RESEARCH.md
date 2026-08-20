@@ -2330,3 +2330,167 @@ mid-build. The one thing still owed is the **cheap-panel leg of the C3 protocol*
 both bench rounds was a good one, which is the opposite of the condition C3 exists to catch. **That check
 lands in W4, not in a reopened W3.**
 
+
+---
+
+# PART 3 — GITLAB DISSECTION (owner taste event S-012, 2026-08-19)
+
+**Source:** `about.gitlab.com` homepage, dissected via Playwright at 1440×900, 2026-08-19.
+**Method:** the same five fields as the Stripe/Linear round — PURPOSE / STRUCTURE / TECHNIQUE /
+DEGRADATION / VERDICT. **Verdicts are TAKE / ADAPT / REJECT against `nexo-brand`, not against taste.**
+
+**Why this dissection exists:** the owner named GitLab as a colour and starting-design reference and
+asked explicitly for *inspiration, not copy* — "be creative, give credit, and improve it." Credit is
+given here in the only form that means anything: reading what they actually did, at the level of the
+CSS, rather than admiring a screenshot.
+
+---
+
+## 14a. THE GRADIENT — the thing the owner loves, and it is the cheapest thing on the page
+
+**PURPOSE.** Give a flat marketing page a sense of atmosphere and warmth without imagery, and do it in
+a way that reads as *light* rather than as decoration.
+
+**STRUCTURE.** One element — `.homepage-hero-v2__card`, **1392×675, `border-radius: 32px`** — carrying
+the entire effect as its `background-image`. It sits on a transparent body. The hero content sits on
+top of it.
+
+**TECHNIQUE — measured, not guessed. It is SIX layered CSS `radial-gradient`s, and nothing else:**
+
+| # | Position | Core colour | Falls to |
+|---|---|---|---|
+| 1 | `72% 85% at 104% 55%` | `rgb(238, 92, 18)` — orange, opaque | transparent at 68% |
+| 2 | `85% 100% at 96% 45%` | `rgba(246, 145, 70, 0.7)` | transparent at 64% |
+| 3 | `55% 60% at 92% 8%` | `rgba(252, 215, 176, 0.5)` — pale peach | transparent at 65% |
+| 4 | `62% 78% at 6% 102%` | `rgba(246, 95, 110, 0.92)` — **rose** | transparent at 78% |
+| 5 | `45% 85% at -5% 70%` | `rgba(248, 130, 145, 0.5)` — pink | transparent at 62% |
+| 6 | `25% 90% at 68% 70%` | `rgba(255, 200, 170, 0.18)` — haze | transparent at 70% |
+
+**The organising idea is two off-canvas "suns".** Layers 1–3 are an orange sun anchored *past* the
+right edge (`at 104%`); layers 4–5 are a rose sun anchored *past* the bottom-left corner (`at 6% 102%`
+and `at -5% 70%`). Because both centres sit outside the box, the viewer never sees a hotspot — only
+the falloff. Layer 6 is a wide, almost-invisible warm haze tying the two together across the middle.
+**Every layer falls to fully transparent**, so they composite rather than tile, and the card's own
+background shows through the gaps.
+
+**`canvas` count: 0. `video` count: 0. `animation-name: none`. `filter: none`.** No JS, no image, no
+canvas, no animation. **Network cost: zero bytes.** Runtime cost: one paint of six gradients on a
+static element — it is not even animated, so it does not re-paint.
+
+**DEGRADATION.** Nothing to degrade. `radial-gradient` with alpha stops has been universal for a
+decade; there is no support gate and no fallback needed. On a low-gamut display the falloff bands
+slightly, which is a taste cost, not a function cost.
+
+**VERDICT: TAKE the technique. It is the single most transferable thing in this study.** Layered
+off-canvas radial gradients with alpha falloff is exactly the kind of atmosphere we have been building
+by hand with the AmbientMap, and it costs **nothing** against D20. **Crucially the technique is
+hue-agnostic** — the same construction works in jade, which is why the bench's D2 direction can take
+the craft without taking the palette.
+
+**THE FINDING THAT MATTERS MOST FOR US:** the part the owner loves is free, and the part that makes
+GitLab's page slow (below) is unrelated to it. **We can have the atmosphere without the cost.**
+
+---
+
+## 14b. HERO ANATOMY
+
+**PURPOSE.** One claim, one supporting line, one action pair. No third option.
+
+**STRUCTURE / TECHNIQUE.**
+
+| Element | Measured |
+|---|---|
+| h1 | **96px / 100px line-height (1.04)**, weight **660**, letter-spacing **−2.88px (−0.03em)**, colour `rgb(23,19,33)`, max width 913px |
+| Primary CTA | ink fill `rgb(23,19,33)`, white text, **`border-radius: 4px`**, 18px/660, 47px tall, padding `11px 16px` |
+| Secondary CTA | **text-only ghost** — no border, no fill, same 18px/660 |
+| Card | `border-radius: 32px`, 675px tall |
+
+**The deliberate tension worth noticing: a 32px-radius card holding 4px-radius buttons.** Soft
+container, sharp controls. It reads as "friendly surface, precise tool" — very close to the positioning
+problem the owner described (neither purely warm nor purely technical).
+
+**Line-height 1.04 at 96px** is tighter than our hero, and is the same instinct as S-003.
+
+**DEGRADATION.** Standard type; nothing exotic.
+
+**VERDICT: ADAPT.** The **one-claim / one-lede / two-action** structure is already ours. The **radius
+tension is worth testing** (our buttons are softer). **REJECT the weight-660 display face** — that is
+GitLab Sans doing a job Bricolage already does for us under D21, and D21 is closed until post-launch.
+Our hero tracking (−0.030em) already matches theirs almost exactly, which is a quiet confirmation of
+the bench-measured value rather than a reason to change it.
+
+---
+
+## 14c. NAV
+
+**STRUCTURE.** `<header>`, **68px tall**, `position: sticky`, background **opaque white**,
+`backdrop-filter: none`, **`box-shadow: none`, `border-bottom: 0px`**, `z-index: 1025`, 63 links.
+The scrolled state measured **identically — no scroll-state change at all.**
+
+**VERDICT: REJECT the chrome treatment, and the reason is a shipped field fix.** GitLab's nav has *no*
+bottom boundary in either state. That is survivable for them because their nav is opaque white over a
+light page. **Ours is a dark glass bar over mixed registers, and FO-2 proved that when its boundary
+collapses the bar stops reading as a separate layer on real hardware.** The F1 nav seam exists for that
+reason and is guarded by I21. **Do not import "no boundary" from a page whose colour situation is not
+ours.** The *simplicity* the owner admires is real and is available to us through structure — fewer
+items, clearer grouping — not through deleting the seam.
+
+---
+
+## 14d. THE DARK-CARD SYSTEM
+
+**Honest limitation, stated rather than papered over:** the automated pass caught the nav dropdown
+cards (transparent backgrounds, `border-radius: 14px`, no border, no shadow) and the hero's inset card
+(`rgb(23,19,33)` fill, **`border-radius: 16px`, `padding: 24px`, no border, no shadow**), but did not
+inventory the full dark-card system further down the page. **The pattern is nonetheless legible from
+what was measured:** dark cards are **fill-only** — a near-black ink surface, generous radius (14–32px
+by tier), **zero border, zero shadow**, separated from the page by *fill contrast alone*.
+
+**VERDICT: ADAPT, with one hard constraint.** We already own the ink register (nexo-brand §1) and an
+ink-card treatment. What is genuinely takeable is the **fill-only, borderless, generous-radius** look.
+**The constraint is D23:** our `--on-ink-border-strong` exists because on the owner's operative device
+an ink card *without* a perceptible edge stopped reading as a card — that is the E2-05 floor, measured,
+and **floors-only-rise means a borderless variant must earn its way past a bench, not past a
+screenshot.** GitLab can go borderless because their dark cards sit on white; ours sit on ink.
+
+---
+
+## 14e. PERFORMANCE — single run, 2026-08-19, not lab-grade
+
+| Metric | GitLab | Our D20 bar |
+|---|---|---|
+| First Contentful Paint | **3812ms** | far under |
+| DOMContentLoaded | 4023ms | — |
+| Load | 4158ms | — |
+| Total transfer | **1434 kB** | — |
+| Requests | **250** | — |
+| Script bytes | **804 kB across 136 script requests** | — |
+| Image bytes | 113 kB | — |
+
+**Labelled honestly: one run, one machine, one network. An observation, not a benchmark.**
+
+**VERDICT: REJECT the delivery model entirely — and note the irony.** 136 script requests and 804 kB of
+JavaScript to render a marketing page is precisely what D20's "decline, don't degrade" rule exists to
+prevent. **But none of that cost is the gradient** — the gradient is six CSS declarations and zero
+bytes. **The thing the owner wants is free; the thing that makes their page slow is everything else.**
+That is the cleanest possible separation of what to take from what to leave.
+
+---
+
+## 14f. WHERE GITLAB'S CHOICES COLLIDE WITH OUR LAWS
+
+Recorded explicitly, because these are the points a future session might otherwise "fix" by importing:
+
+1. **Warm brand hue vs status semantics.** GitLab's brand field is orange-through-rose. **Our red means
+   *refused* and our amber means *deadline*.** A warm brand puts the identity in the same emotional
+   register as the alarms. GitLab carries no comparable status vocabulary on their marketing page, so
+   they pay nothing for it; **we would.** This cannot be settled by argument, which is why the bench
+   renders a real status row inside every direction — **including the warm pivot, unflinched.**
+2. **No nav boundary** vs the F1 seam (FO-2, I21). See 14c.
+3. **Borderless dark cards** vs the D23 E2-05 floor. See 14d.
+4. **A JS-heavy delivery model** vs D20. See 14e.
+5. **`prefers-reduced-motion`** is not a factor here — the gradient is static, which is the one place
+   GitLab is *more* conservative than we are.
+
+**Nothing in this dissection changes a token.** It feeds the three-direction bench, and the bench feeds
+an owner ruling (D25).

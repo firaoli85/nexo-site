@@ -169,3 +169,120 @@ and a banner states that pre-2026-08-18 readings were taken against the PREVIOUS
 laptop should now find the first visible step **at or below 1.00×**; if it does not, the floor rises again.
 Finding 8 from §4 (section C prints alpha but no ratio) **remains open** — glass was held this task, so the
 worst-case composite ratio it asked for was not needed to decide anything, and it is still worth building.
+
+---
+
+## 7. DIRECTION ROUND — three colour futures (Task #24, 2026-08-19)
+
+**Instrument:** `docs/color-direction-bench/index.html`, one self-contained `file://`-ready page.
+**Trigger:** owner taste event S-012, GitLab named as a colour and starting-design reference.
+**Status: OPEN. No direction is chosen here.** The bench produces an owner ruling, **D25**.
+
+### Bench design
+
+Three directions, each rendered as **the same four fragments from identical markup** so only the tokens
+differ: (i) hero at real scale with the approved lede, (ii) a **status row** carrying the real pills
+(refused / timely-filing / credentials-current), (iii) a dark-card trio with Nexo content, (iv) an ink
+terminus. D21 type tokens are dogfooded. Every fragment prints its own contrast ratios with floors and
+pass/fail, computed live. A **GROUP BY** control re-groups the twelve fragments by fragment index so the
+same fragment from all three directions can be read adjacent instead of from memory.
+
+**The status row is the point of the whole instrument.** Warm brands collide with alarm semantics, and
+that collision cannot be settled by argument, so it is rendered inside every direction, D3 included and
+unflinched.
+
+### The warm family, and why it is this one
+
+The D2 warm family was chosen by **colour geometry, not mood**. Jade sits at hue **159°**, so its
+complement is ~339° (rose) and its split-complement neighbour is ~35° (apricot). Complementary warmth
+*harmonises* with jade rather than muddying it, which is why the family is sand/coral/rose and why a
+yellow-green or teal warm was never a candidate.
+
+| Direction | Tokens |
+|---|---|
+| **D1 CURRENT** | The hardened jade system exactly as shipped. Atmosphere is the faint jade grid that ships today. Control. |
+| **D2 SYNTHESIS** | Identity tokens **byte-identical to D1**. The only change is a warm atmosphere LAYER: apricot `rgba(244,168,116,.28)` anchored at `104% 52%`, rose `rgba(238,138,150,.24)` at `4% 104%`, plus a faint haze, all off-canvas with alpha falloff. |
+| **D3 WARM PIVOT** | Full re-token. Accent `#9a3412`, ink `#110b09`, ink-surface `#32211c`, on-ink `#f5ece8`, card edge `#957064`, page `#f8f4f1`, and a GitLab-strength fire atmosphere. |
+
+### Tuning rationale, with the numbers that forced each choice
+
+- **D2 alphas are capped at 0.28** and both suns are anchored off-canvas. Higher alphas pushed
+  `--accent` below AA over the field.
+- **Accent text on the warm field must be `--accent-hover`.** Measured: plain `--accent` lands at
+  **4.25** at the worst painted pixel in the lede's own column (fails 4.5); `--accent-hover` holds
+  **5.40**. `nexo-brand §3` already designates `--accent-hover` as the deeper-field substitute, so this
+  is existing law rather than a new exception, but it is a real constraint on the design.
+- **D3's warm ink pair was re-tuned to clear D23.** The prettier, warmer pairs measured **1.17 to 1.23**
+  separation and were rejected for falling under the shipped jade value of 1.25. `#110b09 / #32211c`
+  measures **1.27**. **Floors-only-rise binds every direction, whatever the hue.**
+- **D3's card edge was re-tuned mid-build.** `#7a5a4e` measured **2.48** against the warm ink surface,
+  failing the 3:1 card-edge tier that D1's jade clears at 3.47. `#957064` measures **3.49**, matching
+  jade's headroom.
+
+### THE NUMBER THAT MAKES THE COLLISION ARGUABLE-FREE
+
+Hue distance between the brand accent and the **danger red** (`#c81e2c`, hue 355°):
+
+| Direction | Accent | Hue | Distance from danger |
+|---|---|---|---|
+| D1 / D2 | `#0b7d56` jade | 159° | **164°** |
+| D3 ember | `#9a3412` | 15° | **20°** |
+| (a rose warm) | `#be123c` | 345° | **10°** |
+| (GitLab's own orange) | `#ee5c12` | 20° | 25° |
+
+A warm brand puts the identity **10 to 25 degrees from the alarm colour**. Jade sits **164 degrees**
+away, nearly opposite on the wheel. That is the semantic cost of D3, measured rather than asserted.
+A second, subtler cost is visible in the rendered D3 status row: because the page is warm, the **green
+"credentials current" pill becomes the visual outlier**, which inverts the intended hierarchy — the
+quiet good state should not be the loudest thing in the row.
+
+### Verification
+
+- **Font check (primed per the Task #12 amendment):** Bricolage Grotesque LOADED, Hanken Grotesk LOADED,
+  IBM Plex Mono LOADED.
+- **Screenshots at 1440 and 390 for all three directions, viewed.** D3 stacks correctly at 390; the
+  status row wraps to two lines and the cards stack.
+- **All twelve fragment ratio sets pass** their floors in both group-by modes. Zero console errors at
+  either width.
+- **A measurement corrected my own analysis mid-build.** The bench first scored text against the
+  theoretical *sun core* and reported D3's lede failing at 4.06. Sampling the **actual painted pixels**
+  in the lede's own column (the suns are anchored off-canvas, so the core is never reachable under text)
+  returned **7.37**. D3 was being condemned by an assumption. The bench now reports measured values and
+  demotes the sun-core figure to an information row.
+
+### impeccable — findings and responses
+
+Run against the bench before handoff. **Assessment independence: degraded** (sub-agents were not used;
+session policy restricts the Agent tool, so Assessment A and B ran sequentially per the documented
+fallback). Heuristic average **3.1/4**. Snapshot persisted under `.impeccable/critique/`.
+
+| # | Severity | Finding | Response |
+|---|---|---|---|
+| 1 | **P1** | The bench's entire job is comparison, but it only supported sequential reading. Weighing D1's hero against D3's meant holding the first in memory across ~2 screens of scroll. | **FIXED.** Added the **GROUP BY → FRAGMENT** mode. Verified: 4 rows, 12 direction blocks, correct headers, zero ratio failures, clean restore. |
+| 2 | **P1** | The two-machine reading requirement lived only in the protocol card at the foot, after the impression is already formed. | **FIXED**, and partially downgraded on review: the core instruction was already in the opening lede. The two-machine requirement now sits there too. |
+| 3 | **P2** | NOTES strips ran the full 1180px container, past the 65–75ch body cap. | **FIXED.** Capped at 78ch. |
+| 4 | **P2** | Detector: **em-dash overuse, 26 in body copy** — a real AI cadence tell. | **FIXED** with 20 sentence-level rewrites, done individually because automatic dash-stripping breaks grammar. **Detector now returns `[]`.** |
+| 5 | **P3** | The dark-card trio is three identical cards (the identical-card-grid pattern). | **ACCEPTED, not fixed.** The fragment exists to render the site's *actual* card system for comparison; restyling it would break the thing it is for. Recorded so it is not mistaken for a reflex. |
+
+Two further patterns were checked and judged **earned rather than reflexive**: the numbered uppercase
+fragment labels (the fragments genuinely are an enumerated comparison set, and the numbers carry
+which-fragment-am-I-looking-at information across three directions) and the `repeating-linear-gradient`
+grid lines (these render the site's shipped AmbientMap grid, so identity-preservation wins over the
+codex-decoration ban).
+
+### PROTOCOL
+
+> **Owner reads on both machines, reacts by direction number; ruling becomes D25 — adopt, synthesize,
+> or hold. Until ruled, the hardened jade palette remains law. Any adoption then goes through a full
+> token-implementation task with cube and AA re-verification, floors-only-rise honoured.**
+
+Three further notes for that ruling:
+
+1. **The layers split** (S-012): atmosphere, composition, and card treatment can be adopted
+   independently. **D2 is precisely "atmosphere only"**, which is why it carries zero identity risk.
+2. **The atmosphere technique is free.** It is six CSS declarations, zero bytes, zero JS, no animation
+   (`docs/DESIGN_RESEARCH.md` §14a). What makes GitLab's own page slow — 136 script requests, 804 kB of
+   JavaScript, FCP 3812ms — has nothing to do with the part the owner liked.
+3. **The bench cannot answer one question and should not pretend to:** whether the warm thesis
+   (*neither fully medical nor fully technology*) is worth the status-semantics cost. It renders the
+   cost. The judgement is the owner's.

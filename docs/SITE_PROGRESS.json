@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-19",
-    "currentTask": "owner two-machine field proof (FO-3), then W5 part 2",
+    "currentTask": "owner colour-direction reactions (both machines) + FO-3 two-machine field proof",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -469,7 +469,7 @@
       "title": "Owner TWO-MACHINE field proof at the curve — the closing proof for FO-3",
       "status": "todo",
       "date": "2026-08-19",
-      "note": "THE PROTOCOL IS NOW TWO MACHINES, AND EACH MUST BE TESTED AT THE SETTING THAT USED TO FAIL IT - a different setting on each. The work machine supplied the other half of the curve: it is PERFECT at 100 percent (effective scale 1.00) and BROKEN at 80 percent (effective scale 0.80), the mirror image of the Yoga, which is broken at 1.25 and perfect at 1.00. UNIFIED LAW: the pre-Task-22 dual-renderer architecture fails whenever the EFFECTIVE SCALE is not 1.0, in EITHER direction - two machines failing on opposite sides of unity and both perfect exactly at unity is the class-level conviction, and it retires the last 'it is just that laptop' reading. RUN, both on a build at or after Task #22 (432958c): (1) Yoga at browser zoom 100 percent, (2) work machine at browser zoom 80 percent. Testing both at 100 percent would pass on the work machine for the WRONG REASON, because 100 percent was never its failing case. Use the console probe recorded in docs/FIELD_OBSERVATIONS.md FO-3 at the terminus curve: errY should read about 0 and the zoom ladder should be FLAT rather than scaling with distance from 1.0. ALSO STILL OWED: FO-1's van glue re-test at a verified commit.",
+      "note": "TWO OWNER READINGS ARE NOW OUTSTANDING AND THEY ARE INDEPENDENT. (1) FO-3 TWO-MACHINE FIELD PROOF, unchanged and still the closing proof for the van fix: Yoga at browser zoom 100 percent and work machine at 80 percent, each at the setting that used to fail IT, both on a build at or after Task #22 (432958c); run the console probe in docs/FIELD_OBSERVATIONS.md FO-3 at the terminus curve and expect errY about 0 with a FLAT zoom ladder. (2) COLOUR DIRECTION READING, new: open docs/color-direction-bench/index.html on BOTH machines and react by direction number; the ruling becomes D25 (adopt, synthesize, or hold). Use the GROUP BY - FRAGMENT control to compare the same fragment across all three directions adjacently rather than from memory. Until D25 the hardened jade palette remains law, and any adoption goes through a full token-implementation task with cube and AA re-verification.",
       "fixlogRef": "2026-08-19 - Task #23"
     },
     {
@@ -516,6 +516,15 @@
       "date": "2026-08-19",
       "fixlogRef": "2026-08-19 - Task #23",
       "note": "Documentation-only: no site code, no cube. Ground truth to v1.6 with D24 appended to the section-4 ledger and the impact-check law added to section 8. docs/DESIGN_SUGGESTIONS.md created with the schema, the six dispositions, and 11 seeded entries. THE ONE THAT MATTERS MOST IS THE REJECTION: the external audit's 'remove drop shadows, crisp 1px borders only' is a COLLISION with the F1 nav seam (Task #20), which is a box-shadow hairline that exists because the scrolled-nav edge was invisible on the owner's own laptop, and which I21 guards at four device scale factors. Rejected as a blanket rule; the card-shadow half survives as TEST-FIRST for one variant, to be judged on the D23-hardened palette rather than the V1 palette the audit actually saw. S-011 records the external FO-3 theory as EVALUATED-REJECTED with five independent pieces of evidence, because its prescription is to restore the exact condition (preserveAspectRatio=none) that was present when the defect was first reported."
+    },
+    {
+      "id": "W-D25-BENCH",
+      "phase": "P3",
+      "title": "GitLab direction study: dissection + three-direction colour bench (awaiting D25)",
+      "status": "done",
+      "date": "2026-08-19",
+      "fixlogRef": "2026-08-19 - Task #24",
+      "note": "Documentation and bench tooling only: no site code, no cube, no token changed. GitLab dissected at CSS level (docs/DESIGN_RESEARCH.md part 3, sections 14a-14f). THE HEADLINE FINDING: the gradient the owner loves is SIX layered CSS radial-gradients with alpha falloff, anchored OFF-CANVAS so only the falloff is ever seen - zero bytes, zero JS, zero canvas, no animation - while what makes GitLab slow (FCP 3812ms, 1434kB, 136 script requests, 804kB of JS) has nothing to do with it. We can have the atmosphere without the cost, and the technique is hue-agnostic so it works in jade. Verdicts: TAKE the gradient technique; ADAPT the hero structure and the fill-only dark cards (constrained by the D23 E2-05 floor); REJECT the nav treatment (they have NO bottom boundary in either state, which collides with the F1 seam that exists because FO-2 proved the boundary collapsing on real hardware, guarded by I21) and REJECT the delivery model (D20). Bench renders three directions from identical markup: D1 current jade control, D2 synthesis (identity tokens BYTE-IDENTICAL, warmth is a LAYER only), D3 honest full warm pivot. THE STATUS ROW IS RENDERED IN ALL THREE because a warm brand collides with alarm semantics and that cannot be settled by argument. The collision is now a number: brand-to-danger hue distance is 164deg for jade and 20deg for the ember warm (10deg for a rose warm). D23 floors were treated as PORTABLE and bound every direction: D3 warm ink was re-tuned from pairs measuring 1.17-1.23 up to 1.27 (jade ships 1.25), and its card edge from 2.48 up to 3.49 to clear the 3:1 tier."
     }
   ],
   "decisions": [
@@ -950,6 +959,10 @@
     {
       "date": "2026-08-19",
       "summary": "Task #23 documentation-only: D24 establishes the impact-check law (every build prompt maps its change against the ledger, the FIXLOG audit guidance and the invariant set before implementing, and an unresolvable collision is a STOP, not a silent override) and makes docs/DESIGN_SUGGESTIONS.md the sole door for outside design input. Register seeded with 11 dispositioned entries. FO-3 gained the unified-scale evidence: the work machine fails at effective scale 0.80 while the Yoga fails at 1.25, so the pre-22 architecture failed away from unity in EITHER direction, and the closing proof is now a two-machine protocol."
+    },
+    {
+      "date": "2026-08-19",
+      "summary": "Task #24 GitLab direction study. Dissected about.gitlab.com at CSS level: the gradient is six layered off-canvas radial-gradients, zero bytes and zero JS, while their page cost (FCP 3812ms, 804kB of script) is unrelated to it. Built a three-direction colour bench rendering identical markup under D1 current jade, D2 synthesis (warmth as a LAYER over byte-identical identity tokens) and D3 an honest full warm pivot, with the real status row in every direction. The warm-versus-alarm collision is now a measured number: 164deg of hue separation for jade against 20deg for the warm accent. D23 floors were applied as PORTABLE and forced two re-tunes in D3. impeccable run: five findings, four fixed including a group-by-fragment comparison mode; detector clean. No direction chosen; D25 is the owner ruling."
     }
   ]
 }

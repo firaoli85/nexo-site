@@ -165,3 +165,53 @@ because the person making it has not read the ledger.
 - **Purpose of this entry:** so that a future session reading a plausible external theory does not
   relitigate a question that has five measurements against it. **Do not re-open without new field
   evidence from a build ≥ Task #22.**
+
+---
+
+## S-012 — GitLab as colour + starting-design reference
+
+- **Source:** **Owner taste event** — `about.gitlab.com` named directly · **Date:** 2026-08-19
+- **Disposition:** **TEST-FIRST** → rendered as three directions in `docs/color-direction-bench/index.html` (Task #24)
+
+**The owner's reasons, cleaned from voice with the meaning preserved:**
+
+- Loves the **pink/red/fire gradient** and the way the combination works together.
+- Loves the **simplicity** — the menu and the hero specifically.
+- Loves the **dark cards**.
+- **Inspiration, not copy** — stated explicitly: *"whenever you like something, be creative, give
+  credit, and improve it."*
+- **The thesis, which is the substantive part:** the **warm + technical middle ground** fits a company
+  that is *neither fully medical nor fully technology*. Medical-blue would claim clinical care we do
+  not provide; pure developer-tool aesthetics would disown the care side. Warm-plus-technical is a
+  positioning argument expressed as colour, and it deserves to be tested rather than admired or
+  dismissed.
+
+**THREE-LAYER SPLIT — recorded so the layers can be adopted independently.** "GitLab" is not one
+decision, and collapsing it into one would force an all-or-nothing ruling on things that have very
+different costs:
+
+| Layer | What it is | Independent cost |
+|---|---|---|
+| **Atmosphere** | The warm gradient field behind the hero | Highest reward, lowest structural risk — it is a background layer, not an identity change |
+| **Composition** | Hero simplicity, nav structure, spacing | Largely orthogonal to colour; can be adopted with the jade palette untouched |
+| **Card treatment** | The dark-card system | Already partly ours (the ink register, nexo-brand §1); the question is breadth and treatment, not invention |
+
+**Impact — named per D24, and one collision is not resolvable by taste:**
+
+- **nexo-brand §1 tonal law is under review by owner ruling**, which is legitimate — §1 is a decision,
+  not a physical constraint, and the owner may revise it. It is not being *violated*; it is being
+  *questioned*, and the bench is the instrument.
+- **D23 floors are PORTABLE and bind every direction.** The separation laws (A06/B06/E1-07/E2-05) were
+  measured as *perception* thresholds, not as jade-specific values. Any direction must honour the
+  equivalent deltas, and **floors-only-rise** applies whatever the hue.
+- **STATUS-COLOUR SEMANTICS IS THE REAL COLLISION.** Red means *refused*, amber means *deadline*. A
+  warm brand field puts the brand in the same emotional register as the alarms. **This cannot be
+  settled by argument, so the bench renders a real status row inside every direction** — including the
+  warm pivot, unflinched — so the cost is *seen* rather than asserted.
+- **D21 type is untouched.** The bench dogfoods the shipped type tokens.
+- **The Railway receipt (§13) is refined, not discarded.** A new ruling would be a reversal with a
+  receipt, per the founding law.
+- **W2 hero concepts: synergy.** An atmosphere layer feeds that work rather than competing with it.
+
+**Nothing is adopted by this entry.** The bench produces a ruling (**D25**) — adopt, synthesize, or
+hold. Until then the hardened jade palette remains law.

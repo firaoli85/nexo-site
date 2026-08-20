@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colour direction bench — three futures (Task #24)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ── D21 TYPE TOKENS, dogfooded exactly as shipped ───────────────────────────────────────────── */
+:root{
+  --font-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --font-body:"Hanken Grotesk",ui-sans-serif,system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --weight-hero:800; --weight-heading:700;
+  --track-hero:-0.030em; --track-heading:-0.022em; --track-lede:-0.008em; --track-mono:0.035em;
+  /* status tokens are SEMANTIC, not brand — identical in all three directions on purpose */
+  --danger:#c81e2c; --danger-subtle:#fef2f2;
+  --warning:#b45309; --warning-subtle:#fffbeb;
+  --success:#0b7d56; --success-subtle:#e9f9f1;
+  --bench-canvas:#c9ced3; /* off-palette, appears in no direction */
+}
+
+/* ── D1 CURRENT — the hardened jade system exactly as shipped (control) ──────────────────────── */
+[data-dir="d1"]{
+  --bg:#f5f7f9; --surface:#ffffff; --surface-tint:#e9f3ef; --surface-tint-border:#93c0ab;
+  --border:#c3c9d5; --border-strong:#969fae; --border-control:#7e8d86;
+  --text:#0c1512; --text-muted:#42544c; --text-subtle:#4b5c53;
+  --accent:#0b7d56; --accent-hover:#0a6b49; --accent-text:#ffffff;
+  --ink:#0b1512; --ink-surface:#192b24; --on-ink:#e9f1ee; --on-ink-muted:#adbfb8;
+  --on-ink-border-strong:#5b8275; --accent-on-ink:#46d6a0;
+  /* atmosphere = what actually ships today: a faint jade grid, no gradient field */
+  --atmos:
+    repeating-linear-gradient(0deg,rgba(11,125,86,.055) 0 1px,transparent 1px 132px),
+    repeating-linear-gradient(90deg,rgba(11,125,86,.055) 0 1px,transparent 1px 132px);
+}
+
+/* ── D2 SYNTHESIS "jade heart, warm light" ───────────────────────────────────────────────────── */
+/* Identity tokens are BYTE-IDENTICAL to D1. The only change is an atmosphere LAYER.
+   Warm family chosen by colour geometry, not by mood: jade sits at hue 159deg, so its complement is
+   ~339deg (rose) and its split-complement neighbour is ~35deg (apricot). Complementary warmth
+   HARMONISES with jade instead of fighting it, which is why sand/coral/rose is the family and why a
+   yellow-green or teal warm would have muddied. Alphas are capped at 0.28 at the core and both suns
+   are anchored OFF-CANVAS (GitLab's technique) so the falloff — not the hotspot — lands under text. */
+[data-dir="d2"]{
+  --bg:#f5f7f9; --surface:#ffffff; --surface-tint:#e9f3ef; --surface-tint-border:#93c0ab;
+  --border:#c3c9d5; --border-strong:#969fae; --border-control:#7e8d86;
+  --text:#0c1512; --text-muted:#42544c; --text-subtle:#4b5c53;
+  --accent:#0b7d56; --accent-hover:#0a6b49; --accent-text:#ffffff;
+  --ink:#0b1512; --ink-surface:#192b24; --on-ink:#e9f1ee; --on-ink-muted:#adbfb8;
+  --on-ink-border-strong:#5b8275; --accent-on-ink:#46d6a0;
+  --atmos:
+    radial-gradient(70% 84% at 104% 52%, rgba(244,168,116,.28) 0, rgba(246,186,146,.18) 26%, rgba(250,214,190,.07) 52%, rgba(255,235,222,0) 70%),
+    radial-gradient(62% 78% at 4% 104%, rgba(238,138,150,.24) 0, rgba(243,170,178,.14) 28%, rgba(250,210,214,.05) 58%, rgba(255,232,232,0) 76%),
+    radial-gradient(30% 70% at 70% 76%, rgba(252,224,205,.12) 0, rgba(255,240,228,0) 68%),
+    repeating-linear-gradient(0deg,rgba(11,125,86,.05) 0 1px,transparent 1px 132px),
+    repeating-linear-gradient(90deg,rgba(11,125,86,.05) 0 1px,transparent 1px 132px);
+}
+/* Accent TEXT sitting on the warm field uses --accent-hover, which nexo-brand §3 already designates
+   as the substitute "on any deeper light field where jade-on-jade would fail". Measured: plain
+   --accent falls to 3.84–4.32 over the warm composite (FAILS AA); --accent-hover holds 4.88–5.49. */
+[data-dir="d2"] .on-atmos .accent-text{color:var(--accent-hover);}
+
+/* ── D3 WARM PIVOT — an honest GitLab-class full warm direction ───────────────────────────────── */
+/* Rendered fairly, including its costs. Warm ink pair chosen to CLEAR the D23 B06-equivalent
+   separation: #110b09 / #32211c measures 1.27 against jade's shipped 1.25. Warmer-but-closer pairs
+   (1.17–1.23) were rejected for falling under the floor — floors-only-rise binds every direction. */
+[data-dir="d3"]{
+  --bg:#f8f4f1; --surface:#ffffff; --surface-tint:#f6ebe4; --surface-tint-border:#d9b79f;
+  --border:#d8cdc6; --border-strong:#b0a099; --border-control:#8d7b73;
+  --text:#1a1210; --text-muted:#57443e; --text-subtle:#614d46;
+  --accent:#9a3412; --accent-hover:#7c2a0e; --accent-text:#ffffff;
+  --ink:#110b09; --ink-surface:#32211c; --on-ink:#f5ece8; --on-ink-muted:#d8c4bb;
+  --on-ink-border-strong:#957064; --accent-on-ink:#f2a06a;
+  --atmos:
+    radial-gradient(72% 85% at 104% 55%, rgba(238,92,18,.62) 0, rgba(241,105,28,.5) 12%, rgba(244,125,55,.34) 26%, rgba(250,184,137,.14) 46%, rgba(252,206,171,0) 70%),
+    radial-gradient(62% 78% at 6% 102%, rgba(246,95,110,.5) 0, rgba(248,120,135,.34) 16%, rgba(252,185,190,.12) 44%, rgba(255,219,219,0) 74%),
+    radial-gradient(55% 60% at 92% 8%, rgba(252,215,176,.3) 0, rgba(255,240,220,0) 66%),
+    radial-gradient(25% 90% at 68% 70%, rgba(255,200,170,.12) 0, rgba(255,230,220,0) 70%);
+}
+
+/* ── page chrome ─────────────────────────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bench-canvas);color:#0c1512;font-family:var(--font-body);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px;}
+h1.bench{font-family:var(--font-display);font-weight:var(--weight-hero);letter-spacing:var(--track-hero);
+  font-size:36px;line-height:1.1;margin:26px 0 8px;}
+.lede{font-size:17px;max-width:74ch;color:#22302b;}
+.bar{position:sticky;top:0;z-index:50;background:#111a17;color:#e9f1ee;padding:9px 20px;
+  font-family:var(--font-mono);font-size:12.5px;letter-spacing:var(--track-mono);}
+.bar a{color:#46d6a0;text-decoration:none;margin-right:16px;}
+.bar b{color:#fff;}
+.card-doc{scroll-margin-top:54px;background:#fff;border:1px solid #b9c0c6;border-radius:12px;padding:18px 20px;margin:18px 0 26px;}
+.card-doc h2{font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);
+  font-size:20px;margin:0 0 8px;}
+.card-doc p{margin:.5em 0;font-size:14.5px;}
+.card-doc code{font-family:var(--font-mono);font-size:12.5px;background:#eef1f4;padding:1px 5px;border-radius:4px;}
+
+.dir{scroll-margin-top:54px;margin:44px 0 0;border-radius:16px;overflow:hidden;border:2px solid #7c848b;background:#fff;}
+.dir-head{padding:14px 20px;background:#161f1c;color:#e9f1ee;}
+.dir-head h2{margin:0;font-family:var(--font-display);font-weight:var(--weight-heading);
+  letter-spacing:var(--track-heading);font-size:23px;}
+.dir-head .tag{font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);color:#9fd8c0;}
+.notes{padding:12px 20px;background:#f2f4f6;border-bottom:1px solid #c9ced3;font-size:14px;max-width:78ch;}
+/* GROUP-BY control. The bench's job is comparison, and reading it top to bottom asks you to hold D1's
+   hero in memory across two screens of scrolling to weigh it against D3's. Fragment mode puts the same
+   fragment from all three directions next to each other, at full width, so the comparison is adjacent
+   instead of remembered. */
+.modebar{display:flex;align-items:center;gap:10px;margin:20px 0 0;font-family:var(--font-mono);
+  font-size:12.5px;letter-spacing:var(--track-mono);}
+.modebar button{font-family:var(--font-mono);font-size:12.5px;letter-spacing:var(--track-mono);
+  padding:7px 14px;border-radius:8px;border:1px solid #7c848b;background:#fff;color:#2b3640;cursor:pointer;}
+.modebar button.on{background:#161f1c;color:#e9f1ee;border-color:#161f1c;}
+.fragrow{margin:44px 0 0;border-radius:16px;overflow:hidden;border:2px solid #7c848b;background:#fff;
+  scroll-margin-top:54px;}
+.fragrow > .rowhead{padding:12px 20px;background:#161f1c;color:#e9f1ee;font-family:var(--font-display);
+  font-weight:var(--weight-heading);letter-spacing:var(--track-heading);font-size:19px;}
+.dirtag{padding:6px 20px;background:#2b3640;color:#cfe6db;font-family:var(--font-mono);
+  font-size:11.5px;letter-spacing:var(--track-mono);}
+.notes b{font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);}
+.frag{padding:0;border-top:1px solid #c9ced3;}
+.frag-label{font-family:var(--font-mono);font-size:11.5px;letter-spacing:var(--track-mono);
+  padding:7px 20px;background:#e4e8eb;color:#3b4750;text-transform:uppercase;}
+.ratios{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.02em;padding:8px 20px 12px;
+  background:#eef1f4;color:#2b3640;display:flex;flex-wrap:wrap;gap:6px 18px;}
+.ratios .ok::before{content:"PASS ";color:#0b7d56;}
+.ratios .no::before{content:"FAIL ";color:#c81e2c;font-weight:700;}
+.ratios .info::before{content:"— ";color:#6b7780;}
+
+/* ── the four fragments, IDENTICAL markup in every direction ─────────────────────────────────── */
+.stage{background:var(--bg);background-image:var(--atmos);background-repeat:no-repeat;
+  background-size:cover;padding:44px 40px;}
+.eyebrow{display:inline-block;font-family:var(--font-mono);font-size:13px;letter-spacing:var(--track-mono);
+  color:var(--accent);background:var(--surface-tint);border:1px solid var(--surface-tint-border);
+  border-radius:999px;padding:5px 13px;}
+.hero-h1{font-family:var(--font-display);font-weight:var(--weight-hero);letter-spacing:var(--track-hero);
+  font-size:54px;line-height:1.06;color:var(--text);margin:16px 0 0;max-width:20ch;text-wrap:balance;}
+.hero-lede{font-size:18px;line-height:1.6;letter-spacing:var(--track-lede);color:var(--text-muted);
+  max-width:56ch;margin:16px 0 0;}
+.btns{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;}
+.btn-p{background:var(--accent);color:var(--accent-text);border:1px solid var(--accent);
+  border-radius:8px;padding:11px 20px;font-weight:600;font-size:16px;}
+.btn-s{background:transparent;color:var(--text);border:1px solid var(--border-control);
+  border-radius:8px;padding:11px 20px;font-weight:600;font-size:16px;}
+
+.statusrow{background:var(--bg);background-image:var(--atmos);background-repeat:no-repeat;
+  background-size:cover;padding:30px 40px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.pill{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:7px 14px;
+  font-size:14px;font-weight:600;border:1px solid transparent;}
+.pill .dot{width:8px;height:8px;border-radius:50%;}
+.pill-d{background:var(--danger-subtle);color:var(--danger);border-color:color-mix(in srgb,var(--danger) 30%,transparent);}
+.pill-d .dot{background:var(--danger);}
+.pill-w{background:var(--warning-subtle);color:var(--warning);border-color:color-mix(in srgb,var(--warning) 30%,transparent);}
+.pill-w .dot{background:var(--warning);}
+.pill-s{background:var(--success-subtle);color:var(--success);border-color:color-mix(in srgb,var(--success) 30%,transparent);}
+.pill-s .dot{background:var(--success);}
+.statusrow .note{font-family:var(--font-mono);font-size:12px;letter-spacing:var(--track-mono);
+  color:var(--text-subtle);width:100%;margin-top:4px;}
+
+.cards{background:var(--bg);background-image:var(--atmos);background-repeat:no-repeat;background-size:cover;
+  padding:34px 40px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.dcard{background:var(--ink-surface);border:1px solid var(--on-ink-border-strong);border-radius:16px;padding:20px;}
+.dcard h3{font-family:var(--font-display);font-weight:var(--weight-heading);letter-spacing:var(--track-heading);
+  font-size:18px;color:var(--on-ink);margin:0 0 8px;}
+.dcard p{font-size:14.5px;color:var(--on-ink-muted);margin:0;}
+.dcard .stat{font-family:var(--font-mono);font-size:12.5px;letter-spacing:var(--track-mono);
+  color:var(--accent-on-ink);display:block;margin-top:12px;}
+
+.terminus{background:var(--ink);padding:36px 40px;border-radius:0;}
+.terminus .word{font-family:var(--font-display);font-weight:var(--weight-hero);letter-spacing:var(--track-hero);
+  font-size:38px;color:var(--on-ink);margin:0;}
+.terminus p{color:var(--on-ink-muted);font-size:15px;margin:8px 0 0;max-width:52ch;}
+.terminus a{color:var(--accent-on-ink);text-decoration:none;font-size:14px;
+  font-family:var(--font-mono);letter-spacing:var(--track-mono);display:inline-block;margin-top:14px;}
+
+@media (max-width:820px){
+  .cards{grid-template-columns:1fr;}
+  .hero-h1{font-size:38px;}
+  .stage,.statusrow,.cards,.terminus{padding-left:22px;padding-right:22px;}
+}
+#fontcheck{font-family:var(--font-mono);font-size:12px;padding:10px 20px;background:#111a17;color:#9fd8c0;}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <b>DIRECTION BENCH</b>
+  <a href="#impact">impact check</a>
+  <a href="#d1">D1 current</a>
+  <a href="#d2">D2 synthesis</a>
+  <a href="#d3">D3 warm pivot</a>
+  <a href="#protocol">how to read this</a>
+</div>
+
+<div class="wrap">
+  <h1 class="bench">Three colour futures, rendered rather than described</h1>
+  <p class="lede">One question: <strong>which of these is Nexo Access?</strong> Each direction renders the
+  same four fragments from identical markup. Only the tokens change. React by <strong>direction
+  number</strong>; the ruling becomes <strong>D25</strong>. Until then the hardened jade palette is law.<br>
+  <strong>Read it on BOTH machines</strong> (the good monitor and the standard laptop). D23 exists because the
+  second machine disagrees with the first. Full protocol at the foot of the page.</p>
+
+  <div class="card-doc" id="impact">
+    <h2>D24 impact check, written before building as the law now requires</h2>
+    <p><b>Planned work:</b> render alternative colour directions for an owner ruling. No site code, no
+    invariant touched, no token changed.</p>
+    <p><b>Collisions mapped:</b></p>
+    <p>· <code>nexo-brand §1</code> tonal law: <strong>under review by owner ruling, which is
+    legitimate.</strong> §1 is a decision, not a physical constraint. It is being questioned, not violated.</p>
+    <p>· <code>D23</code> perception floors: <strong>PORTABLE, and they bind every direction here.</strong>
+    The A06/B06/E1-07/E2-05 separations were measured as <em>perception</em> thresholds, not as jade-specific
+    values. D3's warm ink pair was re-tuned to <code>#110b09 / #32211c</code> (1.27) precisely because the
+    warmer, prettier pairs measured 1.17–1.23 and fell under the shipped 1.25. <strong>Floors-only-rise
+    applies whatever the hue.</strong></p>
+    <p>· <strong>Status-colour semantics, the collision that cannot be argued, only seen.</strong> Red means
+    refused; amber means deadline. A warm brand puts the identity in the alarm's own hue neighbourhood.
+    Every direction therefore renders a <em>real</em> status row, D3 included and unflinched.</p>
+    <p>· <code>D21</code> type: untouched. this bench dogfoods the shipped tokens.</p>
+    <p>· <strong>Railway receipt (§13)</strong>: a new ruling would refine it with a reversal receipt, per
+    the founding law. Not discarded.</p>
+    <p>· <strong>W2 hero concepts</strong>: synergy. an atmosphere layer feeds that work.</p>
+    <p><b>Unresolvable by bench → owner forks:</b> whether the warm thesis (<em>neither fully medical nor
+    fully technology</em>) outweighs the semantic cost quantified below; and how much atmosphere is
+    "enough" before it competes with the copy.</p>
+  </div>
+
+  <div class="card-doc">
+    <h2>Credit, as asked</h2>
+    <p>The atmosphere technique in D2 and D3 is <strong>GitLab's</strong>, read from
+    <code>about.gitlab.com</code> and dissected in <code>docs/DESIGN_RESEARCH.md</code> §14a: layered CSS
+    <code>radial-gradient</code>s with alpha falloff, anchored <em>off-canvas</em> so the viewer sees the
+    falloff and never the hotspot. It is six declarations, zero bytes, zero JS, and it does not animate.
+    <strong>What we add:</strong> the hue geometry (D2's warm family is jade's complement, chosen so the two
+    harmonise rather than compete), the AA discipline under every text zone, and the D23 floors applied to a
+    palette that is not ours yet.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="modebar">Group by
+    <button id="byDir" class="on" type="button">DIRECTION</button>
+    <button id="byFrag" type="button">FRAGMENT (compare across directions)</button>
+  </div>
+  <div id="stage">
+
+  <!-- ═══════════ D1 ═══════════ -->
+  <section class="dir" id="d1" data-dir="d1">
+    <div class="dir-head"><h2>D1 · CURRENT, hardened jade</h2>
+      <span class="tag">the control · exactly what ships today · D23-hardened</span></div>
+    <div class="notes">
+      <b>BENEFIT:</b> identity is settled, every pairing is already AA-verified on real hardware, and the
+      accent sits <strong>164° from the danger red</strong>, so the status row can never be misread as brand.<br>
+      <b>COST:</b> the page reads cool and technical. The owner's thesis is that this under-sells the
+      <em>care</em> half of a company that is neither fully medical nor fully technology (D1/D15 identity).
+    </div>
+    <div class="frag"><div class="frag-label">i · hero at real scale</div>
+      <div class="stage on-atmos">
+        <span class="eyebrow">Non-emergency medical transportation</span>
+        <h1 class="hero-h1">Every trip, accounted for.</h1>
+        <p class="hero-lede">Nexo Access is a medical transportation management organization built for the
+        DMV. Trips run through credentialed providers on our platform, and every claim is checked before it
+        is billed.</p>
+        <div class="btns"><span class="btn-p">See the platform</span><span class="btn-s">Talk to us</span></div>
+      </div>
+      <div class="ratios" data-ratios="d1-hero"></div></div>
+    <div class="frag"><div class="frag-label">ii · status row · the semantics test</div>
+      <div class="statusrow">
+        <span class="pill pill-d"><span class="dot"></span>Refused</span>
+        <span class="pill pill-w"><span class="dot"></span>Timely filing · 4 days</span>
+        <span class="pill pill-s"><span class="dot"></span>Credentials current</span>
+        <span class="note">Can you tell the alarm from the brand without reading the words?</span>
+      </div>
+      <div class="ratios" data-ratios="d1-status"></div></div>
+    <div class="frag"><div class="frag-label">iii · dark-card trio</div>
+      <div class="cards">
+        <div class="dcard"><h3>Credential-gated dispatch</h3><p>Drivers and vehicles with lapsed credentials
+          are blocked from assignment, checked live.</p><span class="stat">RLS ON EVERY TABLE</span></div>
+        <div class="dcard"><h3>Claims, checked first</h3><p>Seven adjudication checks run before a claim is
+          billed, not after it is denied.</p><span class="stat">7 CHECKS · 13 FROZEN FIELDS</span></div>
+        <div class="dcard"><h3>One validated path</h3><p>Every trip follows a validated state machine.
+          Completed, cancelled and no-show are final.</p><span class="stat">2 APPEAL LEVELS</span></div>
+      </div>
+      <div class="ratios" data-ratios="d1-cards"></div></div>
+    <div class="frag"><div class="frag-label">iv · ink terminus</div>
+      <div class="terminus"><p class="word">Nexo Access</p>
+        <p>Medical transportation management for DC, Maryland and Virginia.</p>
+        <a>Built for HIPAA compliance →</a></div>
+      <div class="ratios" data-ratios="d1-term"></div></div>
+  </section>
+
+  <!-- ═══════════ D2 ═══════════ -->
+  <section class="dir" id="d2" data-dir="d2">
+    <div class="dir-head"><h2>D2 · SYNTHESIS, jade heart and warm light</h2>
+      <span class="tag">recommended hypothesis · identity tokens byte-identical to D1 · warmth is a LAYER</span></div>
+    <div class="notes">
+      <b>BENEFIT:</b> the warmth the owner responded to, with <strong>zero identity risk</strong>. Accent,
+      ink and text ramp are unchanged, so the accent still sits <strong>164° from danger</strong> and the
+      status row stays unambiguous. Costs nothing against <code>D20</code> (six CSS declarations, no JS).<br>
+      <b>COST:</b> accent <em>text</em> over the warm field must use <code>--accent-hover</code>. Plain
+      <code>--accent</code> measures 3.84–4.32 there and <strong>fails AA</strong>. That substitution is
+      already <code>nexo-brand §3</code> law, but it is a real constraint the design must respect, not a free lunch.
+    </div>
+    <div class="frag"><div class="frag-label">i · hero at real scale</div>
+      <div class="stage on-atmos">
+        <span class="eyebrow accent-text">Non-emergency medical transportation</span>
+        <h1 class="hero-h1">Every trip, accounted for.</h1>
+        <p class="hero-lede">Nexo Access is a medical transportation management organization built for the
+        DMV. Trips run through credentialed providers on our platform, and every claim is checked before it
+        is billed.</p>
+        <div class="btns"><span class="btn-p">See the platform</span><span class="btn-s">Talk to us</span></div>
+      </div>
+      <div class="ratios" data-ratios="d2-hero"></div></div>
+    <div class="frag"><div class="frag-label">ii · status row · the semantics test</div>
+      <div class="statusrow">
+        <span class="pill pill-d"><span class="dot"></span>Refused</span>
+        <span class="pill pill-w"><span class="dot"></span>Timely filing · 4 days</span>
+        <span class="pill pill-s"><span class="dot"></span>Credentials current</span>
+        <span class="note">Can you tell the alarm from the brand without reading the words?</span>
+      </div>
+      <div class="ratios" data-ratios="d2-status"></div></div>
+    <div class="frag"><div class="frag-label">iii · dark-card trio</div>
+      <div class="cards">
+        <div class="dcard"><h3>Credential-gated dispatch</h3><p>Drivers and vehicles with lapsed credentials
+          are blocked from assignment, checked live.</p><span class="stat">RLS ON EVERY TABLE</span></div>
+        <div class="dcard"><h3>Claims, checked first</h3><p>Seven adjudication checks run before a claim is
+          billed, not after it is denied.</p><span class="stat">7 CHECKS · 13 FROZEN FIELDS</span></div>
+        <div class="dcard"><h3>One validated path</h3><p>Every trip follows a validated state machine.
+          Completed, cancelled and no-show are final.</p><span class="stat">2 APPEAL LEVELS</span></div>
+      </div>
+      <div class="ratios" data-ratios="d2-cards"></div></div>
+    <div class="frag"><div class="frag-label">iv · ink terminus</div>
+      <div class="terminus"><p class="word">Nexo Access</p>
+        <p>Medical transportation management for DC, Maryland and Virginia.</p>
+        <a>Built for HIPAA compliance →</a></div>
+      <div class="ratios" data-ratios="d2-term"></div></div>
+  </section>
+
+  <!-- ═══════════ D3 ═══════════ -->
+  <section class="dir" id="d3" data-dir="d3">
+    <div class="dir-head"><h2>D3 · WARM PIVOT, GitLab-class and honestly rendered</h2>
+      <span class="tag">the full commitment · warm accent, warm ink, fire atmosphere · costs shown, not argued</span></div>
+    <div class="notes">
+      <b>BENEFIT:</b> the strongest possible expression of the owner's thesis. Distinctive in a category of
+      blue medical sites, and unmistakably not a developer tool either.<br>
+      <b>COST, and this is the honest one:</b> the ember accent sits <strong>20° from the danger red</strong>
+      (rose would be 10°) against jade's 164°. <strong>Brand and alarm become neighbours on the colour
+      wheel.</strong> Look at the status row below and decide whether that is survivable for a company whose
+      product exists to tell people a claim was <em>refused</em>. Also: a full re-token, re-verified against
+      <code>D23</code>, plus a <code>§13</code> Railway-receipt reversal.
+    </div>
+    <div class="frag"><div class="frag-label">i · hero at real scale</div>
+      <div class="stage on-atmos">
+        <span class="eyebrow accent-text">Non-emergency medical transportation</span>
+        <h1 class="hero-h1">Every trip, accounted for.</h1>
+        <p class="hero-lede">Nexo Access is a medical transportation management organization built for the
+        DMV. Trips run through credentialed providers on our platform, and every claim is checked before it
+        is billed.</p>
+        <div class="btns"><span class="btn-p">See the platform</span><span class="btn-s">Talk to us</span></div>
+      </div>
+      <div class="ratios" data-ratios="d3-hero"></div></div>
+    <div class="frag"><div class="frag-label">ii · status row · the semantics test · READ THIS ONE SLOWLY</div>
+      <div class="statusrow">
+        <span class="pill pill-d"><span class="dot"></span>Refused</span>
+        <span class="pill pill-w"><span class="dot"></span>Timely filing · 4 days</span>
+        <span class="pill pill-s"><span class="dot"></span>Credentials current</span>
+        <span class="note">Can you tell the alarm from the brand without reading the words?</span>
+      </div>
+      <div class="ratios" data-ratios="d3-status"></div></div>
+    <div class="frag"><div class="frag-label">iii · dark-card trio</div>
+      <div class="cards">
+        <div class="dcard"><h3>Credential-gated dispatch</h3><p>Drivers and vehicles with lapsed credentials
+          are blocked from assignment, checked live.</p><span class="stat">RLS ON EVERY TABLE</span></div>
+        <div class="dcard"><h3>Claims, checked first</h3><p>Seven adjudication checks run before a claim is
+          billed, not after it is denied.</p><span class="stat">7 CHECKS · 13 FROZEN FIELDS</span></div>
+        <div class="dcard"><h3>One validated path</h3><p>Every trip follows a validated state machine.
+          Completed, cancelled and no-show are final.</p><span class="stat">2 APPEAL LEVELS</span></div>
+      </div>
+      <div class="ratios" data-ratios="d3-cards"></div></div>
+    <div class="frag"><div class="frag-label">iv · ink terminus</div>
+      <div class="terminus"><p class="word">Nexo Access</p>
+        <p>Medical transportation management for DC, Maryland and Virginia.</p>
+        <a>Built for HIPAA compliance →</a></div>
+      <div class="ratios" data-ratios="d3-term"></div></div>
+  </section>
+
+  </div>
+
+  <div class="card-doc" id="protocol" style="margin-top:36px">
+    <h2>How to read this: the protocol</h2>
+    <p><b>Read it on BOTH machines</b> (the good monitor and the standard laptop). The whole reason D23
+    exists is that the second machine disagrees with the first.</p>
+    <p><b>React by direction number.</b> You are not picking a hex; you are picking a direction. The ruling
+    becomes <strong>D25</strong>: adopt, synthesize, or hold.</p>
+    <p><b>The layers can be split.</b> S-012 records three of them (atmosphere, composition, card treatment)
+    and you can adopt any one without the others. D2 is precisely "atmosphere only".</p>
+    <p><b>Until you rule, the hardened jade palette remains law.</b> Any adoption then goes through a full
+    token-implementation task with the cube and AA re-verification, honouring floors-only-rise.</p>
+    <p><b>The one question the bench cannot answer for you:</b> whether the warm thesis is worth the
+    status-semantics cost. The bench renders the cost; the judgement is yours.</p>
+  </div>
+
+  <div id="fontcheck">checking fonts…</div>
+</div>
+
+<script>
+/* ── contrast maths (WCAG 2.x relative luminance) ─────────────────────────────────────────────── */
+const hx=h=>{const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255]};
+const lin=c=>{c/=255;return c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4)};
+const L=t=>0.2126*lin(t[0])+0.7152*lin(t[1])+0.0722*lin(t[2]);
+const cr=(a,b)=>{const x=L(typeof a==="string"?hx(a):a),y=L(typeof b==="string"?hx(b):b);
+  const h=Math.max(x,y),l=Math.min(x,y);return (h+0.05)/(l+0.05)};
+const over=(fg,al,bg)=>{const f=typeof fg==="string"?hx(fg):fg,b=typeof bg==="string"?hx(bg):bg;
+  return f.map((v,i)=>Math.round(al*v+(1-al)*b[i]))};
+const hue=c=>{const [r,g,b]=hx(c).map(v=>v/255);const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;
+  if(!d)return 0;let h;if(mx===r)h=((g-b)/d)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;
+  return Math.round(((h*60)+360)%360)};
+const hdist=(a,b)=>{const d=Math.abs(hue(a)-hue(b));return Math.min(d,360-d)};
+
+/* Per-direction token snapshots. The WORST-CASE atmosphere composite is precomputed from the same
+   alphas the CSS uses, so the printed number describes what is actually painted. */
+const T={
+ d1:{bg:"#f5f7f9",text:"#0c1512",muted:"#42544c",accent:"#0b7d56",accentHover:"#0a6b49",
+     ink:"#0b1512",inkSurface:"#192b24",onInk:"#e9f1ee",onInkMuted:"#adbfb8",accentOnInk:"#46d6a0",
+     onInkBorder:"#5b8275",tint:"#e9f3ef",tintBorder:"#93c0ab",atmosCore:null,
+     /* MEASURED, not assumed: the darkest pixel actually painted in the lede's own column, sampled
+        from a render of this file. An earlier version of this bench scored the theoretical SUN CORE
+        and unfairly condemned D3 — the suns are anchored off-canvas, so the core is not reachable
+        where the text sits. Measuring replaced arguing. */
+     measured:"#e8f0f0"},
+ d2:{bg:"#f5f7f9",text:"#0c1512",muted:"#42544c",accent:"#0b7d56",accentHover:"#0a6b49",
+     ink:"#0b1512",inkSurface:"#192b24",onInk:"#e9f1ee",onInkMuted:"#adbfb8",accentOnInk:"#46d6a0",
+     onInkBorder:"#5b8275",tint:"#e9f3ef",tintBorder:"#93c0ab",
+     atmosCore:over("#f4a874",0.28,"#f5f7f9"),measured:"#eae9ea"},
+ d3:{bg:"#f8f4f1",text:"#1a1210",muted:"#57443e",accent:"#9a3412",accentHover:"#7c2a0e",
+     ink:"#110b09",inkSurface:"#32211c",onInk:"#f5ece8",onInkMuted:"#d8c4bb",accentOnInk:"#f2a06a",
+     onInkBorder:"#957064",tint:"#f6ebe4",tintBorder:"#d9b79f",
+     atmosCore:over("#ee5c12",0.62,"#f8f4f1"),measured:"#f8e2e1"},
+};
+const ST={danger:"#c81e2c",dSub:"#fef2f2",warning:"#b45309",wSub:"#fffbeb",success:"#0b7d56",sSub:"#e9f9f1"};
+const hexs=t=>"#"+t.map(v=>v.toString(16).padStart(2,"0")).join("");
+
+function row(items){
+  return items.map(([label,val,floor])=>{
+    const v=typeof val==="number"?val:0;
+    const cls=floor==null?"info":(v>=floor?"ok":"no");
+    const shown=typeof val==="number"?val.toFixed(2)+(floor?" / "+floor:""):val;
+    return '<span class="'+cls+'">'+label+" "+shown+"</span>";
+  }).join("");
+}
+for(const d of ["d1","d2","d3"]){
+  const t=T[d];
+  const field=t.atmosCore||hx(t.bg);           // worst-case painted background in the atmosphere zone
+  const fieldHex=t.atmosCore?hexs(t.atmosCore):t.bg;
+  const accOnField=cr(t.accent,field), accHovOnField=cr(t.accentHover,field);
+
+  document.querySelector('[data-ratios="'+d+'-hero"]').innerHTML=row([
+    ["h1 on page",cr(t.text,t.bg),4.5],
+    ["lede on page",cr(t.muted,t.bg),4.5],
+    ["lede in its OWN column, MEASURED worst px "+t.measured,cr(t.muted,t.measured),4.5],
+    ["(constraint) raw --accent placed ON the atmosphere would measure",cr(t.accent,t.measured).toFixed(2)+" — use --accent-hover instead (nexo-brand section 3). No accent text sits on the atmosphere in these fragments; the eyebrow is on an opaque tint pill.",null],
+    ["accent-hover in its own column, MEASURED worst",cr(t.accentHover,t.measured),4.5],
+    ["(info) sun-core composite "+fieldHex+" — off-canvas anchored, NOT reachable under text: lede",cr(t.muted,field).toFixed(2)+" accent "+accOnField.toFixed(2),null],
+    ["primary btn text on fill",cr("#ffffff",t.accent),4.5],
+    ["eyebrow on tint",cr(t.accent,t.tint),4.5],
+  ]);
+  document.querySelector('[data-ratios="'+d+'-status"]').innerHTML=row([
+    ["refused text on fill",cr(ST.danger,ST.dSub),4.5],
+    ["deadline text on fill",cr(ST.warning,ST.wSub),4.5],
+    ["current text on fill",cr(ST.success,ST.sSub),4.5],
+    ["refused pill vs field",cr(over(ST.dSub,0.92,field),field),null],
+    ["BRAND-TO-ALARM HUE DISTANCE",hdist(t.accent,ST.danger)+"deg (jade=164, warm=10-25)",null],
+  ]);
+  document.querySelector('[data-ratios="'+d+'-cards"]').innerHTML=row([
+    ["card title on card",cr(t.onInk,t.inkSurface),4.5],
+    ["card body on card",cr(t.onInkMuted,t.inkSurface),4.5],
+    ["mono stat on card",cr(t.accentOnInk,t.inkSurface),4.5],
+    ["card edge vs card (1.4.11)",cr(t.onInkBorder,t.inkSurface),3],
+    ["card vs page",cr(t.inkSurface,t.bg),null],
+  ]);
+  document.querySelector('[data-ratios="'+d+'-term"]').innerHTML=row([
+    ["wordmark on ink",cr(t.onInk,t.ink),4.5],
+    ["body on ink",cr(t.onInkMuted,t.ink),4.5],
+    ["link on ink",cr(t.accentOnInk,t.ink),4.5],
+    ["ink-surface vs ink (B06-equivalent separation)",cr(t.inkSurface,t.ink),null],
+  ]);
+}
+
+/* ── GROUP-BY: direction (default) or fragment (adjacent comparison) ──────────────────────────── */
+(function(){
+  const stage=document.getElementById("stage");
+  if(!stage) return;
+  const byDir=document.getElementById("byDir"), byFrag=document.getElementById("byFrag");
+  const original=stage.innerHTML;
+  const DIRNAME={d1:"D1 CURRENT (hardened jade)",d2:"D2 SYNTHESIS (jade heart, warm light)",d3:"D3 WARM PIVOT (GitLab-class)"};
+  function toFragments(){
+    const src=document.createElement("div"); src.innerHTML=original;
+    const dirs=[...src.querySelectorAll("[data-dir]")];
+    const groups=[];
+    dirs.forEach(dir=>{
+      [...dir.querySelectorAll(".frag")].forEach((f,i)=>{
+        (groups[i]=groups[i]||[]).push({dir:dir.getAttribute("data-dir"),node:f});
+      });
+    });
+    stage.innerHTML="";
+    groups.forEach(g=>{
+      const row=document.createElement("section"); row.className="fragrow";
+      const label=g[0].node.querySelector(".frag-label");
+      const head=document.createElement("div"); head.className="rowhead";
+      head.textContent=label?label.textContent.trim():"fragment";
+      row.appendChild(head);
+      g.forEach(({dir,node})=>{
+        const wrap=document.createElement("div"); wrap.setAttribute("data-dir",dir);
+        const tag=document.createElement("div"); tag.className="dirtag"; tag.textContent=DIRNAME[dir]||dir;
+        wrap.appendChild(tag);
+        const clone=node.cloneNode(true);
+        const fl=clone.querySelector(".frag-label"); if(fl) fl.remove(); // the row header already names it
+        wrap.appendChild(clone);
+        row.appendChild(wrap);
+      });
+      stage.appendChild(row);
+    });
+  }
+  function toDirections(){ stage.innerHTML=original; }
+  byFrag.addEventListener("click",()=>{ toFragments(); byFrag.classList.add("on"); byDir.classList.remove("on"); });
+  byDir.addEventListener("click",()=>{ toDirections(); byDir.classList.add("on"); byFrag.classList.remove("on"); });
+})();
+
+/* ── the standing font check (Task #12 amendment: PRIME first, or an unrendered family reports a
+      FALSE fallback because the browser never downloads a face nothing is using) ─────────────── */
+(function(){
+  const FAMS=[["Bricolage Grotesque",800],["Hanken Grotesk",400],["IBM Plex Mono",500]];
+  const PROBE="Every trip, accounted for. NX-1042 0123456789";
+  const w=(stack,wt)=>{const s=document.createElement("span");s.textContent=PROBE;
+    s.style.cssText="position:absolute;left:-9999px;white-space:nowrap;font-size:72px;font-weight:"+wt+";font-family:"+stack;
+    document.body.appendChild(s);const x=s.getBoundingClientRect().width;s.remove();return x;};
+  Promise.all(FAMS.map(f=>document.fonts.load(f[1]+" 72px '"+f[0]+"'").catch(()=>{}))).then(()=>{
+    const out=FAMS.map(([fam,wt])=>{
+      const fb=fam==="IBM Plex Mono"?"ui-monospace,monospace":"system-ui,sans-serif";
+      const a=w("'"+fam+"',"+fb,wt), b=w(fb,wt);
+      return fam+": "+(Math.abs(a-b)>1?"LOADED":"FALLBACK");
+    });
+    document.getElementById("fontcheck").textContent="font check (primed) — "+out.join("  ·  ");
+  });
+})();
+</script>
+</body>
+</html>
