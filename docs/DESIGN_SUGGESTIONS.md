@@ -215,3 +215,22 @@ different costs:
 
 **Nothing is adopted by this entry.** The bench produces a ruling (**D25**) — adopt, synthesize, or
 hold. Until then the hardened jade palette remains law.
+
+---
+
+## S-013 — Containerize the dev environment
+
+- **Source:** Owner · **Date:** 2026-08-20 · **Disposition:** **OWNER-DIRECTIVE / LATER**
+- **The ask:** run development in a container so the build environment is identical on every machine.
+- **Why it came up:** the owner syncs the working folder across three machines with Syncthing,
+  including `.next`, `node_modules` and `.git`. That is a live mechanism for stale and mixed builds and
+  is the most likely contaminant of two earlier field rounds (see D26 and `docs/FIELD_OBSERVATIONS.md`).
+- **Registered for POST-LAUNCH evaluation, and the immediate problem is already solved without it.**
+  D26 ships a committed `.stignore` excluding `.next`, `node_modules`, `.git` and `out`, which Syncthing
+  reads from the folder root, so every machine is protected automatically after a `git pull`. That
+  closes the contamination path today at zero cost.
+- **Impact when it is evaluated:** containerization is a real improvement for reproducibility, and it is
+  also a change to how every future task builds, tests and runs the cube. It touches the QA harness
+  (`scripts/qa/run.mjs` spawns a local server), the `NEXT_DIST_DIR` build-check seam, and the deploy
+  lane (Coolify, per D14). **Not a drop-in.** It belongs after launch, when the build surface is stable
+  and a week of friction costs nothing.

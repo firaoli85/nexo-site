@@ -719,7 +719,20 @@ a:active {
    offset-distance / offset-rotate / offset-anchor, the imperative offsetPath assignment, and the
    `@supports (offset-path: ...)` display gate — SVG transforms need no support gate, so the van now
    renders everywhere the svg does instead of being hidden on engines without offset-path. */
-.route-path { stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--route-progress, 1)); }
+/* FO-3 ROOT CAUSE (Task #25). This rule used to read
+     stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--route-progress, 1));
+   and the dashoffset value there is INVALID CSS. As a CSS property (not an SVG attribute)
+   `stroke-dashoffset` takes <length-percentage>; a bare number is not a length. `stroke-dasharray`
+   is the lenient one — it genuinely accepts <number> — which is why only the offset broke.
+   Blink and WebKit coerce the number to px anyway (they serialise `calc(0.729646px)` and
+   `0.72968px`). GECKO IS STRICT AND CORRECT: it drops the declaration, so the offset falls back to
+   its initial value 0, and dashoffset 0 with dasharray 1 means THE WHOLE PATH IS DRAWN.
+   That is exactly the field signature: the LINE renders fully drawn while the VAN, positioned by a
+   JS transform that never consults CSS inheritance, sits correctly at mid-route.
+   Measured at dpr 1, 1.5 AND 2 in Gecko, so the device-pixel-ratio lead was a red herring; the
+   variable is engine strictness. Multiplying by 1px makes the value a real length and all three
+   engines agree. Do NOT revert to the unitless form. */
+.route-path { stroke-dasharray: 1px; stroke-dashoffset: calc((1 - var(--route-progress, 1)) * 1px); }
 
 /* Shown only when the overlay is ARMED — i.e. motion is allowed. Under reduced-motion the effect
    never sets data-direction, so the van stays absent and the line renders fully drawn. This is the

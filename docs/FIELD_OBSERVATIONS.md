@@ -549,10 +549,142 @@ each. Testing both at 100% would pass on the work machine for the wrong reason �
 failing case. Run the console probe recorded above at the terminus curve on both: **`errY` should read
 ~0**, and the zoom ladder should be **flat** rather than scaling with distance from 1.0.
 
+### PROBE RETRACTION, REOPENING, AND ROOT CAUSE (2026-08-20)
+
+#### BOTH chat-authored probes are RETRACTED. Neither ever measured what it claimed.
+
+**Probe 1 (the Task #21 probe, cited as the Task #22 "conviction"):** it read
+`--route-progress` from `document.documentElement`. **The code sets that variable on the
+`.route-overlay` element**, never on the root. So the read returned an empty string and
+`parseFloat("")` gave `0` **on every machine, every time, regardless of the site's actual state.**
+Its `errY` therefore measured only *the van's distance along the path* and was an **artifact, not an
+error**. Reproduced here deliberately: across 36 samples in three engines, `var(documentElement)` was
+**empty in every single one**.
+
+- **Yoga `errY: 2945.6` — RECLASSIFIED AS ARTIFACT.**
+- **Owner laptop `errY: 2071` — RECLASSIFIED AS ARTIFACT.**
+- **Neither JSON may ever be cited as evidence again.**
+
+**Probe 2 (the "corrected" probe published in Task #21):** it threw
+`getPointAtLength: non-finite` on the owner's machine. **Root cause now known and it is the same
+family of blind assumption:** Blink serialises `stroke-dashoffset` as **`calc(0.729646px)`**, and
+`parseFloat("calc(0.729646px)")` is **`NaN`**, which then poisoned `getPointAtLength`. The same trap
+appeared in this task's own first hunt script, where every Chromium row printed `lineP: null`.
+
+**Both probes were written blind against assumed selectors and assumed property serialisation, and
+both failed. The owner's visual reports have been the only valid field instrument throughout.**
+
+#### What this does and does not change about Task #22
+
+**The Task #22 "conviction" narrative is RETRACTED as evidence.** There was no dual-renderer state
+desync demonstrated, because the number that appeared to demonstrate it was an artifact.
+
+**Task #22's architecture stands on its independent merits**, which never depended on that narrative:
+one raster surface instead of two renderers, the `@supports` gate removed so the van renders wherever
+the svg does, a measured per-frame cost of 4.9–13.8µs, and invariant coverage. It is a better design
+for reasons that were measured separately.
+
+#### THE ROOT CAUSE, FOUND — and the dpr lead was a red herring
+
+The reopened signature was: **on a proven NEW build, the LINE renders fully drawn while the VAN sits
+mid-route.** It reproduced immediately, in **Firefox**, and the mechanism is a one-line CSS defect
+that had been shipping since the route was built:
+
+```css
+/* WRONG — what shipped until Task #25 */
+.route-path { stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--route-progress, 1)); }
+```
+
+**As a CSS property, `stroke-dashoffset` takes a `<length-percentage>`. A bare number is not a
+length.** (`stroke-dasharray` is the lenient one: it genuinely accepts `<number>`, which is why only
+the offset broke.) Engines diverge on the invalid value:
+
+| Engine | Serialised `stroke-dashoffset` | Result |
+|---|---|---|
+| Blink | `calc(0.729646px)` | coerced; line correct, but the string breaks `parseFloat` |
+| WebKit | `0.72968px` | coerced; line correct |
+| **Gecko** | **`0px`** | **declaration dropped, offset falls back to 0** |
+
+**With `stroke-dasharray: 1`, a dashoffset of 0 draws the ENTIRE path.** So Gecko paints a fully-drawn
+line while the van — positioned by a JS transform that never consults CSS inheritance — sits correctly
+at mid-route. **That is precisely the reported signature.**
+
+**Measured at dpr 1, 1.5 and 2 in Gecko with identical results, so device pixel ratio is irrelevant.
+The variable is engine strictness, and Gecko is the one behaving correctly.**
+
+**THE FIX** (Task #25): multiply by a unit so the value is a real length.
+
+```css
+.route-path { stroke-dasharray: 1px; stroke-dashoffset: calc((1 - var(--route-progress, 1)) * 1px); }
+```
+
+**Verified after the fix, all three engines at dpr 2, w1542:** dashoffset now serialises as
+`0.618027px` / `0.618117px` / **`0.619808px`** (Gecko fixed), `lineP` equals the variable, head Y
+equals van Y, **gap 0px**, verdict *OK: line and van agree* at every sampled position.
+
+**I20 now asserts it.** The invariant previously compared the van against the path *geometry* and
+never asked what the line was actually *drawing*, which is exactly where the defect lived. It now
+parses the computed dashoffset (stripping `calc()` first) and fails if the line disagrees with the
+variable by more than 0.02. Since Firefox is already a cube engine, **this assertion would have caught
+the defect on the day it shipped.** A dpr-2 lane was added to the I20 zoom leg as well.
+
+#### THE FIELD PROBE — executed before publication, per D26
+
+**This probe was run by the harness against the running local build in Chromium, WebKit and Firefox
+before being written here, and its output is recorded in the Task #25 report.** It reads the variable
+from `.route-overlay` (not `documentElement`), strips `calc()` before parsing (Blink's serialisation),
+and never calls `getPointAtLength` with an unvalidated number. Paste into DevTools on the homepage,
+scrolled to any mid-page position:
+
+```js
+(() => {
+  const root = document.querySelector('.route-overlay');
+  const path = document.querySelector('.route-path');
+  const van  = document.querySelector('.route-van');
+  if (!root || !path) return 'no route overlay here (below lg, interior route, or not the homepage)';
+  const num = s => { if (s == null) return NaN;
+    return parseFloat(String(s).trim().replace(/^calc\((.*)\)$/, '$1')); };
+  const varRaw = getComputedStyle(root).getPropertyValue('--route-progress').trim();
+  const varP   = num(varRaw);
+  const dofRaw = getComputedStyle(path).strokeDashoffset;
+  const daRaw  = getComputedStyle(path).strokeDasharray;
+  const dof    = num(dofRaw);
+  const lineP  = isFinite(dof) ? 1 - dof : NaN;
+  const L      = path.getTotalLength();
+  const headY  = isFinite(lineP) ? path.getPointAtLength(Math.max(0, Math.min(1, lineP)) * L).y : null;
+  const vanT   = van ? van.getAttribute('transform') : null;
+  const m      = vanT ? /translate\(\s*(-?[\d.]+)[ ,]+(-?[\d.]+)/.exec(vanT) : null;
+  const vanY   = m ? parseFloat(m[2]) : null;
+  return {
+    build: van && van.tagName.toLowerCase() === 'g' ? 'NEW (van inside the svg)' : 'OLD (van outside the svg)',
+    varRaw: varRaw || '(EMPTY — the variable is not reaching the overlay)',
+    varP: isFinite(varP) ? +varP.toFixed(4) : null,
+    dashoffsetRaw: dofRaw, dasharrayRaw: daRaw,
+    lineP: isFinite(lineP) ? +lineP.toFixed(4) : null,
+    headY: headY == null ? null : Math.round(headY),
+    vanY:  vanY  == null ? null : Math.round(vanY),
+    gapPx: (headY == null || vanY == null) ? null : Math.round(vanY - headY),
+    VERDICT: !isFinite(lineP) ? 'CANNOT READ dashoffset — report the raw string above'
+      : (isFinite(varP) && lineP > 0.98 && varP < 0.9) ? 'DEFECT: LINE-FULL while the variable says mid-route'
+      : (headY != null && vanY != null && Math.abs(vanY - headY) > 40) ? 'DEFECT: line and van disagree'
+      : 'OK: line and van agree',
+    dpr: window.devicePixelRatio, winW: window.innerWidth,
+    zoom: +(window.outerWidth / window.innerWidth).toFixed(3),
+  };
+})()
+```
+
+**`gapPx` is the whole question.** It is the direct line-versus-van measurement with no assumptions:
+0 means they agree. **The element that carries the animated dash is `path.route-path` with
+`pathLength="1"`, inside the route `svg`** — confirmed from the live DOM, which matters because the
+page contains a *second* dashed element (a `line` inside `g.terminus-line`, `dasharray: 5px, 4.5px`)
+that an assumption-based probe could easily have grabbed instead.
+
 ### Status
 
-> **FO-3: FIXED on v2 (Task #22) by removing the class — there is no second renderer left to desync.**
-> **The Chromium-internal mechanism is deliberately unproven**; it was never reproducible in lab, and
-> claiming a diagnosis we could not instrument would be worse than saying so. **The owner's Yoga
-> re-test at the curve is the closing proof** and is pending. Re-run the console probe above: `errY`
-> should now be ~0 at every scroll position and every zoom level.
+> **FO-3: ROOT CAUSE FOUND AND FIXED (Task #25).** An invalid CSS length in `stroke-dashoffset` that
+> Gecko correctly rejected and the other two engines silently coerced. Fixed, verified in all three
+> engines, and now guarded by I20 on every cube cell. **The dpr-2 lead was a red herring; engine
+> strictness was the variable.** **Both prior chat-authored probes are retracted and must never be
+> cited.** Owner confirmation on the field machines is still welcome using the probe above, but the
+> mechanism is no longer hypothetical.

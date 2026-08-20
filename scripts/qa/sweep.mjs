@@ -498,6 +498,16 @@ const I20_PROBE = () => {
   // origin, which is exactly the point that rides the path. The old HTML parent's border box
   // excluded the child transform for free; the svg group does not, and that difference is real.
   const vm = van.getScreenCTM();
+  // THE LINE'S OWN CLAIM (Task #25). I20 used to compare the van against the path GEOMETRY and never
+  // asked what the line was actually DRAWING. FO-3's real defect lived exactly in that blind spot:
+  // `stroke-dashoffset: calc(1 - var(...))` is invalid CSS (the property takes a length, not a bare
+  // number), so Gecko dropped the declaration, the offset fell back to 0, and with dasharray 1 that
+  // paints the WHOLE path — a fully-drawn line beside a correctly-placed van. Blink and WebKit
+  // coerced the number and hid it. Firefox is already a cube engine, so asserting the dash here is
+  // what would have caught it. Note the serialisation trap too: Blink returns `calc(0.61px)`, and
+  // parseFloat on that is NaN — which is what crashed the second field probe.
+  const dofRaw = getComputedStyle(path).strokeDashoffset;
+  const dofNum = parseFloat(String(dofRaw).trim().replace(/^calc\((.*)\)$/, "$1"));
   const seam = document.querySelector("[data-route-seam]");
   return {
     p: +p.toFixed(4),
@@ -506,6 +516,9 @@ const I20_PROBE = () => {
     // off 1 and the detail string says so by name.
     ctmA: +m.a.toFixed(4), ctmD: +m.d.toFixed(4),
     delta: +Math.hypot(vm.e - hx, vm.f - hy).toFixed(3),
+    dashoffsetRaw: String(dofRaw),
+    dashFinite: isFinite(dofNum),
+    lineP: isFinite(dofNum) ? +(1 - dofNum).toFixed(4) : null,
     // HANDOFF — the gap between the route END and the footer card, which is the mode-2 metric.
     // Both terms MUST be in the same coordinate space: map the path end through the CTM to get a
     // viewport y, and compare with the seam rect (also viewport). An earlier version mixed spaces
@@ -551,6 +564,13 @@ export async function checkVanRidesLine(page, route, width) {
       problems.push(`${label}: route svg CTM is not identity (a=${o.ctmA} d=${o.ctmD}) — the line can scale away from the van; check for h-full/w-full or preserveAspectRatio on the route svg`);
     if (o.delta > I20_TOL)
       problems.push(`${label}: van is ${o.delta}px off the drawn head at p=${o.p} (tolerance ${I20_TOL}px)`);
+    // THE LINE MUST AGREE WITH THE VARIABLE IT CLAIMS TO BE DRAWING (Task #25, FO-3 root cause).
+    // I20 previously compared the van against the path GEOMETRY and never asked what the line was
+    // actually drawing, which is precisely where the defect lived.
+    if (!o.dashFinite)
+      problems.push(`${label}: stroke-dashoffset does not parse to a number (raw: ${o.dashoffsetRaw}) so the line cannot be verified`);
+    else if (Math.abs(o.lineP - o.p) > 0.02)
+      problems.push(`${label}: THE LINE DISAGREES WITH THE VARIABLE. dashoffset says the line is drawn to ${o.lineP} while --route-progress is ${o.p} (raw: ${o.dashoffsetRaw}). A bare number in stroke-dashoffset is invalid CSS: Gecko drops the declaration and paints the whole path.`);
     return o;
   };
 
@@ -642,6 +662,11 @@ export async function checkVanRidesLineZoom({ base = BASE, sabotage = false } = 
     // the field defect. It is here so that a future regression at fractional DPR cannot pass unseen —
     // the owner's field re-test remains the closing proof for FO-3 itself.
     { name: "dpr", factor: 1.25, dsf: 1.25 },
+    // dpr 2 lane (Task #25). The field machine that produced the LINE-FULL/VAN-MID report ran at
+    // dpr 2 and I20 had never exercised it. The defect turned out to be engine strictness rather
+    // than device pixel ratio, but the lane stays: it was an untested corner of a real reader's
+    // configuration, and the cost of covering it is one more context.
+    { name: "dpr", factor: 2, dsf: 2 },
   ];
   const browser = await chromium.launch();
   const problems = [], samples = [];
@@ -726,7 +751,7 @@ export async function checkVanRidesLineZoom({ base = BASE, sabotage = false } = 
     detail: problems.length
       ? problems.slice(0, 3).join("; ")
       : "chromium only — the zoom lanes need CDP, and the DPR lane rides along in the same browser rather than tripling the sweep — " + measured.length +
-        " samples across css-zoom 1.25/1.5, device-metrics 1.25 and fractional-DPR 1.25, " + curvedOnes.length +
+        " samples across css-zoom 1.25/1.5, device-metrics 1.25 and fractional-DPR 1.25 plus 2, " + curvedOnes.length +
         " of them MID-CURVE, worst delta " + (worst ? worst.delta : "n/a") + "px against a " + I20_TOL + "px tolerance",
     samples,
   };
