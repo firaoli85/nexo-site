@@ -709,32 +709,42 @@ a:active {
 
 /* THE FULL-PAGE ROUTE (Stage 6.4) — the page-level RouteOverlay draws ONE line across the whole
    journey; a livery van rides its full length. Reuses .spine-node / .spine-grad-*; these two are
-   route-specific: the draw is scrubbed by --route-progress (1:1 with scroll), and the van follows
-   the measured curve via an imperatively-set offset-path. */
+   route-specific: the draw is scrubbed by --route-progress (1:1 with scroll), and the van is a <g>
+   INSIDE the same svg, translated per frame from a precomputed position LUT.
+
+   FO-3 (Task #22) RETIRED THE OFFSET-PATH SYSTEM ENTIRELY. The van used to be an HTML span beside
+   the svg with `offset-distance: calc(var(--route-progress) * 100%)`, which made the line and the
+   van TWO renderers reading one variable. On real fractional-DPR hardware a field probe caught the
+   van's side holding a stale value while the line honestly rendered progress 0. Gone with it:
+   offset-distance / offset-rotate / offset-anchor, the imperative offsetPath assignment, and the
+   `@supports (offset-path: ...)` display gate — SVG transforms need no support gate, so the van now
+   renders everywhere the svg does instead of being hidden on engines without offset-path. */
 .route-path { stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--route-progress, 1)); }
-.route-van {
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: none;
-  offset-distance: calc(var(--route-progress, 0) * 100%);
-  offset-rotate: 0deg;
-  offset-anchor: center;
+
+/* Shown only when the overlay is ARMED — i.e. motion is allowed. Under reduced-motion the effect
+   never sets data-direction, so the van stays absent and the line renders fully drawn. This is the
+   same gate as before, minus the @supports wrapper it no longer needs. */
+.route-van { display: none; }
+.route-overlay[data-direction] .route-van { display: block; }
+
+/* Each nested group owns exactly ONE transform so they cannot fight: .route-van carries the
+   per-frame translate (written as an ATTRIBUTE by JS, so no CSS rule may set `transform` on it),
+   .route-van-lane the lane offset, .route-van-nose the facing. transform-box/origin are pinned so
+   the rotation turns about the van's own centre — the art group centres the glyph on the origin,
+   so `0 0` in each group's local space IS that centre. */
+.route-van-lane,
+.route-van-nose {
+  transform-box: view-box;
+  transform-origin: 0 0;
 }
 /* faces travel — nose down by default, up on reverse (glyph nose is at the right → +90deg = down) */
-.route-van svg { transform: rotate(90deg); transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1); }
-[data-direction="up"] .route-van svg { transform: rotate(-90deg); }
+.route-van-nose { transform: rotate(90deg); transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1); }
+[data-direction="up"] .route-van-nose { transform: rotate(-90deg); }
 /* LANE by LEG (Stage 6.6 U-turn) — OUTBOUND rides the right lane (+12px), RETURN the left (-12px).
    The leg flip at the terminus crosses lanes over ~450ms (the U-turn); mid-page scroll reversals keep
-   the lane (only the nose rotation follows direction). On the inner wrapper so `.route-van`'s
-   offset-path + the svg's nose rotation stay untouched. Interruptible (a plain transition). */
-.route-van-lane { display: block; transform: translateX(12px); transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1); }
+   the lane (only the nose rotation follows direction). Interruptible (a plain transition). */
+.route-van-lane { transform: translateX(12px); transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1); }
 [data-leg="return"] .route-van-lane { transform: translateX(-12px); }
-
-/* shown only where offset-path is supported AND the overlay is armed (motion allowed) */
-@supports (offset-path: path("M0 0")) {
-  .route-overlay[data-direction] .route-van { display: block; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

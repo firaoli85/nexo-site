@@ -477,6 +477,14 @@ the identity CTM, even a geometry that *is* momentarily stale keeps the line and
 identity-CTM assertion, and a **perturbation leg** that grows the document post-mount and re-asserts.
 Negative-tested in 7 legs. **This closes the D12 receipt for FO-1.**
 
+**FO-2 (Task #20) and FO-3 (Task #22) followed as field-driven interrupts, not W5 work.** FO-3 is the
+one that changed this component again: the field probe convicted a DUAL-RENDERER STATE DESYNC (the van
+read the shared --route-progress through CSS offset-distance and stopped re-resolving on real
+fractional-DPR hardware while the SVG line kept listening), so the van was moved INSIDE the route svg
+as a <g> positioned per frame from a 256-point LUT. The whole offset-path system is gone. The Chromium
+internal path is deliberately UNPROVEN — it was never reproducible in lab, so the class was removed
+rather than the bug diagnosed. Owner Yoga re-test is the closing proof and is pending.
+
 **STILL OPEN IN W5 — this task delivered the C4 fix only.** The motion system proper is untouched: the four
 `nexo-motion` candidates above are **not** built, the skill is **not** authored, and the motion-safe
 conversion has **not** started. W5 remains in progress.

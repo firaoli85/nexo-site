@@ -77,9 +77,37 @@ function sameGeo(a: Geo, b: Geo) {
   );
 }
 
+// ── THE POSITION LUT (FO-3, Task #22) ───────────────────────────────────────────────────────────
+// N = 256. Two costs are traded here and both were measured, not guessed.
+//   ACCURACY: the path is ~4840 user units, so spacing is ~19 units. The long straight leg
+//   interpolates EXACTLY, so error only exists in the terminus curve, where the chord error is
+//   about s^2/(8R) = 19^2/(8*460) ~= 0.10px — 10x under I20's 1px tolerance, and measured in-curve
+//   at 0.02-0.03px on all three engines.
+//   COST: the build is 256 getPointAtLength calls, paid once per GEOMETRY CHANGE (never per frame),
+//   and getPointAtLength is far more expensive on Gecko than on Blink. At N=512 the build measured
+//   6.4ms chromium / 25ms webkit / 144ms FIREFOX; halving to 256 halves that while leaving 10x
+//   accuracy headroom. 144ms of main-thread work on a reflow mid-scroll is a visible stall, and
+//   buying accuracy nobody can see with time everybody can feel is the wrong trade.
+const LUT_N = 256;
+type Lut = { xs: Float32Array; ys: Float32Array };
+
+/** Interpolate the LUT at progress p and write ONE transform. No geometry reads, no layout reads. */
+function applyVan(el: SVGGElement | null, lut: Lut | null, p: number) {
+  if (!el || !lut) return;
+  const t = Math.min(1, Math.max(0, p)) * (LUT_N - 1);
+  const i = t | 0;
+  const j = i + 1 < LUT_N ? i + 1 : i;
+  const f = t - i;
+  const x = lut.xs[i] + (lut.xs[j] - lut.xs[i]) * f;
+  const y = lut.ys[i] + (lut.ys[j] - lut.ys[i]) * f;
+  el.setAttribute("transform", `translate(${x.toFixed(2)} ${y.toFixed(2)})`);
+}
+
 export function RouteOverlay() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const vanRef = useRef<HTMLSpanElement>(null);
+  const vanRef = useRef<SVGGElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+  const lutRef = useRef<Lut | null>(null);
   const geoRef = useRef<Geo | null>(null);
   const [geo, setGeo] = useState<Geo | null>(null);
   const pathname = usePathname();
@@ -195,6 +223,10 @@ export function RouteOverlay() {
       if (!g) return;
       const p = Math.min(1, Math.max(0, (window.scrollY - g.docStart) / g.docSpan));
       root.style.setProperty("--route-progress", String(p));
+      // THE VAN IS POSITIONED FROM THE SAME NUMBER, IN THE SAME FRAME, INSIDE THE SAME SVG.
+      // It no longer re-reads --route-progress through a second renderer, which is the state the
+      // field probe caught holding stale (progress 0 while the van sat 2945.6px along the route).
+      applyVan(vanRef.current, lutRef.current, p);
       const dp = p - lastDirP;
       if (Math.abs(dp) > 0.003) {
         // nose follows scroll direction on BOTH legs (mid-page reversals only rotate the nose)
@@ -292,16 +324,31 @@ export function RouteOverlay() {
     };
   }, [pathname]);
 
-  // The van follows the measured path — offset-path can only be set imperatively (dynamic d).
+  // BUILD THE POSITION LUT from the RENDERED path, once per geometry change.
+  //
+  // This runs after render (so pathRef points at the live element) and never per frame. Sampling
+  // here rather than inside measure() is deliberate: measure() runs before React has committed the
+  // new `d`, so it would be sampling the previous geometry. Because the equality guard keeps `geo`
+  // referentially stable when nothing moved, this effect is skipped entirely on reflows that do not
+  // change the route.
   useEffect(() => {
-    const van = vanRef.current;
-    if (van && geo) {
-      try {
-        van.style.offsetPath = `path("${geo.d}")`;
-      } catch {
-        /* offset-path unsupported → @supports keeps the van hidden; the line still draws */
-      }
+    const path = pathRef.current;
+    if (!path || !geo) { lutRef.current = null; return; }
+    const total = path.getTotalLength();
+    if (!total || !isFinite(total)) { lutRef.current = null; return; }
+    const xs = new Float32Array(LUT_N);
+    const ys = new Float32Array(LUT_N);
+    for (let i = 0; i < LUT_N; i++) {
+      const pt = path.getPointAtLength((i / (LUT_N - 1)) * total);
+      xs[i] = pt.x;
+      ys[i] = pt.y;
     }
+    lutRef.current = { xs, ys };
+    // Place the van immediately at the CURRENT progress rather than waiting for the next scroll —
+    // otherwise a reflow would leave it at its previous point until the reader moves.
+    const root = rootRef.current;
+    const p = root ? parseFloat(getComputedStyle(root).getPropertyValue("--route-progress")) : 0;
+    applyVan(vanRef.current, lutRef.current, isFinite(p) ? p : 0);
   }, [geo]);
 
   // Homepage-only: interior routes render nothing (zero van/route nodes in the DOM).
@@ -348,6 +395,7 @@ export function RouteOverlay() {
               </linearGradient>
             </defs>
             <path
+              ref={pathRef}
               d={geo.d}
               className="route-path"
               stroke="url(#routeGrad)"
@@ -367,43 +415,57 @@ export function RouteOverlay() {
                 vectorEffect="non-scaling-stroke"
               />
             ))}
-          </svg>
+            {/* THE LIVERY VAN (Task C, moved INSIDE the svg in Task #22) — a Nexo-liveried NEMT van:
+                white/on-ink FILLED body, ink outline, one jade accent stripe, ink wheels.
+                Self-coloured so it POPS on the green line and on every background it crosses
+                (light / tint / ink). NEVER an ambulance.
 
-          {/* THE LIVERY VAN (Task C) — a Nexo-liveried NEMT van: white/on-ink FILLED body, ink
-              outline, one jade accent stripe, ink wheels. Self-coloured so it POPS on the green line
-              and on every background it crosses (light / tint / ink). NEVER an ambulance. Rides the
-              full path via offset-path; faces travel (rotation from 6.1). */}
-          {/* Van v2 (Stage 6.5) — a MODERN transit-van profile (rounded roofline, sloped hood, window
-              band, rocker line, hubbed wheels), not a box. The `.route-van-lane` inner wrapper carries
-              the TWO-WAY LANE offset (±X perpendicular to the vertical route, by travel direction) so
-              the offset-path machinery on `.route-van` stays untouched; the svg carries the nose
-              rotation. Livery: white/on-ink body, ink outline, one jade stripe. NEVER an ambulance. */}
-          <span ref={vanRef} className="route-van" aria-hidden="true">
-            <span className="route-van-lane">
-              <svg viewBox="0 0 32 20" className="block h-[19px] w-[30px]" fill="none" aria-hidden="true">
-                {/* body — boxy rear, rounded roof, sloped hood to a rounded nose */}
-                <path
-                  d="M2.6 15.6 L2.6 8 Q2.6 5.5 5.1 5.5 L20 5.5 Q23 5.5 24.6 7.7 L27.7 11.4 Q29.1 12 29.1 13.7 L29.1 15.6 Z"
-                  className="fill-on-ink stroke-ink"
-                  strokeWidth="1.3"
-                  strokeLinejoin="round"
-                />
-                {/* window band — two side windows + an angled windshield */}
-                <rect x="5.1" y="7.4" width="6.1" height="3.1" rx="0.6" className="stroke-ink" strokeWidth="0.85" />
-                <rect x="12.5" y="7.4" width="6.1" height="3.1" rx="0.6" className="stroke-ink" strokeWidth="0.85" />
-                <path d="M21 7.5 L23.7 7.7 L25.8 10.5 L21 10.5 Z" className="stroke-ink" strokeWidth="0.85" strokeLinejoin="round" />
-                {/* jade livery stripe */}
-                <line x1="3.4" y1="12.9" x2="27.6" y2="12.9" className="stroke-accent" strokeWidth="1.8" strokeLinecap="round" />
-                {/* subtle rocker line */}
-                <line x1="4.2" y1="14.5" x2="27.6" y2="14.5" className="stroke-ink" strokeWidth="0.7" strokeLinecap="round" opacity="0.45" />
-                {/* wheels with hubs */}
-                <circle cx="8.4" cy="15.9" r="2.8" className="fill-ink" />
-                <circle cx="8.4" cy="15.9" r="1.1" className="fill-on-ink" />
-                <circle cx="22.7" cy="15.9" r="2.8" className="fill-ink" />
-                <circle cx="22.7" cy="15.9" r="1.1" className="fill-on-ink" />
-              </svg>
-            </span>
-          </span>
+                ONE RASTER SURFACE. The van used to be an HTML <span> beside the svg, positioned by
+                CSS offset-path/offset-distance off the shared --route-progress variable. That made
+                the line and the van TWO renderers reading one variable, and on real fractional-DPR
+                hardware the field probe caught the van's side holding a stale value while the line
+                honestly rendered progress 0. There is no second renderer now: the van is a <g> in
+                the same svg, in the same user space, written from the same number in the same frame.
+
+                THREE NESTED GROUPS, each owning exactly one transform, so none of them fight:
+                  .route-van       translate to the path point  — set per frame from the LUT (JS)
+                  .route-van-lane  the +/-12px lane offset by LEG (CSS, 450ms, interruptible)
+                  .route-van-nose  the +/-90deg nose rotation by DIRECTION (CSS, 200ms)
+                The art group then centres the 32x20 glyph on the origin and scales it to the 30x19
+                it rendered at before, so the point on the path is the same point it always was. */}
+            <g ref={vanRef} className="route-van" aria-hidden="true">
+              <g className="route-van-lane">
+                <g className="route-van-nose">
+                  <g className="route-van-art" transform="translate(-15 -9.5) scale(0.9375 0.95)">
+                    {/* Keeps the group's box exactly the 32x20 the old rendered svg occupied, so the
+                        van's measured centre is the point on the path rather than the ink's own
+                        bbox centre — which is what I15/I20 measure and what the rotation turns about. */}
+                    <rect x="0" y="0" width="32" height="20" fill="none" stroke="none" />
+                    {/* body — boxy rear, rounded roof, sloped hood to a rounded nose */}
+                    <path
+                      d="M2.6 15.6 L2.6 8 Q2.6 5.5 5.1 5.5 L20 5.5 Q23 5.5 24.6 7.7 L27.7 11.4 Q29.1 12 29.1 13.7 L29.1 15.6 Z"
+                      className="fill-on-ink stroke-ink"
+                      strokeWidth="1.3"
+                      strokeLinejoin="round"
+                    />
+                    {/* window band — two side windows + an angled windshield */}
+                    <rect x="5.1" y="7.4" width="6.1" height="3.1" rx="0.6" className="stroke-ink" strokeWidth="0.85" />
+                    <rect x="12.5" y="7.4" width="6.1" height="3.1" rx="0.6" className="stroke-ink" strokeWidth="0.85" />
+                    <path d="M21 7.5 L23.7 7.7 L25.8 10.5 L21 10.5 Z" className="stroke-ink" strokeWidth="0.85" strokeLinejoin="round" />
+                    {/* jade livery stripe */}
+                    <line x1="3.4" y1="12.9" x2="27.6" y2="12.9" className="stroke-accent" strokeWidth="1.8" strokeLinecap="round" />
+                    {/* subtle rocker line */}
+                    <line x1="4.2" y1="14.5" x2="27.6" y2="14.5" className="stroke-ink" strokeWidth="0.7" strokeLinecap="round" opacity="0.45" />
+                    {/* wheels with hubs */}
+                    <circle cx="8.4" cy="15.9" r="2.8" className="fill-ink" />
+                    <circle cx="8.4" cy="15.9" r="1.1" className="fill-on-ink" />
+                    <circle cx="22.7" cy="15.9" r="2.8" className="fill-ink" />
+                    <circle cx="22.7" cy="15.9" r="1.1" className="fill-on-ink" />
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg>
         </>
       ) : null}
     </div>

@@ -428,10 +428,95 @@ being painted rather than where the element is positioned, and the hunt moves to
 large, `errX`/`errY` and `dxFromGutter` say which axis and how far into the curve, `ctm` says whether a
 scale crept in, and `zoom`/`dpr` capture the machine state that no emulation lane reproduced.
 
+### CONVICTED BY FIELD PROBE (owner, 2026-08-19)
+
+The console probe from Task #21 was run on the Yoga at the curve. Build fingerprint: `preserveAspect=null`,
+which only holds from Task #19 onward. **Browser zoom 100%, Windows display scaling 125% (dpr 1.25):**
+
+```json
+{ "progress": 0, "errX": 0.0, "errY": 2945.6, "vvScale": 1, "svgW": "1521px", "winW": 1536 }
+```
+
+**Read it carefully, because it names the mechanism.** `progress: 0` — the shared `--route-progress`
+variable read **zero**. The LINE rendered that honestly: undrawn, which matches the owner's screenshot
+showing no line at all. The VAN, reading the *same variable through a different renderer*, sat
+**2945.6px along the route** holding a value the variable no longer had. `errX: 0.0` says the two
+agree perfectly on the horizontal axis; the entire disagreement is `errY`, i.e. *distance along the
+route*. This is not a paint problem and not a geometry problem — **it is a state problem: one variable,
+two renderers, and only one of them still listening.**
+
+**The owner's zoom ladder correlates exactly with the EFFECTIVE fractional scale:**
+
+| Browser zoom | × display scaling | Effective scale | Result |
+|---|---|---|---|
+| 100% | 1.25 | **1.25** | large gap |
+| 90% | 1.25 | **1.125** | small gap |
+| 80% | 1.25 | **1.00** | perfect |
+
+The defect scales with how *fractional* the effective device scale is, and vanishes exactly when it
+lands on a whole number. That is a rasterisation-boundary signature.
+
+**CONVICTION: dual-renderer state desync.** The van's `offset-distance: calc(var(--route-progress) * 100%)`
+stops re-resolving on real fractional-DPR hardware while the SVG line keeps listening. Position-level,
+not paint-level. Chromium. **NOT reproducible in lab emulation** — Task #21's 51-sample matrix across
+four emulation lanes and three engines measured everything within 1px.
+
+**The precise Chromium-internal invalidation path remains UNPROVEN, and deliberately so.** We could
+not reproduce it, so we cannot instrument it, so we cannot claim to have found it. What we can do is
+remove the thing it needs to exist. **The fix is architectural: there is no second renderer to desync.**
+
+### FIXED (Task #22, 2026-08-19) — one raster surface
+
+The van is no longer an HTML `<span>` beside the svg. It is a `<g>` **inside** the same svg, in the
+same user space, positioned per frame by an SVG transform written from the same number in the same
+frame as the line's dash. `offset-path`, `offset-distance`, `offset-rotate`, `offset-anchor`, the
+imperative `offsetPath` assignment and the `@supports (offset-path: ...)` display gate are **all gone**.
+
+**Positioning is a precomputed LUT.** At each geometry change the rendered path is sampled at
+**N = 256** points into two `Float32Array`s; per frame `update()` interpolates two entries and writes
+one `transform` attribute. **Zero per-frame geometry reads, zero per-frame layout reads** — the scroll
+handler is still one passive listener, one rAF, one CSS var write, plus this one attribute write.
+
+| Engine | LUT build (per geometry change) | Per frame | Worst van↔line error |
+|---|---|---|---|
+| chromium | 15.3ms | **4.9µs** | 0.095px |
+| webkit | 12ms | **3.7µs** | 0.096px |
+| firefox | 30ms | **13.8µs** | 0.106px |
+
+A 60fps frame is 16 667µs, so the per-frame cost is **0.02–0.08%** of budget. N was chosen by
+measurement, not taste: the straight leg interpolates exactly, so error exists only in the terminus
+curve where the chord error is ~`s²/(8R)` = 19²/(8·460) ≈ **0.10px** — 10× under I20's 1px tolerance,
+and measured at 0.095–0.106px. N = 512 halved the error to ~0.03px (invisible) while costing **144ms**
+on firefox per rebuild — a visible main-thread stall on a reflow mid-scroll, bought with accuracy
+nobody can perceive.
+
+**MOTION PARITY — verified, not hoped.** Three nested groups each own exactly one transform so none of
+them fight: `.route-van` takes the per-frame translate (a presentation *attribute*, so no CSS rule may
+set `transform` on it), `.route-van-lane` the ±12px lane offset (450ms, interruptible), `.route-van-nose`
+the ±90° facing (200ms). Measured identically in **all three engines**: rotation displaces the van's
+centre by **0.00px**, the leg flip moves it by exactly **−24.00px**, and the nose matrices are exactly
+±90°. Eye pass at zoom 1: worst delta **0.09px** over 30 slow steps and **0.01px** on hard jumps with
+no settle — *better* than the Task #19 baseline of 0.227px/0.08px. Handoff holds at **36px** through
+the curve, the U-turn, the manual reflow trigger and its removal. I15 gap at the terminus: **21px**,
+unchanged.
+
+**WHAT SUPPORT WAS GAINED.** The `@supports (offset-path: path(...))` gate used to *hide the van
+entirely* on any engine without `offset-path`. SVG transforms need no gate, so the van now renders
+wherever the svg does. The deliberate absences are untouched and re-verified in all three engines:
+reduced-motion (progress pinned to 1, van absent, line fully drawn, spine not armed), sub-`lg`
+teardown (zero van and path nodes, overlay `display:none`), the narrow→wide resize-lockout rule, and
+static-complete SSR.
+
+**One measurement subtlety worth recording**, because it looked like a 12px regression and was not:
+`getBoundingClientRect()` on a `<g>` **includes its children's transforms**, so it folds in the
+deliberate ±12px lane offset. The old HTML parent's border box excluded the child transform for free.
+I20 now measures `van.getScreenCTM()` — the group's *own* origin, which is the point that rides the
+path.
+
 ### Status
 
-> **FO-3: HELD — reproduced by nobody but the owner, on one machine, and not by any instrument here.**
-> No fix is claimed and none shipped: the one candidate architecture was measured and rejected because
-> it broke I20 in two engines. **What shipped is coverage, not a cure** — the I20 zoom leg, so the
-> class is instrumented from now on. **The next move is the field console probe above**, run on the
-> Yoga at the curve. Do not paper this over as fixed.
+> **FO-3: FIXED on v2 (Task #22) by removing the class — there is no second renderer left to desync.**
+> **The Chromium-internal mechanism is deliberately unproven**; it was never reproducible in lab, and
+> claiming a diagnosis we could not instrument would be worse than saying so. **The owner's Yoga
+> re-test at the curve is the closing proof** and is pending. Re-run the console probe above: `errY`
+> should now be ~0 at every scroll position and every zoom level.

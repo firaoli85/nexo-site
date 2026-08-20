@@ -435,7 +435,7 @@ async function checkOverlap(page, route, width) {
     await page.evaluate((frac) => window.scrollTo({ top: Math.round((document.documentElement.scrollHeight - window.innerHeight) * frac), behavior: "instant" }), f);
     await page.waitForTimeout(220);
     const m = await page.evaluate(() => {
-      const van = document.querySelector(".route-van .route-van-lane svg") || document.querySelector(".route-van");
+      const van = document.querySelector(".route-van .route-van-art") || document.querySelector(".route-van");
       if (!van) return { none: true };
       const vr = van.getBoundingClientRect();
       if (vr.width === 0 && vr.height === 0) return { none: true };
@@ -479,8 +479,11 @@ const I20_PROBE = () => {
   const path = document.querySelector(".route-path");
   const van = document.querySelector(".route-van");
   if (!root || !path || !van) return { absent: true, why: "no route/van nodes" };
-  if (getComputedStyle(van).display === "none") return { absent: true, why: "van display:none (@supports / not armed)" };
-  if (getComputedStyle(van).offsetPath === "none") return { absent: true, why: "offset-path unsupported or rejected" };
+  if (getComputedStyle(van).display === "none") return { absent: true, why: "van display:none (overlay not armed - reduced-motion or pre-hydration)" };
+  // NOTE: there is no offset-path gate any more. Task #22 moved the van INSIDE the svg as a <g>
+  // positioned by transform, so it renders wherever the svg does — the old `@supports (offset-path)`
+  // hide-the-van branch is gone, and checking offsetPath here would now report "none" on a perfectly
+  // healthy van and silently skip the assertion.
   const p = parseFloat(getComputedStyle(root).getPropertyValue("--route-progress"));
   if (!isFinite(p)) return { bad: "--route-progress is not a number" };
   const m = path.getScreenCTM();
@@ -488,7 +491,13 @@ const I20_PROBE = () => {
   const q = path.getPointAtLength(p * L);
   const hx = m.a * q.x + m.c * q.y + m.e;
   const hy = m.b * q.x + m.d * q.y + m.f;
-  const r = van.getBoundingClientRect();
+  // MEASURE THE VAN GROUP'S OWN ORIGIN, not its bounding box. Since Task #22 the van is a <g>
+  // inside the svg, and getBoundingClientRect() on a <g> INCLUDES its children's transforms — so it
+  // would fold in the deliberate +/-12px lane offset and the nose rotation and report a 12px error
+  // on a perfectly-placed van. getScreenCTM() returns the mapping for the group's OWN coordinate
+  // origin, which is exactly the point that rides the path. The old HTML parent's border box
+  // excluded the child transform for free; the svg group does not, and that difference is real.
+  const vm = van.getScreenCTM();
   const seam = document.querySelector("[data-route-seam]");
   return {
     p: +p.toFixed(4),
@@ -496,7 +505,7 @@ const I20_PROBE = () => {
     // system. If someone reinstates h-full/w-full or preserveAspectRatio on that svg, this moves
     // off 1 and the detail string says so by name.
     ctmA: +m.a.toFixed(4), ctmD: +m.d.toFixed(4),
-    delta: +Math.hypot(r.left + r.width / 2 - hx, r.top + r.height / 2 - hy).toFixed(3),
+    delta: +Math.hypot(vm.e - hx, vm.f - hy).toFixed(3),
     // HANDOFF — the gap between the route END and the footer card, which is the mode-2 metric.
     // Both terms MUST be in the same coordinate space: map the path end through the CTM to get a
     // viewport y, and compare with the seam rect (also viewport). An earlier version mixed spaces
@@ -604,19 +613,19 @@ const I20_ZOOM_PROBE = () => {
   const van = document.querySelector(".route-van");
   if (!root || !path || !van) return { absent: "no route/van nodes (below lg, or torn down)" };
   const cs = getComputedStyle(van);
-  if (cs.display === "none") return { absent: "van hidden (@supports / not armed)" };
-  if (!cs.offsetPath || cs.offsetPath === "none") return { absent: "offset-path rejected" };
+  if (cs.display === "none") return { absent: "van hidden (overlay not armed)" };
+  // (no offset-path gate since Task #22 — see the note in I20_PROBE)
   const p = parseFloat(getComputedStyle(root).getPropertyValue("--route-progress"));
   const m = path.getScreenCTM();
   const L = path.getTotalLength();
   const q = path.getPointAtLength(p * L);
   const q0 = path.getPointAtLength(0);
   const hx = m.a * q.x + m.c * q.y + m.e, hy = m.b * q.x + m.d * q.y + m.f;
-  const r = van.getBoundingClientRect();
+  const vm = van.getScreenCTM(); // the group's own origin — see the note in I20_PROBE
   return {
     p: +p.toFixed(4),
     dxFromGutter: +(q.x - q0.x).toFixed(1),
-    delta: +Math.hypot(r.left + r.width / 2 - hx, r.top + r.height / 2 - hy).toFixed(3),
+    delta: +Math.hypot(vm.e - hx, vm.f - hy).toFixed(3),
   };
 };
 
@@ -625,19 +634,29 @@ export async function checkVanRidesLineZoom({ base = BASE, sabotage = false } = 
     { name: "css-zoom", factor: 1.25 },
     { name: "css-zoom", factor: 1.5 },
     { name: "device-metrics", factor: 1.25 },
+    // FRACTIONAL-DPR LANE (Task #22). The FO-3 field probe came from a machine at dpr 1.25 (Windows
+    // 125% scaling), and the owner's zoom ladder correlated exactly with the EFFECTIVE fractional
+    // scale — 100%x1.25 large gap, 90%x1.25 small gap, 80%x1.25 perfect. THIS LANE IS A GUARD, NOT A
+    // REPRODUCTION, and the distinction matters: Task #21's 51-sample matrix (this same emulation,
+    // among others) measured everything within 1px, so lab emulation demonstrably does NOT reproduce
+    // the field defect. It is here so that a future regression at fractional DPR cannot pass unseen —
+    // the owner's field re-test remains the closing proof for FO-3 itself.
+    { name: "dpr", factor: 1.25, dsf: 1.25 },
   ];
   const browser = await chromium.launch();
   const problems = [], samples = [];
   try {
     for (const lane of LANES) {
       const tag = lane.name + "@" + lane.factor;
-      const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+      const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: lane.dsf || 1 });
       const page = await ctx.newPage();
       const cdp = await ctx.newCDPSession(page);
       try {
         await page.goto(base + "/", { waitUntil: "networkidle" });
         await page.waitForTimeout(600);
-        if (lane.name === "device-metrics") {
+        if (lane.name === "dpr") {
+          // nothing to emulate beyond the context deviceScaleFactor already set above
+        } else if (lane.name === "device-metrics") {
           await cdp.send("Emulation.setDeviceMetricsOverride", {
             width: Math.round(1440 / lane.factor), height: Math.round(900 / lane.factor),
             deviceScaleFactor: lane.factor, mobile: false,
@@ -651,12 +670,12 @@ export async function checkVanRidesLineZoom({ base = BASE, sabotage = false } = 
           // its OWN copy of the geometry, shifted. That is exactly what the pre-url() architecture
           // made possible, and what offset-path: url(#id) removes by construction.
           await page.evaluate(() => {
-            const d = document.querySelector(".route-path").getAttribute("d");
-            // Shift EVERY coordinate, not just the start. An earlier version shifted only the M
-            // command, which left the path's END unmoved — so the samples that land at p=1 saw no
-            // divergence and the sabotage slipped past its own test.
-            const shifted = d.replace(/[\d.]+/g, (n) => (parseFloat(n) + 25).toFixed(1));
-            document.querySelector(".route-van").style.offsetPath = 'path("' + shifted + '")';
+            // Displace the van group. Since Task #22 the van is positioned by a transform ATTRIBUTE
+            // rewritten every frame, and a CSS transform beats a presentation attribute — so this
+            // wins on every frame and produces exactly the disagreement I20 exists to catch.
+            const st = document.createElement("style");
+            st.textContent = ".route-van { transform: translate(40px, 120px); }";
+            document.head.appendChild(st);
           });
           await page.waitForTimeout(250);
         }
@@ -706,8 +725,8 @@ export async function checkVanRidesLineZoom({ base = BASE, sabotage = false } = 
     pass: problems.length === 0 && curvedOnes.length > 0,
     detail: problems.length
       ? problems.slice(0, 3).join("; ")
-      : "chromium only (zoom is not emulable in the webkit/firefox lanes) — " + measured.length +
-        " samples across css-zoom 1.25/1.5 + device-metrics 1.25, " + curvedOnes.length +
+      : "chromium only — the zoom lanes need CDP, and the DPR lane rides along in the same browser rather than tripling the sweep — " + measured.length +
+        " samples across css-zoom 1.25/1.5, device-metrics 1.25 and fractional-DPR 1.25, " + curvedOnes.length +
         " of them MID-CURVE, worst delta " + (worst ? worst.delta : "n/a") + "px against a " + I20_TOL + "px tolerance",
     samples,
   };
