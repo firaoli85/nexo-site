@@ -15,9 +15,16 @@ import { HERO_LEDE } from "@/lib/seo";
 // or re-wording it is a one-line edit.
 const HEADLINE = { before: "Every trip, ", accent: "accounted", after: " for." };
 
+// atmo-ink = the D25/T2 atmosphere layer (Task #27), and this is the FLAGSHIP application: the glow
+// enters off the right edge and bleeds off the left-bottom corner, so it reads as light in the room
+// rather than as a shape on the page. The class ALSO carries the compensated ink tokens, scoped (see
+// globals.css) — a glow costs --ink-surface its D23 B06 separation as a matter of arithmetic, so the
+// surface and BOTH border tiers are lifted for this subtree only, never globally.
+// WIDER ROLLOUT IS P4 PER-PAGE WORK: the interior routes deliberately do NOT wear this yet, because
+// each one needs its own painted-pixel AA pass first.
 export function Hero() {
   return (
-    <Section className="relative -mt-16 overflow-hidden bg-ink pt-28 sm:pt-32 lg:pt-36">
+    <Section className="atmo-ink relative -mt-16 overflow-hidden bg-ink pt-28 sm:pt-32 lg:pt-36">
       {/* The living map (ink tone) — the hero field's atmosphere. Kept OUT of the console. */}
       <AmbientMap tone="ink" region="wide" />
       <Container className="relative">

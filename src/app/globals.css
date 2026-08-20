@@ -216,6 +216,34 @@
      side. It is a hard 0-blur line, i.e. a rule, not a glow — the flat aesthetic is intact. */
   --nav-seam:         rgb(11 21 18 / 0.75);
 
+
+  /* ATMOSPHERE (D25, temperature T2 "rose + violet" — Task #27) ------------------------------
+     Warmth enters the site HERE and nowhere else. D25 makes atmosphere SEMANTICALLY SILENT: these
+     values never colour text, a control, a status, or a service level — jade keeps every one of
+     those jobs. The owner's law, on record: warm/pink cannot be an emergency-adjacent signal;
+     incorporate it in backgrounds. So this is a BACKGROUND REGISTER and nothing more, which is
+     also why it is safe: the alarms' colour space is never entered.
+     Construction is the GitLab technique dissected in docs/DESIGN_RESEARCH.md §14a and credited
+     there — layered off-canvas radial-gradients with alpha falloff. Zero JS, zero images, zero new
+     network bytes, and nothing animates. */
+  --atmo-rose:        #f58f9c;   /* owner anchor — the sun that carries the register */
+  --atmo-rose-soft:   #f7929a;   /* companion, same family — the light stack's mid stops */
+  --atmo-violet:      #8d6fd3;   /* owner violet. Held BELOW rose in alpha on purpose: --svc-wheel
+                                    already owns violet SEMANTICALLY (wheelchair), so a violet strong
+                                    enough to read as A COLOUR would start competing with a service
+                                    level. Task #27 rendered that collision and ruled it. */
+
+  /* The two stacks, verbatim from the owner's T2 pick (docs/COLOR_BENCH.md §8), written in the
+     modern rgb() syntax this file already uses. Tokenised so a future temperature change is a
+     two-value edit instead of a hunt through components. */
+  --atmo-light:
+    radial-gradient(70% 84% at 104% 46%, rgb(245 143 156 / 0.25) 0, rgb(247 170 180 / 0.14) 28%, rgb(252 214 219 / 0.04) 56%, rgb(255 236 238 / 0) 74%),
+    radial-gradient(58% 74% at 2% 104%, rgb(141 111 211 / 0.17) 0, rgb(171 148 224 / 0.09) 30%, rgb(214 203 242 / 0.03) 58%, rgb(232 226 248 / 0) 76%),
+    radial-gradient(30% 64% at 66% 88%, rgb(245 143 156 / 0.07) 0, rgb(255 240 242 / 0) 70%);
+  --atmo-ink:
+    radial-gradient(64% 78% at 104% 38%, rgb(245 143 156 / 0.19) 0, rgb(245 143 156 / 0.09) 30%, rgb(245 143 156 / 0.03) 58%, rgb(245 143 156 / 0) 78%),
+    radial-gradient(54% 66% at -6% 96%, rgb(141 111 211 / 0.16) 0, rgb(141 111 211 / 0.06) 38%, rgb(141 111 211 / 0) 72%);
+
   /* Legacy aliases — used by old body{} rule; kept so nothing breaks */
   --background:     var(--bg);
   --foreground:     var(--text);
@@ -236,6 +264,48 @@ body {
   /* --font-body is set by next/font on <html>; clean system sans as fallback */
   /* D21: the token carries its own fallback chain — do not repeat it here. */
   font-family: var(--font-body);
+}
+
+/* THE ATMOSPHERE LAYER (D25 / T2 — Task #27) ---------------------------------------------------
+   Applied as a background-image ON THE SECTION ITSELF rather than as a ::before overlay. Reasons,
+   in order: (1) a section's background paints beneath every child, so the glow lands under the
+   AmbientMap, the console and the copy without inventing a z-index or a new stacking context —
+   the ::before route needs both, and .ambient-map / .route-overlay already contend for that space;
+   (2) both hosts already set their own background-COLOR utility (bg-ink / bg-bg) and a
+   background-image composites over it natively, so the base register is untouched; (3) it can
+   never intercept a pointer, because it is not a box.
+   No JS, no images, no animation — a static paint, so reduced-motion has nothing to honour and
+   the flat aesthetic (§5: no glow/bloom on OBJECTS) is intact: this is a field, not an object. */
+.atmo-light,
+.atmo-ink { background-repeat: no-repeat; }
+.atmo-light { background-image: var(--atmo-light); }
+.atmo-ink   { background-image: var(--atmo-ink); }
+
+/* THE COMPENSATED INK PAIR — SCOPED TO THE GLOW, and the scoping is the design decision.
+   The bench (COLOR_BENCH §8) proved the arithmetic: pure ink sits at luminance 0.00651 and D23's
+   B06 floor of 1.25 against --ink-surface permits at most 0.00649, so ANY usable glow on ink costs
+   the raised surface its separation. The fix is to compensate the surface — but only WHERE THE GLOW
+   IS. A global token change would lift every ink surface on the site (nav dropdown panels, the
+   footer, Stop 3) where there is no glow and therefore no deficit, and it would invalidate Task
+   #18's --ink-hover derivation, which was solved against #192b24. Custom properties inherit, so
+   scoping the override to this class hands the compensated values to every descendant automatically
+   and leaves the rest of the site on its measured values. --ink-hover is NAV-ONLY and the nav is
+   chrome (a sibling of <main>, never inside a glowing section), so it is untouched here and its
+   Task #18 math still holds: 1.59:1 vs the panel, --on-ink-muted 4.85:1 on it.
+   THREE tiers move, not the two the bench named — the bench modelled only the card edge:
+     --ink-surface          #192b24 -> #273a32   1.35:1 vs the painted ink (D23 B06 floor 1.25)
+     --on-ink-border        #405e58 -> #4a6c66   the DIVIDER tier. D23 E2-05 hardened it to 2.10:1,
+                                                 and the lifted surface drops #405e58 to 1.70:1 —
+                                                 under its own floor. #4a6c66 restores 2.09:1.
+     --on-ink-border-strong #5b8275 -> #688f82   the CARD-EDGE tier. The lifted surface would drop
+                                                 #5b8275 to 2.82:1, under the 3:1 WCAG 1.4.11 tier
+                                                 it is named for; #688f82 restores 3.36:1.
+   Text on the compensated surface, re-computed: --on-ink 10.52, --on-ink-muted 6.29,
+   --accent-on-ink 6.55 — all clear AA with margin. Floors rose or held; none was lowered. */
+.atmo-ink {
+  --ink-surface:          #273a32;
+  --on-ink-border:        #4a6c66;
+  --on-ink-border-strong: #688f82;
 }
 
 /* Glass surface for INK stages only (Stage 4.5 doctrine amendment). Default is a

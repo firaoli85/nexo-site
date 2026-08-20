@@ -378,6 +378,17 @@ async function checkReducedMotion(browser, base, routes) {
   page.on("console", (m) => { if (m.type() === "error") errs.push(m.text().slice(0, 60)); });
   page.on("pageerror", (e) => errs.push(String(e.message).slice(0, 60)));
   for (const route of routes) {
+    // CROSS-ROUTE ERROR BLEED (Task #27). All routes share ONE page, and Next prefetches the links in
+    // view. Navigating away ABORTS those in-flight prefetches, and WebKit reports each abort as a
+    // console error that lands AFTER the next goto has started — so route N-1's aborted prefetch was
+    // charged to route N. The tell is that the failing prefetch TARGET is always some unrelated page
+    // ("/" or "/apply") while the BLAMED route changes every run. Measured over 12 sweeps per arm it
+    // fired in 5/12 with this task's atmosphere layer and 6/12 WITHOUT it, i.e. it is pre-existing and
+    // not caused by any page change. Park on about:blank first and let the aborts land THERE, then
+    // clear and navigate for real. Detection is not weakened: about:blank runs no app code, so any
+    // genuine error on the route under test still lands in the buffer after this point.
+    await page.goto("about:blank").catch(() => {});
+    await page.waitForTimeout(150);
     errs.length = 0;
     await page.goto(base + route, { waitUntil: "networkidle" }).catch(() => {});
     await page.waitForTimeout(300);
@@ -793,6 +804,25 @@ async function checkIndicator(page, width) {
       const h = await t.elementHandle();
       await t.hover();
       const opened = await page.waitForFunction((el) => el.getAttribute("aria-expanded") === "true", h, { timeout: 2000 }).then(() => true).catch(() => false);
+      // Radix MOUNTS the Indicator on open, and aria-expanded flips BEFORE that mount lands. A fixed
+      // 340ms wait raced it in WebKit: roughly 1 run in 10 measured while the indicator was still
+      // absent and reported "no-indicator" on a randomly varying trigger. Characterised in Task #27
+      // over 30 runs — the rate was IDENTICAL with and without that task's atmosphere layer (9/10
+      // both ways), and a mount-aware wait passed 10/10 with a worst offset of 0px, so the site was
+      // never at fault. Wait for the indicator to exist and paint a non-zero bar, THEN settle.
+      // THIS DOES NOT WEAKEN THE INVARIANT: the Stage-16 defect I17 exists to catch is a FROZEN
+      // indicator, which is mounted with a real width, so this wait returns immediately and the
+      // +/-4px assertion below still convicts it. A genuinely absent indicator still falls through
+      // the timeout to the existing no-indicator failure.
+      await page
+        .waitForFunction(() => {
+          for (const ind of document.querySelectorAll(`.nav-indicator[data-state="visible"]`)) {
+            const bar = ind.querySelector(".nav-indicator-bar") || ind;
+            if (bar.getBoundingClientRect().width > 0) return true;
+          }
+          return false;
+        }, null, { timeout: 3000 })
+        .catch(() => {});
       await page.waitForTimeout(340); // let the transform transition settle before measuring
       const m = await page.evaluate((el) => {
         const tr = el.getBoundingClientRect();

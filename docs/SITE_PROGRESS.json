@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-20",
-    "currentTask": "owner tuned-bench temperature pick (T1/T2/T3) -> warm-atmosphere implementation task (full cube)",
+    "currentTask": "FO-3 owner field confirmation, then W5 part 2 (nexo-motion + S-001 card motion)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -467,10 +467,10 @@
       "id": "W4-owner-check",
       "phase": "P3",
       "title": "Owner temperature pick (T1/T2/T3) for the ruled warm atmosphere",
-      "status": "todo",
+      "status": "done",
       "date": "2026-08-20",
-      "note": "D25 IS RULED; what is open is HOW WARM. Open docs/color-direction-bench/tuned.html on BOTH machines and reply T1, T2 or T3. Use the GROUP BY FRAGMENT control and spend the attention on fragment ii, THE INK HERO: it is the register that was never tested for warmth and it is where the three differ most. T1 rose solo is the quietest. T2 rose plus violet is the most distinctive, but the violet needs an eye on whether it competes with the service-level violet that already carries a semantic job. T3 rose plus apricot is the warmest and closest to the GitLab feel, and it sits nearest the amber alarm hue. Saying none of these, warmer or cooler is a legitimate answer; the dial is continuous. The pick becomes the implementation spec for a separate full-cube task, which also inherits the compensated ink pair this bench derived. NOTE: the FO-3 field confirmation is no longer blocking, because Task #25 found and fixed the root cause and I20 now guards it.",
-      "fixlogRef": "2026-08-20 - Task #26"
+      "note": "CLOSED: the owner picked T2 (rose + violet) and it is implemented and live (see W-D25-T2-LIVE). The bench's remaining obligation, a painted-pixel re-measurement on the REAL pages rather than on fragments, was discharged in the same task and is recorded in docs/COLOR_BENCH.md section 9 with the bench-versus-site deltas, including two places the bench's painted values did not transfer to full-width sections.",
+      "fixlogRef": "2026-08-20 - Task #27"
     },
     {
       "id": "W5-1",
@@ -543,6 +543,15 @@
       "date": "2026-08-20",
       "fixlogRef": "2026-08-20 - Task #26",
       "note": "Docs-only: no site code, no cube, no token changed. Three temperatures rendered from identical fragments with only the glow layer tokenised. THE FLAGSHIP FRAGMENT EARNED ITSELF IMMEDIATELY: the ink register had never been tested for warmth, and it turns out that ANY usable glow on ink breaks the D23 B06 floor as a matter of arithmetic. Pure ink sits at luminance 0.00651 and the 1.25 floor against --ink-surface permits at most 0.00649. Measured 1.07 / 1.10 / 1.02 against the shipped #192b24. The bench FAILS that line rather than excusing it, and prints the compensated pair passing beneath: --ink-surface #192b24 to #273a32 (holding 1.32 / 1.34 / 1.25) and --on-ink-border-strong #5b8275 to #688f82 (the lifted surface would otherwise drop the card edge to 2.82, under its 3:1 tier; #688f82 restores 3.36). The LIGHT register shows the exact inverse: the glow darkens the page slightly so a white card separates BETTER than today, with D23 A06 measured at 1.28 against the shipped 1.07. Light has luminance headroom to spare and ink has almost none, so a bench that only tested light would have shipped this straight into the flagship register. Measurement is by painted pixels with the text hidden; an earlier sampling pass returned blue and orange values that turned out to be subpixel antialiasing fringes on glyph edges."
+    },
+    {
+      "id": "W-D25-T2-LIVE",
+      "phase": "P3",
+      "title": "D25/T2 atmosphere live — rose+violet system, scoped compensated ink pair",
+      "status": "done",
+      "date": "2026-08-20",
+      "fixlogRef": "2026-08-20 - Task #27",
+      "note": "The owner's T2 pick ships on two surfaces: the homepage INK HERO (flagship) and the FINAL CTA light band. Layers are the bench values verbatim, tokenised as --atmo-light / --atmo-ink with the owner hexes as --atmo-rose, --atmo-rose-soft and --atmo-violet, delivered by two utility classes that set a background-image on the section itself: no pseudo-element, no z-index, no stacking context, no JS, no images, nothing animated, zero new network bytes. THE COMPENSATED INK PAIR IS SCOPED TO .atmo-ink RATHER THAN GLOBAL, a deliberate departure from the impact check's assumption: compensating globally would lift every ink surface on the site (nav panels, footer, Stop 3) where there is no glow and no deficit, and would invalidate Task #18's --ink-hover derivation, which was solved against #192b24. Custom properties inherit, so the override reaches exactly the glowing subtree. Verified by computed style: inside the hero ink-surface #273a32 / border #4a6c66 / strong #688f82, while :root, the nav, the footer and the light band all keep their Task #18 values and --ink-hover #2e4d40 is unchanged everywhere. THREE tiers move, not the two the bench named: the bench never modelled the DIVIDER tier, and D23 E2-05 hardened --on-ink-border to 2.10:1 while the lifted surface drops the shipped #405e58 to 1.70:1, under its own floor, so #4a6c66 restores 2.09:1. AA re-verified on PAINTED PIXELS on the real pages across all four console scenes and both registers: 57 text runs, ZERO below floor. VIOLET RULED WEATHER, NOT MEANING by render, including a deliberate worst case with the violet sun dragged directly under the --svc-wheel chip at the owner's own alpha, plus a 3x-alpha control proving the test can fail. ONE MEASURED DEGRADATION ON RECORD: the console panel's FILL separation from the field falls 1.14 to 1.00 at the brightest point of the rose sun, because --ink-glass is a fixed alpha the compensation does not touch; it breaches no governing floor, since B06 governs --ink-surface and the panel's separation is carried by its EDGE by documented design (4.40 vs the painted field, 3.13 vs the interior, both clear of the 3:1 tier), but the fill now contributes nothing and the trade of doubling --ink-glass luminance was not taken unilaterally. Wider rollout is P4 per-page work."
     }
   ],
   "decisions": [
@@ -870,7 +879,7 @@
     "tsc": {
       "state": "green",
       "date": "2026-08-20",
-      "note": "npx tsc --noEmit TRUE 0 after the globals.css dashoffset fix"
+      "note": "npx tsc --noEmit TRUE 0 with the atmosphere layer and the scoped compensated ink tokens in place"
     },
     "ci": {
       "state": "green",
@@ -880,9 +889,8 @@
     "cube": {
       "state": "green",
       "cells": 234,
-      "checks": "13 routes x 6 profiles x 3 engines = 234 cells; 3412 checks; chromium, webkit and firefox each GREEN; zero failures. Once-per-sweep lanes folded into the exit code: stale-build preflight, I19 (4/4), I21 (16/16), I20 zoom leg (10 samples across css-zoom 1.25/1.5, device-metrics 1.25 and fractional-DPR 1.25 plus the NEW dpr-2 lane, 5 of them mid-curve, worst 0.095px)",
-      "date": "2026-08-20",
-      "note": "Full cube after the FO-3 root-cause fix (stroke-dashoffset given a real unit) and the new I20 dash assertion. THE ASSERTION IS THE POINT OF THIS RUN: I20 now reads the computed stroke-dashoffset and fails if the line disagrees with --route-progress, and since Firefox is already a cube engine that check would have caught the defect on the day it shipped. One cosmetic edit was made to sweep.mjs AFTER this run started (a single label string in the zoom-leg detail text); the assertion logic that ran is identical to what is committed."
+      "checks": "13 routes x 6 profiles x 3 engines = 234 cells; chromium, webkit and firefox each GREEN; SWEEP_EXIT=0. Once-per-sweep lanes folded into the exit code: stale-build preflight, I19 (4/4), I21 (16/16, weakest LOCAL MAX 1.92 vs a 1.5 floor), I20 zoom leg (10 samples, worst delta 0.095px vs a 1px tolerance). Green only on the FOURTH run: two HARNESS defects were found and fixed on the way, neither caused by the atmosphere layer and both proven so by A/B before any change. I17 raced Radix's Indicator mount (a fixed 340ms wait; failures reported all=0, i.e. UNMOUNTED rather than mispositioned, on a randomly varying trigger; identical 9/10 rate with the glow ON and OFF; a mount-aware wait passed 10/10 at 0px worst offset, and a 4-leg negative test proves it still convicts the Stage-16 frozen-line defect at 102px and 208px). I10 charged one route's aborted Next prefetch to the NEXT route because all 13 share one page (5/12 sweeps failing with the glow ON vs 6/12 with it OFF, i.e. pre-existing and marginally worse without it); parking on about:blank before clearing the error buffer gives 8/8 clean sweeps while a negative leg still convicts 13/13 routes with a real console error.",
+      "date": "2026-08-20"
     },
     "perfBudget": {
       "state": "not-built",
@@ -1013,6 +1021,10 @@
     {
       "date": "2026-08-20",
       "summary": "Task #26 D25 receipts and the tuned atmosphere bench. D25 recorded in its reserved ledger slot: jade keeps the identity and all interaction and status, warmth is atmosphere only and semantically silent, anchored on the owner rose #f58f9c. Built three temperatures on identical fragments with the ink hero as the flagship, and it immediately found that any glow on ink breaks the D23 B06 floor as arithmetic rather than tuning, with a compensated ink pair derived and printed passing. The light register shows the inverse and separates better than today. impeccable run: four findings, two fixed and two shown to be false positives with measurements."
+    },
+    {
+      "date": "2026-08-20",
+      "summary": "Task #27 implemented the owner's T2 atmosphere pick on the ink hero and the final CTA band. The compensated ink pair was scoped to the glow rather than applied globally, which keeps Task #18's derivations intact everywhere the glow does not reach, and a third tier the bench had missed (the divider tier, under its own D23 E2-05 floor once the surface lifts) was derived and added. Painted-pixel AA was re-measured on the real pages: 57 text runs, zero below floor. Violet was ruled weather rather than meaning by render, worst case included. One degradation is on record: the glass console panel's fill separation collapses to 1.00, leaving its edge to carry the boundary alone. The measuring probe itself was wrong five times before it was right, each wrong version manufacturing site defects that did not exist; the failure modes and the corrected instrument are written into COLOR_BENCH section 9."
     }
   ]
 }

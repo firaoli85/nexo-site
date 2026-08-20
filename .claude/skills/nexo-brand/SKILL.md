@@ -241,7 +241,7 @@ Opacity — not blur — guarantees contrast; blur < 20px. Any change is AA-veri
 (now including the dark nav glass over PURE WHITE — the `--nav-glass` 0.90 alpha is calibrated for it).
 
 ## 5. MOTION VOCABULARY + CEILINGS
-Flat aesthetic — **no glow/bloom/gradient**. Animate transform/opacity/filter only (+ dashoffset
+Flat aesthetic — **no glow/bloom/gradient ON OBJECTS** (see §6.9: D25 admits a warm gradient FIELD as background atmosphere; an object still never glows). Animate transform/opacity/filter only (+ dashoffset
 for the spine draw). Everything interruptible; reduced-motion = instant.
 - **Page content:** calm, ≤ ~300ms, ease-out; entrances rise from `scale(0.95)`/`translateY`,
   never from `scale(0)`; no all-at-once — stagger grouped items. Read-first copy is NOT animated.
@@ -598,6 +598,35 @@ the privacy page says "**built for HIPAA compliance**", never an unverified "enc
   Performance ≥ 90 on desktop AND mobile**, verified against the prod build.
 - Redirect + post-deploy SEO decisions live in `DEPLOY-NOTES.md` (apex canonical; www + fcnexo.com 301→apex;
   Rich Results + Search Console + sitemap submission post-deploy; per-city pages as a future content layer).
+
+## 6.9 ATMOSPHERE COLOUR (D25, temperature T2 — live since Task #27)
+Warmth entered the palette as a **background register and nothing else**. Owner's law, verbatim and
+binding: *warm/pink cannot be an emergency-adjacent signal; incorporate it in backgrounds.* That is
+what makes the direction safe — it keeps warmth out of the alarms' colour space entirely.
+
+- **Tokens:** `--atmo-rose #f58f9c` (anchor) · `--atmo-rose-soft #f7929a` (companion) ·
+  `--atmo-violet #8d6fd3` · `--atmo-light` / `--atmo-ink` (the layered radial stacks).
+- **SEMANTICALLY SILENT.** These never colour text, a control, a status, a service level, or any
+  interactive surface. **Jade keeps every one of those jobs.** Giving rose or violet a meaning, a
+  state, or an interactive surface is a VIOLATION, not a refinement.
+- **Delivery:** `.atmo-light` / `.atmo-ink` set a `background-image` on the section itself — beneath
+  every child without a z-index or a stacking context, and unable to intercept a pointer. **Zero JS,
+  zero images, zero new network bytes, nothing animated** (so reduced-motion has nothing to honour).
+  Technique credited to the GitLab dissection in `docs/DESIGN_RESEARCH.md §14a`.
+- **`.atmo-ink` CARRIES A SCOPED COMPENSATED TRIAD, and this is the part that is easy to get wrong.**
+  Any usable glow on ink costs `--ink-surface` its D23 B06 separation as a matter of arithmetic, so
+  inside a glowing subtree `--ink-surface #273a32`, `--on-ink-border #4a6c66` and
+  `--on-ink-border-strong #688f82` override the globals. **THREE tiers, not two** — the divider tier
+  falls under its own E2-05 floor when the surface lifts. **Never hoist these to `:root`:** the rest
+  of the site has no glow, therefore no deficit, and a global lift would also invalidate Task #18's
+  `--ink-hover` derivation. A new glowing section must **wear `.atmo-ink`**, never hand-roll the
+  background-image, or it glows with uncompensated borders.
+- **Applied surfaces are deliberately few:** the homepage ink hero and the final CTA band. Wider
+  rollout is **P4 per-page work**, each page owing its own painted-pixel pass first.
+- **AudienceTriage stays CLEAN** (§6.1) — the glow does not go there.
+- **Verification is by PAINTED PIXELS, never composited alphas**, and the text must be hidden (layout
+  kept) before sampling or subpixel fringes lie. Bench values do **not** transfer to full-width
+  sections; re-measure in place.
 
 ## 7. THE COPY HONESTY GATE (verbatim — audit EVERY string, incl. aria-label, sr-only, alt, SVG title/desc)
 **NEVER claim, imply, or depict:** GPS / live tracking / live map / ETA / "track your ride";

@@ -407,3 +407,57 @@ The implementation task inherits two obligations from this round: the **compensa
 and a re-measurement of the painted pixels on the real pages rather than on bench fragments.
 **"None of these, warmer or cooler" is a legitimate answer** — the dial is continuous and a fourth
 round costs one task.
+
+---
+
+## 9. T2 IMPLEMENTED — bench versus site (Task #27, 2026-08-20)
+
+**The owner picked T2 (rose + violet).** It now ships on the homepage **ink hero** and the **final
+CTA band**, with the §8 layer values carried across verbatim (only rewritten from `rgba(r,g,b,a)`
+into the `rgb(r g b / a)` form `globals.css` already uses). Tokens: `--atmo-rose #f58f9c`,
+`--atmo-rose-soft #f7929a`, `--atmo-violet #8d6fd3`, plus `--atmo-light` / `--atmo-ink` holding the
+stacks. Delivery is two utility classes applying a **background-image to the section itself** — no
+pseudo-element, no z-index, no stacking context, no JS, no images, nothing animated.
+
+### Where the bench was right
+
+- **The ink floor failure is real and is arithmetic.** Compensation was genuinely required; the glow
+  could not simply be tuned down without deleting the idea.
+- **`--on-ink-border-strong #5b8275 → #688f82` was exactly right.** Measured on the real page, the
+  compensated edge holds **3.36:1** against the lifted surface and **4.40:1** against the painted
+  field, both clear of the 3:1 boundary tier.
+- **Light has headroom and ink does not.** On the real band the glow cost the h2 only 0.47 (17.28 →
+  16.81) and the lede 0.31 (7.51 → 7.20), from floors of 3.0 and 4.5. Nothing on light came close.
+
+### Where the bench was incomplete or wrong, measured on the real pages
+
+| # | Bench said | The site says | Consequence |
+|---|---|---|---|
+| 1 | Compensate **two** tokens | **Three.** The bench never modelled the DIVIDER tier. D23 E2-05 hardened `--on-ink-border` to 2.10:1; the lifted surface drops the shipped `#405e58` to **1.70:1**, under its own floor. | `--on-ink-border #405e58 → #4a6c66` (restores 2.09:1) was added at implementation. |
+| 2 | The ink card is filled with `--ink-surface` | **It is not.** The hero console is `.ink-glass` — a fixed `rgb(22 42 34 / 0.70)` composite. In the whole hero, `--ink-surface` backs only the small avatar circles and the no-`backdrop-filter` fallback. | The B06 arithmetic the bench ran governs a surface the flagship barely uses. The compensation still earns its place through the two border tiers, which the hero uses 17 times. |
+| 3 | Compensation restores card separation | **The panel's FILL separation still collapses**, from 1.14 to **1.00**, because `--ink-glass` is a fixed alpha the compensated tokens do not touch. | Recorded as the one measured degradation. It breaches no governing floor — the panel's separation is carried by its EDGE by documented design — but the fill now contributes nothing. |
+| 4 | Painted ink sampled `#1b202a` | The real hero's brightest painted field is `#242221`–`#20201e`, and text-backing pixels are `#0b1512` (field) and `#12231d` (card). | Bench fragments are small, so a radial covers proportionally more of them. **Bench painted values do not transfer to full-width sections** and must be re-measured in place — which is why §8 owed this round a real-page pass. |
+| 5 | Painted light sampled `#e0e4ee` | The real band's darkest text-backing pixel is `#f5f1f3`. | Same cause, opposite direction: on a 1440-wide band the copy sits in the falloff, not the core. The bench was **pessimistic** here by a wide margin. |
+
+### The result
+
+**57 text runs measured on painted pixels across both registers and all four console scenes: zero
+below floor.** Four pairings moved measurably and all keep large margin. **Violet was ruled
+weather, not meaning**, by render — including a deliberate worst case with the violet sun dragged
+directly under the `--svc-wheel` chip at the owner's own alpha (the chip still reads as a chip) and
+a 3x-alpha control proving the test can fail.
+
+### A method note that cost most of the task
+
+**The probe was wrong five times before it was right, and every wrong version invented site defects
+that did not exist** — at one point 49 of 52 runs "failed". The failure modes, recorded because
+they will recur: sampling an element's box catches its **decorative children** (a status dot, a
+button's own fill); switching to the padding box still catches every **rounded border**, which arcs
+into the padding rectangle at the corners; reading `getComputedStyle().color` **after** applying the
+hide-text style returns transparent-black for every run; and forcing `.demo-scene[data-active]` with
+only a 220ms settle collects the **outgoing** scene's runs against the **incoming** scene's raster.
+The instrument that is actually correct takes **Range client rects of the text nodes themselves**
+in document coordinates against a full-page raster, waits 700ms for scene transitions, and treats
+opacity below 0.05 as invisible. **It ends by drawing the sampled rects back onto the live page and
+screenshotting them, so alignment is judged by eye before a single number is believed.** Per D26,
+no probe result was reported until the probe had been executed and its output shown.

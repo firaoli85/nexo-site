@@ -8,7 +8,7 @@ Read this first, every session, before touching anything.
 | **Owner** | Firaoli ("Oli") Seboka, solo founder, FC Nexo LLC dba Nexo Access |
 | **Status** | V1 live at nexoaccess.com. V2 rebuild starting: research-first, on the `v2` branch. |
 | **Horizon** | Built to hold for 2 to 3 years of solo operation. Oli will be running the business, not rebuilding the site. |
-| **Version** | v1.8 — August 20, 2026 |
+| **Version** | v1.9 — August 20, 2026 |
 
 ---
 
@@ -140,3 +140,49 @@ Each phase produces documents before code. A phase is done when its documents ex
 ## 9. CURRENT STATE (update every session)
 
 **As of August 18, 2026:** P3-W3 CLOSED (D21, implemented Task #14). **P3-W4 CLOSED (D23, implemented Task #18):** the palette is hardened to the owner's measured perception floors — 12 token values moved, F1 (scrolled-nav edge → card tier) and F3 (15 section/chrome boundary rules → `--border-strong`) adopted, and the hex guard is live so the token block is enforced as the single source (DISC-20 closed). Glass alphas were deliberately NOT changed: their read floors (0.75 / 0.60) sit below the shipped values (0.90 / 0.70), and floors-only-rise gives no mandate to move what already clears. **The closing proof is owed and is the owner's:** these values were derived from readings but have not yet been scrolled by the owner on the standard laptop that set the floor. NEXT: W5 — motion system (nexo-motion skill, the C4 fix + I20, motion-safe architecture).
+
+**As of August 20, 2026 — D25 IS LIVE ON THE SITE (T2, implemented Task #27).** The owner picked
+temperature **T2 (rose + violet)** from the tuned bench and it now ships on two surfaces: the
+**homepage ink hero** (the flagship) and the **final CTA band** (the one light band). The layers are
+the bench values verbatim, tokenised in `globals.css` as `--atmo-light` / `--atmo-ink` with the
+owner hexes as `--atmo-rose`, `--atmo-rose-soft` and `--atmo-violet`, applied through two utility
+classes (`.atmo-light`, `.atmo-ink`) as a **background-image on the section itself** — zero JS, zero
+images, zero new network bytes, nothing animated.
+
+**THE COMPENSATED INK PAIR IS SCOPED, NOT GLOBAL, AND THAT IS A DELIBERATE DEPARTURE FROM THE IMPACT
+CHECK'S ASSUMPTION.** The bench proved that any usable glow on ink costs `--ink-surface` its D23 B06
+separation. Compensating it globally would have lifted every ink surface on the site — nav dropdown
+panels, the footer, Stop 3 — where there is no glow and therefore no deficit, and it would have
+invalidated Task #18's `--ink-hover` derivation, which was solved against `#192b24`. Custom
+properties inherit, so the compensation rides on `.atmo-ink` and reaches only glowing subtrees.
+**Verified by computed style:** inside the hero `--ink-surface #273a32`, `--on-ink-border #4a6c66`,
+`--on-ink-border-strong #688f82`; at `:root`, in the nav, in the footer and in the light band all
+three keep their Task #18 values, and `--ink-hover #2e4d40` is unchanged everywhere (it is nav-only,
+and the nav is chrome — a sibling of `<main>`, never inside a glowing section).
+
+**THREE TIERS MOVE, NOT THE TWO THE BENCH NAMED.** The bench modelled only the card edge and missed
+the divider tier: D23 E2-05 hardened `--on-ink-border` to **2.10:1**, and the lifted surface drops
+the shipped `#405e58` to **1.70:1** — under its own floor. `#4a6c66` restores **2.09:1**. The card
+edge behaves as the bench predicted (`#5b8275` would fall to 2.82 under the 3:1 WCAG 1.4.11 tier;
+`#688f82` restores 3.36). No floor was lowered.
+
+**AA RE-VERIFIED ON PAINTED PIXELS ON THE REAL PAGES, NOT ON BENCH FRAGMENTS: 57 text runs, 0 below
+floor**, across all four console scenes and both registers. The four pairings the glow measurably
+lowered all keep enormous margin (hero lede 9.66→9.27, hero secondary CTA 16.17→15.86, band h2
+17.28→16.81, band lede 7.51→7.20; floors 4.5 and 3.0). **VIOLET COLLISION: RULED WEATHER, NOT
+MEANING** — rendered and viewed, including a deliberate worst case with the violet sun dragged
+directly behind the `--svc-wheel` chip at the owner's own alpha, where the chip still reads as a
+chip; a 3x-alpha control confirms the test can fail. Violet therefore stays in the ink register.
+
+**ONE MEASURED DEGRADATION IS ON RECORD AND IS THE OWNER'S TO WEIGH:** the console panel's FILL
+separation from the field falls from **1.14 to 1.00** at the brightest point of the rose sun. It
+breaches no floor that governs it — B06 governs `--ink-surface`, not the `--ink-glass` composite,
+and the panel's separation is carried by its EDGE by documented design (Hero.tsx says so in as many
+words), which measures **4.40 vs the painted field and 3.13 vs the panel interior**, both clear of
+the 3:1 boundary tier. But at 1.00 the fill contributes literally nothing, so the console now leans
+entirely on its edge. Restoring fill separation would mean roughly doubling `--ink-glass`
+luminance, which would end the hero's kin-to-kin doctrine; that trade was not taken unilaterally.
+
+**WIDER ROLLOUT IS P4 PER-PAGE WORK.** The interior routes deliberately do not wear the treatment
+yet: each needs its own painted-pixel pass first. NEXT: FO-3 owner field confirmation, then W5 part
+2 (nexo-motion + S-001 card motion).
