@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-21",
-    "currentTask": "owner Round-2 Bench reading (G1 nav, G2/G3 density, G4 spring) - unblocks ladder v2 rungs #33/#35/#36",
+    "currentTask": "#34 braid + van at route scale (dynamic-physics reparameterization)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -862,6 +862,12 @@
       "date": "2026-08-21",
       "title": "D25 reversal receipt (ruled 08-20, shipped in #27, reversed 08-21 by N3-b)",
       "summary": "The warm-atmosphere direction is reversed after a side-by-side render rather than in prose. Owner, verbatim: the warm dusk is officially dead, mint is the only light in the dark. FROM: rose and violet atmosphere as an ink-register background wash (--atmo-rose #f58f9c, --atmo-rose-soft #f7929a, --atmo-violet #8d6fd3, --atmo-light, --atmo-ink) plus the compensated ink pair that existed only to pay for the wash's luminance lift (--ink-surface #273a32, --on-ink-border #4a6c66, --on-ink-border-strong #688f82). TO: pure noir per D29. WHY: side by side the warm atmosphere read as dusk rather than as instrumentation, and it put a second temperature into a palette whose whole argument is one light in the dark. SALVAGE, because the ruling cost nothing and produced three things that outlive it: the painted-pixel method (Range client rects in document coordinates against a text-hidden full-page raster), which is now the standard instrument; the register-split discovery, which is the seed of D29's register-split law; and the compensated-pair math, which is the worked example of what a background change costs in border and surface tokens. EXECUTION RIDES TASK #33, not #32 - the reversal removes the atmo applications and tokens, and the pre-#27 global values are intact outside the scoped .atmo-ink subtree, which #33 verifies before deleting rather than assuming."
+    },
+    {
+      "id": "D31",
+      "date": "2026-08-21",
+      "title": "R2 rulings + the Mint Restraint Law (owner)",
+      "summary": "G1-b ADOPTED: the liquid-glass nav, tint at the 0.75 D23 lineage floor, blur 16px, over both registers, with the @supports fallback rendering solid ink-bold - the two-state reality is accepted by ruling rather than treated as a defect, and the nav must be complete and I21-legal in both. The braid's mint smearing through the glass is LEGAL: it is transmission of a live element rather than accent application, which is the interpretive note on D29's accent law - the mint is not placed in the chrome, it is seen through it. G2 breathing field ADOPTED for theater fields, with the imperceptible-as-motion bar confirmed live by the owner. G3 grain PROVEN-UNADOPTED: a working, measured tool with no current application, shelved rather than rejected. G4 spring ADOPTED as the site's arrival and interaction grammar (zeta 0.72, omega-n 9.2, 620ms linear() family, zero JS); framer-motion removed this task and banned as a dependency. THE MINT RESTRAINT LAW: on the noir register mint appears in exactly two places, the active route (braid and map) and the primary CTA, and nowhere else at any opacity or size. N4-A is REVERSED with its receipt - the mobility cards' active state becomes spring physics plus a subtle charcoal elevation rather than neon borders, on the owner's rationale that neon edges on every card turn the page into a laser tag arena: one ring is an instrument, six rings are a game, and the treatment failed on repetition rather than on contrast or craft. The nav's mint underline is retired under the same law; the bar's boundary is carried by glass, structure and the neutral I21 hairline, so I21's mechanism is preserved and only its colour changes. D29's section-5 ring amendment stays on the books but is DORMANT - no sanctioned surface uses a neon ring, it is not repealed, and nothing may cite it as licence today."
     }
   ],
   "discoveries": [
@@ -1201,6 +1207,10 @@
     {
       "date": "2026-08-21",
       "summary": "Task #32 recorded D29 and D30 and rendered the three questions they left open. The most useful thing to come out of it was not the answer to the question asked. G1 was built to test whether sheerer glass reads as more liquid; measuring it showed that the glass is load-bearing for legibility rather than decorative, because on-ink text sitting directly on the mint strand measures 1.39:1 while the same text over the bar measures 13.03:1. That makes clearing text columns a hard constraint on the route-scale braid rather than a preference, and the bench proved it the expensive way: at 390 its own hero lede landed on a charcoal strand at 2.78:1, invisible at 1440, and had to be recomposed. The D25 reversal is recorded with its from, its to, its why and its salvage, and executes in #33 rather than here."
+    },
+    {
+      "date": "2026-08-21",
+      "summary": "Task #33 put the first D31 ruling into shipped code. The nav is liquid glass at the 0.75 lineage floor with a genuinely-tested solid fallback, the dropdowns became boxed destinations separated fill-against-fill, the D25 atmosphere was executed-dead verify-then-delete, and framer-motion left the dependency list. Two things are worth remembering. First, mint restraint was proved by sweeping every computed colour in the header rather than by asserting it, and the header returns exactly one mint value - the CTA. Second, the newly-adopted breathing field was WITHHELD from the hero, because B06 measures 1.250 there, its floor exactly, so the maximum field alpha the console card can survive is 0.0000: the same arithmetic that forced the compensated ink pair into existence in Task 27, now forcing a treatment to stay out. The glass also produced a constraint of its own - over pure white the 0.75 bar composites to a value where on-ink-muted is 4.25:1, so no muted TEXT may sit in the bar, and the only muted thing in it is an icon governed by the 3:1 graphic tier."
     }
   ]
 }

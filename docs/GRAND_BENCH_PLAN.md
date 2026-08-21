@@ -36,16 +36,22 @@ the one-task shift in the numbering can be audited.
 
 | Task | Rung | Why here, and what it is blocked on |
 |---|---|---|
-| **#33** | **Nav + chrome in noir.** Three things land together because they touch the same files and the same cube run: **(1) the D25 REVERSAL** — remove the `.atmo-*` applications and tokens, and the compensated ink pair with them; **(2) the `framer-motion` removal** (S-026); **(3) glass-or-ink-bold per the owner's G1 pick.** | Chrome touches every route, so it wants the full cube anyway, and doing it first means every later rung is judged against final chrome. **Blocked on: the G1 ruling.** The reversal itself is not blocked — it is already ruled. **Verify the pre-#27 globals are intact outside the scoped `.atmo-ink` subtree before deleting, rather than assuming it.** |
-| **#34** | **Braid + van at route scale.** Paint-only recolor per D28, plus **path-time reparameterization** for variable speed (S-031's adopted half). | Lands on the most invariant-protected object on the site (I15 / I20 / the LUT), so it gets its own task. **Carries a hard constraint from S-032: the strand must clear text columns outright wherever there is no bar over it** — 1.39:1 is what happens when it does not. |
+| **#33 — IN BUILD → DONE (2026-08-21)** | **Nav + chrome in noir.** Three things land together because they touch the same files and the same cube run: **(1) the D25 REVERSAL** — remove the `.atmo-*` applications and tokens, and the compensated ink pair with them; **(2) the `framer-motion` removal** (S-026); **(3) glass-or-ink-bold per the owner's G1 pick.** | Chrome touches every route, so it wants the full cube anyway, and doing it first means every later rung is judged against final chrome. **Blocked on: the G1 ruling.** The reversal itself is not blocked — it is already ruled. **Verify the pre-#27 globals are intact outside the scoped `.atmo-ink` subtree before deleting, rather than assuming it.** |
+| **#34 — NEXT** | **Braid + van at route scale.** Paint-only recolor per D28, plus **path-time reparameterization** for variable speed (S-031's adopted half). | Lands on the most invariant-protected object on the site (I15 / I20 / the LUT), so it gets its own task. **Carries a hard constraint from S-032: the strand must clear text columns outright wherever there is no bar over it** — 1.39:1 is what happens when it does not. |
 | **#35** | **Ambient B4-d2** — the dispatch-network model, plus whichever density treatment wins. | **No longer blocked** (N3 is ruled). **Blocked on: the G2/G3/control pick.** |
 | **#36** | **Mobility cards** — neon hairline rings (N4-A), geometric icons, spring settle (G4). | Self-contained. Where the **§5 amendment** written in D29 gets exercised for the first time. |
 | **#37** | **Homepage tonal map + mid-band re-cast into theater** per D30. | Needs #33–#36 to exist first, because the seam is drawn between real registers rather than described. **This redraws tonal map v3 rather than inferring the change.** |
 | then | **W2 hero-signature concept round** — including the **searching line and the recalculation event** (S-031's autonomous half). | Still deliberately last: it speaks the braid and ambient language the earlier rungs make real. |
 
-**What is actually blocking what, stated plainly:** every rung except the D25 reversal and the
-framer-motion removal is waiting on **owner picks from the Round-2 Bench**. Those two are ruled and can
-proceed regardless.
+**STATUS, updated 2026-08-21 (Task #33).** **The Round-2 picks are in (D31), so nothing on this ladder is blocked on
+the owner any more.** #33 is built: the liquid-glass nav at the 0.75 lineage floor with the solid ink-bold fallback,
+the boxed-destination panels, the **D25 reversal executed**, framer-motion **removed**, and the spring + breathing
+primitives landed in the system for the rungs that follow.
+
+**Two rulings changed the shape of the rungs below, and they are folded in rather than appended:**
+**N4-A is reversed** (S-037), so **#36's cards carry spring physics and charcoal elevation, not neon rings**; and the
+**Mint Restraint Law** means **#34 and #35 now own the ONLY two sanctioned mint surfaces on the noir register** — the
+active route and the primary CTA. That makes #34 the task where mint restraint is either proved or broken.
 
 **Nothing here has shipped, and nothing may reach the site before you react to a candidate.**
 

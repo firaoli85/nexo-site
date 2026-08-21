@@ -202,7 +202,38 @@
      contrast (--ink-hover vs a white-lightened panel ≈1.1:1 = invisible; vs the solid ink panel
      ≈1.9:1 = clearly visible). Base hue sits a hair above --ink so the bar is near-seamless over the
      ink hero (≈1.1:1) yet clearly jade-green-cast over white. */
-  --nav-glass:        rgb(12 23 19 / 0.90);
+  /* D31/G1-b: the nav tint sits at the 0.75 D23 LINEAGE FLOOR (was 0.90). Floors only rise, so 0.75
+     is legal but IS the edge, and the ruling accepts that on purpose -- 0.75 is what lets the braid
+     transmit through the bar, which D31 rules is transmission of a live element rather than accent
+     application. THE CONSTRAINT THIS BUYS, and it is load-bearing: over PURE WHITE the 0.75 bar
+     composites to #49514e, where --on-ink-muted measures 4.25:1 -- BELOW the 4.5 text floor. So:
+     *** NO MUTED TEXT MAY SIT IN THE GLASS BAR. *** The only muted thing in the closed bar is the
+     chevron ICON, governed by 1.4.11's 3:1 graphic tier, which 4.25 clears. --on-ink itself measures
+     7.11:1 over white and 9.14:1 over the braid's mint, so the primary ramp is safe in both
+     registers. Panels and the mobile overlay are SOLID and are unaffected by any of this. */
+  --nav-glass:        rgb(12 23 19 / 0.75);
+  /* The @supports fallback is a DESIGNED PEER, not a degradation (decline-don't-degrade): the bar at
+     full opacity, which is exactly what 0.75-over-ink already composites to (#0c1713), so over the
+     ink hero the two states are indistinguishable and they only diverge where the backdrop does. */
+  --nav-solid:        #0c1713;
+
+
+  /* MOTION PRIMITIVES (D31 / G4) ------------------------------------------------------------
+     The spring is ADOPTED as the site's arrival grammar, and it ships as a token so later rungs
+     (#36's mobility cards) consume one name instead of re-deriving a curve. It is the damped-spring
+     solution -- zeta 0.72, omega_n 9.2 rad/s -- sampled at 31 stops into a CSS linear(), which is
+     what lets spring physics ship with framer-motion REMOVED and zero JS.
+     ONE CORRECTION IS BAKED IN AND MUST NOT BE 'TIDIED' AWAY: at 620ms this spring has NOT settled
+     (it is still at 102.4%; a true 0.1% settle takes ~1090ms, far too slow for UI), so the final
+     stop is FORCED to 100%. A linear() whose last stop is not 100% leaves the animated property
+     permanently overshot. The last 20ms therefore carries 102.7 -> 100, which on a 12px translate
+     is 0.32px: a real final settle, not a snap.
+     THE DURATION IS PART OF THE PRIMITIVE: --spring-settle is for ARRIVALS (cards, reveals). It is
+     NOT for the nav, which is chrome and keeps nexo-brand SS5's <=250ms ceiling on --ease-nav. */
+  --spring-settle:    linear(0.0% 0.0%, 1.6% 3.3%, 6.0% 6.7%, 12.3% 10.0%, 19.8% 13.3%, 28.1% 16.7%, 36.6% 20.0%, 45.1% 23.3%, 53.3% 26.7%, 61.0% 30.0%, 68.1% 33.3%, 74.5% 36.7%, 80.2% 40.0%, 85.1% 43.3%, 89.3% 46.7%, 92.9% 50.0%, 95.8% 53.3%, 98.2% 56.7%, 100.0% 60.0%, 101.4% 63.3%, 102.4% 66.7%, 103.1% 70.0%, 103.6% 73.3%, 103.8% 76.7%, 103.8% 80.0%, 103.8% 83.3%, 103.6% 86.7%, 103.3% 90.0%, 103.0% 93.3%, 102.7% 96.7%, 100.0% 100.0%);
+  --spring-duration:  620ms;
+  /* The nav's decelerate curve, named rather than repeated at eight call sites. */
+  --ease-nav:         cubic-bezier(0.22, 1, 0.36, 1);
   /* NAV SEAM (FO-2). A 1px hairline drawn just BELOW the scrolled nav, and the reason it exists is
      a perceptual one the colour floors cannot express. A line is SEEN when it is a LOCAL EXTREMUM —
      different from the nearest different value on BOTH sides. The nav's --on-ink-border-strong edge
@@ -217,32 +248,15 @@
   --nav-seam:         rgb(11 21 18 / 0.75);
 
 
-  /* ATMOSPHERE (D25, temperature T2 "rose + violet" — Task #27) ------------------------------
-     Warmth enters the site HERE and nowhere else. D25 makes atmosphere SEMANTICALLY SILENT: these
-     values never colour text, a control, a status, or a service level — jade keeps every one of
-     those jobs. The owner's law, on record: warm/pink cannot be an emergency-adjacent signal;
-     incorporate it in backgrounds. So this is a BACKGROUND REGISTER and nothing more, which is
-     also why it is safe: the alarms' colour space is never entered.
-     Construction is the GitLab technique dissected in docs/DESIGN_RESEARCH.md §14a and credited
-     there — layered off-canvas radial-gradients with alpha falloff. Zero JS, zero images, zero new
-     network bytes, and nothing animates. */
-  --atmo-rose:        #f58f9c;   /* owner anchor — the sun that carries the register */
-  --atmo-rose-soft:   #f7929a;   /* companion, same family — the light stack's mid stops */
-  --atmo-violet:      #8d6fd3;   /* owner violet. Held BELOW rose in alpha on purpose: --svc-wheel
-                                    already owns violet SEMANTICALLY (wheelchair), so a violet strong
-                                    enough to read as A COLOUR would start competing with a service
-                                    level. Task #27 rendered that collision and ruled it. */
+/* ATMOSPHERE — REMOVED. D25 was ruled 2026-08-20, shipped in Task #27, and REVERSED 2026-08-21 by
+   the N3-b reading (D31, and the D25 reversal receipt in the ledger). The rose + violet stacks, the
+   --atmo-* tokens and the COMPENSATED INK PAIR that existed only to pay for the wash's luminance
+   lift are all gone; the ink register is back on its Task-18 values, which were verified intact
+   here BEFORE the deletion rather than assumed. Re-measured on the returned values: B06
+   --ink-surface vs --ink = 1.25:1 (its floor exactly), --on-ink-border 2.10:1,
+   --on-ink-border-strong 3.47:1, --on-ink 16.17:1 on ink. Do not reintroduce a background wash
+   without re-deriving that pair -- the arithmetic is the whole reason the pair existed. */
 
-  /* The two stacks, verbatim from the owner's T2 pick (docs/COLOR_BENCH.md §8), written in the
-     modern rgb() syntax this file already uses. Tokenised so a future temperature change is a
-     two-value edit instead of a hunt through components. */
-  --atmo-light:
-    radial-gradient(70% 84% at 104% 46%, rgb(245 143 156 / 0.25) 0, rgb(247 170 180 / 0.14) 28%, rgb(252 214 219 / 0.04) 56%, rgb(255 236 238 / 0) 74%),
-    radial-gradient(58% 74% at 2% 104%, rgb(141 111 211 / 0.17) 0, rgb(171 148 224 / 0.09) 30%, rgb(214 203 242 / 0.03) 58%, rgb(232 226 248 / 0) 76%),
-    radial-gradient(30% 64% at 66% 88%, rgb(245 143 156 / 0.07) 0, rgb(255 240 242 / 0) 70%);
-  --atmo-ink:
-    radial-gradient(64% 78% at 104% 38%, rgb(245 143 156 / 0.19) 0, rgb(245 143 156 / 0.09) 30%, rgb(245 143 156 / 0.03) 58%, rgb(245 143 156 / 0) 78%),
-    radial-gradient(54% 66% at -6% 96%, rgb(141 111 211 / 0.16) 0, rgb(141 111 211 / 0.06) 38%, rgb(141 111 211 / 0) 72%);
 
   /* Legacy aliases — used by old body{} rule; kept so nothing breaks */
   --background:     var(--bg);
@@ -266,47 +280,6 @@ body {
   font-family: var(--font-body);
 }
 
-/* THE ATMOSPHERE LAYER (D25 / T2 — Task #27) ---------------------------------------------------
-   Applied as a background-image ON THE SECTION ITSELF rather than as a ::before overlay. Reasons,
-   in order: (1) a section's background paints beneath every child, so the glow lands under the
-   AmbientMap, the console and the copy without inventing a z-index or a new stacking context —
-   the ::before route needs both, and .ambient-map / .route-overlay already contend for that space;
-   (2) both hosts already set their own background-COLOR utility (bg-ink / bg-bg) and a
-   background-image composites over it natively, so the base register is untouched; (3) it can
-   never intercept a pointer, because it is not a box.
-   No JS, no images, no animation — a static paint, so reduced-motion has nothing to honour and
-   the flat aesthetic (§5: no glow/bloom on OBJECTS) is intact: this is a field, not an object. */
-.atmo-light,
-.atmo-ink { background-repeat: no-repeat; }
-.atmo-light { background-image: var(--atmo-light); }
-.atmo-ink   { background-image: var(--atmo-ink); }
-
-/* THE COMPENSATED INK PAIR — SCOPED TO THE GLOW, and the scoping is the design decision.
-   The bench (COLOR_BENCH §8) proved the arithmetic: pure ink sits at luminance 0.00651 and D23's
-   B06 floor of 1.25 against --ink-surface permits at most 0.00649, so ANY usable glow on ink costs
-   the raised surface its separation. The fix is to compensate the surface — but only WHERE THE GLOW
-   IS. A global token change would lift every ink surface on the site (nav dropdown panels, the
-   footer, Stop 3) where there is no glow and therefore no deficit, and it would invalidate Task
-   #18's --ink-hover derivation, which was solved against #192b24. Custom properties inherit, so
-   scoping the override to this class hands the compensated values to every descendant automatically
-   and leaves the rest of the site on its measured values. --ink-hover is NAV-ONLY and the nav is
-   chrome (a sibling of <main>, never inside a glowing section), so it is untouched here and its
-   Task #18 math still holds: 1.59:1 vs the panel, --on-ink-muted 4.85:1 on it.
-   THREE tiers move, not the two the bench named — the bench modelled only the card edge:
-     --ink-surface          #192b24 -> #273a32   1.35:1 vs the painted ink (D23 B06 floor 1.25)
-     --on-ink-border        #405e58 -> #4a6c66   the DIVIDER tier. D23 E2-05 hardened it to 2.10:1,
-                                                 and the lifted surface drops #405e58 to 1.70:1 —
-                                                 under its own floor. #4a6c66 restores 2.09:1.
-     --on-ink-border-strong #5b8275 -> #688f82   the CARD-EDGE tier. The lifted surface would drop
-                                                 #5b8275 to 2.82:1, under the 3:1 WCAG 1.4.11 tier
-                                                 it is named for; #688f82 restores 3.36:1.
-   Text on the compensated surface, re-computed: --on-ink 10.52, --on-ink-muted 6.29,
-   --accent-on-ink 6.55 — all clear AA with margin. Floors rose or held; none was lowered. */
-.atmo-ink {
-  --ink-surface:          #273a32;
-  --on-ink-border:        #4a6c66;
-  --on-ink-border-strong: #688f82;
-}
 
 /* Glass surface for INK stages only (Stage 4.5 doctrine amendment). Default is a
    SOLID ink-surface (the fallback); only where backdrop-filter is supported does it
@@ -331,12 +304,43 @@ body {
    bar falls back to a SOLID dark bg where backdrop-filter is unsupported. Blur is chrome-scale. */
 /* FO-2: applied ONLY in the scrolled state, so the page-top no-border design is untouched. */
 .nav-seam { box-shadow: 0 1px 0 var(--nav-seam); }
-.nav-glass { background-color: var(--ink-surface); }
+/* THE BREATHING FIELD (D31 / G2) -- a DENSITY treatment for THEATER fields (D30), not a moving part.
+   S-028 rejected nexo-drift because it was per-cell opacity cycling and read as moving parts; this is
+   ONE slow transform on ONE pseudo-element, and its stated bar is imperceptible-as-motion: if you can
+   see it move, it has failed. Zero bytes, zero requests, one compositor layer.
+   THE BASE IS THE FINISHED COMPOSITION -- the gradients paint statically and only the transform lives
+   in the motion scope, so a reduced-motion reader gets the field, just not the breath.
+   *** APPLIED NOWHERE YET, ON PURPOSE. *** The only theater field that exists today is the ink hero,
+   and it holds the dispatch console: B06 (--ink-surface vs --ink) measures 1.250:1 there, its floor
+   EXACTLY, so the maximum field alpha that keeps the card separating is 0.0000. Applying this to the
+   hero would silently re-open the deficit the compensated ink pair used to pay -- the machinery D31
+   deleted. It belongs on a theater field with no raised card (#35's ambient work). */
+.breathe { position: relative; }
+.breathe::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 44% at 18% 22%, rgb(233 241 238 / 0.045) 0, rgb(233 241 238 / 0) 70%),
+    radial-gradient(34% 40% at 82% 34%, rgb(233 241 238 / 0.035) 0, rgb(233 241 238 / 0) 72%),
+    radial-gradient(46% 52% at 54% 88%, rgb(233 241 238 / 0.030) 0, rgb(233 241 238 / 0) 74%);
+}
+/* 1.4% over 15s, alternating -- the G2 values. Inert until referenced inside the motion scope. */
+@keyframes breatheDrift { from { transform: scale(1); } to { transform: scale(1.014); } }
+
+
+/* The fallback was --ink-surface (#192b24), a RAISED surface that read a step light against the ink
+   hero. The designed peer is the bar's own base at full opacity. */
+.nav-glass { background-color: var(--nav-solid); }
 @supports ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
   .nav-glass {
     background-color: var(--nav-glass);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    /* 16px per D31. saturate(1.25) is modest and earns its keep in exactly one place: it keeps the
+       braid's mint reading as mint through the tint instead of silting toward grey. It cannot
+       misbehave over white (white has no saturation to lift) and it is a single backdrop pass. */
+    -webkit-backdrop-filter: blur(16px) saturate(1.25);
+    backdrop-filter: blur(16px) saturate(1.25);
   }
 }
 
@@ -375,14 +379,11 @@ a:active {
 .nav-panel-right { transform-origin: top right; }
 
 
-@keyframes navPanelIn {
-  from { opacity: 0; transform: translateY(8px) scale(0.96); }
-  to   { opacity: 1; transform: none; }
-}
-@keyframes navPanelOut {
-  from { opacity: 1; transform: none; }
-  to   { opacity: 0; transform: translateY(6px) scale(0.97); }
-}
+/* navPanelIn / navPanelOut were DELETED in Task #33. They were @keyframes, and a keyframe restarts
+   from its first frame every time it is applied -- so moving trigger A -> B -> A replayed A's full
+   200ms entrance from opacity 0 even though A had just been visible. That is the #29 retarget fault.
+   The replacement is a TRANSITION plus @starting-style, below in the motion scope: a transition
+   retargets from the property's CURRENT value, so an interrupted open reverses from where it is. */
 
 /* ── Nav CHOREOGRAPHY (Stage 4.8) — nav is chrome, a higher motion ceiling than page
    content but still <=250ms, decelerate-eased, transform/opacity only, interruptible (Radix
@@ -400,7 +401,7 @@ a:active {
 }
 
 .nav-indicator[data-state="hidden"]  {  opacity: 0; }
-@keyframes navIndFade { from { opacity: 0; } to { opacity: 1; } }
+/* navIndFade deleted in Task #33 -- the indicator now transitions its opacity (retargetable). */
 /* Magic line — full accent (accent-on-ink on ink), wide + 2.5px so it clearly reads (Stage 6). */
 .nav-indicator-bar { margin-top: 1px; height: 2.5px; width: 62%; border-radius: 9999px; }
 
@@ -842,27 +843,39 @@ a:active {
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .nav-panel[data-state="open"] {
-    animation: navPanelIn 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* RETARGETABLE panel motion (Task #33, replacing the #29 @keyframes fault).
+     The base composition is the FINISHED panel (opaque, untransformed), so a reduced-motion reader
+     and any engine without @starting-style both get a complete panel that simply appears -- which is
+     decline-don't-degrade, not a broken entrance. */
+  .nav-panel {
+    transition: opacity 200ms var(--ease-nav), transform 200ms var(--ease-nav);
   }
 
+  /* The entrance start-state. @starting-style is the only way to transition a freshly-MOUNTED
+     element without JS, and Radix mounts Content on open. */
+  @starting-style {
+    .nav-panel[data-state="open"] {
+      opacity: 0;
+      transform: translateY(8px) scale(0.96);
+    }
+  }
+
+  /* The exit. Closing mid-open reverses from the current value instead of restarting. */
   .nav-panel[data-state="closed"] {
-    animation: navPanelOut 130ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+    transition-duration: 130ms;
   }
 
   /* Magic line — Radix Indicator; slides between triggers following the open/focused item.
      transform-only (nav law): the visible bar is a fixed 22px centred child, so Radix can snap
      the indicator's width while only the compositor-friendly transform animates. */
+  /* The magic line slides on transform (already retargetable) AND now fades on transition rather
+     than on a reversed keyframe -- hovering on/off quickly used to restart the fade from zero. The
+     hidden state itself is a STATE rule in the base layer (opacity 0 there), not a motion rule, so
+     a reduced-motion reader still gets a correctly hidden indicator. */
   .nav-indicator {
-    transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .nav-indicator[data-state="visible"] {
-    animation: navIndFade 160ms ease;
-  }
-
-  .nav-indicator[data-state="hidden"] {
-    animation: navIndFade 160ms ease reverse;
+    transition: transform 250ms var(--ease-nav), opacity 160ms ease;
   }
 
   /* Dropdown items — cascade in on open (opacity + 6px rise, ~45ms steps). Shared by the
@@ -875,6 +888,19 @@ a:active {
   /* Dropdown item arrow — nudges in from the left on hover/focus of its item (.group). */
   .nav-arrow {
     transition: opacity 180ms ease, transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* BOXED DESTINATION CELLS (Task #33). The fill change is the state; the 2px lift is the manners.
+     Timing function is --spring-settle, the ADOPTED arrival curve, at a chrome-tempo duration: the
+     curve is percentage-based, so the family reads the same at 260ms as at 620ms while the nav
+     keeps nexo-brand SS5's <=250ms-ish ceiling. A transition (not a keyframe) so a pointer that
+     leaves mid-lift reverses from where it is. */
+  .nav-cell {
+    transition: background-color 150ms ease, transform 260ms var(--spring-settle);
+  }
+  .nav-cell:hover,
+  .nav-cell:focus-visible {
+    transform: translateY(-2px);
   }
 
   /* "Apply as provider" — lift + arrow nudge on hover/focus. (Single register 6.1: the CTA is always

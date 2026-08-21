@@ -412,6 +412,37 @@ round costs one task.
 
 ## 9. T2 IMPLEMENTED — bench versus site (Task #27, 2026-08-20)
 
+> ## ⛔ CLOSED OUT — THIS SECTION DOCUMENTS A REVERSED RULING (Task #33, 2026-08-21)
+>
+> **Everything below shipped, and everything below has since been removed from the code.** D25 was
+> ruled 2026-08-20, implemented here in Task #27, reversed 2026-08-21 by the N3-b reading, and the
+> reversal was **EXECUTED in Task #33**: the `--atmo-*` tokens, both gradient stacks, the
+> `.atmo-light` / `.atmo-ink` classes and their two applications (the ink hero, the FinalCta band)
+> are gone, and so is the scoped compensated ink pair that existed only to pay for the wash.
+>
+> **The deletion was verify-then-delete, not delete-and-hope.** The Task-18 globals were confirmed
+> present and unmodified at `:root` BEFORE anything was cut — `--ink-surface #192b24`,
+> `--on-ink-border #405e58`, `--on-ink-border-strong #5b8275` — and the ink register was then
+> re-measured on the returned values rather than assumed:
+>
+> | Spot | Returned value | Floor |
+> |---|---|---|
+> | **B06** `--ink-surface` vs `--ink` | **1.25:1** | 1.25 — *its floor exactly, with zero headroom* |
+> | `--on-ink-border` vs `--ink-surface` | 2.10:1 | 2.0 (E2-05) |
+> | `--on-ink-border-strong` vs `--ink-surface` | 3.47:1 | 3.0 (WCAG 1.4.11) |
+> | `--on-ink` on `--ink` | 16.17:1 | 4.5 |
+> | `--on-ink-muted` on `--ink` | 9.66:1 | 4.5 |
+> | `--accent-on-ink` on `--ink` | 10.07:1 | 4.5 |
+>
+> **THE MOST USEFUL THING THIS SECTION LEAVES BEHIND is that B06 = 1.250 exactly.** That is not a
+> comfortable pass, it is a boundary: the maximum extra luminance the ink field can carry before the
+> console card stops separating is **0.0000**. It is why the compensated pair had to exist, and in
+> Task #33 it is why the newly-adopted **breathing field was withheld from the hero** — the same
+> arithmetic, reached from the opposite direction, two rulings apart.
+>
+> The method this section pioneered — **painted pixels, not composited alphas** — outlived the ruling
+> it was built to defend and is now the standard instrument. See the ledger's D25 reversal receipt.
+
 **The owner picked T2 (rose + violet).** It now ships on the homepage **ink hero** and the **final
 CTA band**, with the §8 layer values carried across verbatim (only rewritten from `rgba(r,g,b,a)`
 into the `rgb(r g b / a)` form `globals.css` already uses). Tokens: `--atmo-rose #f58f9c`,

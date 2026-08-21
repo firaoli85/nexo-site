@@ -85,10 +85,15 @@ export const SOLUTIONS_ITEMS: NavItem[] = [
   },
 ];
 
-// "Company" menu — no icons/descriptions; a short list.
+// "Company" menu. The boxed-destination panels (Task #33) give every cell a room rather than a row,
+// and a room with only a name in it reads as an empty room -- so these two gained a one-line
+// description. NO new destinations: the set is unchanged, and both lines are copy-gate clean (no
+// company theater per SS7.2 -- no team, office, year or scale claim; no performance or volume claim).
+// Icons are deliberately absent here: Platform and Solutions earn glyphs because their cells are
+// choices between similar things, while About and Contact are simply two doors.
 export const COMPANY_ITEMS: NavItem[] = [
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "About", href: "/about", description: "What we do, and why we built it." },
+  { label: "Contact", href: "/contact", description: "Ways to reach us." },
 ];
 
 // "Sign in" menu (Stage 15) — the three CUSTOMER-facing portal doors, in the nav item grammar

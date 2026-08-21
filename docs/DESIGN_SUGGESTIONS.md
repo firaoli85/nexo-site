@@ -669,3 +669,38 @@ a **background-register** question, which leaves the alarms and the jade accent 
 - The advisor asked whether the noir field reads as *airy* or merely as *empty*. That is not a separate question with its
   own answer; **it is exactly what G2, G3 and the flat control test.** Recording it here so the question is closed by the
   bench rather than re-asked in the next round.
+
+
+---
+
+## S-037 — N4-A REVERSED: the neon card borders are dead
+
+- **Source:** **Owner**, ruling on the Round-2 reading · **Date:** 2026-08-21 · **Disposition:** **REVERSED — recorded as
+  law in D31**
+- **What was adopted and is now withdrawn:** **N4-A**, the 1px neon hairline ring as the mobility cards' active state,
+  ruled on the Noir Bench (**S-030**) and carried into D29's §5 amendment.
+- **The owner's rationale, kept because it is the useful part:** neon edges on *every* card turn the page into a
+  **"laser tag arena."** That is the opposite of the "expensive instrument" reading N4-A was adopted for. **One ring is an
+  instrument; six rings are a game** — the treatment did not fail on contrast or on craft, it failed on **repetition**,
+  which is a thing a single bench fragment structurally cannot show.
+- **What replaces it:** the cards' active state is **spring physics plus a subtle charcoal elevation** — motion and depth
+  rather than colour. The spring is already adopted (**S-034 / G4**), so the replacement costs nothing new.
+- **The §5 amendment is NOT repealed — it is DORMANT.** No sanctioned surface uses a neon ring today. If a future surface
+  earns exactly one, the amendment already governs how (rings, never halos). **Nothing may cite it as licence in the
+  meantime**, and a second surface reaching for it should be read as this same failure recurring.
+- **Cross-refs:** **S-030** (the N-rulings table — N4-A's row is superseded by this entry) · **D29** §5 · **D31**.
+
+---
+
+## S-038 — Static grain: **PROVEN-UNADOPTED** (shelved, not rejected)
+
+- **Source:** **Advisor round**, rendered as G3 · **Date:** 2026-08-21 · **Disposition:** **PROVEN-UNADOPTED — a working
+  tool with no current application**
+- **This is a third disposition and the distinction is deliberate.** **S-028 (`nexo-drift`) was REJECTED** — bench evidence
+  said it read worse. **G3 was not rejected.** It works, it was measured (**2.8 KB** seeded 64×64 alpha-noise tile as a
+  data URI, zero requests, zero JS, survives 390 legibly), and the owner simply adopted **G2 breathing** for theater
+  fields instead. There is nothing wrong with it; there is nowhere it is needed.
+- **Why record it at all:** so that a future task which *does* need a static surface texture finds a costed, contrast-
+  checked implementation instead of re-deriving one — and so nobody mistakes "unused" for "failed" and re-benches it.
+- **The guardrail that comes with it:** grain is a **theater-register** tool. It must never land on a D18 deep-reading
+  surface, and `feTurbulence` remains banned as the mechanism (a named AI tell); the tile is a raster on purpose.

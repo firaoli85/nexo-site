@@ -17,50 +17,54 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { cn } from "@/utils/cn";
 
-// SINGLE-REGISTER + CHOREOGRAPHED nav (Stage 6.1). Owner decision: consistency over theming. The
-// nav is ONE dark, jade-cast register in every state on every page — the light glass + the
-// usePathname/theme-flip machinery are gone. The sticky bar is always `.nav-glass` (dark translucent
-// liquid glass, calibrated so the on-ink ramp holds AA even over pure-white sections); the base hue
-// sits a hair above --ink so it is near-seamless over the ink hero. Dropdown panels + the mobile
-// overlay are a SOLID dark surface (bg-ink / bg-ink-surface), not translucent — a see-through panel
-// over white both washes out and collapses the hover-fill contrast. The bar gains a border once
-// scrolled (its only scroll-state change).
+// NOIR CHROME (Task #33, D31). The nav is ONE dark register in every state on every page.
 //
-// Motion (nav = chrome, a higher ceiling than page content but still <=250ms, decelerate-eased,
-// transform/opacity only, interruptible off Radix data-state, reduced-motion = instant):
-//   - a "magic line" (Radix Indicator) slides between triggers on hover/focus;
-//   - the caret rotates 180deg on open; the panel grows origin-aware from its trigger;
-//   - panel items cascade in; each item has a fill sweep + icon-chip fill + arrow nudge;
-//   - the Apply CTA gets a lift + arrow nudge; the mobile items cascade too.
-// Every hover state has a focus twin (group-hover + group-focus-within / focus-visible).
+// THE BAR is liquid glass at the 0.75 D23 lineage floor with a 16px blur (`.nav-glass`), and the
+// `@supports` fallback is the same bar at full opacity — a DESIGNED PEER, not a degradation. Over the
+// ink hero the two states are indistinguishable by construction (0.75-over-ink composites to the
+// solid value); they only diverge where the backdrop does, which is the point: the braid passing
+// beneath transmits through the bar. D31 rules that transmission LEGAL — the mint is seen through the
+// chrome, not applied to it.
+//
+// THE MINT RESTRAINT LAW (D31) governs everything else here: on the noir register mint appears in
+// EXACTLY TWO places, the active route and the primary CTA. In this file that means the Apply button
+// and nothing else. The magic line, the panel icons, the item arrows and the focus rings were all
+// `accent-on-ink` before this task and are now the neutral on-ink ramp. Focus rings did not lose
+// contrast in the trade — white measures 16:1 on ink and 7.11:1 over the worst-case glass, against
+// mint's 10:1 — so restraint cost nothing an auditor would miss.
+//
+// THE PANELS are boxed destinations (D27b, the Railway pattern): a darker well holding cells at the
+// raised-surface fill. Separation is FILL-AGAINST-FILL rather than borders — panel `bg-ink`, cells
+// `bg-ink-surface`, which is D23's B06 card tier (1.25:1) doing exactly the job it was derived for.
+//
+// Motion is chrome-tier (<=250ms, decelerate `--ease-nav`, transform/opacity only, reduced-motion =
+// instant) and, since Task #33, RETARGETABLE: the panel open/close is a transition plus
+// `@starting-style`, never a keyframe, so an interrupted open reverses from where it is instead of
+// replaying from zero. Every hover state has a focus twin.
 
-// The ONE nav theme bundle — the dark/on-ink register, used in every state. Panel + overlay are
-// solid dark (bg-ink), so the hover fill (--ink-hover) reads at ~1.9:1 against them.
+// The ONE nav theme bundle — the dark/on-ink register, used in every state.
 const NT = {
   wordmark: "text-on-ink",
-  // triggers are full on-ink WHITE at font-medium (Stage 6.4 older-reader pass); the magic line +
-  // caret + panel carry the hover/open state, so the label needs no resting→hover colour shift.
   trigger: "text-on-ink",
+  // The chevron is the ONLY muted thing inside the glass bar, and it is deliberately an ICON: over a
+  // white page the 0.75 bar composites to #49514e where on-ink-muted is 4.25:1 — under the 4.5 TEXT
+  // floor but comfortably over 1.4.11's 3:1 graphic tier. No muted TEXT may sit in this bar.
   chevron: "text-on-ink-muted",
-  ring: "focus-visible:ring-accent-on-ink focus-visible:ring-offset-ink",
-  indicatorBar: "bg-accent-on-ink",
-  // dropdown panel = SOLID ink-surface (never glass over white). ink-surface (not pure ink) so the
-  // panel LIFTS a step off the ink hero (a pure-ink panel would match the hero exactly) yet still
-  // pops dark over white; the on-ink-border-strong edge is 3.15:1 over the hero / 3.9:1 over white.
-  panel: "bg-ink-surface border-on-ink-border-strong",
-  // hover fill = --ink-hover (1.45:1 vs the ink-surface panel = a clearly lighter row); desc
-  // (on-ink-muted) still clears AA on it.
-  itemHover: "hover:bg-ink-hover focus-visible:bg-ink-hover",
-  // resting chip = bg-ink (recessed a step BELOW the ink-surface panel, so it reads as a distinct
-  // well); the ~10:1 accent-on-ink icon identifies it. Bright accent fill appears on hover/focus.
-  chip: "border border-transparent bg-ink text-accent-on-ink group-hover:bg-accent-on-ink group-hover:text-ink group-focus-visible:bg-accent-on-ink group-focus-visible:text-ink",
-  // title stays FULL on-ink (crisp); the visible fill + accent chip + arrow carry the hover state.
+  // Neutral focus ring (D31 mint restraint). Higher contrast than the mint it replaced.
+  ring: "focus-visible:ring-on-ink focus-visible:ring-offset-ink",
+  // Neutral magic line. It still slides, it just no longer spends the accent to do it.
+  indicatorBar: "bg-on-ink",
+  // The panel is the WELL: darker than the cells it holds, with a card-tier edge so it reads over a
+  // light page as well as over the ink hero.
+  panel: "bg-ink border-on-ink-border-strong",
+  // Cells sit at the raised-surface fill and lift to --ink-hover. No borders: the fills do the work.
+  cell: "bg-ink-surface hover:bg-ink-hover focus-visible:bg-ink-hover",
+  cellIcon: "text-on-ink-muted group-hover:text-on-ink group-focus-visible:text-on-ink",
   itemTitle: "text-on-ink",
   itemDesc: "text-on-ink-muted",
-  arrow: "text-accent-on-ink",
+  arrow: "text-on-ink-muted group-hover:text-on-ink group-focus-visible:text-on-ink",
   hamburger: "text-on-ink hover:bg-ink-surface",
 } as const;
-type NT = typeof NT;
 
 function Wordmark({ onClick }: { onClick?: () => void }) {
   return (
@@ -68,7 +72,7 @@ function Wordmark({ onClick }: { onClick?: () => void }) {
       href="/"
       onClick={onClick}
       className={cn(
-        "rounded-sm font-display text-lg font-heading tracking-heading motion-safe:transition-opacity duration-200 hover:opacity-70 focus-visible:outline-none focus-visible:ring-2",
+        "inline-flex min-h-[44px] items-center rounded-sm font-display text-lg font-heading tracking-heading motion-safe:transition-opacity duration-200 hover:opacity-70 focus-visible:outline-none focus-visible:ring-2",
         NT.wordmark,
         NT.ring
       )}
@@ -78,20 +82,63 @@ function Wordmark({ onClick }: { onClick?: () => void }) {
   );
 }
 
+/** One boxed destination — a "room" in the panel rather than a row in a list. */
+function DestinationCell({ item, featured }: { item: NavItem; featured?: boolean }) {
+  const Icon = item.icon;
+  return (
+    <NavigationMenu.Link asChild>
+      <Link
+        href={item.href}
+        className={cn(
+          "nav-cell group flex h-full rounded-lg p-4 outline-none focus-visible:ring-2",
+          featured ? "flex-row items-start gap-3.5" : "flex-col gap-2",
+          NT.cell,
+          NT.ring
+        )}
+      >
+        {Icon ? (
+          <Icon
+            aria-hidden="true"
+            className={cn(featured ? "mt-0.5 h-6 w-6 shrink-0" : "h-5 w-5", NT.cellIcon)}
+          />
+        ) : null}
+        <span className="flex min-w-0 flex-col">
+          <span
+            className={cn(
+              "flex items-center gap-1.5 font-semibold",
+              featured ? "text-base" : "text-[15px]",
+              NT.itemTitle
+            )}
+          >
+            {item.label}
+            <ArrowRight aria-hidden="true" className={cn("nav-arrow h-3.5 w-3.5 shrink-0", NT.arrow)} />
+          </span>
+          {item.description ? (
+            <span className={cn("mt-1 text-sm leading-snug", NT.itemDesc)}>{item.description}</span>
+          ) : null}
+        </span>
+      </Link>
+    </NavigationMenu.Link>
+  );
+}
+
 // One desktop dropdown. Radix owns hover/focus open, arrow-key traversal, Escape, and
-// aria-expanded/aria-controls. The panel is a solid dark surface with a card edge and grows
-// origin-aware from its trigger (.nav-panel); items cascade in and choreograph on hover.
+// aria-expanded/aria-controls.
 function DesktopMenu({
   label,
   items,
   panelClass,
+  gridClass,
+  /** Index of the cell that spans the full row. `-1` = an even grid, which is the honest answer
+   *  whenever the destinations are peers and featuring one would misrepresent them. */
+  featuredIndex = -1,
   align = "left",
 }: {
   label: string;
   items: NavItem[];
   panelClass: string;
-  /** Which trigger edge the panel anchors to. Right-seated menus (Sign in) anchor RIGHT so a wide
-   *  panel opens inward instead of off the viewport's right edge; the grow-origin follows (.nav-panel-right). */
+  gridClass: string;
+  featuredIndex?: number;
   align?: "left" | "right";
 }) {
   return (
@@ -99,13 +146,14 @@ function DesktopMenu({
     // Radix positions the shared Indicator from each trigger's `offsetLeft`; if the Item is the trigger's
     // offsetParent, offsetLeft is 0 for EVERY trigger and the line freezes under the first one. Keeping
     // the Item static makes the shared Root the offsetParent (the same one the Indicator measures
-    // against), so offsetLeft is correct. The dropdown panel gets its OWN `relative` wrapper below — a
-    // sibling of the trigger, never an ancestor — so it still anchors under its trigger without
-    // reintroducing the offsetParent bug. Verified by I17 across chromium/webkit/firefox.
+    // against). The panel gets its OWN `relative` wrapper below — a sibling of the trigger, never an
+    // ancestor. Verified by I17 across chromium/webkit/firefox.
     <NavigationMenu.Item>
       <NavigationMenu.Trigger
         className={cn(
-          "group inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium outline-none motion-safe:transition-colors focus-visible:ring-2",
+          // min-h-[44px] answers the sub-44px question the benches raised: these are the real triggers,
+          // and they now clear the 44px target on the shipped nav.
+          "group inline-flex min-h-[44px] items-center gap-1 rounded-md px-3 py-2 text-sm font-medium outline-none motion-safe:transition-colors focus-visible:ring-2",
           NT.trigger,
           NT.ring
         )}
@@ -122,67 +170,33 @@ function DesktopMenu({
       {/* Relative wrapper for the absolute panel (Stage 16): restores per-trigger anchoring now that the
           Item is static. It is a SIBLING of the trigger, so it does not become the trigger's offsetParent. */}
       <div className="relative">
-      <NavigationMenu.Content
-        className={cn(
-          "nav-panel absolute top-full z-50 mt-1.5 rounded-xl border p-2 shadow-md",
-          align === "right" ? "nav-panel-right right-0" : "left-0",
-          NT.panel,
-          panelClass
-        )}
-      >
-        <ul className="grid gap-1">
-          {items.map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <li key={item.href} className="nav-cascade" style={{ ["--i" as string]: i }}>
-                <NavigationMenu.Link asChild>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "group flex items-start gap-3 rounded-lg p-3 outline-none motion-safe:transition-colors focus-visible:ring-2",
-                      NT.itemHover,
-                      NT.ring
-                    )}
-                  >
-                    {Icon ? (
-                      <span
-                        className={cn(
-                          "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg motion-safe:transition-colors duration-200",
-                          NT.chip
-                        )}
-                      >
-                        <Icon aria-hidden="true" className="h-[18px] w-[18px]" />
-                      </span>
-                    ) : null}
-                    <span className="flex min-w-0 flex-col">
-                      <span className={cn("flex items-center gap-1 text-[15px] font-semibold motion-safe:transition-colors", NT.itemTitle)}>
-                        {item.label}
-                        <ArrowRight
-                          aria-hidden="true"
-                          className={cn("nav-arrow h-3.5 w-3.5 shrink-0", NT.arrow)}
-                        />
-                      </span>
-                      {item.description ? (
-                        <span className={cn("mt-0.5 text-sm leading-snug", NT.itemDesc)}>
-                          {item.description}
-                        </span>
-                      ) : null}
-                    </span>
-                  </Link>
-                </NavigationMenu.Link>
+        <NavigationMenu.Content
+          className={cn(
+            "nav-panel absolute top-full z-50 mt-2 rounded-xl border p-2.5 shadow-md",
+            align === "right" ? "nav-panel-right right-0" : "left-0",
+            NT.panel,
+            panelClass
+          )}
+        >
+          <ul className={cn("grid gap-2.5", gridClass)}>
+            {items.map((item, i) => (
+              <li
+                key={item.href}
+                className={cn("nav-cascade", i === featuredIndex && "col-span-full")}
+                style={{ ["--i" as string]: i }}
+              >
+                <DestinationCell item={item} featured={i === featuredIndex} />
               </li>
-            );
-          })}
-        </ul>
-      </NavigationMenu.Content>
+            ))}
+          </ul>
+        </NavigationMenu.Content>
       </div>
     </NavigationMenu.Item>
   );
 }
 
 // Mobile accordion group (on the solid dark overlay). Native <button> with aria-expanded/
-// aria-controls; the panel toggles flex/hidden so collapsed links leave the tab order + a11y tree;
-// items cascade; chevron rotates.
+// aria-controls; the panel toggles flex/hidden so collapsed links leave the tab order + a11y tree.
 function MobileAccordion({
   label,
   items,
@@ -203,7 +217,7 @@ function MobileAccordion({
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between rounded-md py-4 text-left text-base font-semibold text-on-ink outline-none motion-safe:transition-colors focus-visible:ring-2 focus-visible:ring-accent-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+        className="flex min-h-[44px] w-full items-center justify-between rounded-md py-4 text-left text-base font-semibold text-on-ink outline-none motion-safe:transition-colors focus-visible:ring-2 focus-visible:ring-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
       >
         {label}
         <ChevronDown
@@ -211,13 +225,14 @@ function MobileAccordion({
           className={cn("h-5 w-5 text-on-ink-muted motion-safe:transition-transform duration-200", open && "rotate-180")}
         />
       </button>
-      <ul id={panelId} className={cn("flex-col gap-0.5 pb-3", open ? "flex" : "hidden")}>
+      <ul id={panelId} className={cn("flex-col gap-1 pb-3", open ? "flex" : "hidden")}>
         {items.map((item, i) => (
           <li key={item.href} className="nav-cascade" style={{ ["--i" as string]: i }}>
             <Link
               href={item.href}
               onClick={onNavigate}
-              className="block rounded-lg px-3 py-2.5 text-sm text-on-ink-muted motion-safe:transition-colors hover:bg-ink-hover hover:text-on-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              // py-3 + min-h: the sub-44px question answered on mobile too. These were 40px.
+              className="flex min-h-[44px] items-center rounded-lg bg-ink-surface px-3 py-3 text-sm text-on-ink-muted motion-safe:transition-colors hover:bg-ink-hover hover:text-on-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
               {item.label}
             </Link>
@@ -235,9 +250,8 @@ export function Navbar() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  // Single register: the bar is always the dark nav-glass (on-ink ramp everywhere), so no
-  // usePathname / theme branching. `scrolled` only toggles the bottom border. First render is
-  // `scrolled=false`, matching the server output.
+  // Single register: the bar is always the dark nav-glass, so no usePathname / theme branching.
+  // `scrolled` only toggles the bottom border. First render is `scrolled=false`, matching the server.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -317,15 +331,12 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          // always the dark nav-glass; the border is the only scroll-state change.
           "nav-glass sticky top-0 z-40 motion-safe:transition-colors duration-200",
-          // D23/F1: the scrolled edge sits at the CARD tier (--on-ink-border-strong, itself hardened
-          // by E2-05). FO-2 then showed that edge alone is not enough: it is a local MAXIMUM over the
-          // ink chapters and reads there, but over LIGHT content it sits monotonically between a dark
-          // bar and a bright page and is read as antialiasing. `nav-seam` adds the dark hairline that
-          // supplies the missing polarity on the light side; together they cover both registers.
-          // The page-top no-border state is unchanged BY DESIGN, which is why the seam is armed with
-          // the same `scrolled` condition rather than applied to .nav-glass unconditionally.
+          // I21 — the painted nav edge, PRESERVED IN MECHANISM AND NEUTRALISED IN COLOUR (D31: the
+          // mint underline is retired; the boundary is glass + structure + a neutral hairline). The
+          // card-tier border reads over the ink chapters; `nav-seam` adds the dark hairline that
+          // supplies the missing polarity over LIGHT content, where the edge would otherwise sit
+          // monotonically between a dark bar and a bright page and be read as antialiasing.
           scrolled ? "border-b border-on-ink-border-strong nav-seam" : "border-b border-transparent"
         )}
       >
@@ -333,8 +344,9 @@ export function Navbar() {
           <div className="flex h-16 items-center justify-between gap-4">
             <Wordmark />
 
-            {/* The ONE nav landmark (Stage-1 rule: the nav landmark appears exactly once). Platform /
-                Solutions / Company live here with the shared magic line. */}
+            {/* The ONE nav landmark (Stage-1 rule). Platform / Solutions / Company with the shared
+                magic line. Panel shapes differ ON PURPOSE and the difference is editorial, not
+                decorative — see the grid/featured props below. */}
             <NavigationMenu.Root
               aria-label="Primary"
               delayDuration={100}
@@ -342,10 +354,29 @@ export function Navbar() {
               className="relative hidden lg:flex"
             >
               <NavigationMenu.List className="flex items-center gap-1">
-                <DesktopMenu label="Platform" items={PLATFORM_ITEMS} panelClass="w-[26rem]" />
-                <DesktopMenu label="Solutions" items={SOLUTIONS_ITEMS} panelClass="w-[26rem]" />
-                <DesktopMenu label="Company" items={COMPANY_ITEMS} panelClass="w-56" />
-                {/* Magic line — slides between triggers following the open/focused item. */}
+                {/* Platform: Dispatch is featured because it is the spine the other three hang off —
+                    claims, compliance and oversight are all downstream of a trip being dispatched. */}
+                <DesktopMenu
+                  label="Platform"
+                  items={PLATFORM_ITEMS}
+                  panelClass="w-[36rem]"
+                  gridClass="grid-cols-3"
+                  featuredIndex={0}
+                />
+                {/* Solutions: four PEER audiences. Featuring one would say the business favours it,
+                    which is not true and is not ours to imply — so this grid is deliberately even. */}
+                <DesktopMenu
+                  label="Solutions"
+                  items={SOLUTIONS_ITEMS}
+                  panelClass="w-[34rem]"
+                  gridClass="grid-cols-2"
+                />
+                <DesktopMenu
+                  label="Company"
+                  items={COMPANY_ITEMS}
+                  panelClass="w-[22rem]"
+                  gridClass="grid-cols-2"
+                />
                 <NavigationMenu.Indicator className="nav-indicator">
                   <div className={cn("nav-indicator-bar", NT.indicatorBar)} />
                 </NavigationMenu.Indicator>
@@ -353,13 +384,9 @@ export function Navbar() {
             </NavigationMenu.Root>
 
             <div className="hidden items-center gap-2 lg:flex">
-              {/* Sign in — a peer menu in the nav grammar (Stage 15): Radix trigger + caret + magic line
-                  + solid-ink panel + item cascade, same weight/register as the left menus, seated in the
-                  right cluster before Apply. It gets its OWN NavigationMenu.Root so its indicator tracks
-                  its own trigger — but that Root renders `asChild` as a <div>, NOT a second <nav>, so the
-                  site keeps exactly ONE nav landmark (the "Primary" root above; Stage-1 rule). Lists the
-                  three customer portal doors; admin is deliberately excluded (law §7.4). Panel anchors
-                  RIGHT so it opens inward. */}
+              {/* Sign in — a peer menu in the nav grammar (Stage 15). Its own Root so the indicator
+                  tracks its own trigger, rendered `asChild` as a <div> so the site keeps exactly ONE
+                  nav landmark. Three customer portal doors; admin excluded (law §7.4). */}
               {PORTAL_LIVE ? (
                 <NavigationMenu.Root asChild delayDuration={100} skipDelayDuration={300}>
                   <div className="relative">
@@ -367,7 +394,8 @@ export function Navbar() {
                       <DesktopMenu
                         label="Sign in"
                         items={SIGNIN_ITEMS}
-                        panelClass="w-[26rem]"
+                        panelClass="w-[30rem]"
+                        gridClass="grid-cols-1"
                         align="right"
                       />
                       <NavigationMenu.Indicator className="nav-indicator">
@@ -377,13 +405,8 @@ export function Navbar() {
                   </div>
                 </NavigationMenu.Root>
               ) : null}
-              {/* Apply — lift + arrow nudge; the single bright accent pop on the dark bar. */}
-              <Button
-                href="/apply"
-                variant="primaryOnInk"
-                size="sm"
-                className="nav-apply"
-              >
+              {/* Apply — ONE of the two sanctioned mint surfaces on the noir register (D31). */}
+              <Button href="/apply" variant="primaryOnInk" size="sm" className="nav-apply min-h-[44px]">
                 Apply as provider
                 <ArrowRight aria-hidden="true" className="nav-apply-arrow h-4 w-4" />
               </Button>
@@ -423,7 +446,7 @@ export function Navbar() {
               type="button"
               onClick={closeMobile}
               aria-label="Close menu"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-md text-on-ink motion-safe:transition-colors hover:bg-ink-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-md text-on-ink motion-safe:transition-colors hover:bg-ink-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
               <X aria-hidden="true" className="h-6 w-6" />
             </button>
@@ -433,9 +456,6 @@ export function Navbar() {
             <MobileAccordion label="Platform" items={PLATFORM_ITEMS} onNavigate={closeMobile} index={0} />
             <MobileAccordion label="Solutions" items={SOLUTIONS_ITEMS} onNavigate={closeMobile} index={1} />
             <MobileAccordion label="Company" items={COMPANY_ITEMS} onNavigate={closeMobile} index={2} />
-            {/* Sign in — a fourth accordion group in the same grammar (Stage 15), holding the three portal
-                doors. The pinned row below keeps ONLY the primary CTA so "Sign in" appears exactly once
-                (no duplicate affordance). */}
             {PORTAL_LIVE ? (
               <MobileAccordion label="Sign in" items={SIGNIN_ITEMS} onNavigate={closeMobile} index={3} />
             ) : null}

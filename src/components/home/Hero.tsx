@@ -15,16 +15,22 @@ import { HERO_LEDE } from "@/lib/seo";
 // or re-wording it is a one-line edit.
 const HEADLINE = { before: "Every trip, ", accent: "accounted", after: " for." };
 
-// atmo-ink = the D25/T2 atmosphere layer (Task #27), and this is the FLAGSHIP application: the glow
-// enters off the right edge and bleeds off the left-bottom corner, so it reads as light in the room
-// rather than as a shape on the page. The class ALSO carries the compensated ink tokens, scoped (see
-// globals.css) — a glow costs --ink-surface its D23 B06 separation as a matter of arithmetic, so the
-// surface and BOTH border tiers are lifted for this subtree only, never globally.
-// WIDER ROLLOUT IS P4 PER-PAGE WORK: the interior routes deliberately do NOT wear this yet, because
-// each one needs its own painted-pixel AA pass first.
+// THE HERO FIELD IS PURE INK (D31 / the D25 reversal). The warm atmosphere that shipped here in
+// Task #27 is gone, and with it the scoped compensated ink pair -- this subtree is back on the
+// Task-18 globals, re-measured: B06 1.25:1, --on-ink 16.17:1, --on-ink-muted 9.66:1. The field's
+// atmosphere is carried by the AmbientMap alone.
+//
+// THE BREATHING FIELD IS DELIBERATELY NOT APPLIED HERE, and the reason is arithmetic rather than
+// taste. On the returned Task-18 values B06 (--ink-surface vs --ink) measures 1.250:1 -- its floor,
+// EXACTLY, with zero headroom. The maximum white alpha this field can carry and still keep the
+// console card separating is 0.0000. Any breathing gradient under this hero re-opens precisely the
+// deficit the scoped compensated ink pair was invented to pay, and D31 just deleted that machinery
+// by ruling. `.breathe` therefore ships as a system primitive with no application yet; it belongs
+// on a theater field that carries no raised card (#35), or here only after a compensation pass is
+// re-derived on purpose.
 export function Hero() {
   return (
-    <Section className="atmo-ink relative -mt-16 overflow-hidden bg-ink pt-28 sm:pt-32 lg:pt-36">
+    <Section className="relative -mt-16 overflow-hidden bg-ink pt-28 sm:pt-32 lg:pt-36">
       {/* The living map (ink tone) — the hero field's atmosphere. Kept OUT of the console. */}
       <AmbientMap tone="ink" region="wide" />
       <Container className="relative">
