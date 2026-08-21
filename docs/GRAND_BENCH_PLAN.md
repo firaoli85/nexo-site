@@ -25,6 +25,28 @@
 
 **The ladder is a proposal, not a decision.** The one ordering constraint that is real: **#34 cannot start before N3 is ruled.**
 
+---
+
+## IMPLEMENTATION LADDER — **v2** (Task #32, after D29 / D30 and the Round-2 Bench)
+
+**The ladder above is SUPERSEDED.** It was drawn before D29, D30 and the round-2 questions existed; its
+one real ordering constraint has since been satisfied (**N3 is ruled**), and it has no rung for the
+**D25 reversal**, which is now real work with a written scope. It is kept above rather than deleted so
+the one-task shift in the numbering can be audited.
+
+| Task | Rung | Why here, and what it is blocked on |
+|---|---|---|
+| **#33** | **Nav + chrome in noir.** Three things land together because they touch the same files and the same cube run: **(1) the D25 REVERSAL** — remove the `.atmo-*` applications and tokens, and the compensated ink pair with them; **(2) the `framer-motion` removal** (S-026); **(3) glass-or-ink-bold per the owner's G1 pick.** | Chrome touches every route, so it wants the full cube anyway, and doing it first means every later rung is judged against final chrome. **Blocked on: the G1 ruling.** The reversal itself is not blocked — it is already ruled. **Verify the pre-#27 globals are intact outside the scoped `.atmo-ink` subtree before deleting, rather than assuming it.** |
+| **#34** | **Braid + van at route scale.** Paint-only recolor per D28, plus **path-time reparameterization** for variable speed (S-031's adopted half). | Lands on the most invariant-protected object on the site (I15 / I20 / the LUT), so it gets its own task. **Carries a hard constraint from S-032: the strand must clear text columns outright wherever there is no bar over it** — 1.39:1 is what happens when it does not. |
+| **#35** | **Ambient B4-d2** — the dispatch-network model, plus whichever density treatment wins. | **No longer blocked** (N3 is ruled). **Blocked on: the G2/G3/control pick.** |
+| **#36** | **Mobility cards** — neon hairline rings (N4-A), geometric icons, spring settle (G4). | Self-contained. Where the **§5 amendment** written in D29 gets exercised for the first time. |
+| **#37** | **Homepage tonal map + mid-band re-cast into theater** per D30. | Needs #33–#36 to exist first, because the seam is drawn between real registers rather than described. **This redraws tonal map v3 rather than inferring the change.** |
+| then | **W2 hero-signature concept round** — including the **searching line and the recalculation event** (S-031's autonomous half). | Still deliberately last: it speaks the braid and ambient language the earlier rungs make real. |
+
+**What is actually blocking what, stated plainly:** every rung except the D25 reversal and the
+framer-motion removal is waiting on **owner picks from the Round-2 Bench**. Those two are ruled and can
+proceed regardless.
+
 **Nothing here has shipped, and nothing may reach the site before you react to a candidate.**
 
 | Candidate | Status | Anchor |

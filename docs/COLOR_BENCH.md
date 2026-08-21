@@ -523,3 +523,95 @@ signature/chrome registers, and that is the owner's call, not a workaround to be
 > 4. **N4 — the border treatment.** Hairline-glow or 2px-glow? And the §5 amendment: yes or no?
 >
 > **These four answers finalize D28's implementation specs.** Nothing ships before them.
+
+
+---
+
+## 11. R2 — THE ROUND-2 BENCH (Task #32, 2026-08-21)
+
+**D29 and D30 are law; this round tests the three things they left open.** The instrument is
+`docs/round2-bench/index.html`, one self-contained `file://` page. **Status: OPEN, pending the owner's
+G-picks.** No site code moved in this task — the D25 reversal executes in **#33**.
+
+### The values, computed and then measured
+
+| Spot | Value | Ratio | Floor |
+|---|---|---|---|
+| G1-a nav text over **0.90** glass over the mint strand | composites to `#102c20` | **13.03:1** | 4.5 |
+| G1-a muted text, same case | | 7.78:1 | 4.5 |
+| G1-b nav text over **0.75** glass over the mint strand | composites to `#154b34` | **8.76:1** | 4.5 |
+| G1-b muted text, same case | | 5.23:1 | 4.5 |
+| G1-c nav text on **solid ink-bold** | `#0c1712` | **15.94:1** | 4.5 |
+| G1 the 1px mint rule against the bar | | 11.45:1 | 3.0 (I21) |
+| **G1 on-ink text DIRECTLY on the mint strand, no bar** | `#2fe89a` | **1.39:1 — SHOWN FAILING ON PURPOSE** | 4.5 |
+| G2/G3 headline / lede on the noir field | | 16.17:1 / 9.66:1 | 3.0 / 4.5 |
+| G4 card body / mint ring on dark glass | | 7.73:1 / 9.30:1 | 4.5 / 3.0 |
+
+**Eleven computed spots, zero below floor** (the 1.39:1 row is a deliberate demonstration, not a
+defect, and prints as `SHOWN-FAILING` so it can never be mistaken for a pass).
+
+### THE FINDING: the glass is load-bearing, not decorative
+
+The fragment was built to answer *"is sheerer glass more liquid?"* and answered a different question
+on the way. **On-ink text sitting directly on the mint strand measures 1.39:1** — unusable at any
+size. Over the bar the same text measures **13.03:1** at 0.90 and **8.76:1** at 0.75, because the
+glass composites the strand back down to near-ink. **The bar makes the crossing legal, and nothing
+else does.** Where there is no bar, **the strand has to clear the text column outright.** That is a
+constraint on the route-scale braid in **#34**, not a tuning preference, and it is now written into
+**S-032**.
+
+**This was confirmed the expensive way.** At 390 the bench's own hero lede landed on a charcoal
+strand at **2.78:1** — below floor, in the fragment that had just finished explaining the rule. The
+1440 measurement showed nothing, because at 1440 the copy column and the braid do not overlap. The
+composition was fixed (the braid stops at the bar band on phones and the copy takes full width) and
+re-measured green. **Measuring only at the wide width would have shipped the bench with the defect it
+documents.**
+
+### Floors, and the value that is deliberately absent
+
+D23's nav-glass read floor is **0.75**; the shipped value is **0.90**. **Floors only rise**, so 0.75
+is *legal but is the edge*. **The advisor's 0.60 sheer tint is BELOW the floor and is deliberately not
+rendered** — benching an illegal value would invite a ruling the law already forbids. **I21 remains
+the floor** for the bar's boundary. **Decline-don't-degrade** is honoured by rendering the
+`@supports` fallback (solid ink-bold) **as a peer candidate rather than as a consolation**: every
+browser without `backdrop-filter` gets it, so it has to be good on its own terms.
+
+### Density: the distinction that keeps G2/G3 legal
+
+**S-028 rejected `nexo-drift` because it was per-cell opacity cycling and read as moving parts.**
+G2 and G3 are **density treatments**, not moving parts: G2 is *one* slow field transform whose stated
+bar is **imperceptible-as-motion**, and **G3 does not move at all**. Cost is measured, not estimated
+(D20): G2 is **zero bytes, one compositor layer**; G3 is a **2.8 KB** seeded 64×64 alpha-noise tile as
+a data URI. `feTurbulence` was not used — paper-grain filters are a named AI tell.
+
+### The spring
+
+**ζ 0.72, ωₙ 9.2 rad/s, 620 ms, 31 stops, peak 103.8%**, sampled from the damped-spring solution into
+a CSS `linear()` easing. **Zero JS, zero library** — this is what lets framer-motion stay dead while
+still getting spring physics.
+
+### Method
+
+**Painted pixels, not composited alphas**, by Task #27's Range-rect probe, run at **1440 and 390**:
+**31 text runs, zero below floor** after the 390 fix. The probe's rects were **drawn back onto the
+page and viewed** before any number was believed. Reduced motion: **zero running animations, zero
+hidden elements, zero unstroked strands, both G4 cards static-complete**. Fonts primed and all three
+families confirmed loaded; zero console errors; zero horizontal overflow at either width; 12 headings
+with zero jumps; 14/14 tabbed elements show a focus indicator.
+
+### PROTOCOL
+
+> **Open `docs/round2-bench/index.html` from `file://` on BOTH machines, and answer three questions:**
+>
+> 1. **G1 — the nav.** **(a)** glass 0.90, **(b)** glass 0.75, or **(c)** solid ink-bold? The real
+>    question underneath: *does floor-legal glass deliver the liquid feel, or is ink-bold the truth?*
+>    **Note that (c) is what every browser without `backdrop-filter` renders regardless**, so a vote
+>    for (a) or (b) is a vote for two states, not one.
+> 2. **G2 vs G3 vs control.** Breathing field, static grain, or **flat ink**? *Which field feels dense
+>    without feeling busy?* **The flat control is a real candidate** — if neither treatment beats it,
+>    flat wins and that is a legitimate answer.
+> 3. **G4 — approve the spring?** Yes keeps `linear()` spring physics as the arrival grammar; no keeps
+>    the current 300 ms ease.
+>
+> **These three answers unblock rungs #33, #35 and #36 of ladder v2.** The D25 reversal and the
+> framer-motion removal are already ruled and proceed regardless.

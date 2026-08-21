@@ -556,3 +556,116 @@ a **background-register** question, which leaves the alarms and the jade accent 
   **Neon never carries or neighbours alarm semantics**; red and amber are untouched.
 - **S-007 REAFFIRMED:** **cyan stays rejected.** The electric mint crafted for D28 sits at **hue 155°**; cyan begins around
   **175°**. The neon is a *jade*, and that is measurable rather than a matter of opinion.
+
+
+---
+
+## S-030 — The N-rulings: what the Noir Bench actually settled
+
+- **Source:** **Owner**, reading `docs/noir-bench/index.html` · **Date:** 2026-08-21 · **Disposition:** **RULED — these
+  are the implementation specs D28 was missing**
+
+| # | Ruling | Value | What it decides |
+|---|---|---|---|
+| **N1-A** | Charcoal at **maximum recession** | `rgb(46 53 61 / 0.28)` → composites to `#bdc1c4`, **1.69:1** | Inactive strands are **background**, not structure. The floor underneath is D23's E1-07 divider tier (1.66:1), so this is the quietest legal value rather than an arbitrary one. |
+| **N2-A** | **Electric mint `#2fe89a`** | hue 155°, S80 V91, **11.62:1** on ink | Precision over maximum voltage. `#00ffa3` was rejected as gaming-adjacent. |
+| **N3-b** | **Pure noir** | the warm dusk removed | **This ruling reverses D25.** See the reversal receipt in the ledger. |
+| **N4-A** | **Hairline ring** | 1px, no halo | The "expensive instrument" reading. Carries the **§5 amendment**: rings yes, blooms no, signature and chrome registers only. |
+| **N5-b** | Ink-bold nav **over pure noir** | — | The nav and the field are the same darkness family; separation comes from the boundary, not from a temperature difference. |
+
+- **The one thing the bench got wrong and the owner caught anyway:** N3 was built as the fork precisely because prose could
+  not settle it, and the ruling came back in one sentence — ***"the warm dusk is officially dead; mint is the only light in
+  the dark."*** That is the argument for rendering forks rather than describing them.
+
+---
+
+## S-031 — OWNER DYNAMIC-ROUTING DIRECTIVE — **DISPOSITION: SPLIT**
+
+- **Source:** **Owner** · **Date:** 2026-08-21 · **Disposition:** **SPLIT — one half is adopted into the braid spec, the
+  other half is moved to the hero signature. The split is the ruling of record.**
+- **The intents, verbatim in substance:** (1) a **searching secondary line** — a strand that reads as looking for a route
+  rather than following one; (2) **variable speed and physics** — the route should not travel at a constant rate, it should
+  accelerate and hesitate the way a real vehicle does; (3) a **recalculation-reversal event** — the drama of a route being
+  re-computed mid-journey.
+- **THE SPLIT.**
+  - **Speed and physics → the route-scale braid**, implemented as **path-time reparameterization**: the LUT already samples
+    the canonical path, so varying the *sampling rate* along it produces acceleration and hesitation with **no new geometry,
+    no second path and no extra work per frame**. It stays **scroll-obedient** (the reader's scroll is still the clock) and
+    therefore stays **I20-compatible**.
+  - **Searching line and recalculation drama → the W2 hero signature**, where the motion is **autonomous** (it owns its own
+    clock) and **theater-only** per D30.
+- **THE LAW THIS ESTABLISHES:** **the page route never self-moves under the reader's scroll.** A scroll-driven line that
+  also animates on its own steals the reader's control of the page and breaks the one promise the scroll-draw makes — that
+  the reader is driving. Autonomous motion is legitimate; it just does not belong on the scroll route. **Flag any
+  autonomous motion on the scroll route as a violation of this entry.**
+- **Why not simply build all three into the braid:** because "searching" and "recalculating" are *narrative* events with
+  their own timing, and hanging them off scroll position means the story only happens if the reader scrolls at the right
+  speed. The hero can tell that story properly; the route cannot.
+
+---
+
+## S-032 — Liquid glass at the floors — **TEST-FIRST, rendered in the Round-2 Bench (G1)**
+
+- **Source:** **Advisor round** · **Date:** 2026-08-21 · **Disposition:** **TEST-FIRST — rendered, awaiting the owner's
+  G1 pick**
+- **The proposal:** a sheerer, more liquid nav glass than the shipped 0.90.
+- **What is rendered:** **0.90 (shipped)**, **0.75 (D23's read floor)**, and **solid ink-bold** as a peer rather than as a
+  consolation. **The advisor's 0.60 sheer tint is BELOW the floor and is deliberately not rendered** — benching an illegal
+  value would invite a ruling the law already forbids, and floors only rise.
+- **THE FINDING THE FRAGMENT PRODUCED, which was not the question asked:** **the glass is load-bearing for legibility, not
+  decorative.** On-ink text sitting directly on the mint strand measures **1.39:1**. The same text over the bar measures
+  **13.03:1** at 0.90 and **8.76:1** at 0.75, because the glass composites the strand back down to near-ink. **The bar is
+  what makes the crossing legal, and nothing else is.** Where there is no bar, **the strand must clear the text column
+  outright** — a hard constraint on the route-scale braid in #34, not a preference. This was confirmed the expensive way:
+  at 390 the bench's own hero lede landed on a charcoal strand at **2.78:1** and had to be recomposed.
+
+---
+
+## S-033 — Density without motion: breathing field vs static grain — **TEST-FIRST (G2 / G3)**
+
+- **Source:** **Advisor round** · **Date:** 2026-08-21 · **Disposition:** **TEST-FIRST — rendered against a flat control**
+- **The distinction that keeps this legal, and it is a real one rather than a rename:** **S-028 rejected `nexo-drift`
+  because it was per-cell opacity cycling and read as moving parts.** These are **density treatments**. **G2** is *one* slow
+  field transform whose stated bar is **imperceptible-as-motion** — if you can see it move, it has failed. **G3 does not
+  move at all.** A rejected candidate is not being resurrected under a new name; the mechanism is different and so is
+  the test.
+- **Cost, measured rather than estimated (D20):** G2 is three layered radial gradients on one pseudo-element — **zero
+  bytes, one compositor layer**. G3 is a seeded **64×64 alpha-noise PNG tiled at 128px, 2.8 KB as a data URI** — zero
+  requests, zero JS.
+- **`feTurbulence` was NOT used.** Paper-grain filters are on the design skill's explicit ban list as an AI tell, so a
+  tiled raster is the honest technique here.
+- **The question printed on the bench:** *which field feels dense without feeling busy?* **The flat control is a real
+  candidate** — if neither treatment beats it, flat wins and that is a legitimate answer.
+
+---
+
+## S-034 — Spring settle instead of ease — **ADOPTED pending the demo (G4)**
+
+- **Source:** **Advisor round**, ratified by **D29** · **Date:** 2026-08-21 · **Disposition:** **ADOPTED pending the
+  owner's G4 approval**
+- **What was crafted:** a damped-spring solution sampled into a **CSS `linear()` easing** — **ζ 0.72, ωₙ 9.2 rad/s,
+  620 ms, 31 stops, peak 103.8%**. A **3.8% overshoot** is a soft landing rather than a bounce; the design skill's "no
+  bounce, no elastic" rule is about elastic settling, and this reads as weight arriving.
+- **Zero JS, zero library.** This is the mechanism that lets **framer-motion stay dead** while still getting spring
+  physics; its removal still rides **#33** and is unaffected by this entry.
+- **Reduced motion:** both cards are **static-complete**. The hidden state is applied only inside the no-preference scope,
+  so a reduced-motion reader never sees a hidden element and the replay control simply has nothing to replay.
+
+---
+
+## S-035 — Illustration noir pass — **SCHEDULED**
+
+- **Source:** **D29** · **Date:** 2026-08-21 · **Disposition:** **SCHEDULED — not a bench question**
+- D29 retires rose and violet **including the illustration accent**. The line art (morph figures, assist scene, map
+  glyphs, van) therefore needs a pass to bring it onto the monochrome-plus-mint palette. **This is not a candidate for
+  the owner to rule on** — it follows from the palette law — but it is real work and it is listed so it does not get lost
+  between the bench tasks.
+
+---
+
+## S-036 — "Airy vs empty" — **ANSWERED-BY: the density candidates**
+
+- **Source:** **Advisor round** · **Date:** 2026-08-21 · **Disposition:** **ANSWERED-BY S-033**
+- The advisor asked whether the noir field reads as *airy* or merely as *empty*. That is not a separate question with its
+  own answer; **it is exactly what G2, G3 and the flat control test.** Recording it here so the question is closed by the
+  bench rather than re-asked in the next round.

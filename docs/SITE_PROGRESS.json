@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-21",
-    "currentTask": "owner Noir Bench reading (N1-N5, rules the D25 fork)",
+    "currentTask": "owner Round-2 Bench reading (G1 nav, G2/G3 density, G4 spring) - unblocks ladder v2 rungs #33/#35/#36",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -844,6 +844,24 @@
       "date": "2026-08-21",
       "title": "Tech-noir ruling (owner, Grand Bench reading)",
       "summary": "Brand thesis: a medical transportation company whose backbone is pure technology; trust through a clean, highly professional interface; the aesthetic of a modern high-end developer tool or cloud platform, Railway-class; minimalist and modern with a very subtle Blade Runner edge; practical medical transport made effortless through advanced routing tech. RULINGS: B1 adopt B1(i) INK-BOLD nav. B2 adopt structure, with active and hover carried by glowing neon accent borders rather than heavy fills, geometric utilitarian icons, and the modifier tier ratified. B3 adopt the braid at ROUTE SCALE for precision routing rather than page dominance; the strand palette is re-ruled so inactive strands are low-opacity neutral charcoal, register-aware, receding into the field, with ONE saturated neon active line, ELECTRIC MINT from the jade family - cyan remains rejected per S-007; van livery B, the ink body with mint outline glowing wireframe; the weave, the occlusion and the roller-coaster timing are unchanged because the recolor is paint-only. B4 adopt Direction 2, the dispatch-network model, as a tactical data stream. B5 drift REJECTED on bench evidence that the static field read better and that B4-d2 makes it redundant; settle ADOPTED as the arrival grammar. Composite ratifies Chanel's rule: the braid and the network nodes are THE signatures and everything around them stays stark and minimal. GUARDRAIL, load-bearing: subtle. Noir owns the signature and chrome registers only; D18 deep-reading surfaces for provider and payer content stay clean and legible; neon never carries or neighbours alarm semantics. OPEN FORK: the D25 warm atmosphere on ink is ruled from the Noir Bench fragment N3, not in chat."
+    },
+    {
+      "id": "D29",
+      "date": "2026-08-21",
+      "title": "Monochrome + One Light (owner research ruling)",
+      "summary": "PALETTE LAW: deep ink, charcoal, stark white, and exactly ONE accent. Accent law verbatim: mint only where blood is pumping through the system - the accent marks life in the system (active route, live state, the one thing moving) and nowhere else, so an accent placed where nothing is live violates this law even when it is legible. The accent is ELECTRIC MINT #2fe89a, hue 155 degrees, 11.62:1 on ink; the maximum-voltage alternate #00ffa3 is rejected as gaming-adjacent because the brand is an instrument, not a console. REGISTER-SPLIT LAW, arithmetic rather than preference: electric mint measures 1.49:1 on paper and is unusable there for text or graphics, no tuning escapes it because it is a property of white grounds, so the light register carries its own active line (#00a36a, 3.03:1) and electric is an INK-register idea - on ink the signature reads as voltage, on light the same signature reads as precision. Jade as a wash is retired but jade SURVIVES as the mint bloodline, since electric mint sits inside the jade family at hue 155, so the identity is continuous rather than replaced, and cyan stays rejected per S-007 by measurement (cyan begins near 175 degrees, this sits 20 degrees clear). Rose and violet are retired including the illustration accent, with a noir pass over the line art scheduled. Section 5 amendment to nexo-brand: neon edges are 1px calibrated RINGS, never halos or blooms, per the N4-A expensive-instrument reading; the object-glow ban is otherwise intact and this amends section 5 for the signature and chrome registers only. Spring physics ship via CSS linear(), zero JS, so framer-motion stays dead. Ambient density is pursued through breathing and grain candidates, which are distinct from the rejected drift: drift was per-cell opacity cycling and read as moving parts, while density treatments change the field's texture rather than its behaviour, so S-028 is not reopened."
+    },
+    {
+      "id": "D30",
+      "date": "2026-08-21",
+      "title": "Two-Register Law + Seam Rule (owner, the Stripe move)",
+      "summary": "The site runs two registers and each has a job it must do. THEATER, noir plus neon: chrome, heroes, the braid and van, the dispatch map, the mobility cards - its job is to prove technical weight. PAPER, light and high-legibility: provider requirements, payer content, compliance, and every D18 deep-reading surface - its job is to pass compliance. THE SEAM RULE: chrome is always theater on every page, so the bar does not change register when the body does; any page may open with a theater band; the moment content becomes studied (tables, floors, legal text, long-form) the page crosses to paper and STAYS there rather than crossing back inside one page; forms are paper; alarms are register-independent and keep their own colour space in both, which restates the D28 guardrail as a boundary rather than a warning. Each page's crossing point is drawn explicitly in that page's P4 tonal map, homepage first, so the seam is a designed line rather than an emergent one. Owner-approved scope: the homepage mid-page bands are re-cast into theater per the tonal map, which supersedes tonal map v3's register assignments for those bands; the map is redrawn in the task that implements it (#37) rather than inferred in advance."
+    },
+    {
+      "id": "D25-REVERSED",
+      "date": "2026-08-21",
+      "title": "D25 reversal receipt (ruled 08-20, shipped in #27, reversed 08-21 by N3-b)",
+      "summary": "The warm-atmosphere direction is reversed after a side-by-side render rather than in prose. Owner, verbatim: the warm dusk is officially dead, mint is the only light in the dark. FROM: rose and violet atmosphere as an ink-register background wash (--atmo-rose #f58f9c, --atmo-rose-soft #f7929a, --atmo-violet #8d6fd3, --atmo-light, --atmo-ink) plus the compensated ink pair that existed only to pay for the wash's luminance lift (--ink-surface #273a32, --on-ink-border #4a6c66, --on-ink-border-strong #688f82). TO: pure noir per D29. WHY: side by side the warm atmosphere read as dusk rather than as instrumentation, and it put a second temperature into a palette whose whole argument is one light in the dark. SALVAGE, because the ruling cost nothing and produced three things that outlive it: the painted-pixel method (Range client rects in document coordinates against a text-hidden full-page raster), which is now the standard instrument; the register-split discovery, which is the seed of D29's register-split law; and the compensated-pair math, which is the worked example of what a background change costs in border and surface tokens. EXECUTION RIDES TASK #33, not #32 - the reversal removes the atmo applications and tokens, and the pre-#27 global values are intact outside the scoped .atmo-ink subtree, which #33 verifies before deleting rather than assuming."
     }
   ],
   "discoveries": [
@@ -1179,6 +1197,10 @@
     {
       "date": "2026-08-21",
       "summary": "Task #31 recorded D28 and rendered what it means. The braid recolored to one live electric-mint line against receding charcoal is the clearest expression the programme has produced of the owner's own thesis: the routing engine is the product. The bench also found that the neon does not survive the light register, which makes the noir signature register-split by nature. N3 puts the D25 fork in front of the owner as two identical heroes differing only in the warm dusk, with the revert scope stated: the compensated ink pair should revert with the glow, because it exists only to pay for it."
+    },
+    {
+      "date": "2026-08-21",
+      "summary": "Task #32 recorded D29 and D30 and rendered the three questions they left open. The most useful thing to come out of it was not the answer to the question asked. G1 was built to test whether sheerer glass reads as more liquid; measuring it showed that the glass is load-bearing for legibility rather than decorative, because on-ink text sitting directly on the mint strand measures 1.39:1 while the same text over the bar measures 13.03:1. That makes clearing text columns a hard constraint on the route-scale braid rather than a preference, and the bench proved it the expensive way: at 390 its own hero lede landed on a charcoal strand at 2.78:1, invisible at 1440, and had to be recomposed. The D25 reversal is recorded with its from, its to, its why and its salvage, and executes in #33 rather than here."
     }
   ]
 }
