@@ -43,6 +43,27 @@ the one-task shift in the numbering can be audited.
 | **#37** | **Homepage tonal map + mid-band re-cast into theater** per D30. | Needs #33–#36 to exist first, because the seam is drawn between real registers rather than described. **This redraws tonal map v3 rather than inferring the change.** |
 | then | **W2 hero-signature concept round** — including the **searching line and the recalculation event** (S-031's autonomous half). | Still deliberately last: it speaks the braid and ambient language the earlier rungs make real. |
 
+## IMPLEMENTATION LADDER — **v4** (Task #36, after the owner's concept round)
+
+**Ladder v3 is superseded.** The concept round (D34) inserted a bench and an implementation task ahead of
+the interaction work, because the signature's *geometry and livery* are now open questions and every rung
+below would otherwise be built against a signature that is about to change.
+
+| Task | Rung | Why here |
+|---|---|---|
+| **#36 — DONE (2026-08-21)** | **The Serpent Bench** — cable strands, Asclepius variant, livery strip, balance dial | The owner invested hours in concept studies; the reply is a rendered bench, not prose. |
+| **#37 — NEXT** | **Serpent implementation** — whichever geometry, livery and balance the owner picks | Nothing below should be built against a signature that is still a question. |
+| **#38** | **Interaction grammar + premium forms** (S-039, S-040, S-041) | |
+| **#39** | **Ambient B4-d2** — the dispatch-network model | |
+| **#40** | **Mobility cards** — spring physics + charcoal elevation (N4-A reversed, S-037) | |
+| **#41** | **Homepage tonal map + mid-band re-cast** (D30) | |
+| then | **W2 hero-signature script** — the searching line and the recalculation event (S-031) | Still last, still the only place autonomy is allowed. |
+
+**Also open and not on any rung yet:** the **#35 ending question** (S-043), which the owner rules during a
+full-scroll read rather than from a fragment.
+
+---
+
 ## IMPLEMENTATION LADDER — **v3** (Task #35, after the owner's field verdict)
 
 **Ladder v2 is superseded.** The owner scrolled the shipped signature and ruled it a basic

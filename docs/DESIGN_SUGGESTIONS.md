@@ -742,3 +742,56 @@ a **background-register** question, which leaves the alarms and the jade accent 
 - **Watch the copy gate, not just the motion:** those cards carry sample data, and any lift that draws
   the eye to them raises the stakes on §7's "sample data must be obviously fictional" rule. Motion is
   not a reason to revisit the copy, but a reviewer looking at them again is.
+
+
+---
+
+## S-042 — The owner concept round (three images, two prompts) — **REGISTERED**
+
+- **Source:** **Owner**, AI-image concept studies · **Date:** 2026-08-21 · **Disposition:** **REGISTERED — DNA
+  extracted, one element rejected for chrome, two questions benched**
+
+### ⚠ THE PROMPT TEXT IS NOT YET IN THIS FILE
+
+**The two prompts were not supplied with the task, so there is nothing here to quote.** They are recorded as
+required-verbatim and the slot is left explicitly empty rather than filled with a paraphrase, because a
+paraphrase in a verbatim slot is worse than a gap — it looks like a record. **Paste them here and this entry is
+complete.**
+
+> **PROMPT 1 —** *(awaiting the owner's text)*
+>
+> **PROMPT 2 —** *(awaiting the owner's text)*
+
+What IS on record from the task brief, and is used throughout the bench: the **balance bar** verbatim
+(*"not supposed to be obvious as much and not supposed to be hidden — find the balance"*), the **Asclepius
+insight**, and the per-image DNA below.
+
+### Disposition per element
+
+| Element | Source | Disposition |
+|---|---|---|
+| **Ribbon-cable strands** (4–5 fine parallel fibers per strand) | image 1 | **BENCHED — S1/S2.** Implemented as fibers offset along the path NORMAL, so they stay parallel through every bend rather than fanning out on the curves. |
+| **Wide graceful crossings** | image 1 | **ALREADY SHIPPED (#35)** at swing 122/140 and wavelength 433. The bench renders the shipped values, not larger ones. |
+| **Masks + under-glow + small luminous vehicle** | image 1 | **ALREADY SHIPPED (#35).** Live on every bench fragment. |
+| **Photoreal 3D mesh / road surfaces** | images 2–3 | **REJECTED FOR CHROME (D34).** D19/D20 payload and paint cost; medium collision with a wholly line-art site; and it cannot be register-split. **Survives only as a line-art micro-dash sheen.** |
+| **The Asclepius reading** | owner insight | **ADOPTED AS THE SIGNATURE'S STATED MEANING (D27h)** — and bounded by the new **medical-symbol law**: abstract only, no literal snake, staff, caduceus or cross. |
+| **Geometry: all-weave vs staff-and-coil** | derived | **OPEN — bench S1 vs S2.** |
+| **Livery: mint / white / silver** | prompt wording | **OPEN — bench S3.** May overturn D33; owner-invited. |
+
+- **S-007 binds regardless of how a prompt is worded:** any glow is **white or mint (155°)**. **Cyan stays rejected.**
+- **D29's interpretive line, stated because multi-fiber rendering invites the confusion:** the lead is drawn as
+  **4 fibers** but is **ONE semantic mint object**. Fiber count does not multiply "active routes", and mint
+  restraint still permits exactly two mint surfaces on the noir register.
+
+---
+
+## S-043 — The #35 ending question — **QUEUED FOR THE OWNER'S FULL-SCROLL READ**
+
+- **Source:** **Task #35's own honest report** · **Date:** 2026-08-21 · **Disposition:** **QUEUED — not benched**
+- #35 fixed the dangling stop (the route now docks at the terminus **station node** rather than 30px short of
+  it), but the ending remains a **handoff**: the van stops 21px above the ink card and the footer's dashed motif
+  picks up *inside* it. The alternative is the **route entering the card** as one unbroken line.
+- **Deliberately NOT on the serpent bench.** A fragment cannot answer it — the question is how the page *ends*
+  after a full scroll, and it only exists at the bottom of a real page. **The owner rules it during the
+  post-upgrade full-scroll read.**
+- **FOOTER_HANDOFF is currently law**, so "route enters the card" is a law change, not a tweak.

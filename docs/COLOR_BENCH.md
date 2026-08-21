@@ -646,3 +646,85 @@ with zero jumps; 14/14 tabbed elements show a focus indicator.
 >
 > **These three answers unblock rungs #33, #35 and #36 of ladder v2.** The D25 reversal and the
 > framer-motion removal are already ruled and proceed regardless.
+
+
+---
+
+## 12. THE SERPENT ROUND — the owner's concept study, rendered (Task #36, 2026-08-21)
+
+**D34 is recorded and this round renders its implementable half.** The instrument is
+`docs/serpent-bench/index.html`, one self-contained `file://` page. **Status: OPEN, pending three picks.**
+Nothing ships from a bench.
+
+### The cable, constructed
+
+A ribbon cable is **not a thicker stroke**. Each strand is N fine fibers offset along the **path normal**, so
+they stay parallel through every bend instead of fanning out on the curves:
+
+```
+x(y) = g - A(1 - cos θ)/2        θ = 2πy/λ + φ
+dx/dy = -(Aπ/λ) sin θ = m
+unit normal = (1, -m) / √(1 + m²)
+fiber i sits at offset  o_i = (i - (N-1)/2) · spacing  along that normal
+```
+
+| | fibers | fiber width | spacing | bundle width |
+|---|---|---|---|---|
+| **Companion cable** | 5 | 0.7px | 1.05px | **4.90px** |
+| **Active lead cable** | 4 | 0.85px | 0.84px | **3.37px** |
+
+**The lead is tighter and glowing on purpose**: 4 fibers plus an under-glow read as **one luminous cable**,
+which is what keeps D29's interpretive line true — multi-fiber rendering does not multiply active routes.
+
+**Clearance:** the bundle's spread counts toward strand extent. The outermost fiber sits **~2.1px** beyond the
+path, so the cable spends **2.1 of the 28.4px** minimum the shipped route holds. **The 1.39:1 text law is not
+approached.**
+
+### Register presence — unchanged from #35, and the ceiling still governs
+
+| Spot | Value | Ratio |
+|---|---|---|
+| Active lead, ink | `#2fe89a` | **11.62:1** |
+| Active lead, light | `#00a36a` | **3.03:1** |
+| Companion cable, ink | α.30 | **1.66:1** |
+| Companion cable, light — **B1 quieter** | α.40 | 2.20:1 |
+| Companion cable, light — **B2 as shipped** | α.52 | **2.91:1** |
+| Companion cable, light — **B3 bolder** | α.62 | **3.76:1 — OVER the lead** |
+
+**B3 is deliberately past the ceiling** so the owner can see what "more obvious" costs: above 3.03:1 the
+*inactive* strands out-contrast the *active* one and D29's accent law inverts.
+
+### THE LIVERY MEASUREMENT, which refuted the intuition
+
+A vehicle needs a silhouette on **both** registers. **Every candidate has exactly one register where its body
+fails — and they fail on opposite ones.**
+
+| Livery | body vs light | body vs ink | edge vs its own body |
+|---|---|---|---|
+| **(a) ink + mint wireframe** *(shipped D33)* | **17.30:1** | 1.00:1 | **11.62:1** |
+| **(b) luminous white wireframe** | **17.30:1** | 1.00:1 | **18.58:1** |
+| **(c) brushed silver body** | **1.48:1** | **11.71:1** | **3.74:1** |
+
+The wireframes are invisible on ink and their **edge rescues them hard**. Silver is the reverse — it nearly
+vanishes on paper, and its rescue edge is only **3.74:1**. **The candidate that looks like the safe solid choice
+is the one with the weakest rescue on the register it loses.**
+
+### Rejected here, and why
+
+The **photoreal 3D mesh** from images 2–3 is rejected for chrome: D19/D20 payload and paint cost, a medium
+collision with a wholly line-art site, and it **cannot be register-split**. It survives as a **micro-dash sheen
+fiber** on the companion cables — the cable catching light, in line art.
+
+### PROTOCOL
+
+> **Open `docs/serpent-bench/index.html` from `file://` on BOTH machines, and answer three questions:**
+>
+> 1. **GEOMETRY — A or B?** All-weave cables (every strand equal, the lead weaves with them) or staff-and-coil
+>    (a calm lead with the companions coiling around it)? The question underneath: **should the active line be
+>    the energetic thing, or the still thing everything else moves around?**
+> 2. **LIVERY — a, b or c?** Note that (a) and (b) rely on their edge over ink while (c) relies on its edge over
+>    paper, and (c)'s rescue is the weakest of the three.
+> 3. **BALANCE — B1, B2 or B3?** Point at where *"not obvious, not hidden"* actually sits.
+>
+> **These three answers become the #37 implementation spec.** The **#35 ending question** (handoff vs
+> route-enters-card) is deliberately NOT here — it needs a full-scroll read, not a fragment.
