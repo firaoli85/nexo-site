@@ -47,3 +47,10 @@ scripts/qa/artifacts/research/
 # Impeccable's working backlog. It is tool state, not a receipt —
 # FIXLOG.md is the record of what was found and what changed.
 .impeccable/critique/
+
+# QA failure screenshots. Pure build exhaust: the sweep writes one per failing cell and overwrites
+# them on the next run, so they are never a receipt — cube34.log and the FIXLOG entry are.
+# (A workflow agent's perf experiment also left a .next-perf dist here once, which made Next
+# auto-append its types path to tsconfig.json. D26(a): sync and VCS must never carry build exhaust.)
+scripts/qa/artifacts/FAIL_*
+.next-perf/

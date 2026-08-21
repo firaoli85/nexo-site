@@ -218,6 +218,31 @@
   --nav-solid:        #0c1713;
 
 
+  /* THE ROUTE BRAID (D32, Task #34) ---------------------------------------------------------
+     THE ACTIVE LEAD is the one live thing on the page, and D31 makes it one of only TWO
+     sanctioned mint surfaces on the noir register (the other is the primary CTA). It is
+     REGISTER-SPLIT because D29 says it has to be: electric mint measures 1.49:1 on paper and is
+     unusable there, so the light register carries its own active line. Same signature, two
+     readings -- voltage on ink, precision on paper. */
+  --route-active-ink:    #2fe89a;   /* electric mint, 11.62:1 on --ink */
+  --route-active-light:  #00a36a;   /* the light-register active line, 3.03:1 on --bg (graphic tier) */
+
+  /* THE COMPANION STRANDS are the existing network, not this trip -- inactive, and therefore
+     never mint. They invert across the seam because register-aware means opposite directions:
+     on paper the neutral is DARKER than the field, on ink it must be LIGHTER. Both values sit at
+     N1-A's maximum recession, just clear of D23's E1-07 divider floor (1.66:1), which is the
+     level below which a line stops reading as a line and starts reading as a printing artifact. */
+  --route-strand-light:  rgb(46 53 61 / 0.28);    /* composites to #bdc1c4 - 1.69:1 vs paper */
+  --route-strand-ink:    rgb(143 154 166 / 0.30); /* composites to #333d3e - 1.66:1 vs ink */
+
+  /* LIVERY B (D28) -- ink body, electric-mint wireframe. The outline does NOT switch register
+     (D32): a 30px object changing colour mid-travel reads as a glitch rather than as design, and
+     the two registers already carry the silhouette differently -- over paper it is the ink body
+     against a light field, over ink it is the mint outline against a dark one. */
+  --van-body-fill:       var(--ink);
+  --van-outline:         #2fe89a;
+
+
   /* MOTION PRIMITIVES (D31 / G4) ------------------------------------------------------------
      The spring is ADOPTED as the site's arrival grammar, and it ships as a token so later rungs
      (#36's mobility cards) consume one name instead of re-deriving a curve. It is the damped-spring
@@ -229,8 +254,16 @@
      permanently overshot. The last 20ms therefore carries 102.7 -> 100, which on a 12px translate
      is 0.32px: a real final settle, not a snap.
      THE DURATION IS PART OF THE PRIMITIVE: --spring-settle is for ARRIVALS (cards, reveals). It is
-     NOT for the nav, which is chrome and keeps nexo-brand SS5's <=250ms ceiling on --ease-nav. */
-  --spring-settle:    linear(0.0% 0.0%, 1.6% 3.3%, 6.0% 6.7%, 12.3% 10.0%, 19.8% 13.3%, 28.1% 16.7%, 36.6% 20.0%, 45.1% 23.3%, 53.3% 26.7%, 61.0% 30.0%, 68.1% 33.3%, 74.5% 36.7%, 80.2% 40.0%, 85.1% 43.3%, 89.3% 46.7%, 92.9% 50.0%, 95.8% 53.3%, 98.2% 56.7%, 100.0% 60.0%, 101.4% 63.3%, 102.4% 66.7%, 103.1% 70.0%, 103.6% 73.3%, 103.8% 76.7%, 103.8% 80.0%, 103.8% 83.3%, 103.6% 86.7%, 103.3% 90.0%, 103.0% 93.3%, 102.7% 96.7%, 100.0% 100.0%);
+     NOT for the nav, which is chrome and keeps nexo-brand SS5's <=250ms ceiling on --ease-nav.
+     *** SHIPPED BROKEN IN TASK #33 AND FIXED IN #34. *** The stops were written with PERCENTAGE
+     outputs (`0.0% 0.0%, 1.6% 3.3%, ...`). linear()'s output is a <number>; only the optional input
+     positions are percentages. All three engines therefore rejected the value, and because it was
+     substituted through var() into a `transition` SHORTHAND, the whole declaration became invalid at
+     computed-value time and fell back to `0s ease` -- so every rule using it silently had NO
+     transition at all, including the nav cells' hover lift. Measured: CSS.supports(...) === false on
+     chromium, firefox and webkit. This is the same failure family as FO-3 (invalid CSS silently
+     dropped, engine falls back, nothing reports it). Do NOT reintroduce percentage outputs. */
+  --spring-settle:    linear(0.0000 0.0%, 0.0165 3.3%, 0.0600 6.7%, 0.1228 10.0%, 0.1982 13.3%, 0.2808 16.7%, 0.3663 20.0%, 0.4513 23.3%, 0.5332 26.7%, 0.6102 30.0%, 0.6811 33.3%, 0.7451 36.7%, 0.8017 40.0%, 0.8511 43.3%, 0.8933 46.7%, 0.9288 50.0%, 0.9580 53.3%, 0.9816 56.7%, 1.0001 60.0%, 1.0141 63.3%, 1.0244 66.7%, 1.0314 70.0%, 1.0357 73.3%, 1.0379 76.7%, 1.0384 80.0%, 1.0375 83.3%, 1.0357 86.7%, 1.0332 90.0%, 1.0302 93.3%, 1.0270 96.7%, 1.0000 100.0%);
   --spring-duration:  620ms;
   /* The nav's decelerate curve, named rather than repeated at eight call sites. */
   --ease-nav:         cubic-bezier(0.22, 1, 0.36, 1);
@@ -476,7 +509,11 @@ a:active {
 }
 [data-terminus-live][data-terminus-in] .terminus-node {
   opacity: 1; transform: none;
-  transition: opacity 200ms ease, transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1);
+  /* Task #34: the Stage 6.8 bounce curve (its third control point overshot past 1, which is what
+     made it a bounce) is replaced by the
+     ADOPTED spring family (D31/G4). It was flagged by the detector in #33 and deliberately
+     deferred to a task that could verify the arrival by eye rather than fix it blind. */
+  transition: opacity 200ms ease, transform var(--spring-duration) var(--spring-settle);
   transition-delay: 180ms;
 }
 [data-terminus-live][data-terminus-in] .terminus-cols {
@@ -728,8 +765,18 @@ a:active {
    The line is stroked with a vertical gradient (accent → accent-on-ink across the
    ink band → accent); the middle stops' offsets are set from the measured ink-stop
    bounds. Node 3 and the traveling dot take on-ink colours over the band. */
-.spine-grad-accent { stop-color: var(--accent); }
-.spine-grad-ink { stop-color: var(--accent-on-ink); }
+/* The active lead's gradient stops. Repointed in Task #34 from the general jade accent to the
+   route's OWN register-aware pair, so the signature can be tuned without moving every jade on the
+   site -- and so D29's register split is expressed where it actually applies. */
+.spine-grad-accent { stop-color: var(--route-active-light); }
+.spine-grad-ink { stop-color: var(--route-active-ink); }
+/* Companion strand stops -- same seam offsets, opposite register logic. */
+.spine-strand-light { stop-color: var(--route-strand-light); }
+.spine-strand-ink { stop-color: var(--route-strand-ink); }
+/* The companions are DECORATIVE SIBLINGS and they are STATIC: no dash, no scroll-draw, no motion
+   of any kind. That is why they need no motion scope and why a reduced-motion reader sees the
+   complete braid -- all three strands, correct over/under -- with only the van absent. */
+.route-strand { fill: none; }
 .spine-node.spine-node-ink { fill: var(--accent-on-ink); }
 [data-spine-live] .spine-node.spine-node-ink { fill: var(--on-ink-border); }
 [data-spine-live] .spine-node.spine-node-ink.is-lit { fill: var(--accent-on-ink); }
@@ -767,6 +814,12 @@ a:active {
 /* Shown only when the overlay is ARMED — i.e. motion is allowed. Under reduced-motion the effect
    never sets data-direction, so the van stays absent and the line renders fully drawn. This is the
    same gate as before, minus the @supports wrapper it no longer needs. */
+/* LIVERY B -- the glowing wireframe. Fill and stroke are tokens so the hex guard stays green and
+   so the livery is one edit, not fifteen attributes. */
+.van-body { fill: var(--van-body-fill); }
+.van-edge { stroke: var(--van-outline); fill: none; }
+.route-van .van-body.van-edge { fill: var(--van-body-fill); }
+
 .route-van { display: none; }
 .route-overlay[data-direction] .route-van { display: block; }
 

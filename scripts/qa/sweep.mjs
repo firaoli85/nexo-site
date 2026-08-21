@@ -433,8 +433,10 @@ async function checkNoJs(browser, base, routes) {
 async function checkOverlap(page, route, width) {
   const isHome = route === "/";
   if (!isHome) {
-    const n = await page.evaluate(() => document.querySelectorAll(".route-van").length + document.querySelectorAll(".route-overlay svg .route-path").length);
-    return { pass: n === 0, detail: n ? `interior route has ${n} van/route nodes` : "" };
+    const n = await page.evaluate(() => document.querySelectorAll(".route-van").length
+      + document.querySelectorAll(".route-overlay svg .route-path").length
+      + document.querySelectorAll(".route-overlay svg .route-strand").length);
+    return { pass: n === 0, detail: n ? `interior route has ${n} van/route/strand nodes` : "" };
   }
   if (width < 1024) {
     const n = await page.evaluate(() => document.querySelectorAll(".route-van").length);
@@ -467,8 +469,22 @@ async function checkOverlap(page, route, width) {
       if (gap < 12) gapBad = `van only ${gap}px above footer card at terminus`;
     }
   }
+  // STRAND STROKE (promoted from the Task #31 bench probe into a shipped invariant). On the Noir
+  // Bench the braid once rendered with no stroke at all — the colour rules were scoped to a class
+  // the host element did not carry — and nothing caught it, because a stroke-less path is still a
+  // path and still has a bounding box. An unpainted signature is a blank page that measures fine.
+  const strandBad = await page.evaluate(() => {
+    const paths = [...document.querySelectorAll(".route-overlay svg path.route-path, .route-overlay svg path.route-strand")];
+    if (!paths.length) return null;
+    const dead = paths.filter((p) => {
+      const cs = getComputedStyle(p);
+      return cs.stroke === "none" || cs.stroke === "rgba(0, 0, 0, 0)" || parseFloat(cs.strokeOpacity) === 0 || parseFloat(cs.strokeWidth) === 0;
+    });
+    return dead.length ? `${dead.length} of ${paths.length} route strands render with NO stroke` : null;
+  });
+
   const moved = new Set(vanYs).size > 1;
-  const detail = [missing, overlapText, gapBad, vanYs.length && !moved ? "van did not move with scroll (stuck/detached)" : ""].filter(Boolean).join("; ");
+  const detail = [missing, overlapText, gapBad, strandBad, vanYs.length && !moved ? "van did not move with scroll (stuck/detached)" : ""].filter(Boolean).join("; ");
   return { pass: !detail, detail };
 }
 
@@ -487,9 +503,15 @@ const I20_TOL = 1.0;
 
 const I20_PROBE = () => {
   const root = document.querySelector(".route-overlay");
-  const path = document.querySelector(".route-path");
+  // THE CANONICAL-PATH LAW, made checkable. Since Task #34 the route is a braid: the lead is the
+  // single truth (van + LUT + dash all consume it) and the companion strands are decorative
+  // siblings. Binding to the attribute rather than to a class name means a future strand that
+  // happens to pick up .route-path cannot quietly become a second truth.
+  const canon = document.querySelectorAll("[data-route-canonical]");
+  const path = canon[0];
   const van = document.querySelector(".route-van");
   if (!root || !path || !van) return { absent: true, why: "no route/van nodes" };
+  if (canon.length !== 1) return { bad: `there are ${canon.length} canonical route paths; there must be exactly 1 (the companion strands are decorative and must never be canonical)` };
   if (getComputedStyle(van).display === "none") return { absent: true, why: "van display:none (overlay not armed - reduced-motion or pre-hydration)" };
   // NOTE: there is no offset-path gate any more. Task #22 moved the van INSIDE the svg as a <g>
   // positioned by transform, so it renders wherever the svg does — the old `@supports (offset-path)`
@@ -597,6 +619,52 @@ export async function checkVanRidesLine(page, route, width) {
   }
   if (!sawVan) return { pass: true, detail: "I20 skip: van never rendered" };
 
+  // (a2) THE WARP LEG (Task #34). Two things are asserted and they are different claims.
+  //   OBEDIENCE: --route-progress must be MONOTONE NON-DECREASING as the reader scrolls down.
+  //     D29's split ruling put autonomous drama in the W2 hero script precisely so the page route
+  //     could stay obedient to the scroll, and a law nothing can check is a preference. A warp is
+  //     a reparameterisation; if it ever runs backwards under a forward scroll it is an animation.
+  //   COVERAGE: the old ladder scrolled to DOCUMENT fractions and relied on 0.9 landing deep in
+  //     the terminus. Under a warp that correspondence is a side effect, not a guarantee, so this
+  //     asserts directly that some sample is genuinely in-curve rather than trusting the proxy.
+  {
+    const warp = await page.evaluate(async () => {
+      const root = document.querySelector(".route-overlay");
+      const path = document.querySelector("[data-route-canonical]");
+      if (!root || !path) return null;
+      const span = (root.dataset.routeSpan || "").split(",").map(Number);
+      if (span.length !== 2 || !isFinite(span[0]) || !isFinite(span[1])) return { noSpan: true };
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const rows = [];
+      for (let i = 0; i <= 48; i++) {
+        window.scrollTo({ top: Math.round((max * i) / 48), behavior: "instant" });
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        const p = Math.min(1, Math.max(0, (window.scrollY - span[0]) / span[1]));
+        const s = parseFloat(getComputedStyle(root).getPropertyValue("--route-progress"));
+        const q = path.getPointAtLength(Math.min(1, Math.max(0, s)) * path.getTotalLength());
+        const q0 = path.getPointAtLength(0);
+        rows.push({ p: +p.toFixed(5), s: +s.toFixed(5), dx: +(q.x - q0.x).toFixed(1) });
+      }
+      return { rows };
+    });
+    if (warp && warp.noSpan) problems.push("the route publishes no data-route-span, so scroll-obedience cannot be verified");
+    else if (warp && warp.rows) {
+      const rows = warp.rows;
+      let back = null;
+      for (let i = 1; i < rows.length; i++) {
+        if (!isFinite(rows[i].s)) { back = `--route-progress is not finite at p=${rows[i].p}`; break; }
+        if (rows[i].s < rows[i - 1].s - 1e-4) { back = `the route ran BACKWARDS under a forward scroll: ${rows[i - 1].s} -> ${rows[i].s}`; break; }
+      }
+      if (back) problems.push(`warp obedience: ${back}`);
+      const inCurve = rows.filter((r) => Math.abs(r.dx) > 20 && r.s < 0.999).length;
+      if (!inCurve) problems.push("warp coverage: no sample landed in a curved part of the route, so the in-curve agreement was never actually tested");
+      const dev = Math.max(...rows.map((r) => Math.abs(r.s - r.p)));
+      if (dev > 0.25) problems.push(`the warp deviates ${(dev * 100).toFixed(1)}% from linear scroll — far enough that the van can leave the viewport`);
+    }
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    await page.waitForTimeout(200);
+  }
+
   // (b) PERTURBATION — the FO-1 trigger encoded forever. Grow the document AFTER mount with no
   // window resize (the fonts-settling / late-content case) and re-assert. Before the fix this left
   // the route terminating 1536px above the footer seam; the ResizeObserver must now re-measure.
@@ -647,6 +715,9 @@ const I20_ZOOM_PROBE = () => {
   if (cs.display === "none") return { absent: "van hidden (overlay not armed)" };
   // (no offset-path gate since Task #22 — see the note in I20_PROBE)
   const p = parseFloat(getComputedStyle(root).getPropertyValue("--route-progress"));
+  // Without this guard getPointAtLength(NaN) THROWS, and the failure surfaces as an opaque "lane
+  // error TypeError" instead of naming the real cause — which is the FO-3 signature itself.
+  if (!isFinite(p)) return { bad: "--route-progress is not a number" };
   const m = path.getScreenCTM();
   const L = path.getTotalLength();
   const q = path.getPointAtLength(p * L);
@@ -721,7 +792,18 @@ export async function checkVanRidesLineZoom({ base = BASE, sabotage = false } = 
         // Sweep the whole descent rather than stopping at the first curved hit: zoom shrinks the
         // layout viewport, so the page bottom arrives sooner and the naive early-exit landed on
         // p=1 (the terminus ENDPOINT) instead of a genuinely mid-curve point.
-        for (const f of [0.4, 0.6, 0.8, 0.86, 0.9, 0.93, 0.96, 0.985, 1]) {
+        //
+        // RUNG LIST RE-DERIVED IN TASK #34, and the derivation is worth recording because it is
+        // not obvious. CSS `zoom` shrinks the effective CSS viewport (1440/1.5 = 960), which
+        // collapses the content container's left offset to 0, which puts the weave under its own
+        // deadband — so UNDER ZOOM THE ROUTE IS CORRECTLY STRAIGHT and the terminus is the only
+        // curve there is. Measured on the braided build: at zoom 1.25 exactly one rung (f=0.8)
+        // landed in-curve; at zoom 1.5 the ladder jumped from p=0.8637 (still straight) straight
+        // to p=1 (saturated) and reached NO mid-curve sample at all. The fixed ladder therefore
+        // adds low rungs for the un-zoomed serpentine and, when the coarse pass still finds
+        // nothing, BISECTS the bracket between the last un-saturated rung and the first saturated
+        // one. A ladder that cannot find the curve it exists to sample is a blind spot.
+        for (const f of [0.2, 0.3, 0.4, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.86, 0.9, 0.93, 0.96, 0.985, 1]) {
           await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), Math.round(max * f));
           await page.waitForTimeout(240);
           const o = await page.evaluate(I20_ZOOM_PROBE);
@@ -731,11 +813,36 @@ export async function checkVanRidesLineZoom({ base = BASE, sabotage = false } = 
         if (!seen.length) {
           samples.push({ tag, skipped: absent || "no samples" });
         } else {
+          // REFINEMENT: if the coarse ladder never landed mid-curve, bisect the bracket between
+          // the last un-saturated sample and the first saturated one. Under zoom that window can
+          // be a few percent of the scroll range wide, and a fixed ladder can step straight over it.
+          if (!seen.some((o) => Math.abs(o.dxFromGutter) > 20 && o.p < 0.999)) {
+            const lo = [...seen].reverse().find((o) => o.p < 0.999);
+            const hi = seen.find((o) => o.p >= 0.999);
+            if (lo && hi) {
+              let a = lo.f, c = hi.f;
+              for (let k = 0; k < 7; k++) {
+                const mid = (a + c) / 2;
+                await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), Math.round(max * mid));
+                await page.waitForTimeout(200);
+                const o = await page.evaluate(I20_ZOOM_PROBE);
+                if (o.absent || o.bad) break;
+                seen.push({ ...o, f: mid });
+                if (o.p >= 0.999) c = mid; else a = mid;
+                if (Math.abs(o.dxFromGutter) > 20 && o.p < 0.999) break;
+              }
+            }
+          }
           const control = seen.find((o) => o.dxFromGutter < 1);
           // prefer a point genuinely INSIDE the curve over the endpoint at p=1
-          const curved = seen.find((o) => o.dxFromGutter > 20 && o.p < 0.999) || seen.find((o) => o.dxFromGutter > 20);
+          // ABSOLUTE VALUE, since Task #34. The serpentine's lateral excursion is NEGATIVE (the
+          // weave extends left of the gutter, because the only horizontal room on the page is
+          // there), so a signed `> 20` gate could never see the braid at all — only the terminus,
+          // which curves right. A gate that cannot match the geometry it is meant to cover is a
+          // blind spot that reports green.
+          const curved = seen.find((o) => Math.abs(o.dxFromGutter) > 20 && o.p < 0.999);
           if (curved) samples.push({ tag, ...curved });
-          else problems.push(tag + ": never reached a curved sample (dxFromGutter never exceeded 20)");
+          else problems.push(tag + ": never reached a curved sample (|dxFromGutter| never exceeded 20 below p=0.999)");
           if (control) samples.push({ tag: tag + " straight-control", ...control });
           // ASSERT ON EVERY SAMPLE, not only the curved one. The first version of this leg checked
           // the tolerance on the curved sample alone, so a 16px error on the straight leg passed —
@@ -755,7 +862,9 @@ export async function checkVanRidesLineZoom({ base = BASE, sabotage = false } = 
     }
   } finally { await browser.close(); }
   const measured = samples.filter((x) => !x.skipped);
-  const curvedOnes = measured.filter((x) => x.dxFromGutter > 20);
+  // Same absolute value, and the p<0.999 filter that the summary was missing: without it a run
+  // that only ever saturated at the endpoint still printed "N of them MID-CURVE".
+  const curvedOnes = measured.filter((x) => Math.abs(x.dxFromGutter) > 20 && x.p < 0.999);
   const worst = measured.length ? measured.reduce((a, c) => (c.delta > a.delta ? c : a)) : null;
   return {
     pass: problems.length === 0 && curvedOnes.length > 0,
