@@ -36,7 +36,7 @@ type ButtonProps = {
 // don't both set --tw-ring-color and collide in source order.
 const base =
   "inline-flex items-center justify-center gap-2 rounded-lg font-semibold whitespace-nowrap " +
-  "select-none transition-colors focus-visible:outline-none focus-visible:ring-2 " +
+  "select-none motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 " +
   "focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
 const LIGHT_RING = "focus-visible:ring-accent focus-visible:ring-offset-bg";

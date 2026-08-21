@@ -68,7 +68,7 @@ function Wordmark({ onClick }: { onClick?: () => void }) {
       href="/"
       onClick={onClick}
       className={cn(
-        "rounded-sm font-display text-lg font-heading tracking-heading transition-opacity duration-200 hover:opacity-70 focus-visible:outline-none focus-visible:ring-2",
+        "rounded-sm font-display text-lg font-heading tracking-heading motion-safe:transition-opacity duration-200 hover:opacity-70 focus-visible:outline-none focus-visible:ring-2",
         NT.wordmark,
         NT.ring
       )}
@@ -105,7 +105,7 @@ function DesktopMenu({
     <NavigationMenu.Item>
       <NavigationMenu.Trigger
         className={cn(
-          "group inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium outline-none transition-colors focus-visible:ring-2",
+          "group inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium outline-none motion-safe:transition-colors focus-visible:ring-2",
           NT.trigger,
           NT.ring
         )}
@@ -139,7 +139,7 @@ function DesktopMenu({
                   <Link
                     href={item.href}
                     className={cn(
-                      "group flex items-start gap-3 rounded-lg p-3 outline-none transition-colors focus-visible:ring-2",
+                      "group flex items-start gap-3 rounded-lg p-3 outline-none motion-safe:transition-colors focus-visible:ring-2",
                       NT.itemHover,
                       NT.ring
                     )}
@@ -147,7 +147,7 @@ function DesktopMenu({
                     {Icon ? (
                       <span
                         className={cn(
-                          "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors duration-200",
+                          "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg motion-safe:transition-colors duration-200",
                           NT.chip
                         )}
                       >
@@ -155,7 +155,7 @@ function DesktopMenu({
                       </span>
                     ) : null}
                     <span className="flex min-w-0 flex-col">
-                      <span className={cn("flex items-center gap-1 text-[15px] font-semibold transition-colors", NT.itemTitle)}>
+                      <span className={cn("flex items-center gap-1 text-[15px] font-semibold motion-safe:transition-colors", NT.itemTitle)}>
                         {item.label}
                         <ArrowRight
                           aria-hidden="true"
@@ -203,12 +203,12 @@ function MobileAccordion({
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between rounded-md py-4 text-left text-base font-semibold text-on-ink outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+        className="flex w-full items-center justify-between rounded-md py-4 text-left text-base font-semibold text-on-ink outline-none motion-safe:transition-colors focus-visible:ring-2 focus-visible:ring-accent-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
       >
         {label}
         <ChevronDown
           aria-hidden="true"
-          className={cn("h-5 w-5 text-on-ink-muted transition-transform duration-200", open && "rotate-180")}
+          className={cn("h-5 w-5 text-on-ink-muted motion-safe:transition-transform duration-200", open && "rotate-180")}
         />
       </button>
       <ul id={panelId} className={cn("flex-col gap-0.5 pb-3", open ? "flex" : "hidden")}>
@@ -217,7 +217,7 @@ function MobileAccordion({
             <Link
               href={item.href}
               onClick={onNavigate}
-              className="block rounded-lg px-3 py-2.5 text-sm text-on-ink-muted transition-colors hover:bg-ink-hover hover:text-on-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              className="block rounded-lg px-3 py-2.5 text-sm text-on-ink-muted motion-safe:transition-colors hover:bg-ink-hover hover:text-on-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
               {item.label}
             </Link>
@@ -318,7 +318,7 @@ export function Navbar() {
       <header
         className={cn(
           // always the dark nav-glass; the border is the only scroll-state change.
-          "nav-glass sticky top-0 z-40 transition-colors duration-200",
+          "nav-glass sticky top-0 z-40 motion-safe:transition-colors duration-200",
           // D23/F1: the scrolled edge sits at the CARD tier (--on-ink-border-strong, itself hardened
           // by E2-05). FO-2 then showed that edge alone is not enough: it is a local MAXIMUM over the
           // ink chapters and reads there, but over LIGHT content it sits monotonically between a dark
@@ -397,7 +397,7 @@ export function Navbar() {
               aria-expanded={mobileOpen}
               aria-haspopup="dialog"
               className={cn(
-                "inline-flex h-11 w-11 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 lg:hidden",
+                "inline-flex h-11 w-11 items-center justify-center rounded-md motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 lg:hidden",
                 NT.hamburger,
                 NT.ring
               )}
@@ -414,7 +414,7 @@ export function Navbar() {
           role="dialog"
           aria-modal="true"
           aria-label="Site menu"
-          className="animate-overlay-in fixed inset-0 z-50 flex flex-col bg-ink lg:hidden"
+          className="motion-safe:animate-overlay-in fixed inset-0 z-50 flex flex-col bg-ink lg:hidden"
         >
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-on-ink-border px-6">
             <Wordmark onClick={closeMobile} />
@@ -423,7 +423,7 @@ export function Navbar() {
               type="button"
               onClick={closeMobile}
               aria-label="Close menu"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-md text-on-ink transition-colors hover:bg-ink-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-md text-on-ink motion-safe:transition-colors hover:bg-ink-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-on-ink focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
               <X aria-hidden="true" className="h-6 w-6" />
             </button>

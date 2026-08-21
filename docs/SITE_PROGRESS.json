@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-20",
-    "currentTask": "W5 part 2: nexo-motion skill + motion-safe conversion + S-001 card motion",
+    "currentTask": "W5 part 2b: MOTION BENCH (four candidates + S-001 card motion rendered for owner reaction)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -370,8 +370,8 @@
       "title": "Motion system: the nexo-motion skill from the four approved candidates + motion-safe architecture",
       "status": "in-progress",
       "date": "2026-08-18",
-      "note": "D20d approved nexo-drift (per-cell AmbientMap dot cycle, 2400-3200ms, static grid under reduced motion), nexo-shape (nav panel size interpolation, 200/250ms, instant swap under reduced motion), nexo-settle (existing play-once settle grammar formalised as a primitive, <=300ms), nexo-accent-card (local dark card on a light section, static - closes a real gap in the tonal system). Governing rules: will-change for imminent transitions only; ambient motion is slow; transform and opacity only; every candidate ships its static end-state first. nexo-shape recommended first. || TASK #19 DELIVERED THE C4 FIX + I20 ONLY; the motion system proper is untouched and W5 stays in progress. Shipped: single-truth route geometry (pixel-sized svg, identity CTM) + reflow re-measure (ResizeObserver, rAF-debounced, equality-guarded) closing FO-1's two modes, and I20 'the van rides the line' with a perturbation leg. STILL OPEN: the four nexo-motion candidates (nexo-drift, nexo-shape, nexo-settle, nexo-accent-card) are NOT built, the nexo-motion skill is NOT authored, and the motion-safe conversion has NOT started. nexo-shape remains the recommended first candidate. || Task #20 was an interrupt (FO-2 nav-edge field failure), not W5 work; W5 part 2 is still the next build task and is unchanged.",
-      "fixlogRef": "2026-08-18 - Task #19"
+      "note": "D20d approved nexo-drift (per-cell AmbientMap dot cycle, 2400-3200ms, static grid under reduced motion), nexo-shape (nav panel size interpolation, 200/250ms, instant swap under reduced motion), nexo-settle (existing play-once settle grammar formalised as a primitive, <=300ms), nexo-accent-card (local dark card on a light section, static - closes a real gap in the tonal system). Governing rules: will-change for imminent transitions only; ambient motion is slow; transform and opacity only; every candidate ships its static end-state first. nexo-shape recommended first. || TASK #19 DELIVERED THE C4 FIX + I20 ONLY; the motion system proper is untouched and W5 stays in progress. Shipped: single-truth route geometry (pixel-sized svg, identity CTM) + reflow re-measure (ResizeObserver, rAF-debounced, equality-guarded) closing FO-1's two modes, and I20 'the van rides the line' with a perturbation leg. STILL OPEN: the four nexo-motion candidates (nexo-drift, nexo-shape, nexo-settle, nexo-accent-card) are NOT built, the nexo-motion skill is NOT authored, and the motion-safe conversion has NOT started. nexo-shape remains the recommended first candidate. || Task #20 was an interrupt (FO-2 nav-edge field failure), not W5 work; W5 part 2 is still the next build task and is unchanged. PART 2a DONE (Task #28): motion-safe architecture converted, structural guard live, nexo-motion skill v1 authored. REMAINING: part 2b, the motion bench - the four candidates plus S-001 card motion rendered for owner reaction. No candidate may be applied to the site before that ruling.",
+      "fixlogRef": "2026-08-20 - Task #28"
     },
     {
       "id": "W6",
@@ -561,6 +561,42 @@
       "date": "2026-08-20",
       "fixlogRef": "2026-08-20 - Task #27",
       "note": "Docs-only: no site code changed, and no cube, because nothing the cube covers moved. The FO-3 field probe was executed on both real machines and both came back clean, which is the evidence the thread had been waiting for since the 2026-08-18 screenshots were ruled unusable for want of build provenance. YOGA (the machine that filed FO-1 and FO-3), Chrome, dpr 1.25, zoom 1.000: errY -0, errX 12, ctm [1,1], offsetPath none. errX 12 is the DESIGNED outbound lane (.route-van-lane offsets by 12px), not drift - a drift defect would give an arbitrary position-dependent number rather than exactly the lane constant; errY -0 agrees with FO-1's corrected record that divergence here is purely horizontal; ctm [1,1] rules out the unified-scale class; offsetPath none confirms the Task #22 LUT architecture is what actually runs there, so the offset-path design that Task #21 measured and rejected (stale url() reference, 978px persistent in Chromium and WebKit) is proven absent in the field. OWNER LAPTOP, dpr 2, winW 1840, zoom 1: varP 0.6523 = lineP 0.6523, headY 3156 = vanY 3156, gapPx 0, VERDICT OK: line and van agree, build NEW. varP === lineP is the Task #25 px-units fix confirmed in the field - the line is listening to the variable - and gapPx 0 is the direct measurement with no assumptions. dpr 2 was the setting the reopened investigation suspected most and it is clean. FO-1 CLOSED by the same evidence. Both prior chat-authored probes stay retracted even though the outcome is good, because they were written blind against assumed selectors and returned confident wrong numbers."
+    },
+    {
+      "id": "W9-I22",
+      "phase": "P5",
+      "title": "I22 painted-pixel AA invariant (registered debt)",
+      "status": "todo",
+      "date": "2026-08-20",
+      "fixlogRef": "2026-08-20 - Task #28",
+      "note": "Text-over-atmosphere pairings measured on PAINTED PIXELS inside the sweep. Spec = Task #27's Range-rect probe: client rects of the TEXT NODES via Range in document coordinates against a full-page raster, text hidden (layout kept) before sampling, 700ms settle for scene transitions, opacity under 0.05 treated as invisible. The probe's FIVE-CORRECTIONS history is part of the spec rather than trivia, because each wrong version manufactured site defects that did not exist (at worst 49 fake failures out of 52 runs): sampling an element's box catches its decorative children, the padding box still catches rounded borders, reading computed colour AFTER hiding the text returns transparent-black for every run, and a 220ms settle collects the outgoing demo scene's runs against the incoming scene's raster. Lands with the P5/W9 QA extension. UNTIL THEN: any atmosphere change requires a manual painted-pixel re-measure by Task #27's method - nothing in the cube covers this, so a green cube says nothing about contrast over the glow."
+    },
+    {
+      "id": "OWNER-GLASS-FILL",
+      "phase": "P3",
+      "title": "PENDING OWNER: console glass fill separation verdict (card vs smear)",
+      "status": "todo",
+      "date": "2026-08-20",
+      "fixlogRef": "2026-08-20 - Task #27",
+      "note": "Task #27 measured the hero console panel's FILL separation from the painted field falling from 1.14 to 1.00 at the brightest point of the rose sun, because --ink-glass is a fixed alpha the scoped compensation does not touch. It breaches no governing floor: D23 B06 governs --ink-surface, not the --ink-glass composite, and the panel's separation is carried by its EDGE by documented design (4.40 vs the painted field, 3.13 vs the panel interior, both clear of the 3:1 WCAG 1.4.11 tier). But at 1.00 the fill contributes literally nothing, so the console now leans entirely on its edge. THE QUESTION FOR THE OWNER IS PERCEPTUAL, NOT ARITHMETIC: does the console still read as a CARD, or does it read as a smear on the field? Restoring fill separation would mean roughly doubling --ink-glass luminance, which would end the hero's kin-to-kin doctrine (the console belongs to the ink field rather than contrasting with it), so the trade was not taken unilaterally. RECORD THE VERDICT HERE WHEN RELAYED."
+    },
+    {
+      "id": "W5-2a",
+      "phase": "P3",
+      "title": "W5 part 2a: motion-safe architecture conversion + motion guard + nexo-motion skill v1",
+      "status": "done",
+      "date": "2026-08-20",
+      "fixlogRef": "2026-08-20 - Task #28",
+      "note": "THE ARCHITECTURE IS INVERTED. Motion used to be declared in the base rules and patched off by a prefers-reduced-motion: reduce block of !important overrides, which made the accessible rendering a SUBTRACTION from the animated one - the static state was whatever survived the overrides, and a new transition added without a matching override would have shipped silently. Now the base IS the static final composition and motion is strictly additive, declared only inside @media (prefers-reduced-motion: no-preference), Tailwind's motion-safe: variant, or a [data-*-live] armed-attribute selector whose arming code early-returns on the reduced-motion query. CONVERSION COUNTS: 37 CSS declarations lifted across 28 selectors (25 unlayered, 3 re-emitted inside @layer utilities so layered styles are not silently promoted above unlayered ones), 15 rules emptied by the lift and removed whole, the 669-byte reduce-override block deleted, and 29 Tailwind utilities prefixed across 11 files - 66 conversions in total. ALREADY COMPLIANT AND DELIBERATELY NOT REFACTORED (impact check): 29 declarations under [data-*-live] armed attributes, verified in source at RouteOverlay.tsx, TerminusReveal.tsx, AssistScene.tsx, MapObserver.tsx and ProofBand.tsx. DEAD CODE FOUND AND DELETED: src/components/motion/Reveal.tsx and PageTransition.tsx, the ONLY two consumers of framer-motion, imported by nothing - PageTransition's own comment claimed it was used by (public)/template.tsx, which does not exist. Also dead: the reduce block's button:active transform override, which suppressed nothing because no active: transform utility exists anywhere in src. THE GUARD: scripts/qa/static-motion-check.mjs, zero-dep, character-level CSS parse plus string-literal-scoped TSX scan, wired into qa:static so BOTH seams (the qa:sweep prelude and the CI check job) pick it up with one edit, exactly as the type and hex guards did. Negative-tested on six legs: three plants caught with file and line (bare utility, bare CSS transition, animation scoped only to Radix data-state) and two sanctioned scopes correctly accepted, plus a clean control. THE KEY DISTINCTION THE GUARD ENCODES: Radix data-state and the components own data-active / data-level / data-leg are set REGARDLESS of the motion preference and therefore do NOT sanction a motion declaration; only [data-*-live] does. This task's own first inventory pass got that wrong and counted 40 declarations as compliant when the real number was 29."
+    },
+    {
+      "id": "W5-SKILL",
+      "phase": "P3",
+      "title": "nexo-motion skill v1 (both copies, byte-identical)",
+      "status": "done",
+      "date": "2026-08-20",
+      "fixlogRef": "2026-08-20 - Task #28",
+      "note": "Authored at .claude/skills/nexo-motion/SKILL.md and mirrored to ~/.claude/skills/nexo-motion/SKILL.md under the same SYNC RULE as nexo-brand. Four sections: (1) doctrine - motion-safe architecture as law, static-complete, decline-don't-degrade (D20), the performance bar as a ceiling, zero CLS, and the nexo-brand section 5 ceilings restated because they bind every candidate; (2) the SHIPPED vocabulary as reference implementations with each one's guard pattern, budget and scar tissue - the route draw, the LUT van, IO-gated stop reveals, the U-turn lane machine, nav chrome, and the play-once arrival settles; (3) the four candidates as SPECS awaiting the bench (nexo-drift, nexo-shape, nexo-settle, nexo-accent-card), each with purpose, sketch, duration, degradation and a budget note, with nexo-accent-card carrying S-001 verbatim plus its binding constraint set; (4) the bench protocol - candidates are rendered for owner reaction before any site application, in BOTH motion states, with budgets measured and printed rather than asserted. nexo-brand section 5 gained a pointer to it in both copies with two changelog lines, one of them logging the section 6.9 edit Task #27 made and forgot to record."
     }
   ],
   "decisions": [
@@ -888,7 +924,7 @@
     "tsc": {
       "state": "green",
       "date": "2026-08-20",
-      "note": "npx tsc --noEmit TRUE 0 with the atmosphere layer and the scoped compensated ink tokens in place"
+      "note": "npx tsc --noEmit TRUE 0 after the motion-safe conversion and the deletion of the two dead framer-motion components"
     },
     "ci": {
       "state": "green",
@@ -898,7 +934,7 @@
     "cube": {
       "state": "green",
       "cells": 234,
-      "checks": "13 routes x 6 profiles x 3 engines = 234 cells; chromium, webkit and firefox each GREEN; SWEEP_EXIT=0. Once-per-sweep lanes folded into the exit code: stale-build preflight, I19 (4/4), I21 (16/16, weakest LOCAL MAX 1.92 vs a 1.5 floor), I20 zoom leg (10 samples, worst delta 0.095px vs a 1px tolerance). Green only on the FOURTH run: two HARNESS defects were found and fixed on the way, neither caused by the atmosphere layer and both proven so by A/B before any change. I17 raced Radix's Indicator mount (a fixed 340ms wait; failures reported all=0, i.e. UNMOUNTED rather than mispositioned, on a randomly varying trigger; identical 9/10 rate with the glow ON and OFF; a mount-aware wait passed 10/10 at 0px worst offset, and a 4-leg negative test proves it still convicts the Stage-16 frozen-line defect at 102px and 208px). I10 charged one route's aborted Next prefetch to the NEXT route because all 13 share one page (5/12 sweeps failing with the glow ON vs 6/12 with it OFF, i.e. pre-existing and marginally worse without it); parking on about:blank before clearing the error buffer gives 8/8 clean sweeps while a negative leg still convicts 13/13 routes with a real console error.",
+      "checks": "13 routes x 6 profiles x 3 engines = 234 cells; chromium, webkit and firefox each GREEN; SWEEP_EXIT=0. Once-per-sweep lanes folded into the exit code: stale-build preflight, I19 (4/4), I21 (16/16), I20 zoom leg (10 samples, worst delta 0.095px vs a 1px tolerance). Green on the SECOND run: the first was red on one cell, I8 at w1920 chromium (20/23 footer text nodes still hidden), and it was ruled PRE-EXISTING before anything was touched - reproduced 8/8 deterministically with instrumentation showing the arrival had already been triggered, then reproduced 6/6 ON THE PRE-CONVERSION BUILD by stashing the whole task and rebuilding at HEAD. Cause: the probe scrolls with scrollIntoView() which inherits scroll-behavior:smooth, then waits a FIXED 1500ms, so the animated ~5450px scroll eats the budget and the 600ms staggered arrival is still running at measurement time. Fixed by waiting for data-terminus-in and then dwelling only for the choreography; 0/8 failures after, and negative-tested on three legs so a stranded reveal and a never-firing arrival both still fail.",
       "date": "2026-08-20"
     },
     "perfBudget": {
@@ -1043,6 +1079,10 @@
     {
       "date": "2026-08-20",
       "summary": "Task #27 addendum: FO-3 and FO-1 closed in the field. Both machines ran the FO-3 probe and both returned clean - the Yoga at dpr 1.25 with errY -0 / errX 12 (the designed lane, not drift) / ctm [1,1] / offsetPath none, and the owner laptop at dpr 2 with varP 0.6523 = lineP 0.6523 / gapPx 0 / build NEW. That is architecture (Task #22) and units (Task #25) both verified on real hardware, on the machine that filed the original reports, at the settings that used to break. FO-1's outstanding verified-commit re-test is satisfied by the same evidence. Field confirmation is now a real validated gate in the board rather than an informal note, and all three field observations are closed."
+    },
+    {
+      "date": "2026-08-20",
+      "summary": "Task #28 inverted the motion architecture. The base is now the static final composition and motion is additive inside sanctioned scopes; 66 declarations were converted, 15 emptied rules and the whole reduce-override block deleted, and 29 armed-attribute declarations left alone as already compliant. A structural guard now fails the build on any motion outside a sanctioned scope, negative-tested on six legs. Two dead components turned up on the way - the only consumers of framer-motion, imported by nothing - and were deleted. The A/B was judged against a measured noise floor rather than against zero: reduced motion is pixel-identical in the deterministic viewport capture on both pages, and the motion-on differences are an order of magnitude below the harness's own run-to-run variance. nexo-motion skill v1 authored in both copies, byte-identical, with the four candidates written as specs awaiting the bench."
     }
   ]
 }

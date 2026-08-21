@@ -17,6 +17,12 @@ description: The design law for the Nexo Access site (Next.js NEMT healthcare ma
 >   synchronized both copies.
 > - 2026-08-18: §3 HARDENED to D23 perception floors (10 token values + their ratios) and §0 gained
 >   the floors-only-rise law plus the hex guard; synchronized both copies.
+> - 2026-08-20: §6.9 ATMOSPHERE COLOUR added (D25 / temperature T2 live) and the §5 flat-aesthetic
+>   clause scoped to OBJECTS so a background gradient field is not read as a ban; synchronized both
+>   copies. (Logged retroactively in Task #28 — Task #27 made the edit and missed the changelog line.)
+> - 2026-08-20: §5 gained a pointer to the new `nexo-motion` skill, which now owns motion
+>   ARCHITECTURE (motion-safe scopes, static-complete, the vocabulary and the candidate set) while
+>   §5 keeps the ceilings; synchronized both copies.
 
 Premium, calm, credible marketing site for a **medical transportation management organization** working
 DC / Maryland / Virginia. (Nexo Access delivers trips through a **credentialed provider network**:
@@ -241,6 +247,14 @@ Opacity — not blur — guarantees contrast; blur < 20px. Any change is AA-veri
 (now including the dark nav glass over PURE WHITE — the `--nav-glass` 0.90 alpha is calibrated for it).
 
 ## 5. MOTION VOCABULARY + CEILINGS
+> **See the `nexo-motion` skill for motion ARCHITECTURE.** This section stays the source of truth for
+> the *ceilings* — what may animate, for how long, on what curve. How motion is STRUCTURED is
+> `nexo-motion`'s: the motion-safe scopes (`@media (prefers-reduced-motion: no-preference)`,
+> Tailwind's `motion-safe:`, and `[data-*-live]` armed attributes), the static-complete doctrine,
+> the shipped vocabulary as reference implementations, and the four candidates awaiting the bench.
+> **Motion outside a sanctioned scope is a build failure**, caught by
+> `scripts/qa/static-motion-check.mjs` in `qa:static` (Task #28).
+
 Flat aesthetic — **no glow/bloom/gradient ON OBJECTS** (see §6.9: D25 admits a warm gradient FIELD as background atmosphere; an object still never glows). Animate transform/opacity/filter only (+ dashoffset
 for the spine draw). Everything interruptible; reduced-motion = instant.
 - **Page content:** calm, ≤ ~300ms, ease-out; entrances rise from `scale(0.95)`/`translateY`,

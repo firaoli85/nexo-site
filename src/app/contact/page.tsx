@@ -14,7 +14,7 @@ const eyebrowPill =
   "inline-flex items-center rounded-full border border-surface-tint-border bg-surface px-3 py-1 font-mono text-xs font-medium tracking-mono text-accent";
 
 const routeLink =
-  "group mt-4 inline-flex items-center gap-1.5 rounded-sm text-sm font-semibold text-accent transition-colors hover:text-accent-hover " +
+  "group mt-4 inline-flex items-center gap-1.5 rounded-sm text-sm font-semibold text-accent motion-safe:transition-colors hover:text-accent-hover " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
 
 // Inline body links carry a PERSISTENT underline (not hover-only) so they're distinguishable from body
@@ -90,7 +90,7 @@ export default function ContactPage() {
               <p className="mt-2 text-base leading-relaxed text-muted">Looking to run trips with us?</p>
               <Link href="/apply" className={routeLink}>
                 Apply as provider
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                <ArrowRight className="h-4 w-4 motion-safe:transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>
             {/* Members card — gated: hidden entirely until portal sign-in is live (PORTAL_LIVE), since
@@ -109,7 +109,7 @@ export default function ContactPage() {
                     tab)" cue are gone now that portal navigation stays in-tab. */}
                 <Link href={SITE.portalLogin("member")} className={routeLink}>
                   Member sign in
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                  <ArrowRight className="h-4 w-4 motion-safe:transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
               </div>
             ) : null}

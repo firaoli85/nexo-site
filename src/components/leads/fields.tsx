@@ -9,7 +9,7 @@ import { cn } from "@/utils/cn";
 // border-danger. Focus ring is accent + offset over the white card.
 
 const inputBase =
-  "w-full rounded-lg bg-input-bg px-3.5 py-2.5 text-base text-default transition-colors " +
+  "w-full rounded-lg bg-input-bg px-3.5 py-2.5 text-base text-default motion-safe:transition-colors " +
   "placeholder:text-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent " +
   "focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
 

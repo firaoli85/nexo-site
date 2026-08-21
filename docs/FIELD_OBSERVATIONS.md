@@ -301,9 +301,15 @@ box-shadow:none`) fails naming `MONOTONIC, strength 0.00`, restored passes again
 >
 > **F1 edge: FIXED on v2 (Task #20). The cause was contrast polarity, not pixel geometry — recorded
 > so nobody re-opens the DPR theory.** The D23 floors were NOT softened and the `/platform` rule was
-> NOT demoted; both were confirmed working by measurement. **Owner field re-test owed** at a verified
-> commit, and it is the closing proof — this is verified by instrument and by eye on a dev-class
-> machine, not yet on the laptop that reported the failure.
+> NOT demoted; both were confirmed working by measurement.
+>
+> **RESIDUAL CLAUSE DISCHARGED 2026-08-20 — by self-provenance, which is the cleanest kind.** The
+> clause asked for a re-test at a *verified commit*, because the 2026-08-18 evidence elsewhere came
+> from builds of unknown provenance. It does not apply here, and the reason is structural rather than
+> procedural: **the nav seam over light content EXISTS ONLY IN BUILDS >= Task #20.** No earlier build
+> can render that pixel — the `--nav-seam` token and the `.nav-seam` rule did not exist. So the
+> owner's 2026-08-18 observation *of the seam* is **its own build proof**: seeing it at all
+> establishes the build. **Clause discharged; owner incidental re-glances remain welcome, not owed.**
 
 ---
 

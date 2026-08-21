@@ -36,7 +36,7 @@ export function AudienceTriage() {
               <Link
                 key={a.href}
                 href={a.href}
-                className="group flex flex-col rounded-xl border border-border bg-surface p-5 shadow-sm outline-none transition-colors hover:border-control hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                className="group flex flex-col rounded-xl border border-border bg-surface p-5 shadow-sm outline-none motion-safe:transition-colors hover:border-control hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-subtle text-accent">
                   <Icon aria-hidden="true" className="h-5 w-5" />
@@ -47,7 +47,7 @@ export function AudienceTriage() {
                   {a.action}
                   <ArrowRight
                     aria-hidden="true"
-                    className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                    className="h-4 w-4 motion-safe:transition-transform duration-200 group-hover:translate-x-0.5"
                   />
                 </span>
               </Link>

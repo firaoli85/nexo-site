@@ -25,7 +25,7 @@ const MISSION =
 // Column links adopt the NAV item grammar (6.8): an underline that slides in on hover/focus (the
 // `.footer-link` ::after), plus the resting→on-ink colour lift. Every hover has a focus twin.
 const footerLink =
-  "footer-link inline-block rounded-sm py-1 text-base text-on-ink-muted transition-colors hover:text-on-ink " +
+  "footer-link inline-block rounded-sm py-1 text-base text-on-ink-muted motion-safe:transition-colors hover:text-on-ink " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-on-ink " +
   "focus-visible:ring-offset-2 focus-visible:ring-offset-ink";
 
@@ -38,7 +38,7 @@ const utilityLink =
 
 // Sign in — accent-on-ink with the same underline-slide grammar as the column links.
 const signInLink =
-  "footer-link inline-flex items-center rounded-sm text-[15px] font-medium text-accent-on-ink transition-colors " +
+  "footer-link inline-flex items-center rounded-sm text-[15px] font-medium text-accent-on-ink motion-safe:transition-colors " +
   "hover:text-accent-on-ink-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-on-ink " +
   "focus-visible:ring-offset-2 focus-visible:ring-offset-ink";
 

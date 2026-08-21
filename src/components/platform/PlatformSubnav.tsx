@@ -130,7 +130,7 @@ export function PlatformSubnav() {
               onClick={(e) => onClick(e, l.id)}
               aria-current={isActive ? "true" : undefined}
               className={cn(
-                "relative shrink-0 whitespace-nowrap rounded-sm px-3 py-3 text-sm font-medium outline-none transition-colors",
+                "relative shrink-0 whitespace-nowrap rounded-sm px-3 py-3 text-sm font-medium outline-none motion-safe:transition-colors",
                 "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
                 isActive ? "text-accent" : "text-muted hover:text-default"
               )}
@@ -138,7 +138,7 @@ export function PlatformSubnav() {
               {l.label}
               <span
                 className={cn(
-                  "absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-accent transition-opacity duration-200",
+                  "absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-accent motion-safe:transition-opacity duration-200",
                   isActive ? "opacity-100" : "opacity-0"
                 )}
                 aria-hidden="true"

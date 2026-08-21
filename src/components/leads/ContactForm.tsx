@@ -117,7 +117,7 @@ export function ContactForm() {
               className="group inline-flex items-center gap-1 rounded-sm font-medium text-accent underline underline-offset-2 hover:text-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
             >
               Use our provider application
-              <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 motion-safe:transition-transform group-hover:translate-x-0.5" />
             </Link>
           </p>
         ) : null}

@@ -358,7 +358,7 @@ export function ProductDemo() {
               aria-pressed={isActive}
               aria-label={`Step ${i + 1} of ${SCENES.length}: ${label}`}
               className={cn(
-                "relative shrink-0 rounded-md px-2 py-2 text-[13px] font-medium outline-none transition-colors",
+                "relative shrink-0 rounded-md px-2 py-2 text-[13px] font-medium outline-none motion-safe:transition-colors",
                 isActive ? "text-on-ink" : "text-on-ink-muted hover:text-on-ink",
                 focusRing
               )}
@@ -393,7 +393,7 @@ export function ProductDemo() {
               onClick={() => setUserPaused((p) => !p)}
               aria-label={userPaused ? "Play walkthrough" : "Pause walkthrough"}
               className={cn(
-                "inline-flex h-8 w-8 items-center justify-center rounded-md text-on-ink-muted outline-none transition-colors hover:text-on-ink",
+                "inline-flex h-8 w-8 items-center justify-center rounded-md text-on-ink-muted outline-none motion-safe:transition-colors hover:text-on-ink",
                 focusRing
               )}
             >

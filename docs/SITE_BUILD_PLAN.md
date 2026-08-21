@@ -529,6 +529,17 @@ Throttled old-device profile · visual diffing · **perf budget as a gate** (D20
 invariant** (raw request with explicit `Host:` header; the sweep addresses `localhost:3300` by port and cannot
 otherwise exercise a host rule) · C1–C4 measurement.
 
+**I22 — painted-pixel AA invariant (registered debt, Task #28).** Text-over-atmosphere pairings measured on
+**painted pixels** inside the sweep. **Spec = Task #27's Range-rect probe**: take the client rects of the TEXT
+NODES themselves via `Range` in document coordinates against a full-page raster, hide the text (keeping
+layout) before sampling, wait for scene transitions to settle, and treat opacity below 0.05 as invisible.
+**That probe's five-corrections history is part of the spec, not trivia** — sampling an element's box catches
+its decorative children; the padding box still catches rounded borders; reading computed colour after hiding
+the text returns transparent-black for every run; and a 220ms settle collects the outgoing demo scene against
+the incoming one's raster. Each of those produced a wall of confident, false failures. **Until I22 lands,
+any atmosphere change requires a MANUAL painted-pixel re-measure by Task #27's method** — the cube does not
+cover it, and green there means nothing about contrast over the glow.
+
 ### W10 — COPY_DECK (P6, last)
 
 "Copy is written last and is the cheapest layer; the machine underneath is the work." Every string passes the

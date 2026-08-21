@@ -902,7 +902,24 @@ async function sweepOneEngine(browser, engineName, profiles, base, routes) {
           const f = document.querySelector("footer, [role=contentinfo]");
           if (f) f.scrollIntoView({ block: "end" });
         });
-        await page.waitForTimeout(1500); // the staggered premium-terminus arrival can run ~1s; let it settle
+        // A FIXED DWELL WAS A RACE BY CONSTRUCTION (Task #28). scrollIntoView() here inherits
+        // `scroll-behavior: smooth`, so on a ~5.5k-pixel page the animated scroll can eat most of the
+        // budget before the IntersectionObserver has even fired, leaving the 600ms staggered arrival
+        // unfinished when the probe measures. At w1920 it had tipped from marginal to deterministic:
+        // 6/6 runs failed — AND 6/6 failed on the PRE-conversion build too, which is how it was ruled
+        // pre-existing rather than caused by the motion-safe conversion.
+        // Wait for the arrival to be TRIGGERED, then dwell only for the choreography itself.
+        // Detection is not weakened: if the reveal never fires, the wait times out and the probe still
+        // measures the hidden state and still fails — which is the regression I8 exists to catch.
+        await page
+          .waitForFunction(() => {
+            const card = document.querySelector("[data-route-seam]");
+            if (!card) return true;                                    // no terminus card on this route
+            if (!card.hasAttribute("data-terminus-live")) return true; // never armed (footer in view at mount, or reduced motion)
+            return card.hasAttribute("data-terminus-in");              // armed: wait for the IO to fire
+          }, null, { timeout: 8000 })
+          .catch(() => {});
+        await page.waitForTimeout(900); // the staggered settle ends at 600ms; 900 leaves margin
         res.I.I8 = await page.evaluate(PROBES.footerArrival);
         // I15 DECORATIVE-OVERLAP (Stage 13) — measured here at the page BOTTOM (where the van reaches its
         // terminus). Interior routes must contain ZERO van/route nodes; the homepage van must never

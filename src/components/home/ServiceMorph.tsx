@@ -162,7 +162,7 @@ export function ServiceMorph({ children }: { children: ReactNode }) {
             onClick={() => setUserPaused((p) => !p)}
             aria-label={userPaused ? "Play service level cycle" : "Pause service level cycle"}
             className={cn(
-              "ink-glass absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-md border border-on-ink-border-strong text-on-ink-muted outline-none transition-colors hover:text-on-ink",
+              "ink-glass absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-md border border-on-ink-border-strong text-on-ink-muted outline-none motion-safe:transition-colors hover:text-on-ink",
               focusRing
             )}
           >
@@ -189,7 +189,7 @@ export function ServiceMorph({ children }: { children: ReactNode }) {
               }}
               aria-pressed={isActive}
               className={cn(
-                "ink-glass relative overflow-hidden rounded-xl border p-3 text-center outline-none transition-colors",
+                "ink-glass relative overflow-hidden rounded-xl border p-3 text-center outline-none motion-safe:transition-colors",
                 isActive ? lvl.activeBorder : "border-on-ink-border-strong hover:border-on-ink-muted",
                 focusRing
               )}

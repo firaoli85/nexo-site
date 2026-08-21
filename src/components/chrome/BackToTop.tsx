@@ -18,7 +18,7 @@ export function BackToTop({ className }: { className?: string }) {
       Back to top
       <ArrowUp
         aria-hidden="true"
-        className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-focus-visible:-translate-y-0.5"
+        className="h-3.5 w-3.5 motion-safe:transition-transform duration-200 group-hover:-translate-y-0.5 group-focus-visible:-translate-y-0.5"
       />
     </button>
   );

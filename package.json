@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "qa:sweep": "npm run qa:static && node scripts/qa/run.mjs",
     "board": "node scripts/board.mjs",
-    "qa:static": "node scripts/qa/static-type-check.mjs && node scripts/qa/static-hex-check.mjs"
+    "qa:static": "node scripts/qa/static-type-check.mjs && node scripts/qa/static-hex-check.mjs && node scripts/qa/static-motion-check.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-sesv2": "^3.1087.0",

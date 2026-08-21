@@ -250,7 +250,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  
   /* Ink-safe document root (Stage 16, Defect A). The iOS overscroll rubber-band and the URL-bar
      collapse reveal the ROOT background, not <body>. Painting it ink means no white ever shows below
      the ink footer endcap (or above the ink hero). The page's own light --bg is painted by <body>,
@@ -340,16 +340,7 @@ body {
   }
 }
 
-/* ── Motion — Railway-informed micro-interactions ────────────────────────────
-   Every interactive control gives smooth, tactile FEEDBACK: hover color/border
-   shifts glide instead of snapping, and pressable controls dip slightly on press.
-   Calm ease-out (~150ms), state-feedback not decoration. Railway animates
-   transform+color together at ~0.15-0.2s ease-out; this mirrors that. */
-button, [role="button"], a, select, summary, [role="tab"] {
-  transition-property: color, background-color, border-color, box-shadow, transform, opacity, fill, stroke;
-  transition-duration: 150ms;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
+
 /* Press feedback — the control dips when actively pressed (Railway-style tactility).
    Not applied to selects/inputs (native controls) or disabled buttons. */
 button:not(:disabled):active,
@@ -382,8 +373,8 @@ a:active {
 /* Right-cluster menus (Sign in) anchor to the trigger's RIGHT edge, so the panel must also GROW from
    its top-right corner — otherwise it would scale out of a corner that isn't pinned to the trigger. */
 .nav-panel-right { transform-origin: top right; }
-.nav-panel[data-state="open"]   { animation: navPanelIn 200ms cubic-bezier(0.22, 1, 0.36, 1); }
-.nav-panel[data-state="closed"] { animation: navPanelOut 130ms cubic-bezier(0.22, 1, 0.36, 1); }
+
+
 @keyframes navPanelIn {
   from { opacity: 0; transform: translateY(8px) scale(0.96); }
   to   { opacity: 1; transform: none; }
@@ -406,22 +397,14 @@ a:active {
   align-items: flex-start;
   justify-content: center;
   overflow: hidden;
-  /* transform-only (nav law): the visible bar is a fixed 22px centred child, so Radix can
-     snap the indicator's width while only the compositor-friendly transform animates. */
-  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.nav-indicator[data-state="visible"] { animation: navIndFade 160ms ease; }
-.nav-indicator[data-state="hidden"]  { animation: navIndFade 160ms ease reverse; opacity: 0; }
+
+.nav-indicator[data-state="hidden"]  {  opacity: 0; }
 @keyframes navIndFade { from { opacity: 0; } to { opacity: 1; } }
 /* Magic line — full accent (accent-on-ink on ink), wide + 2.5px so it clearly reads (Stage 6). */
 .nav-indicator-bar { margin-top: 1px; height: 2.5px; width: 62%; border-radius: 9999px; }
 
-/* Dropdown items — cascade in on open (opacity + 6px rise, ~45ms steps). Shared by the
-   mobile accordion sub-links + groups (--i set inline). */
-.nav-cascade {
-  animation: navCascade 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--i, 0) * 45ms + 40ms);
-}
+
 @keyframes navCascade {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: none; }
@@ -431,19 +414,14 @@ a:active {
 .nav-arrow {
   opacity: 0;
   transform: translateX(-4px);
-  transition: opacity 180ms ease, transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  
 }
 .group:hover .nav-arrow,
 .group:focus-visible .nav-arrow { opacity: 1; transform: none; }
 
-/* "Apply as provider" — lift + arrow nudge on hover/focus. (Single register 6.1: the CTA is always
-   primaryOnInk, so only its background eases on hover — the old color-flip transition was dropped.) */
-.nav-apply {
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
-              background-color 150ms ease, box-shadow 200ms ease;
-}
+
 .nav-apply:hover, .nav-apply:focus-visible { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-.nav-apply-arrow { transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1); }
+
 .nav-apply:hover .nav-apply-arrow, .nav-apply:focus-visible .nav-apply-arrow { transform: translateX(3px); }
 
 /* (Stage 15) The old ghost "Sign in" underline-slide was removed with that link — "Sign in" is now a
@@ -467,7 +445,7 @@ a:active {
   background: currentColor;
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  
 }
 .footer-link:hover::after,
 .footer-link:focus-visible::after { transform: scaleX(1); }
@@ -566,35 +544,23 @@ a:active {
   opacity: 0;
   transform: translateY(8px);
   filter: blur(2px);
-  transition-property: opacity, transform, filter;
-  transition-duration: 180ms;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  
+  
+  
   pointer-events: none;
 }
 .demo-scene[data-active="true"] {
   opacity: 1;
   transform: translateY(0);
   filter: blur(0);
-  transition-duration: 300ms;
+  
   pointer-events: auto;
   z-index: 1;
 }
 
-/* Within-scene micro-animations — replay each time a scene becomes active (the
-   [data-active] gate re-applies the animation). Per-item stagger comes from an
-   inline animation-delay; each starts from opacity 0 (never scale(0)). */
-.demo-scene[data-active="true"] .demo-in,
-.demo-scene[data-active="true"] .demo-pop {
-  animation-duration: 300ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  animation-fill-mode: both;
-}
-.demo-scene[data-active="true"] .demo-in {
-  animation-name: demoIn;
-}
-.demo-scene[data-active="true"] .demo-pop {
-  animation-name: demoPop;
-}
+
+
+
 @keyframes demoIn {
   from { opacity: 0; transform: translateY(7px); }
   to   { opacity: 1; transform: none; }
@@ -609,9 +575,9 @@ a:active {
    animation-play-state: paused inline, freezing the fill in place. */
 .demo-tab-fill {
   transform-origin: left;
-  animation-name: demoTabProgress;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
+  
+  
+  
 }
 @keyframes demoTabProgress {
   from { transform: scaleX(0); }
@@ -632,8 +598,7 @@ a:active {
 .spine-node {
   transform-box: fill-box;
   transform-origin: center;
-  transition: fill 220ms cubic-bezier(0.22, 1, 0.36, 1),
-              transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  
 }
 [data-spine-live] .spine-node { fill: var(--border-strong); transform: scale(0.8); }
 [data-spine-live] .spine-node.is-lit { fill: var(--accent); transform: scale(1); }
@@ -721,14 +686,9 @@ a:active {
 }
 [data-assist-live][data-assist-in] .assist-att-r { transition-delay: 110ms; }
 
-/* THE PROOF SPOTLIGHT (Stage 6.5) — the RESTING markup is fully readable on its own (readability
-   never depends on motion); this only LIFTS one proof at a time while its list is in view. The
-   ProofSpotlight client toggles .is-active (~3s each, IO-gated, paused on hover/focus); CSS fills the
-   icon chip with accent + a ≤2px settle. Transform/colour only → zero CLS. Reduced-motion never
-   toggles .is-active (the client no-ops) AND the global block zeroes these transitions. */
-.proof-item { transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1); }
+
 .proof-item.is-active { transform: translateX(2px); }
-.proof-chip { transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease; }
+
 [data-proof-surface="light"] .proof-item.is-active .proof-chip {
   background-color: var(--accent);
   color: var(--accent-text);
@@ -744,8 +704,7 @@ a:active {
 .svc-app {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  transition: transform 540ms cubic-bezier(0.22, 1, 0.36, 1),
-              opacity 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  
 }
 
 /* Apparatus: hidden + settled-down by default; the active one fades up and lands a
@@ -756,7 +715,7 @@ a:active {
 .svc-stage[data-level="str"] .svc-app-str {
   opacity: 1;
   transform: none;
-  transition-delay: 80ms;
+  
 }
 
 /* Persistent body pose per state — pivots at the hip (fill-box 50% 100%). */
@@ -821,41 +780,220 @@ a:active {
   transform-origin: 0 0;
 }
 /* faces travel — nose down by default, up on reverse (glyph nose is at the right → +90deg = down) */
-.route-van-nose { transform: rotate(90deg); transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1); }
+.route-van-nose { transform: rotate(90deg);  }
 [data-direction="up"] .route-van-nose { transform: rotate(-90deg); }
 /* LANE by LEG (Stage 6.6 U-turn) — OUTBOUND rides the right lane (+12px), RETURN the left (-12px).
    The leg flip at the terminus crosses lanes over ~450ms (the U-turn); mid-page scroll reversals keep
    the lane (only the nose rotation follows direction). Interruptible (a plain transition). */
-.route-van-lane { transform: translateX(12px); transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1); }
+.route-van-lane { transform: translateX(12px);  }
 [data-leg="return"] .route-van-lane { transform: translateX(-12px); }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    /* Negative delay > duration so delayed + fill-mode:both animations (e.g. the
-       demo micro-animations) start already-completed instead of holding their
-       hidden `from` state for the delay window and staggering into view. */
-    animation-delay: -1ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    transition-delay: 0s !important;
-  }
-  button:active, [role="button"]:active, [role="tab"]:active, a:active { transform: none !important; }
-}
+
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-  .animate-step-in {
-    animation: stepIn 180ms ease-out;
-  }
-  .animate-overlay-in {
-    animation: overlayIn 140ms ease-out;
-  }
-  .animate-panel-in {
-    animation: panelIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
+  
+  
+  
 }
 
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════════
+   THE MOTION SCOPE (Task #28) — every animation and transition on this site that is not already
+   gated by a [data-*-live] armed attribute lives HERE, and nowhere else.
+
+   WHY THIS SHAPE. Motion used to be declared in the base rules and then patched off by a
+   `prefers-reduced-motion: reduce` block of !important overrides. That worked, but it made the
+   accessible rendering a SUBTRACTION from the animated one: the static state was whatever survived
+   the overrides, and the rule was enforced by discipline rather than by structure — nothing stopped
+   a new transition from being added with no matching override, and nothing would have told us.
+
+   Now the base IS the static, final, complete composition and motion is strictly additive. If this
+   block never applies — reduced-motion, an engine without the media feature, a stylesheet truncated
+   before it — every element still renders its finished state. That is the static-complete doctrine,
+   and it is the same reasoning as D20's decline-don't-degrade rule.
+
+   These selectors are re-declarations of rules defined above, so specificity is identical and this
+   block wins the tie purely by coming later. NOTHING HERE MAY CHANGE RESTING APPEARANCE: only
+   animation/transition timing belongs in this block. A property that altered layout or colour here
+   would be invisible to reduced-motion users, which is the exact failure this shape exists to stop.
+
+   Comments that documented a rule whose only content was motion moved here with it, so the
+   reasoning still sits next to the declaration it explains.
+
+   Enforced by scripts/qa/static-motion-check.mjs, which fails the build on any motion declaration
+   outside this scope or an armed-attribute selector.
+   ═══════════════════════════════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* ── Motion — Railway-informed micro-interactions ────────────────────────────
+  Every interactive control gives smooth, tactile FEEDBACK: hover color/border
+  shifts glide instead of snapping, and pressable controls dip slightly on press.
+  Calm ease-out (~150ms), state-feedback not decoration. Railway animates
+  transform+color together at ~0.15-0.2s ease-out; this mirrors that. */
+  button, [role="button"], a, select, summary, [role="tab"] {
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity, fill, stroke;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .nav-panel[data-state="open"] {
+    animation: navPanelIn 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .nav-panel[data-state="closed"] {
+    animation: navPanelOut 130ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Magic line — Radix Indicator; slides between triggers following the open/focused item.
+     transform-only (nav law): the visible bar is a fixed 22px centred child, so Radix can snap
+     the indicator's width while only the compositor-friendly transform animates. */
+  .nav-indicator {
+    transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .nav-indicator[data-state="visible"] {
+    animation: navIndFade 160ms ease;
+  }
+
+  .nav-indicator[data-state="hidden"] {
+    animation: navIndFade 160ms ease reverse;
+  }
+
+  /* Dropdown items — cascade in on open (opacity + 6px rise, ~45ms steps). Shared by the
+  mobile accordion sub-links + groups (--i set inline). */
+  .nav-cascade {
+    animation: navCascade 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i, 0) * 45ms + 40ms);
+  }
+
+  /* Dropdown item arrow — nudges in from the left on hover/focus of its item (.group). */
+  .nav-arrow {
+    transition: opacity 180ms ease, transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* "Apply as provider" — lift + arrow nudge on hover/focus. (Single register 6.1: the CTA is always
+  primaryOnInk, so only its background eases on hover — the old color-flip transition was dropped.) */
+  .nav-apply {
+    transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 150ms ease, box-shadow 200ms ease;
+  }
+
+  .nav-apply-arrow {
+    transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .footer-link::after {
+    transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* ── Product demo (homepage hero) ─────────────────────────────────────────────
+  ALL predetermined motion here is CSS so it runs off the main thread and never
+  stutters during hydration. The reduced-motion block below already zeroes every
+  duration; the component additionally gates autoplay in JS so nothing advances
+  and no progress fill is even rendered under reduced motion.
+  
+  Scenes stack in ONE grid cell (grid-area 1/1) so the stage reserves the tallest
+  scene's height once — zero layout shift on scene change. Only opacity/transform/
+  filter animate. Enter (to active) is a touch slower than exit. */
+  .demo-scene {
+    transition-property: opacity, transform, filter;
+    transition-duration: 180ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .demo-scene[data-active="true"] {
+    transition-duration: 300ms;
+  }
+
+  /* Within-scene micro-animations — replay each time a scene becomes active (the
+  [data-active] gate re-applies the animation). Per-item stagger comes from an
+  inline animation-delay; each starts from opacity 0 (never scale(0)). */
+  .demo-scene[data-active="true"] .demo-in, .demo-scene[data-active="true"] .demo-pop {
+    animation-duration: 300ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-fill-mode: both;
+  }
+
+  .demo-scene[data-active="true"] .demo-in {
+    animation-name: demoIn;
+  }
+
+  .demo-scene[data-active="true"] .demo-pop {
+    animation-name: demoPop;
+  }
+
+  /* Progress-fill tab — a LINEAR, GPU-friendly scaleX timer synced to the dwell.
+  Never width (that would trigger layout every frame). Pause = the component sets
+  animation-play-state: paused inline, freezing the fill in place. */
+  .demo-tab-fill {
+    animation-name: demoTabProgress;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+
+  /* Station nodes — lit by default; unlit → IntersectionObserver-lit when live. */
+  .spine-node {
+    transition: fill 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* THE PROOF SPOTLIGHT (Stage 6.5) — the RESTING markup is fully readable on its own (readability
+  never depends on motion); this only LIFTS one proof at a time while its list is in view. The
+  ProofSpotlight client toggles .is-active (~3s each, IO-gated, paused on hover/focus); CSS fills the
+  icon chip with accent + a ≤2px settle. Transform/colour only → zero CLS. Reduced-motion never
+  toggles .is-active (the client no-ops) AND the global block zeroes these transitions. */
+  .proof-item {
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .proof-chip {
+    transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease;
+  }
+
+  .svc-body, .svc-app {
+    transition: transform 540ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .svc-stage[data-level="amb"] .svc-app-amb, .svc-stage[data-level="wheel"] .svc-app-wheel, .svc-stage[data-level="str"] .svc-app-str {
+    transition-delay: 80ms;
+  }
+
+  /* faces travel — nose down by default, up on reverse (glyph nose is at the right → +90deg = down) */
+  .route-van-nose {
+    transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* LANE by LEG (Stage 6.6 U-turn) — OUTBOUND rides the right lane (+12px), RETURN the left (-12px).
+  The leg flip at the terminus crosses lanes over ~450ms (the U-turn); mid-page scroll reversals keep
+  the lane (only the nose rotation follows direction). Interruptible (a plain transition). */
+  .route-van-lane {
+    transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+}
+
+/* The .animate-* utilities live in `@layer utilities`, and layered styles lose to unlayered ones,
+   so their motion is re-emitted INSIDE the same layer rather than being quietly promoted above it. */
+@layer utilities {
+  @media (prefers-reduced-motion: no-preference) {
+    .animate-step-in {
+      animation: stepIn 180ms ease-out;
+    }
+
+    .animate-overlay-in {
+      animation: overlayIn 140ms ease-out;
+    }
+
+    .animate-panel-in {
+      animation: panelIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+  }
+}
