@@ -1,6 +1,30 @@
 # THE GRAND BENCH — build order for Task #30
 
-**STATUS: RENDERED (Task #30, 2026-08-21) — awaiting the owner's ruling.**
+**STATUS: RULED (D28, 2026-08-21). The bench did its job and is now history.**
+
+| Candidate | D28 ruling |
+|---|---|
+| **B1** nav | **ADOPT B1(i) INK-BOLD.** |
+| **B2** cards | **ADOPT structure**; active/hover via glowing neon accent borders, never heavy fills; geometric utilitarian icons; modifier tier ratified. |
+| **B3** braid | **ADOPT at ROUTE SCALE.** Inactive strands low-opacity charcoal, register-aware; ONE electric-mint active line; van livery **B**; weave/occlusion/timing unchanged (paint-only recolor). |
+| **B4** ambient | **ADOPT Direction 2** (the dispatch-network model). |
+| **B5** | **drift REJECTED** (static read better; B4-d2 made it redundant) · **settle ADOPTED** as the arrival grammar. |
+| **COMPOSITE** | **Chanel's rule ratified.** Braid + network nodes are THE signatures; everything around them stays stark. |
+
+**The one thing D28 did NOT settle** is the D25 warm atmosphere, which is ruled from **the Noir Bench, fragment N3**.
+
+### THE IMPLEMENTATION LADDER (a proposal — reorder freely)
+
+| # | Task | Why here |
+|---|---|---|
+| **#32** | **Nav B1(i)** — shared chrome, **full cube**, and the **`framer-motion` removal rides along** (S-026) | Chrome touches every route, so it wants the cube run anyway; doing it first means every later task is judged against the final chrome |
+| **#33** | **Braid + van recolor-and-build** — the signature | Paint-only per D28, but it lands on the most invariant-protected object on the site (I15 / I20 / the LUT), so it gets its own task |
+| **#34** | **Ambient B4-d2** — the dispatch-network model | Depends on the D25 fork being ruled (N3), because "what is behind the model" changes with it |
+| **#35** | **Mobility cards** — neon borders, geometric icons | Self-contained; also where the §5 glow amendment gets written into law |
+| then | **W2 hero-signature concept round** | Still deliberately last: it speaks the braid and ambient language the earlier rungs make real |
+
+**The ladder is a proposal, not a decision.** The one ordering constraint that is real: **#34 cannot start before N3 is ruled.**
+
 **Nothing here has shipped, and nothing may reach the site before you react to a candidate.**
 
 | Candidate | Status | Anchor |

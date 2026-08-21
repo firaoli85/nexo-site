@@ -34,6 +34,11 @@ because the person making it has not read the ledger.
 
 - **Source:** Owner · **Date:** 2026-08-19 · **Disposition:** **OWNER-DIRECTIVE**
 - **The ask, verbatim:** *"cards that move, a lot of animation but not noisy, implemented smartly."*
+- **STATUS 2026-08-21 (D28):** **ANSWERED IN STRUCTURE, PENDING N4.** D28 adopted B2's card structure and ruled the
+  interaction: **glowing neon accent borders, never heavy fills**, with geometric utilitarian icons. That is the concrete
+  form S-001 asked for. **It is answered if N4 sings** — the Noir Bench renders two border treatments (hairline-glow and
+  2px-glow) and the owner picks. **Note the live law collision recorded there:** `nexo-brand` §5 bans glow/bloom ON
+  OBJECTS, and a neon accent border is an object glow, so adopting N4 amends §5 for the signature/chrome registers.
 - **Scope:** **W5 part 2.** The `nexo-motion` candidate set must include a **card-motion pattern**; it is
   not currently among the four D20d candidates (`nexo-drift`, `nexo-shape`, `nexo-settle`,
   `nexo-accent-card`), and `nexo-accent-card` is a *static* treatment, so this is genuinely new scope.
@@ -517,3 +522,37 @@ a **background-register** question, which leaves the alarms and the jade accent 
     refused-red or timely-amber space, and must never be mistaken for an ambulance (§6.1).
   - **Per-frame cost rises with strand count**, and a braid drawn at visible weight is more path
     length than the current single line. B3 prints the reasoning.
+
+---
+
+## S-028 — `nexo-drift`: REJECTED
+
+- **Source:** **Owner**, Grand Bench reading (D28) · **Date:** 2026-08-21 · **Disposition:** **REJECTED, with the receipt**
+- **The evidence, which is why this is not relitigable:** B5 rendered drift **beside a static control of the same field**,
+  deliberately, because an ambient animation is seen *continuously* and that is past the far end of the frequency scale
+  where the guidance is to reduce or remove. **The static field read better.** B4-d2's dispatch-network model then made
+  drift redundant outright: a background that means something does not need to move to earn attention.
+- **Impact:** `nexo-motion` §3.1 keeps the spec on record as **rejected**, not pending. **`nexo-settle` is ADOPTED** as the
+  arrival grammar and replaces four hand-rolled implementations. **Flag any resurrection of drift as a violation** unless
+  the owner reopens it explicitly.
+
+---
+
+## S-029 — The tech-noir brand thesis (D28)
+
+- **Source:** **Owner**, verbatim, at the Grand Bench reading · **Date:** 2026-08-21 · **Disposition:** **OWNER-DIRECTIVE → law as D28**
+- **The thesis:** *"Nexo Access is fundamentally a medical transportation company, but our backbone is pure technology…
+  trust through a clean, highly professional interface… aesthetic like a modern, high-end developer tool or cloud platform
+  (Railway-class)… minimalist, modern, with a very subtle Blade Runner/cyberpunk edge… practical medical transport made
+  effortless through advanced routing tech."*
+- **Why it is the most useful thing the owner has said about the visual system:** it resolves the tension that D27 opened.
+  "Too quiet" did not mean "louder"; it meant **the technology was not visible**. Noir is not a style pick here, it is the
+  argument that the routing engine is the product.
+- **Cross-refs:** **S-015/S-016** (nav) → B1(i) adopted · **S-018/S-001** (cards) → structure adopted, neon borders ruled ·
+  **S-019** (ambient) → Direction 2 adopted · **S-020/S-027** (braid) → route scale, mint active line, livery B ·
+  **S-028** (drift) → rejected · **S-021** (per-page atmosphere) → still LATER, and now downstream of the D25 fork.
+- **THE GUARDRAIL IS THE LOAD-BEARING WORD.** *Subtle.* Noir owns the **signature and chrome** registers. **D18
+  deep-reading surfaces stay clean** — a provider reading credentialing requirements is not reading a cyberpunk page.
+  **Neon never carries or neighbours alarm semantics**; red and amber are untouched.
+- **S-007 REAFFIRMED:** **cyan stays rejected.** The electric mint crafted for D28 sits at **hue 155°**; cyan begins around
+  **175°**. The neon is a *jade*, and that is measurable rather than a matter of opinion.

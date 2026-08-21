@@ -2,7 +2,7 @@
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
     "updatedAt": "2026-08-21",
-    "currentTask": "owner Grand Bench reading (both machines)",
+    "currentTask": "owner Noir Bench reading (N1-N5, rules the D25 fork)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -660,6 +660,15 @@
       "date": "2026-08-21",
       "fixlogRef": "2026-08-21 - Task #30",
       "note": "One self-contained file://-ready page, docs/grand-bench/index.html, 18 fragments, real D21/D23/D25 tokens, real approved copy, sticky legend, BY CANDIDATE / BY REGISTER group-by, and a B1-to-COMPOSITE index. NO SITE CODE AND NO CUBE: it is tooling. The bench DOGFOODS the motion-safe architecture it models - every animation lives inside a no-preference media query, the B1 panel morph uses a retargetable TRANSITION rather than a keyframe (the fault found in the shipped nav in #29), and the reduced-motion pass reports ZERO running animations with every fragment complete and static. Braid geometry is authored at build time as literal path data so nothing depends on page JS. VERIFIED: 102 painted-pixel spot ratios over the new surfaces, ZERO below floor; fonts primed and all three families confirmed loaded; zero console errors; no horizontal overflow at 1440, 768 or 390; heading sequence clean with zero jumps; 14/14 tabbed elements show a focus indicator. THE PAINTED-PIXEL PASS EARNED ITS KEEP by catching two defects a computed ratio cannot see: the Solutions menu was rendering ON TOP of the Platform menu because .panel-grid{display:grid} beats the UA [hidden] rule, and drift dots were sitting under body copy at 3.9:1. Both fixed. impeccable audit run: 3 detector findings, one false positive proven by measurement, one real and reduced, one real and intentional with its cost now stated on the bench."
+    },
+    {
+      "id": "W-NOIR-BENCH",
+      "phase": "P3",
+      "title": "D28 receipts + the Noir Bench (N1-N5 + composite)",
+      "status": "done",
+      "date": "2026-08-21",
+      "fixlogRef": "2026-08-21 - Task #31",
+      "note": "Docs and research only: no site code, no cube. D28 recorded, dispositions updated (drift REJECTED with its receipt as S-028; the brand thesis as S-029; S-007 cyan reaffirmed by measurement - the crafted mint sits at hue 155 and cyan begins around 175). docs/noir-bench/index.html renders the ruling: N1 the braid recolored at route scale on light with two charcoal tunings, N2 the same on ink with van livery B and an alternate mint temperature, N3 THE D25 FORK rendered as two identical hero compositions differing only in the warm dusk, N4 mobility cards with two neon border treatments and geometric icons, N5 the ink-bold nav over both futures, plus a composite strip. THE CRAFTED VALUES: electric mint #2fe89a (hue 155, S80 V91, 11.62:1 on ink), alternate #00ffa3 (hue 158, S100 V100, 14.01:1), and the light-register mint #00a36a (3.03:1 on paper). THE FINDING THAT MATTERS: electric mint DIES on paper at 1.49:1, so the neon is register-split - electric is an INK-register idea, and on light the same line reads as precision rather than as voltage. Charcoal tunings composite to #bdc1c4 (1.69:1) and #9ba0a4 (2.46:1) against D23's E1-07 divider floor of 1.66, and invert on ink to #333d3e (1.66:1). VERIFIED: 57 painted-pixel runs over the new surfaces with ZERO below floor; reduced-motion pass with zero running animations and zero strands unpainted; zero console errors; zero horizontal overflow at 1440, 768 and 390; heading sequence clean; 12/12 focus indicators; fonts primed. A LAW COLLISION IS NAMED RATHER THAN RESOLVED: nexo-brand section 5 bans glow on objects and D28 asks for glowing neon borders, so both N4 treatments use a tight ring rather than a halo and the amendment is put to the owner."
     }
   ],
   "decisions": [
@@ -829,6 +838,12 @@
       "date": "2026-08-20",
       "title": "The Boldness Ruling (owner)",
       "summary": "Verdict on the current build: ~85% right - smooth, sleek, disciplined - but TOO QUIET: flat nav, decorative-but-mute background lines, list-shaped navigation, newspaper feel. Eight directives. (a) NAV becomes bold and unmistakable: sleek but heavy presence, liquid-glass weight, boundary perceivable at a glance, colour no longer restricted to black/ink. (b) NAV PANELS follow the boxed-destination pattern (Railway reference): each destination a designed box with its own shape and representation, never a text list. (c) HERO: the dispatch console demotes down-page and a big signature animation leads, activating D19/W2 with priority. (d) MOBILITY CARDS: the three service levels (ambulatory, wheelchair, stretcher, with bariatric and two-person assist as the modifier) rendered as beautiful switching cards in the GitLab dark-card register - this is S-001's concrete form. (e) AMBIENT MEANING: background lines must read as an intentional system model, aggressive, legible, semantic, never unexplained decoration. (f) BRAIDED ROUTE: evolve the single route line toward a braided multi-strand motif weaving the D25 rose and violet with the jade lead. (g) EVERY PAGE: per-page atmosphere attention in P4, no page ships as bare paper. (h) INTENTIONALITY DOCTRINE: every visual element must be able to state its purpose; 'just a nice line' is banned. PERCEPTION SUPERSESSION: the FO-2 nav hairline measures painted and I21 is green, but it reads invisible to the owner - recorded as the SUBTLE APPROACH FAILING THE OWNER'S BAR, not as a defect; I21 remains the floor; the bold nav supersedes the question. All directives flow through the Grand Bench (rendered candidates, owner reaction) before site application. D23 floors, the D20 budget, motion-safe architecture, decline-don't-degrade, and status-semantics law bind every candidate."
+    },
+    {
+      "id": "D28",
+      "date": "2026-08-21",
+      "title": "Tech-noir ruling (owner, Grand Bench reading)",
+      "summary": "Brand thesis: a medical transportation company whose backbone is pure technology; trust through a clean, highly professional interface; the aesthetic of a modern high-end developer tool or cloud platform, Railway-class; minimalist and modern with a very subtle Blade Runner edge; practical medical transport made effortless through advanced routing tech. RULINGS: B1 adopt B1(i) INK-BOLD nav. B2 adopt structure, with active and hover carried by glowing neon accent borders rather than heavy fills, geometric utilitarian icons, and the modifier tier ratified. B3 adopt the braid at ROUTE SCALE for precision routing rather than page dominance; the strand palette is re-ruled so inactive strands are low-opacity neutral charcoal, register-aware, receding into the field, with ONE saturated neon active line, ELECTRIC MINT from the jade family - cyan remains rejected per S-007; van livery B, the ink body with mint outline glowing wireframe; the weave, the occlusion and the roller-coaster timing are unchanged because the recolor is paint-only. B4 adopt Direction 2, the dispatch-network model, as a tactical data stream. B5 drift REJECTED on bench evidence that the static field read better and that B4-d2 makes it redundant; settle ADOPTED as the arrival grammar. Composite ratifies Chanel's rule: the braid and the network nodes are THE signatures and everything around them stays stark and minimal. GUARDRAIL, load-bearing: subtle. Noir owns the signature and chrome registers only; D18 deep-reading surfaces for provider and payer content stay clean and legible; neon never carries or neighbours alarm semantics. OPEN FORK: the D25 warm atmosphere on ink is ruled from the Noir Bench fragment N3, not in chat."
     }
   ],
   "discoveries": [
@@ -1160,6 +1175,10 @@
     {
       "date": "2026-08-21",
       "summary": "Task #30 rendered the Grand Bench. Five candidates plus a composite, in one self-contained page that dogfoods the motion-safe architecture it is proposing. The braid came out best: three phase-offset strands that genuinely interweave, with the van riding the canonical weaving path and passing over some strands and behind others purely by paint order, so the LUT and the single-surface law are untouched. The painted-pixel pass caught two real defects that computed ratios could not, and the audit caught a third. The composite self-check says honestly that the five do not all survive together, and names the decision that unblocks the rest: whether the braid is the signature or the route's decoration."
+    },
+    {
+      "date": "2026-08-21",
+      "summary": "Task #31 recorded D28 and rendered what it means. The braid recolored to one live electric-mint line against receding charcoal is the clearest expression the programme has produced of the owner's own thesis: the routing engine is the product. The bench also found that the neon does not survive the light register, which makes the noir signature register-split by nature. N3 puts the D25 fork in front of the owner as two identical heroes differing only in the warm dusk, with the revert scope stated: the compensated ink pair should revert with the glow, because it exists only to pay for it."
     }
   ]
 }

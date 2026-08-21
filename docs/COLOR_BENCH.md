@@ -461,3 +461,65 @@ in document coordinates against a full-page raster, waits 700ms for scene transi
 opacity below 0.05 as invisible. **It ends by drawing the sampled rects back onto the live page and
 screenshotting them, so alignment is judged by eye before a single number is believed.** Per D26,
 no probe result was reported until the probe had been executed and its output shown.
+
+---
+
+## 10. THE NOIR ROUND — D28's palette, rendered (Task #31, 2026-08-21)
+
+**D28 is ruled and this round renders what it means for colour.** The instrument is
+`docs/noir-bench/index.html`, one self-contained `file://` page. **Status: OPEN, pending the owner's
+N-picks** — and one of those picks, **N3**, decides the fate of D25.
+
+### The values, crafted and measured
+
+| Role | Value | Measurement | Why this one |
+|---|---|---|---|
+| **Electric mint** (ink register) | **`#2fe89a`** | hue **155°**, S80 V91 · **11.62:1** on `--ink` · 9.30:1 on `--ink-surface` | Measurably more saturated and brighter than the shipped `--accent-on-ink` (hue 158°, S67 V84), so it reads as *voltage* rather than as the same jade. **Cyan begins around 175°; this is 20° clear of it, so S-007 holds by measurement rather than by assertion.** |
+| **Alternate temperature** | **`#00ffa3`** | hue **158°**, S100 V100 · **14.01:1** on ink | The same hue as the shipped jade at maximum saturation and value. The A/B is not hue, it is *voltage*. |
+| **Light-register mint** | **`#00a36a`** | **3.03:1** on `--bg`, clearing the 3:1 graphic tier | Forced by measurement, not by preference — see the finding below. |
+| **Charcoal, tuning A** | `rgb(46 53 61 / 0.28)` → composites to **`#bdc1c4`** | **1.69:1** vs paper | Maximum recession that still clears D23's E1-07 divider tier (**1.66:1**), the floor below which a line reads as a printing artifact. |
+| **Charcoal, tuning B** | `rgb(46 53 61 / 0.45)` → **`#9ba0a4`** | **2.46:1** vs paper | More present. The braid reads as a *structure* rather than as a *background*. |
+| **Charcoal on ink** | `rgb(143 154 166 / 0.30)` → **`#333d3e`** | **1.66:1** vs `--ink` | **Register-aware means inverted**: on paper the neutral is darker than the field, on ink it must be lighter. Same intent, opposite direction. |
+
+### THE FINDING: the neon is register-split, and that is structural
+
+**Electric mint measures 1.49:1 on paper.** It does not merely look weak there, it is *unusable* —
+below any floor, for text or for graphics. The light register therefore needs its own active line
+(`#00a36a`, 3.03:1), and that line is **legible but not neon**, because neon on white is either
+invisible or illegible. There is no tuning that escapes this; it is a property of white grounds.
+
+**So "electric" is an INK-register idea.** On light the same signature reads as **precision**; on ink
+it reads as **voltage**. That is not a compromise to be fixed later — it is what the noir direction
+*is* in a two-register system, and it should be stated in the law when D28's specs are implemented.
+
+### Method
+
+Same as the tuned round: **painted pixels, not composited alphas**, by Task #27's Range-rect probe —
+client rects of the text nodes themselves, in document coordinates, against a full-page raster with
+the text hidden but its layout kept. **57 runs over the new surfaces, zero below floor.** Braid path
+data is **byte-identical to the Grand Bench**, because D28 rules the recolor as **paint-only**: the
+weave, the front-arc segmentation, the canonical path and the roller-coaster timing are unchanged, so
+I15, I20 and the LUT spec are untouched by construction rather than by promise.
+
+### A law collision, named rather than resolved
+
+`nexo-brand` §5 bans **glow/bloom ON OBJECTS**. D28 asks for **glowing neon accent borders** on the
+mobility cards, which is an object glow. Both N4 treatments use a **tight ring** (≤16px, no wide
+halo) so the effect reads as voltage rather than haze — **but adopting N4 amends §5 for the
+signature/chrome registers, and that is the owner's call, not a workaround to be slipped in.**
+
+### PROTOCOL
+
+> **Open `docs/noir-bench/index.html` from `file://` on BOTH machines, and answer four questions:**
+>
+> 1. **N1 — the charcoal tuning.** A (α 0.28, maximum recession) or B (α 0.45, more present)? The real
+>    question underneath: should the braid read as a **structure** or as a **background**?
+> 2. **N2 — the mint temperature.** `#2fe89a` or `#00ffa3`? Precision, or maximum voltage?
+> 3. **N3 — THE FORK, and this one rules D25.** *Dusk stays* or *pure noir*? **If pure noir wins, the
+>    revert scope is: the `.atmo-ink` application on the hero, AND the compensated ink pair with it**
+>    (`--ink-surface #273a32`, `--on-ink-border #4a6c66`, `--on-ink-border-strong #688f82`), because
+>    those exist only to pay for the glow's luminance lift and D23's floors were derived against
+>    `#192b24`. `.atmo-light` on the final CTA band is a separate question this fork does not decide.
+> 4. **N4 — the border treatment.** Hairline-glow or 2px-glow? And the §5 amendment: yes or no?
+>
+> **These four answers finalize D28's implementation specs.** Nothing ships before them.
