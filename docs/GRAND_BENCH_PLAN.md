@@ -1,7 +1,33 @@
 # THE GRAND BENCH — build order for Task #30
 
-**Status: SPEC. Nothing here has been built, and nothing here may reach the site before the owner
-reacts to a rendered candidate.**
+**STATUS: RENDERED (Task #30, 2026-08-21) — awaiting the owner's ruling.**
+**Nothing here has shipped, and nothing may reach the site before you react to a candidate.**
+
+| Candidate | Status | Anchor |
+|---|---|---|
+| **B1** bold nav + boxed panels | RENDERED — 3 closed states × 2 registers + the real Platform panel | [`grand-bench/index.html#b1`](grand-bench/index.html#b1) |
+| **B2** mobility cards | RENDERED — 3 levels + the modifier tier, switching | [`#b2`](grand-bench/index.html#b2) |
+| **B3** braided route | RENDERED — 2 route geometries, 1 hero, motion sketch, 2 liveries | [`#b3`](grand-bench/index.html#b3) |
+| **B4** ambient meaning | RENDERED — 2 directions, each with a legend of intent | [`#b4`](grand-bench/index.html#b4) |
+| **B5** drift + settle | RENDERED — drift beside its static control | [`#b5`](grand-bench/index.html#b5) |
+| **COMPOSITE** | RENDERED — leading picks in one page rhythm + the honest self-check | [`#composite`](grand-bench/index.html#composite) |
+
+### THE RULING PROTOCOL
+
+1. **Open `docs/grand-bench/index.html` from `file://` on BOTH machines.** The high-end control and
+   the standard laptop disagree about subtle things, and this bench is largely about whether
+   "bold" is bold enough on the machine that set the perception floors.
+2. **React by B-number:** **adopt** · **adapt + direction** · **reject**. *"None of these"* and
+   *"quieter"* remain legitimate answers, and so does *"the braid is the signature, make the nav
+   quieter"* — the composite self-check argues that case explicitly.
+3. **Your rulings become D28 and onward.** One ledger row per decision, in the owner's words.
+4. **Each adoption then ships via its OWN full-cube implementation task.** A bench pick is a spec,
+   not a merge: the D23 floors, the painted-pixel pass, the motion guard and the cube all run
+   again against the real pages.
+5. **The `framer-motion` removal (S-026) rides with the first of those implementation tasks**, since
+   it is already paying for a build and a cube.
+6. **The hero signature piece (W2) is the next DESIGN task after the rulings**, and it is
+   deliberately last so it can speak the braid and ambient language you choose here.
 
 ---
 
@@ -57,7 +83,7 @@ judged. The bench is where they become visible.
 
 ### Sequencing — and why the hero is deliberately last
 
-**W2, the hero signature piece, comes AFTER this bench.** D27c raises its priority, and the temptation
+**W2, the hero signature piece, comes AFTER this bench — and it is THE NEXT DESIGN TASK once the owner has ruled** (reaffirmed 2026-08-21). D27c raises its priority, and the temptation
 is to build the most exciting thing first. That would be the same mistake as choosing a colour before
 testing the ink register: the signature piece has to **speak the braid (B3) and ambient (B4) language**,
 and those are what the bench establishes. Building it first freezes a vocabulary nobody has chosen.
@@ -153,6 +179,30 @@ like one object changing state, or three objects fighting? Does the modifier rea
 ---
 
 ## B3 — BRAIDED ROUTE
+
+> **AMENDED BY S-027 (owner, 2026-08-21) — and the amendment RESOLVES the open question rather
+> than reopening it.** The directive: the braid is **scaled to be seen**, the strands are
+> **genuinely interwoven** (*"a tangle of snakes"*), and **the van rides the weave serpentine /
+> roller-coaster style, passing OVER some strands and BEHIND others**. The braid is **"a platform
+> for the van to move around"**.
+>
+> **RECONCILIATION WITH THE #29 CANONICAL-STRAND CALL — they agree.** #29 recommended one strand
+> stay canonical so the van's 256-point LUT samples a single path. That still holds, with one
+> word changed: **the canonical path IS the weaving path.** The van rides ONE path, sampled
+> exactly as it is today; that path is now serpentine and passes through the braid instead of
+> running beside it. **Nothing about the LUT architecture changes** — same single surface, same
+> one-path sampling, same per-frame `setAttribute`.
+>
+> **OVER/UNDER IS PAINT ORDER, NOT GEOMETRY.** The illusion of the van weaving through strands is
+> produced by **segmenting the strands** and drawing the segments that should cross in FRONT of
+> the van **after** the van group in document order. Segments that pass behind are drawn before.
+> No z-index, no second raster surface, no compositing trick — **Task #22's single-surface law is
+> preserved**, which is what makes this safe to attempt at all.
+>
+> **I20 KEEPS ITS MEANING EXACTLY.** The invariant asserts *the van rides the line*; it still does.
+> The line got interesting. **The invariant at real risk is I15**, decorative overlap: a braid
+> scaled to be seen is wider than a hairline, and I15 asserts zero overlap with text and the
+> footer. **B3 must print the width budget**, not assume it.
 
 **Purpose.** D27f — evolve the single route line into a **braided multi-strand motif**, weaving the
 D25 rose/violet with the jade lead.

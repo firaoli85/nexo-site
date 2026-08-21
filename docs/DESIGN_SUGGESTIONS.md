@@ -480,3 +480,40 @@ a **background-register** question, which leaves the alarms and the jade accent 
   out to want a real animation library, this entry is the place to reopen the question** — but note the
   standing rule: **no new project dependencies without approval**, and the motion architecture is
   currently CSS-first by design.
+
+---
+
+## S-027 — Braid motion: the van rides the weave
+
+- **Source:** **Owner**, amending D27f · **Date:** 2026-08-21 ·
+  **Disposition:** **OWNER-DIRECTIVE → amends B3's spec in this task (#30)**
+- **The ask, in the owner's own terms, meaning preserved:**
+  - The braid is **scaled to be SEEN** — not a hairline motif, a structure with presence.
+  - The strands are **genuinely interwoven** — *"a tangle of snakes, you don't know which is
+    which"*. Not three parallel lines with a decorative crossing; a real weave.
+  - **The van rides the weave serpentine / roller-coaster style** — arcing through the twists,
+    passing **OVER** some strands and **BEHIND** others. **Occlusion is the point.**
+  - A **van livery colour-change candidate**, so the van pops against a busier field.
+  - Framing that decides the whole candidate: **the braid is "a platform for the van to move
+    around"** — the braid exists to be ridden, not merely to be looked at.
+- **Impact:**
+  - **This amends B3 rather than replacing it.** The #29 spec recommended that **one strand stays
+    canonical** so the van's LUT samples a single path. That call **survives** — see the
+    reconciliation in `GRAND_BENCH_PLAN` B3: **the canonical path IS the weaving path.** The van
+    still rides one path; that path simply became serpentine.
+  - **Occlusion is a paint-order problem, not a geometry problem.** Strands are segmented, and the
+    segments that should cross in FRONT of the van are painted after the van group. No z-index, no
+    second surface, no compositing trick — Task #22's single-raster-surface law is preserved.
+  - **I20 keeps its meaning exactly.** The invariant says *the van rides the line*. It still does.
+    The line got interesting.
+  - **I15 (decorative overlap) is the real risk**, not I20: a braid scaled *to be seen* occupies
+    more horizontal space than a hairline, and I15 asserts zero overlap with text and the footer.
+    B3 must state the width budget.
+  - **D25 binds the colour and is not negotiable by enthusiasm:** rose and violet are **atmosphere,
+    semantically silent**. A strand may not come to *mean* anything — no "the rose strand is
+    claims". Strands are visual.
+  - **The livery candidate collides with status semantics and must be checked, not assumed.** The
+    van currently reads white-bodied with an ink outline. Any new livery must not land in the
+    refused-red or timely-amber space, and must never be mistaken for an ambulance (§6.1).
+  - **Per-frame cost rises with strand count**, and a braid drawn at visible weight is more path
+    length than the current single line. B3 prints the reasoning.

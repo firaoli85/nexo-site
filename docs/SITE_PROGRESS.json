@@ -1,8 +1,8 @@
 {
   "$schema": "internal://nexo-site/site-progress/v1",
   "meta": {
-    "updatedAt": "2026-08-20",
-    "currentTask": "Task #30: Grand Bench build (B1-B5) -> owner reactions",
+    "updatedAt": "2026-08-21",
+    "currentTask": "owner Grand Bench reading (both machines)",
     "activePhase": "P3",
     "branch": "v2",
     "sourceOfTruth": "SITE_GROUND_TRUTH.md is law; this file is the living status mirror. If they disagree, the ground truth wins."
@@ -602,46 +602,46 @@
       "id": "GB-B1",
       "phase": "P3",
       "title": "Grand Bench B1: bold nav + boxed destination panels",
-      "status": "todo",
-      "date": "2026-08-20",
-      "fixlogRef": "2026-08-20 - Task #29",
-      "note": "Two to three closed-state treatments including one NON-INK direction, each shown over the worst case the register was built for (the bar over a pure-white section) and over the ink hero, plus ONE Railway-class open panel built for the REAL Platform menu - Dispatch, Claims and billing, Compliance, Oversight and reporting, with their existing approved copy. Built on the mechanic dissected in DESIGN_RESEARCH section 15b: a panel DARKER than the page, cells filled at the PAGE colour with a small radius and NO border, one featured cell promoted with our own inline line-art. nexo-shape folds in as the panel's motion (Railway measured at 266 to 302px over about 120ms). Binds: --nav-glass alpha was calibrated for dark glass over pure white so any new surface re-derives every on-nav ratio; a page-coloured cell on a darker panel is a pairing D23 has never measured; I17 and I21 must both survive and I21 REMAINS THE FLOOR even though D27 supersedes the hairline question; overflow hidden on a morphing panel will clip a focus ring; one nav landmark."
+      "status": "done",
+      "date": "2026-08-21",
+      "fixlogRef": "2026-08-21 - Task #30",
+      "note": "RENDERED in docs/grand-bench/index.html and awaiting the owner's ruling. Two to three closed-state treatments including one NON-INK direction, each shown over the worst case the register was built for (the bar over a pure-white section) and over the ink hero, plus ONE Railway-class open panel built for the REAL Platform menu - Dispatch, Claims and billing, Compliance, Oversight and reporting, with their existing approved copy. Built on the mechanic dissected in DESIGN_RESEARCH section 15b: a panel DARKER than the page, cells filled at the PAGE colour with a small radius and NO border, one featured cell promoted with our own inline line-art. nexo-shape folds in as the panel's motion (Railway measured at 266 to 302px over about 120ms). Binds: --nav-glass alpha was calibrated for dark glass over pure white so any new surface re-derives every on-nav ratio; a page-coloured cell on a darker panel is a pairing D23 has never measured; I17 and I21 must both survive and I21 REMAINS THE FLOOR even though D27 supersedes the hairline question; overflow hidden on a morphing panel will clip a focus ring; one nav landmark."
     },
     {
       "id": "GB-B2",
       "phase": "P3",
       "title": "Grand Bench B2: mobility cards (S-001's concrete form)",
-      "status": "todo",
-      "date": "2026-08-20",
-      "fixlogRef": "2026-08-20 - Task #29",
-      "note": "The three service levels as switching cards in the GitLab dark-card register, with real content: ambulatory walks with minimal assistance, wheelchair seated and secured, stretcher transported lying down. Bariatric and two-person assist rendered as WHAT IT IS - a modifier that layers on any of the three - never a fourth card, which would be a copy-gate violation rather than a design variation. The switch itself is the deliverable. Binds: the level count is law (nexo-brand 7.1); never claim platform enforcement of assist; dignity language mandatory; service colours pair with icon and label, never colour alone; zero CLS; 300ms ceiling, transform and opacity only, never from scale(0), read-first copy not animated. S-001's hard part carries over verbatim: 'not noisy' is a design problem, not a volume knob."
+      "status": "done",
+      "date": "2026-08-21",
+      "fixlogRef": "2026-08-21 - Task #30",
+      "note": "RENDERED in docs/grand-bench/index.html and awaiting the owner's ruling. The three service levels as switching cards in the GitLab dark-card register, with real content: ambulatory walks with minimal assistance, wheelchair seated and secured, stretcher transported lying down. Bariatric and two-person assist rendered as WHAT IT IS - a modifier that layers on any of the three - never a fourth card, which would be a copy-gate violation rather than a design variation. The switch itself is the deliverable. Binds: the level count is law (nexo-brand 7.1); never claim platform enforcement of assist; dignity language mandatory; service colours pair with icon and label, never colour alone; zero CLS; 300ms ceiling, transform and opacity only, never from scale(0), read-first copy not animated. S-001's hard part carries over verbatim: 'not noisy' is a design problem, not a volume knob."
     },
     {
       "id": "GB-B3",
       "phase": "P3",
       "title": "Grand Bench B3: braided route",
-      "status": "todo",
-      "date": "2026-08-20",
-      "fixlogRef": "2026-08-20 - Task #29",
-      "note": "Two to three static braid geometries at TWO scales - hero scale where strands are individually readable, and route scale where each strand is 1-2px, which is where braids usually die and is the scale that matters - plus one motion sketch of the drawing behaviour. Binds: this is the most invariant-protected object on the site. I20 asserts the van rides the line across zoom and DPR legs in three engines; I15 asserts zero decorative overlap with text and footer. The LUT architecture decides feasibility: the van is positioned from a 256-point table sampled off ONE path, so the strongly recommended framing is that one strand stays canonical (the van rides the jade lead, the others are decorative) rather than re-deriving the LUT against a braid. D25 binds the colour: rose and violet are semantically silent, so a strand may not carry meaning. Perf: N strands is N times the path length drawn per frame and the bench must print the number."
+      "status": "done",
+      "date": "2026-08-21",
+      "fixlogRef": "2026-08-21 - Task #30",
+      "note": "RENDERED in docs/grand-bench/index.html and awaiting the owner's ruling. Two to three static braid geometries at TWO scales - hero scale where strands are individually readable, and route scale where each strand is 1-2px, which is where braids usually die and is the scale that matters - plus one motion sketch of the drawing behaviour. Binds: this is the most invariant-protected object on the site. I20 asserts the van rides the line across zoom and DPR legs in three engines; I15 asserts zero decorative overlap with text and footer. The LUT architecture decides feasibility: the van is positioned from a 256-point table sampled off ONE path, so the strongly recommended framing is that one strand stays canonical (the van rides the jade lead, the others are decorative) rather than re-deriving the LUT against a braid. D25 binds the colour: rose and violet are semantically silent, so a strand may not carry meaning. Perf: N strands is N times the path length drawn per frame and the bench must print the number."
     },
     {
       "id": "GB-B4",
       "phase": "P3",
       "title": "Grand Bench B4: ambient meaning",
-      "status": "todo",
-      "date": "2026-08-20",
-      "fixlogRef": "2026-08-20 - Task #29",
-      "note": "Two redesign directions for the background layer where every line has a stated meaning, each rendered BEHIND A REAL CONTENT BAND because a background is only judgeable underneath text: (A1) the DC/MD/VA region made legible - routes, stops, coverage; (A2) a dispatch-network model, our equivalent of Railway's product canvas (section 15c), depicting trips, stops, providers and the claim path. Each ships its own legend of intent - one sentence per kind of line and node (D27h). This is a REDESIGN not a tuning: the current AmbientMap is deliberately abstract and that is what the ruling rejects. Binds: text sovereignty is not negotiable, body text over it must clear AA on PAINTED pixels, and I22 does not exist yet (registered W9 debt) so this owes a MANUAL painted-pixel pass by Task #27's method - a green cube says nothing about it. S-008 small-text legibility; the copy gate including anything a diagram labels; NO REAL INSTITUTION NAMES; D23 floors."
+      "status": "done",
+      "date": "2026-08-21",
+      "fixlogRef": "2026-08-21 - Task #30",
+      "note": "RENDERED in docs/grand-bench/index.html and awaiting the owner's ruling. Two redesign directions for the background layer where every line has a stated meaning, each rendered BEHIND A REAL CONTENT BAND because a background is only judgeable underneath text: (A1) the DC/MD/VA region made legible - routes, stops, coverage; (A2) a dispatch-network model, our equivalent of Railway's product canvas (section 15c), depicting trips, stops, providers and the claim path. Each ships its own legend of intent - one sentence per kind of line and node (D27h). This is a REDESIGN not a tuning: the current AmbientMap is deliberately abstract and that is what the ruling rejects. Binds: text sovereignty is not negotiable, body text over it must clear AA on PAINTED pixels, and I22 does not exist yet (registered W9 debt) so this owes a MANUAL painted-pixel pass by Task #27's method - a green cube says nothing about it. S-008 small-text legibility; the copy gate including anything a diagram labels; NO REAL INSTITUTION NAMES; D23 floors."
     },
     {
       "id": "GB-B5",
       "phase": "P3",
       "title": "Grand Bench B5: nexo-drift + nexo-settle (supporting)",
-      "status": "todo",
-      "date": "2026-08-20",
-      "fixlogRef": "2026-08-20 - Task #29",
-      "note": "The two surviving original candidates rendered minimally, judged in the company of the new work rather than in isolation. nexo-drift on the NEW ambient rather than the old dot grid, since the old grid may not survive; its risk is ELEMENT COUNT not duration, so the bench must print the animated-cell count and cap it, or decline per D20b rather than thin the effect. nexo-settle as an arrival-grammar demo - the cheapest candidate on the bench, and it removes code rather than adding it, so judge it on API shape rather than spectacle."
+      "status": "done",
+      "date": "2026-08-21",
+      "fixlogRef": "2026-08-21 - Task #30",
+      "note": "RENDERED in docs/grand-bench/index.html and awaiting the owner's ruling. The two surviving original candidates rendered minimally, judged in the company of the new work rather than in isolation. nexo-drift on the NEW ambient rather than the old dot grid, since the old grid may not survive; its risk is ELEMENT COUNT not duration, so the bench must print the animated-cell count and cap it, or decline per D20b rather than thin the effect. nexo-settle as an arrival-grammar demo - the cheapest candidate on the bench, and it removes code rather than adding it, so judge it on API shape rather than spectacle."
     },
     {
       "id": "W-D27-RECEIPTS",
@@ -651,6 +651,15 @@
       "date": "2026-08-20",
       "fixlogRef": "2026-08-20 - Task #29",
       "note": "Docs and research only: no site code, no cube, because nothing the cube covers moved. Ground truth to v2.0 with D27 appended. Twelve suggestion entries S-015 to S-026, one per directive plus the liquid-nav note, the platform per-section animation wish (LATER), the console-fill verdict CLOSED (owner reviewed, edge-carries-separation doctrine stands), and the scheduled framer-motion removal. W1, W2, W5 and W6 rescoped citing D27. RAILWAY DISSECTED LIVE at CSS level into DESIGN_RESEARCH section 15, five-field method, verdict table of 11 elements. THE HEADLINE FINDING CUTS AGAINST THE BRIEF: Railway's nav bar background is rgb(19,17,28) and the page body is rgb(19,17,28) - the same value - with no backdrop-filter, no border-bottom, no shadow, and it is UNCHANGED when scrolled. Railway has no boundary and never acquires one, so it cannot be the answer to D27a's 'boundary perceivable at a glance'. What it does supply is the panel: a pure-black panel darker than the page, with destination cells filled at the PAGE colour, 6px radius and NO borders - separation is fill-against-fill rather than a drawn edge, which is one extra colour value and zero borders. Hover is a +5/+5/+6 fill lift and nothing else. The panel animates its HEIGHT between triggers, measured 266 to 296 at 80ms to 302 at 120ms, which is nexo-shape with a live reference implementation. Their down-page background IS the product's own canvas - dotted field, service nodes with live status, connectors - which is the strongest reference found for D27e. Perf observed at 4814ms DCL, 299 requests, at least 3854KB: 4x, 5x and 6.4x our D20 ceilings, and NONE of it buys the nav, so D20 is not in tension with D27. Grand Bench roster written as docs/GRAND_BENCH_PLAN.md with per-candidate purpose, fragments, interaction, binding laws and what the owner will judge."
+    },
+    {
+      "id": "W-GRAND-BENCH",
+      "phase": "P3",
+      "title": "The Grand Bench rendered (B1-B5 + composite)",
+      "status": "done",
+      "date": "2026-08-21",
+      "fixlogRef": "2026-08-21 - Task #30",
+      "note": "One self-contained file://-ready page, docs/grand-bench/index.html, 18 fragments, real D21/D23/D25 tokens, real approved copy, sticky legend, BY CANDIDATE / BY REGISTER group-by, and a B1-to-COMPOSITE index. NO SITE CODE AND NO CUBE: it is tooling. The bench DOGFOODS the motion-safe architecture it models - every animation lives inside a no-preference media query, the B1 panel morph uses a retargetable TRANSITION rather than a keyframe (the fault found in the shipped nav in #29), and the reduced-motion pass reports ZERO running animations with every fragment complete and static. Braid geometry is authored at build time as literal path data so nothing depends on page JS. VERIFIED: 102 painted-pixel spot ratios over the new surfaces, ZERO below floor; fonts primed and all three families confirmed loaded; zero console errors; no horizontal overflow at 1440, 768 or 390; heading sequence clean with zero jumps; 14/14 tabbed elements show a focus indicator. THE PAINTED-PIXEL PASS EARNED ITS KEEP by catching two defects a computed ratio cannot see: the Solutions menu was rendering ON TOP of the Platform menu because .panel-grid{display:grid} beats the UA [hidden] rule, and drift dots were sitting under body copy at 3.9:1. Both fixed. impeccable audit run: 3 detector findings, one false positive proven by measurement, one real and reduced, one real and intentional with its cost now stated on the bench."
     }
   ],
   "decisions": [
@@ -1147,6 +1156,10 @@
     {
       "date": "2026-08-20",
       "summary": "Task #29 recorded D27, the Boldness Ruling: the build is 85 percent right but too quiet, and eight directives follow. Railway was dissected live at CSS level, and the headline finding contradicts the brief - their nav bar is exactly the page colour with no border, no backdrop-filter and no scrolled state, so the reference the owner named cannot answer the 'boundary at a glance' directive. What it does give is the panel mechanic: a black panel darker than the page, page-coloured cells with no borders at all, and a height morph between triggers that is nexo-shape with a reference implementation. Their section background is a drawing of their own product canvas, which is the best answer found for ambient meaning. The Grand Bench roster B1 to B5 is written as its own file because it is an executable build order rather than archive or phase map, and the hero signature piece is deliberately sequenced after it so it can speak the language the bench establishes."
+    },
+    {
+      "date": "2026-08-21",
+      "summary": "Task #30 rendered the Grand Bench. Five candidates plus a composite, in one self-contained page that dogfoods the motion-safe architecture it is proposing. The braid came out best: three phase-offset strands that genuinely interweave, with the van riding the canonical weaving path and passing over some strands and behind others purely by paint order, so the LUT and the single-surface law are untouched. The painted-pixel pass caught two real defects that computed ratios could not, and the audit caught a third. The composite self-check says honestly that the five do not all survive together, and names the decision that unblocks the rest: whether the braid is the signature or the route's decoration."
     }
   ]
 }
