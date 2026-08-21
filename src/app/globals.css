@@ -232,7 +232,15 @@
      on paper the neutral is DARKER than the field, on ink it must be LIGHTER. Both values sit at
      N1-A's maximum recession, just clear of D23's E1-07 divider floor (1.66:1), which is the
      level below which a line stops reading as a line and starts reading as a printing artifact. */
-  --route-strand-light:  rgb(46 53 61 / 0.28);    /* composites to #bdc1c4 - 1.69:1 vs paper */
+  /* LIGHT-REGISTER PRESENCE, CORRECTED IN TASK #35 (was rgb(46 53 61 / 0.28), 1.69:1 - invisible).
+     N1-A's maximum recession was ruled ON THE NOIR BENCH, i.e. for the INK register, and applying
+     it to light was a scoping error rather than a taste one. The registers are not symmetric:
+     on ink the active lead measures 11.62:1, so companions at 1.66:1 have enormous headroom to
+     recede into; on light the register-split law leaves the lead at only 3.03:1, so the companions
+     have a CEILING they never had on ink. Measured: a.58 reaches 3.41:1 and a.72 reaches 5.00:1 --
+     both OUT-CONTRAST the active line and invert D29's accent law, which says the live thing is the
+     one that reads. a.52 lands at 2.91:1: present and industrial, and still below the lead. */
+  --route-strand-light:  rgb(46 53 61 / 0.52);    /* composites to #8e9297 - 2.91:1 vs paper */
   --route-strand-ink:    rgb(143 154 166 / 0.30); /* composites to #333d3e - 1.66:1 vs ink */
 
   /* LIVERY B (D28) -- ink body, electric-mint wireframe. The outline does NOT switch register
@@ -777,6 +785,22 @@ a:active {
    of any kind. That is why they need no motion scope and why a reduced-motion reader sees the
    complete braid -- all three strands, correct over/under -- with only the van absent. */
 .route-strand { fill: none; }
+/* Mask stops. White passes, black cuts -- kept as classes so the literals stay inside the token
+   block and the hex guard has nothing to find in a component. */
+.route-mask-on  { stop-color: #ffffff; }
+.route-mask-off { stop-color: #000000; }
+
+/* THE REFLECTION (D33). Mint, blurred, low -- a glow twin on the surface the van glides over.
+   It is HIDDEN unless the overlay is armed, exactly like the van: a reduced-motion reader gets a
+   complete braid with no vehicle and therefore nothing for a vehicle to reflect in. */
+.route-reflection { display: none; }
+.route-overlay[data-direction] .route-reflection { display: block; }
+.route-reflection use {
+  fill: var(--route-active-ink);
+  stroke: var(--route-active-ink);
+  filter: url(#routeVanGlow);
+  opacity: 0.34;
+}
 .spine-node.spine-node-ink { fill: var(--accent-on-ink); }
 [data-spine-live] .spine-node.spine-node-ink { fill: var(--on-ink-border); }
 [data-spine-live] .spine-node.spine-node-ink.is-lit { fill: var(--accent-on-ink); }

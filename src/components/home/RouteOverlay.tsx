@@ -50,6 +50,10 @@ const FOOTER_HANDOFF = 36; // px the line + van stop short of the footer seam (t
 //   obedient to the reader's scroll, and a warp is a reparameterisation, not an animation.
 
 const NODE_FRACTIONS = [12.5, 37.5, 62.5, 87.5]; // ~centre of each stop, within the SPINE portion
+// Where the terminal station node sits inside the footer's terminus motif (cx=82 of a 104-wide
+// viewBox). Kept as a named constant because it is a CONTRACT with Footer.tsx's TerminusMotif:
+// if that glyph is redrawn, this moves with it or the route stops arriving at the station.
+const TERMINUS_NODE_FRAC = 82 / 104;
 const INK_STOP = 2;
 
 // ── THE WEAVE ───────────────────────────────────────────────────────────────────────────────────
@@ -63,9 +67,17 @@ const INK_STOP = 2;
 // than the straight line it replaces, by construction rather than by luck.
 // #32's finding binds here: on-ink text sitting directly on a mint strand measures 1.39:1, so a
 // strand may never cross a text column without a glass bar over it.
+// GEOMETRY V2 (Task #35, the signature rescue). The owner scrolled the shipped signature and
+// ruled it a basic scroll-tracker with the complexity missing. The diagnosis was correct and the
+// cause was mine: I capped the swing at 36px because I read "precision routing, not
+// page-dominating" as a reason to be timid, while 122px of left budget at 1440 and 362px at 1920
+// sat unused. The binding budget was never the left one -- it is the 30px to the RIGHT, which the
+// swing does not spend because it opens leftward. So the amplitude was starved by a constraint
+// that does not apply to it.
 const WEAVE_EDGE = 24;      // every strand stays this far off the host's left edge
-const WEAVE_SWING_MAX = 36; // total lateral excursion, px — lead spans [gutterX-36, gutterX]
-const WEAVE_LAMBDA = 780;   // target wavelength, px: "precision routing, not page-dominating"
+const WEAVE_SWING_MAX = 140; // was 36. 1440 gets 122 (its whole budget), 1920 gets 140 (capped so
+//                              the motif reads the same at every desktop size rather than sprawling)
+const WEAVE_LAMBDA = 450;   // was 780. ~4 crossings per viewport instead of ~2.5 — the tangle reads
 const WEAVE_SEG = 14;       // px per polyline sample — see the LUT budget note below
 const WEAVE_PHASES = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
 
@@ -218,8 +230,12 @@ type Lut = { xs: Float32Array; ys: Float32Array };
 // The dial script's own figure was 191px; it modelled a synthetic path and did not reproduce, so
 // the number recorded here is the one the running build produces.
 const WARP_N = 129;
-const WARP_LAT_CAP = 0.15;
-const WARP_K = 14;
+// RE-DERIVED FOR GEOMETRY V2. The cap has to sit inside the range the path actually produces or
+// it stops discriminating: with swing 122 and lambda 433 the serpentine's own lateral reaches
+// ~0.66, so the old 0.15 cap would saturate EVERY sample, make the weight uniform, and silently
+// turn the warp into the identity — a physics system that does nothing while claiming to.
+const WARP_LAT_CAP = 0.55;
+const WARP_K = 5;
 
 /** Monotone by construction: a normalized cumulative sum of strictly positive weights, inverted. */
 function buildWarp(xs: Float32Array, ys: Float32Array, swing: number): Float32Array | null {
@@ -265,6 +281,37 @@ function buildWarp(xs: Float32Array, ys: Float32Array, swing: number): Float32Ar
   return sOfP;
 }
 
+// ── THE SPRING-FOLLOW VAN (Task #35) ────────────────────────────────────────────────────────────
+// WELDED TO THE ROAD, NOT TO THE WHEEL. The line's dashoffset stays 1:1 with warped scroll — the
+// line is the CLAIM, and it must never lag what the reader has actually scrolled past. The VAN is
+// a vehicle: it chases the line's head through a damped-spring integrator, so it accelerates out of
+// a flick and decelerates into a stop instead of being nailed to the scrollbar.
+//
+// THE THING THAT MAKES IT LEGAL: the van's position is still EXACTLY LUT(s_van) every frame. It
+// rides its own PARAMETER, never its own PATH. The wheels never leave the line, which is why I20
+// can still assert path-adherence — it just asserts it at s_van rather than at the line's s.
+//
+// zeta 0.9 is near-critical: overshoot is exp(-pi*z/sqrt(1-z^2)) = 0.15%, which on a 5000px route
+// is ~7px — under the stroke width, so the van cannot visibly run past the head it is chasing.
+// omega 12 gives a 4/(z*w) settle of ~370ms: a vehicle arriving, not an elastic band.
+const SPRING_ZETA = 0.9;
+const SPRING_OMEGA = 12;
+const SPRING_EPS = 1e-4;   // sleep threshold, in route-parameter units (~0.5px of a 5500px path)
+// SUB-STEPPING, because the naive clamp was measurably wrong. Clamping dt to a single 1/30 step
+// protects against a backgrounded tab teleporting the van, but it also means that when a frame
+// runs long — 116ms stalls were measured during a scripted scroll — the integrator advances only
+// 33ms of physics for 116ms of real time, and the spring runs in slow motion exactly when the page
+// is busiest. Measured consequence: a settle predicted at ~520ms took 1120ms. Sub-stepping keeps
+// the physics real-time-accurate AND bounded: at most SPRING_MAX_SIM of simulated time per frame,
+// taken in fixed 1/60 steps, so a long stall costs at most a few iterations of trivial arithmetic.
+const SPRING_STEP = 1 / 60;
+const SPRING_MAX_SIM = 0.1; // seconds of physics any single frame may advance
+// THE VAN MAY TRAIL, BUT IT MAY NOT VANISH. An End-key press or a scrollbar drag moves the head by
+// half the route instantly, and an unclamped spring answered that with a van ~2700px off-screen
+// that later swooped in — which reads as a bug recovering, not as a vehicle. 0.12 of the route is
+// roughly two thirds of a viewport: far enough to be visibly chasing, close enough to stay a van.
+const SPRING_MAX_LAG = 0.12;
+
 function warpAt(sOfP: Float32Array | null, p: number) {
   if (!sOfP) return p;
   const t = Math.min(1, Math.max(0, p)) * (WARP_N - 1);
@@ -273,21 +320,30 @@ function warpAt(sOfP: Float32Array | null, p: number) {
   return sOfP[i] + (sOfP[j] - sOfP[i]) * (t - i);
 }
 
-/** Interpolate the LUT at arc-length fraction s and write ONE transform. No layout reads. */
-function applyVan(el: SVGGElement | null, lut: Lut | null, s: number) {
-  if (!el || !lut) return;
+/** Interpolate the LUT at arc-length fraction s and write ONE transform per consumer.
+ *  The reflection is handed the SAME point, so it can never drift from the van it belongs to. */
+function applyVan(el: SVGGElement | null, refl: SVGGElement | null, lut: Lut | null, s: number) {
+  if (!lut || (!el && !refl)) return;
   const t = Math.min(1, Math.max(0, s)) * (LUT_N - 1);
   const i = t | 0;
   const j = i + 1 < LUT_N ? i + 1 : i;
   const f = t - i;
   const x = lut.xs[i] + (lut.xs[j] - lut.xs[i]) * f;
   const y = lut.ys[i] + (lut.ys[j] - lut.ys[i]) * f;
-  el.setAttribute("transform", `translate(${x.toFixed(2)} ${y.toFixed(2)})`);
+  const tr = `translate(${x.toFixed(2)} ${y.toFixed(2)})`;
+  if (el) el.setAttribute("transform", tr);
+  if (refl) refl.setAttribute("transform", tr);
 }
 
 export function RouteOverlay() {
   const rootRef = useRef<HTMLDivElement>(null);
   const vanRef = useRef<SVGGElement>(null);
+  const reflRef = useRef<SVGGElement>(null);
+  // The spring's state lives in refs, never in React state: it is written every animation frame
+  // and a re-render per frame would be the opposite of the point.
+  const targetRef = useRef(0);   // s_target — where the line's head is
+  const sVanRef = useRef(0);     // s_van — where the vehicle actually is
+  const vVanRef = useRef(0);     // its velocity, in route-parameter units per second
   const pathRef = useRef<SVGPathElement>(null);
   const lutRef = useRef<Lut | null>(null);
   const warpRef = useRef<Float32Array | null>(null);
@@ -335,7 +391,12 @@ export function RouteOverlay() {
       const h = Math.max(1, seamDoc - regionTopDoc - FOOTER_HANDOFF);
       const w = root.offsetWidth;
       const endRect = endEl.getBoundingClientRect();
-      const motifX = endRect.left + endRect.width / 2 + sx - hostLeft;
+      // AIM AT THE STATION NODE, NOT AT THE MOTIF'S BOUNDING BOX. The terminus motif is a 104-wide
+      // svg whose terminal node sits at cx=82 — 78.8% across, not 50% — so centring the route on
+      // the box landed the van ~30px to the LEFT of the station it is supposed to be arriving at.
+      // Measured on the shipped build: the van sat above the middle of the dashed approach line
+      // rather than above the node. An arrival that misses its own station is the dangling stop.
+      const motifX = endRect.left + endRect.width * TERMINUS_NODE_FRAC + sx - hostLeft;
 
       // gutter X — just inside the content Container's OUTER edge, so the route + its ±12px van lane
       // both stay left of where any column's text begins.
@@ -385,6 +446,63 @@ export function RouteOverlay() {
       setGeo((prev) => (prev && sameGeo(prev, g) ? prev : g));
     };
 
+    // ── THE SPRING INTEGRATOR ──────────────────────────────────────────────────────────────────
+    // IMPERATIVE MOTION, AND IT IS THE ONLY SANCTIONED PIECE ON THE ROUTE. It is legal under the
+    // motion-safe doctrine for two reasons that both have to hold: it is started ONLY inside the
+    // `!reduce` branch below (a reduced-motion reader never has a van at all, so there is nothing
+    // to spring), and it is SCROLL-TARGET-DRIVEN — it has no clock of its own, it only ever chases
+    // a number the reader's scroll set. D29's split ruling is what that protects: autonomy belongs
+    // to the W2 hero script, and a route that moves on its own is a violation of it.
+    // It SELF-SLEEPS: once the van is within SPRING_EPS of the head and effectively still, the
+    // loop cancels itself and costs exactly nothing until the next scroll.
+    let springRaf = 0;
+    let springLast = 0;
+    const writeVan = (sv: number) => {
+      applyVan(vanRef.current, reflRef.current, lutRef.current, sv);
+      root.style.setProperty("--route-van", sv.toFixed(5));
+    };
+    const springStep = (now: number) => {
+      springRaf = 0;
+      let dt = (now - springLast) / 1000;
+      springLast = now;
+      if (!(dt > 0)) dt = SPRING_STEP;
+      if (dt > SPRING_MAX_SIM) dt = SPRING_MAX_SIM;
+      const target = targetRef.current;
+      // A hard leash BEFORE integrating, so the spring solves a bounded problem rather than being
+      // asked to recover from an off-screen position.
+      if (target - sVanRef.current > SPRING_MAX_LAG) sVanRef.current = target - SPRING_MAX_LAG;
+      else if (sVanRef.current - target > SPRING_MAX_LAG) sVanRef.current = target + SPRING_MAX_LAG;
+      // semi-implicit Euler in fixed sub-steps: velocity first, then position. omega*h = 0.2 at
+      // 1/60, comfortably inside the stable region.
+      const steps = Math.max(1, Math.ceil(dt / SPRING_STEP));
+      const h = dt / steps;
+      for (let k = 0; k < steps; k++) {
+        const acc = -2 * SPRING_ZETA * SPRING_OMEGA * vVanRef.current - SPRING_OMEGA * SPRING_OMEGA * (sVanRef.current - target);
+        vVanRef.current += acc * h;
+        sVanRef.current += vVanRef.current * h;
+      }
+      if (sVanRef.current < 0) { sVanRef.current = 0; vVanRef.current = 0; }
+      if (sVanRef.current > 1) { sVanRef.current = 1; vVanRef.current = 0; }
+      // THE NOSE FOLLOWS THE VEHICLE, not the scrollbar: it is the van's own velocity that says
+      // which way it is travelling, and after a flick-and-stop those two disagree for ~370ms.
+      if (Math.abs(vVanRef.current) > 0.004) {
+        root.setAttribute("data-direction", vVanRef.current > 0 ? "down" : "up");
+      }
+      writeVan(sVanRef.current);
+      if (Math.abs(sVanRef.current - target) < SPRING_EPS && Math.abs(vVanRef.current) < SPRING_EPS) {
+        sVanRef.current = target;
+        vVanRef.current = 0;
+        writeVan(target);
+        return; // asleep — no rAF is pending and none will be until the reader scrolls
+      }
+      springRaf = requestAnimationFrame(springStep);
+    };
+    const wakeSpring = () => {
+      if (springRaf) return;
+      springLast = performance.now();
+      springRaf = requestAnimationFrame(springStep);
+    };
+
     let ticking = false;
     let rafId = 0;
     let lastDirP = 0;
@@ -402,8 +520,10 @@ export function RouteOverlay() {
       // which is precisely the FO-3 field signature (a fully-drawn line beside a correct van).
       const sw = warpAt(warpRef.current, p);
       const s = isFinite(sw) ? Math.min(1, Math.max(0, sw)) : p;
+      // THE LINE IS THE CLAIM and it stays 1:1 with warped scroll. The van does NOT.
       root.style.setProperty("--route-progress", String(s));
-      applyVan(vanRef.current, lutRef.current, s);
+      targetRef.current = s;
+      wakeSpring();
       const dp = p - lastDirP;
       if (Math.abs(dp) > 0.003) {
         root.setAttribute("data-direction", dp > 0 ? "down" : "up");
@@ -434,6 +554,11 @@ export function RouteOverlay() {
       // Complete static composition: fully drawn lead, ALL strands painted with correct over/under,
       // nodes lit by default, no van.
       root.style.setProperty("--route-progress", "1");
+      // No van, no reflection, no spring: the parameter is simply pinned to the end of the road so
+      // anything reading it sees a completed trip rather than an uninitialised one.
+      targetRef.current = 1;
+      sVanRef.current = 1;
+      root.style.setProperty("--route-van", "1");
     } else {
       root.setAttribute("data-spine-live", "");
       root.setAttribute("data-direction", "down");
@@ -480,6 +605,7 @@ export function RouteOverlay() {
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
+      if (springRaf) cancelAnimationFrame(springRaf);
       if (roRaf) cancelAnimationFrame(roRaf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
@@ -527,7 +653,12 @@ export function RouteOverlay() {
         const sw = warpAt(warpRef.current, p);
         const s = isFinite(sw) ? Math.min(1, Math.max(0, sw)) : p;
         root.style.setProperty("--route-progress", String(s));
-        applyVan(vanRef.current, lutRef.current, s);
+        // The van keeps its OWN parameter across a reflow — snapping it to the head would undo the
+        // spring's whole argument — but it must be re-placed against the NEW table, or it would
+        // still be sitting on a point from the old geometry.
+        const sv = Math.min(1, Math.max(0, sVanRef.current));
+        applyVan(vanRef.current, reflRef.current, lutRef.current, sv);
+        root.style.setProperty("--route-van", sv.toFixed(5));
       }
     };
 
@@ -588,18 +719,64 @@ export function RouteOverlay() {
                 <stop className="spine-strand-light" offset={geo.inkY1} />
                 <stop className="spine-strand-light" offset="1" />
               </linearGradient>
+
+              {/* MASK-FADE INFINITY. The companions are the EXISTING NETWORK, and a network does
+                  not start at the top of a marketing page or stop above a footer — so they fade in
+                  out of the dark and fade back into it. The ACTIVE LEAD IS DELIBERATELY NOT MASKED:
+                  it is this trip, it has a beginning and it arrives. That contrast is the whole
+                  narrative — an infinite system, one completed journey — and it is why the mask is
+                  scoped to the companion group rather than applied to the svg. */}
+              {/* THE FADE IS ANCHORED TO curveStart, NOT TO h, AND THAT IS THE WHOLE POINT.
+                  The companions only exist over the SERPENTINE portion — they stop at curveStart,
+                  which is up to 460px above the path's end. A fade positioned as a fraction of h
+                  therefore sat BELOW where the strands already were, did nothing at all, and left
+                  them terminating on a hard cut. Measured on the first build of this task. */}
+              <linearGradient id="routeFadeGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2={geo.h}>
+                <stop className="route-mask-off" offset="0" />
+                <stop className="route-mask-on" offset={Math.min(0.2, 200 / Math.max(1, geo.h))} />
+                <stop className="route-mask-on" offset={Math.max(0.3, (geo.curveStart - 240) / Math.max(1, geo.h))} />
+                <stop className="route-mask-off" offset={Math.min(1, geo.curveStart / Math.max(1, geo.h))} />
+                <stop className="route-mask-off" offset="1" />
+              </linearGradient>
+              <mask id="routeFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width={geo.w} height={geo.h}>
+                <rect x="0" y="0" width={geo.w} height={geo.h} fill="url(#routeFadeGrad)" />
+              </mask>
+
+              {/* THE REFLECTION's blur. A filter region has to be given room or the blur is clipped
+                  into a hard edge, which reads as a rectangle rather than as a glow. */}
+              <filter id="routeVanGlow" x="-120%" y="-120%" width="340%" height="340%">
+                <feGaussianBlur stdDeviation="3.2" />
+              </filter>
             </defs>
 
             {/* COMPANION STRANDS — BEHIND runs. Decorative siblings: never sampled, never ridden.
                 They are STATIC (always fully drawn) on purpose — they are the existing network, not
                 this trip. D29's accent law is what makes that the right reading: the lead is mint
                 because it is live, and the companions are charcoal because they are not. */}
-            {geo.comps.map((c, i) =>
-              c.behind ? (
-                <path key={`b${i}`} d={c.behind} className="route-strand" stroke="url(#routeStrandGrad)"
-                      strokeWidth="2" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-              ) : null
-            )}
+            <g mask="url(#routeFadeMask)">
+              {geo.comps.map((c, i) =>
+                c.behind ? (
+                  <path key={`b${i}`} d={c.behind} className="route-strand" stroke="url(#routeStrandGrad)"
+                        strokeWidth="3" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                ) : null
+              )}
+            </g>
+
+            {/* THE REFLECTION — a blurred, mint, low-opacity twin sitting just under the van, drawn
+                BEFORE the lead so the line passes over it: the van reads as gliding ON the surface
+                rather than as dragging a shadow behind it. It is a GLOW TWIN, not a mirror — a
+                mirrored copy under a 90-degree-rotated glyph reads as a duplicate van, not as a
+                reflection. It consumes s_van from the same applyVan call as the van itself, so the
+                two can never drift apart. White or mint only: cyan stays rejected (S-007/D29). */}
+            <g ref={reflRef} className="route-reflection" aria-hidden="true">
+              <g className="route-van-lane">
+                <g className="route-van-nose">
+                  <g transform="translate(0 11) scale(1 0.72)">
+                    <use href="#route-van-art" />
+                  </g>
+                </g>
+              </g>
+            </g>
 
             {/* THE CANONICAL PATH — the single truth. The van, the LUT, the dash and the nodes all
                 consume this and nothing else. */}
@@ -609,7 +786,7 @@ export function RouteOverlay() {
               data-route-canonical=""
               className="route-path"
               stroke="url(#routeGrad)"
-              strokeWidth="2.5"
+              strokeWidth="3.2"
               strokeLinecap="round"
               pathLength={1}
               vectorEffect="non-scaling-stroke"
@@ -643,7 +820,7 @@ export function RouteOverlay() {
             <g ref={vanRef} className="route-van" aria-hidden="true">
               <g className="route-van-lane">
                 <g className="route-van-nose">
-                  <g className="route-van-art" transform="translate(-15 -9.5) scale(0.9375 0.95)">
+                  <g id="route-van-art" className="route-van-art" transform="translate(-15 -9.5) scale(0.9375 0.95)">
                     {/* Keeps the group's box exactly the 32x20 the old rendered svg occupied, so the
                         van's measured centre is the point on the path — which is what I15/I20
                         measure and what the rotation turns about. */}
@@ -669,12 +846,14 @@ export function RouteOverlay() {
                 the van and the lead pass BEHIND these segments and in front of the behind-runs, so
                 the three strands genuinely interleave rather than merely overlapping. No z-index, no
                 second surface — paint order is the whole mechanism. */}
-            {geo.comps.map((c, i) =>
-              c.front ? (
-                <path key={`f${i}`} d={c.front} className="route-strand" stroke="url(#routeStrandGrad)"
-                      strokeWidth="2" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-              ) : null
-            )}
+            <g mask="url(#routeFadeMask)">
+              {geo.comps.map((c, i) =>
+                c.front ? (
+                  <path key={`f${i}`} d={c.front} className="route-strand" stroke="url(#routeStrandGrad)"
+                        strokeWidth="3" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                ) : null
+              )}
+            </g>
           </svg>
         </>
       ) : null}

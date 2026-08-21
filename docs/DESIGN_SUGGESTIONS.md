@@ -704,3 +704,41 @@ a **background-register** question, which leaves the alarms and the jade accent 
   checked implementation instead of re-deriving one — and so nobody mistakes "unused" for "failed" and re-benches it.
 - **The guardrail that comes with it:** grain is a **theater-register** tool. It must never land on a D18 deep-reading
   surface, and `feTurbulence` remains banned as the mechanism (a named AI tell); the tile is a raster on purpose.
+
+
+---
+
+## S-039 — Global spring interaction grammar — **ADOPTED, NEXT TASK (#36)**
+
+- **Source:** **Advisor round**, registered during the Task #35 signature rescue · **Date:** 2026-08-21 ·
+  **Disposition:** **ADOPTED-NEXT-TASK**
+- Every hover, dropdown and focus transition moves onto the **`--spring-settle` family**, so the whole
+  interface shares one arrival grammar instead of the site having spring physics in exactly two places.
+- **The prerequisite is already paid.** The token shipped broken in #33 (percentage outputs; `linear()`
+  takes a `<number>`) and was fixed in #34 — so this is now a grammar that can actually be applied
+  rather than one that silently resolves to `0s ease`. **Any surface adopting it must verify the
+  COMPUTED style, not the source**; that is exactly how the #33 defect stayed invisible for a task.
+- **The ceiling still binds:** nexo-brand §5 caps chrome motion at ~250ms, so chrome consumes the spring
+  *curve* at a chrome *duration*. The 620ms duration is for arrivals, not for a dropdown.
+
+---
+
+## S-040 — Premium form fields on /apply — **ADOPTED, NEXT TASK (#36)**
+
+- **Source:** **Advisor round** · **Date:** 2026-08-21 · **Disposition:** **ADOPTED-NEXT-TASK**
+- Field focus gains a **white focus glow driven by the spring**, giving /apply the same instrument
+  quality the chrome now has.
+- **Two laws bind it before it starts.** **WHITE, not mint** — mint restraint (D31) allows exactly two
+  mint surfaces on the noir register, the active route and the primary CTA, and a focused input is
+  neither. And a focus indicator is an **a11y contract before it is an aesthetic one**: whatever the glow
+  does, the focus state must remain unambiguous at the same or better contrast than today.
+
+---
+
+## S-041 — Sample-card spring lifts on dispatch / platform — **ADOPTED, NEXT TASK (#36)**
+
+- **Source:** **Advisor round** · **Date:** 2026-08-21 · **Disposition:** **ADOPTED-NEXT-TASK**
+- The dispatch and platform sample cards gain spring-driven lifts, matching the boxed nav cells.
+- **Watch the copy gate, not just the motion:** those cards carry sample data, and any lift that draws
+  the eye to them raises the stakes on §7's "sample data must be obviously fictional" rule. Motion is
+  not a reason to revisit the copy, but a reviewer looking at them again is.

@@ -43,6 +43,23 @@ the one-task shift in the numbering can be audited.
 | **#37** | **Homepage tonal map + mid-band re-cast into theater** per D30. | Needs #33–#36 to exist first, because the seam is drawn between real registers rather than described. **This redraws tonal map v3 rather than inferring the change.** |
 | then | **W2 hero-signature concept round** — including the **searching line and the recalculation event** (S-031's autonomous half). | Still deliberately last: it speaks the braid and ambient language the earlier rungs make real. |
 
+## IMPLEMENTATION LADDER — **v3** (Task #35, after the owner's field verdict)
+
+**Ladder v2 is superseded.** The owner scrolled the shipped signature and ruled it a basic
+scroll-tracker, which inserted a rescue task that v2 had no rung for and pushed everything after it
+down one. The advisor's interaction items are registered (S-039/S-040/S-041) and take the next rung
+rather than being folded into a later one, because they are the grammar every remaining rung will
+consume.
+
+| Task | Rung | Why here |
+|---|---|---|
+| **#35 — DONE (2026-08-21)** | **Signature rescue** — visible braid, mask-fade infinity, van reflection, spring-follow physics, I20 evolved to a three-leg van contract | The signature is the thing the whole programme is for, and it was not landing. |
+| **#36 — NEXT** | **Global spring interaction grammar + premium forms** (S-039, S-040, S-041) | The spring exists and is now proven to actually apply; spreading it is what makes it a grammar rather than two special cases. |
+| **#37** | **Ambient B4-d2** — the dispatch-network model | |
+| **#38** | **Mobility cards** — spring physics + charcoal elevation (N4-A reversed, S-037) | |
+| **#39** | **Homepage tonal map + mid-band re-cast into theater** (D30) | Needs the rungs above to exist, because the seam is drawn between real registers. |
+| then | **W2 hero-signature script** — the searching line and the recalculation event (S-031's autonomous half) | Still last, and still the ONLY place autonomy is allowed. |
+
 **STATUS, updated 2026-08-21 (Task #33).** **The Round-2 picks are in (D31), so nothing on this ladder is blocked on
 the owner any more.** #33 is built: the liquid-glass nav at the 0.75 lineage floor with the solid ink-bold fallback,
 the boxed-destination panels, the **D25 reversal executed**, framer-motion **removed**, and the spring + breathing

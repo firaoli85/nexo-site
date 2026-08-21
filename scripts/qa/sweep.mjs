@@ -519,9 +519,16 @@ const I20_PROBE = () => {
   // healthy van and silently skip the assertion.
   const p = parseFloat(getComputedStyle(root).getPropertyValue("--route-progress"));
   if (!isFinite(p)) return { bad: "--route-progress is not a number" };
+  // TASK #35 — THE VAN RIDES ITS OWN PARAMETER. Since the spring-follow change the van chases the
+  // line's head instead of being nailed to it, so comparing it against --route-progress would fail
+  // on a perfectly correct build during any motion. What must STILL be true, and is the whole
+  // reason the change is safe, is that the van is exactly on the CANONICAL PATH at its own
+  // parameter: it rides its own point on the road, never its own road.
+  const sv = parseFloat(getComputedStyle(root).getPropertyValue("--route-van"));
+  if (!isFinite(sv)) return { bad: "--route-van is not a number (the van publishes no parameter, so adherence cannot be checked)" };
   const m = path.getScreenCTM();
   const L = path.getTotalLength();
-  const q = path.getPointAtLength(p * L);
+  const q = path.getPointAtLength(Math.min(1, Math.max(0, sv)) * L);
   const hx = m.a * q.x + m.c * q.y + m.e;
   const hy = m.b * q.x + m.d * q.y + m.f;
   // MEASURE THE VAN GROUP'S OWN ORIGIN, not its bounding box. Since Task #22 the van is a <g>
@@ -544,6 +551,8 @@ const I20_PROBE = () => {
   const seam = document.querySelector("[data-route-seam]");
   return {
     p: +p.toFixed(4),
+    sv: +sv.toFixed(4),
+    lag: +Math.abs(sv - p).toFixed(4),
     // SINGLE-TRUTH RECEIPT: an identity CTM is what makes the line and the van one coordinate
     // system. If someone reinstates h-full/w-full or preserveAspectRatio on that svg, this moves
     // off 1 and the detail string says so by name.
@@ -596,7 +605,7 @@ export async function checkVanRidesLine(page, route, width) {
     if (Math.abs(o.ctmA - 1) > 0.001 || Math.abs(o.ctmD - 1) > 0.001)
       problems.push(`${label}: route svg CTM is not identity (a=${o.ctmA} d=${o.ctmD}) — the line can scale away from the van; check for h-full/w-full or preserveAspectRatio on the route svg`);
     if (o.delta > I20_TOL)
-      problems.push(`${label}: van is ${o.delta}px off the drawn head at p=${o.p} (tolerance ${I20_TOL}px)`);
+      problems.push(`${label}: van is ${o.delta}px OFF THE CANONICAL PATH at its own parameter s_van=${o.sv} (tolerance ${I20_TOL}px). The van must ride its own point on the road, never its own road.`);
     // THE LINE MUST AGREE WITH THE VARIABLE IT CLAIMS TO BE DRAWING (Task #25, FO-3 root cause).
     // I20 previously compared the van against the path GEOMETRY and never asked what the line was
     // actually drawing, which is precisely where the defect lived.
@@ -618,6 +627,57 @@ export async function checkVanRidesLine(page, route, width) {
     sawVan = true;
   }
   if (!sawVan) return { pass: true, detail: "I20 skip: van never rendered" };
+
+  // (a3) THE CONVERGENCE LEG (Task #35). The spring is only legal because it SETTLES: the van is
+  // allowed to lag the head while the reader is moving, and is required to arrive once they stop.
+  // A spring that never converges is a van permanently in the wrong place; a spring that converges
+  // instantly is not a spring. This asserts both ends of that.
+  {
+    const conv = await page.evaluate(async () => {
+      const root = document.querySelector(".route-overlay");
+      if (!root) return null;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const rd = () => ({
+        p: parseFloat(getComputedStyle(root).getPropertyValue("--route-progress")),
+        sv: parseFloat(getComputedStyle(root).getPropertyValue("--route-van")),
+      });
+      // A FLICK: jump a long way in one step, which is the case the spring exists for.
+      window.scrollTo({ top: Math.round(max * 0.2), behavior: "instant" });
+      await new Promise((r) => setTimeout(r, 700));
+      window.scrollTo({ top: Math.round(max * 0.75), behavior: "instant" });
+      // SAMPLE A WINDOW, NOT A FRAME. A single reading taken right after the scroll can land inside
+      // the spring's wake-up window and see a STALE large lag even when the spring is disabled --
+      // which is exactly how this leg failed its own negative test (a van welded to the head still
+      // reported a 0.55 lag on the first frame and the check passed). The median over the first
+      // ~300ms cannot be fooled that way: a welded van sits at ~0 for essentially every frame,
+      // while a springing van holds a real lag across the whole window.
+      const lags = [];
+      const tw = performance.now();
+      while (performance.now() - tw < 300) {
+        await new Promise((r) => requestAnimationFrame(r));
+        const n = rd();
+        lags.push(Math.abs(n.sv - n.p));
+      }
+      lags.sort((a, c) => a - c);
+      const during = { lagMedian: lags.length ? lags[Math.floor(lags.length / 2)] : 0, frames: lags.length };
+      const t0 = performance.now();
+      let settled = -1;
+      while (performance.now() - t0 < 2500) {
+        await new Promise((r) => requestAnimationFrame(r));
+        const now = rd();
+        if (Math.abs(now.sv - now.p) < 0.002) { settled = performance.now() - t0; break; }
+      }
+      return { duringLag: during.lagMedian, lagFrames: during.frames, settledMs: settled, after: rd() };
+    });
+    if (!conv) problems.push("convergence: no route overlay to measure");
+    else {
+      if (conv.settledMs < 0) problems.push(`convergence: the van never caught the head — still ${Math.abs(conv.after.sv - conv.after.p).toFixed(4)} behind after 2500ms of no scrolling`);
+      else if (conv.settledMs > 1200) problems.push(`convergence: the van took ${Math.round(conv.settledMs)}ms to arrive after the scroll stopped (budget 1200ms)`);
+      if (conv.duringLag < 0.004) problems.push(`the van did NOT lag a large instant scroll — median lag ${conv.duringLag.toFixed(5)} over ${conv.lagFrames} frames. The spring is not running, so the van is welded to the scrollbar.`);
+    }
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    await page.waitForTimeout(400);
+  }
 
   // (a2) THE WARP LEG (Task #34). Two things are asserted and they are different claims.
   //   OBEDIENCE: --route-progress must be MONOTONE NON-DECREASING as the reader scrolls down.
@@ -718,9 +778,12 @@ const I20_ZOOM_PROBE = () => {
   // Without this guard getPointAtLength(NaN) THROWS, and the failure surfaces as an opaque "lane
   // error TypeError" instead of naming the real cause — which is the FO-3 signature itself.
   if (!isFinite(p)) return { bad: "--route-progress is not a number" };
+  // Same evolution as the core probe: adherence is asserted at the VAN's parameter (Task #35).
+  const sv = parseFloat(getComputedStyle(root).getPropertyValue("--route-van"));
+  if (!isFinite(sv)) return { bad: "--route-van is not a number" };
   const m = path.getScreenCTM();
   const L = path.getTotalLength();
-  const q = path.getPointAtLength(p * L);
+  const q = path.getPointAtLength(Math.min(1, Math.max(0, sv)) * L);
   const q0 = path.getPointAtLength(0);
   const hx = m.a * q.x + m.c * q.y + m.e, hy = m.b * q.x + m.d * q.y + m.f;
   const vm = van.getScreenCTM(); // the group's own origin — see the note in I20_PROBE
