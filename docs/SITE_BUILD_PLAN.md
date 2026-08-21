@@ -349,6 +349,15 @@ scoped to what can honestly be built, not to what would be nice.
 
 ### W1 — Chrome evolution
 
+> **D27 RESCOPES THIS WORKSTREAM (2026-08-20).** The nav becomes **bold and unmistakable** — heavy
+> presence, liquid-glass weight, boundary perceivable at a glance, **colour no longer restricted to
+> ink** (D27a, S-015) — and the panels become **boxed destinations, never text lists** (D27b, S-016),
+> on the Railway pattern dissected in `DESIGN_RESEARCH` §15. **`nexo-shape` folds in here** as the
+> panel's motion: Railway animates panel HEIGHT between triggers, measured 266→302px over ~120ms.
+> **The FO-2 hairline question is SUPERSEDED, not reopened** — I21 stays the floor, and the bold nav
+> answers the perception problem the hairline could not. **Nothing reaches the site before the Grand
+> Bench (B1) and an owner reaction.**
+
 Nav and terminus footer, on the keep-and-evolve verdicts from `DR` §11a.
 
 - **KEEP:** one `<nav>` landmark · sticky header (a deliberate divergence from Stripe) · real
@@ -365,6 +374,14 @@ Nav and terminus footer, on the keep-and-evolve verdicts from `DR` §11a.
   the same class of fact).
 
 ### W2 — THE HERO SIGNATURE PIECE (D19)
+
+> **D27c RAISES THE PRIORITY AND CHANGES THE ORDER (2026-08-20).** The dispatch console **demotes
+> down-page** and a **big signature animation leads** the hero (S-017). **This workstream is
+> deliberately sequenced AFTER the Grand Bench**, because the signature piece must speak the braid
+> (D27f) and ambient-meaning (D27e) language the bench establishes — building it first would freeze a
+> vocabulary nobody has chosen yet. The constraints box below is unchanged and still binds. Note that
+> demoting the console is an **information-architecture change**, not a move: it currently carries the
+> LCP content and four proof scenes.
 
 **Concept proposed by Claude in P3 as rendered comparisons; owner reacts before build.**
 
@@ -403,6 +420,13 @@ motion, press feedback). **He returned to his own token file's ancestor without 
 bad screen. **P5 measures; W4 must not resolve C3 by guessing.**
 
 ### W5 — Motion system
+
+> **PART 2a IS DONE (Task #28)** — motion-safe architecture converted, the structural guard live, the
+> `nexo-motion` skill authored. **PART 2b IS THE GRAND BENCH**, and D27 has enlarged it well past the
+> original four candidates. The roster is **`docs/GRAND_BENCH_PLAN.md`**: **B1 bold nav + boxed
+> panels** (absorbs `nexo-shape`), **B2 mobility cards** (S-001's concrete form, S-018), **B3 braided
+> route** (S-020), **B4 ambient meaning** (S-019), **B5 `nexo-drift` + `nexo-settle`**. Candidates are
+> **rendered for owner reaction before any site application**.
 
 The four candidates (D20d), approved for P3 exploration and **encoding into a `nexo-motion` skill**:
 
@@ -498,6 +522,13 @@ conversion has **not** started. W5 remains in progress.
 
 
 ### W6 — Illustration / animation imagery system (D19)
+
+> **D27e/D27g RESCOPE THIS (2026-08-20).** The background layer is **redesigned, not tuned**: every
+> line must read as an **intentional system model** — aggressive, legible, semantic (S-019, bench B4).
+> The current `AmbientMap` is deliberately abstract, and that is precisely what the ruling rejects.
+> **Per-page atmosphere becomes an obligation in P4** — *no page ships as bare paper* (S-021) — but it
+> is **ordered after B4**: rolling the current ambient system to every page would multiply exactly the
+> decoration D27e rejects. **Meaning first, rollout second.**
 
 Primary imagery = animation + custom illustration in our own visual language. **Stock people-photography
 permanently banned** (fake patients read as fake trust). **Real photography deferred until real operations

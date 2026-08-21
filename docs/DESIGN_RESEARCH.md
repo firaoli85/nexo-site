@@ -2189,6 +2189,12 @@ receipt of what the owner responded to, not a commitment to build it.
 
 ### The Railway convergence — VERIFIED, and larger than stated
 
+> **FORWARD POINTER (2026-08-20) — SECOND DRAW.** D27 draws on Railway again, this time for the
+> **boxed-destination panel pattern**, dissected at CSS level in **§15**. Two draws from one studio is
+> how a *reference* quietly becomes a *template*, so the credit-and-improve law binds harder here than
+> anywhere else in this document. **§15g carries the fact-check and names the specific improvements**
+> that keep it a reference.
+
 The owner picked Railway on feel alone. **V1's design tokens are already documented as Railway-derived**, and
 the dependency is deeper than the palette. Verified in `src/app/globals.css` on 2026-08-17:
 
@@ -2494,3 +2500,244 @@ Recorded explicitly, because these are the points a future session might otherwi
 
 **Nothing in this dissection changes a token.** It feeds the three-direction bench, and the bench feeds
 an owner ruling (D25).
+
+---
+
+## 15. RAILWAY — THE NAV, THE BOXES, AND THE AMBIENT (dissected live, 2026-08-20/21)
+
+**Why this dissection exists.** D27 names Railway twice: the owner wants the **boxed-destination panel
+pattern** (D27b) and admires their **boxes** generally. Railway is also the palette ancestor recorded in
+§13 — so this is the **second** time the same studio has been drawn on. The credit-and-improve law
+applies with more force, not less: credit is given here in the only form that means anything, which is
+reading what they actually did at the level of the CSSOM rather than admiring a screenshot.
+
+**Method:** the same five fields as the Stripe/Linear/GitLab rounds — **PURPOSE / STRUCTURE / TECHNIQUE
+/ DEGRADATION / VERDICT**. Verdicts are **TAKE / ADAPT / REJECT** against `nexo-brand` and the ledger,
+not against taste. Every number below is read from the live DOM, CSSOM or network log on
+**2026-08-20/21** (the session crossed midnight), at **1440×900, DPR 1, Chromium**. A single run is a single run; the perf figures are
+observations, not a lab.
+
+---
+
+### 15a. THE NAV, CLOSED — and the finding that contradicts the brief
+
+**PURPOSE.** Carry the wordmark, five top-level destinations and two account actions across a very long
+dark page, without competing with a full-bleed illustrated hero.
+
+**STRUCTURE.** Measured, outermost first:
+
+| Layer | What it is | Measured |
+|---|---|---|
+| bar | `div.sticky.top-0.z-[9999].py-4` | **1440×72**, `position: sticky`, `bg rgb(19,17,28)` |
+| container | `div.max-w-container.w-full.mx-auto` | 1160×40, `flex justify-between items-center` |
+| menu | `nav.relative.z-50.flex.justify-center` → `ul.flex.items-center.gap-2` → `li` → `button[aria-expanded]` | **540×32**, centred |
+| trigger | `button.group…rounded-md data-[state=open]:bg-gray-50` | 32px tall, **16px / weight 400**, `rgb(247,247,248)`, radius **6px**, padding **6px 12px**, gap 8px |
+
+**THE FINDING THAT MATTERS, AND IT CUTS AGAINST THE BRIEF.** The bar's background is
+**`rgb(19,17,28)`** and the page body's background is **`rgb(19,17,28)`** — *the same value*. And:
+
+- `backdrop-filter: **none**`
+- `border-bottom: **0px**`
+- `box-shadow: **none**`
+- scrolled to y=1400, **every one of those is unchanged** — no scrolled state at all.
+
+**Railway's nav has no boundary, and never acquires one.** It is not glass; it is not layered; it is a
+region of page that happens to hold the menu. What carries presence is the **wordmark, the trigger
+rhythm, and the panel that drops out of it** — not the surface.
+
+**TECHNIQUE.** Radix-style `data-[state=open]` attribute styling; the open trigger takes a fill
+(`bg-gray-50` in light, a subtle lift in dark). No JS animation in the bar itself.
+
+**DEGRADATION.** Nothing to degrade — it is a solid colour and a flex row.
+
+**VERDICT: REJECT for the surface, TAKE for the trigger rhythm.**
+**This is the most useful thing the dissection found, precisely because it disappoints.** D27a asks for
+a **boundary perceivable at a glance**; the reference the owner named **solves that problem by not
+having the problem** — same colour as the page, no edge, ever. So Railway **cannot be the answer to
+D27a**, and B1 must not chase it there. What Railway does supply is the **trigger geometry**: a compact
+32px pill with 6px radius and a real open-state fill, which reads as a control rather than a word.
+**Collision named:** our `--nav-glass` at alpha 0.90 with `blur(12px)` is a *more* substantial surface
+than Railway's, already. "Liquid weight" (S-023) is ours to define, not theirs to lend.
+
+---
+
+### 15b. THE OPEN PANEL — the boxed-destination pattern, measured
+
+**PURPOSE.** Turn a menu into a small landing page: each destination gets a shape, a name, a sentence,
+and — for the featured one — a picture.
+
+**STRUCTURE.** One panel element, reused for every trigger:
+
+- **540×N at top 58, left 410** — *exactly the width and x-origin of the `ul`*. The panel is aligned to
+  the menu, not to the container. It is a drawer under the words, not a mega-menu.
+- `background: **rgb(0,0,0)**` — **pure black, darker than the page** (`rgb(19,17,28)`).
+- `border: 1px solid rgba(255,255,255,0.1)` · `border-radius: 12px` ·
+  `box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1)` · `padding: 0` ·
+  `overflow: hidden`.
+
+**The grid is asymmetric and it is the whole idea.** Two columns: one **featured cell** spanning the
+full height, and a stack of equal rows beside it.
+
+| Trigger | Panel | Featured cell | Secondary rows |
+|---|---|---|---|
+| Product | 540×**266** | 252×252 "Features" | 3 × 268×80 (Agents / Templates / Changelog) |
+| Developers | 540×**180** | 260×166 "Docs" | 2 × 260×80 (Blog / Central Station) |
+| Enterprise | 540×**180** | 256×166 "Enterprise" | 2 × 264×80 (Customers / Trust center) |
+| Company | 540×**302** | 260×288 "Careers" | job rows at 228×56, radius 6, `rgba(255,255,255,0.05)` |
+
+**HOW EACH DESTINATION IS BOXED — and it is cheaper than it looks.** The box is **not** the `<a>`. The
+`<a>` carries no border, no background and no radius. The box is an **inner `div`**:
+
+- `background: **rgb(19,17,28)**` — *the page colour*, sitting on the panel's **pure black**.
+- `border-radius: 6px` · `padding: 16px` · `transition: all` · **`border: 0px` — no border anywhere.**
+
+**The separation is fill-against-fill, not a drawn edge.** The panel goes darker than the page so the
+cells can be page-coloured and still read as raised. That is one extra colour value and zero borders,
+and it produces the crisp "designed box" the owner responded to. **This is the single most stealable
+mechanic in the dissection** — it costs nothing and it is the opposite of how we currently build ink
+surfaces, where we *lighten* a card and give it a `--on-ink-border-strong` edge.
+
+**HOVER.** Measured on the cell div: `rgb(19,17,28)` → **`rgb(24,22,34)`**. A +5/+5/+6 lift, and
+nothing else — no transform, no shadow, no border change. Extremely quiet, and it works because the
+cell already reads as an object.
+
+**THE FEATURED CELL'S ARTWORK** is a **CSS `background-image: url("/illustrations/…")`** — an external
+asset, not inline SVG, not `<img>`, not `<video>`.
+
+**TECHNIQUE — the morph, and it is `nexo-shape` with a reference implementation.** The panel declares
+`transition: height 0.2s cubic-bezier(0,0,0.2,1)` with `overflow: hidden`. Moving Product → Company,
+sampled live:
+
+```
++  0ms  h=266   (Product open)
++ 40ms  h=266
++ 80ms  h=296
++120ms  h=302   (settled)
+```
+
+**One panel, height-interpolated between destinations.** Our `nexo-shape` candidate (`nexo-motion`
+§3.2) proposed exactly this and flagged that `height` is a layout property we otherwise ban. **Railway
+ships it at 200ms on a 540px-wide panel and it is smooth** — which is evidence, though not proof for
+our case: their panel is small, isolated, and `overflow: hidden`, which is the cheap configuration.
+
+**DEGRADATION.** With the transition removed the panel snaps between sizes — content is complete at
+every step, because the height animation only clips an already-laid-out box. **Static-complete by
+construction**, which is why this mechanic is safe for us.
+
+**VERDICT: TAKE the boxed-cell mechanic (fill-against-fill on a darker panel). TAKE the asymmetric
+featured-cell grid. ADAPT the artwork (inline SVG in our line-art language — D20 prefers zero new
+assets, and an external illustration file is a new asset per panel). ADAPT the morph as `nexo-shape`,
+benched not assumed. REJECT nothing here.**
+**Collisions named:** (1) the cell fill trick inverts our ink-surface convention, so B1 must re-derive
+contrast — a page-coloured cell on a black panel is a **new pairing** D23 has never measured;
+(2) `overflow: hidden` on a height-morphing panel will clip a focus ring — the focus-visible treatment
+must be verified inside the morph, not only at rest; (3) our nav is one `<nav>` landmark and Radix
+`NavigationMenu` — the boxed grid must live *inside* the existing panel, not become a second landmark.
+
+---
+
+### 15c. THE AMBIENT — the background that IS the product, and the answer to D27e
+
+**PURPOSE.** Make a marketing section explain the product without a paragraph.
+
+**STRUCTURE.** Down-page, their sections do not carry an abstract texture. They carry a **rendering of
+the product's own canvas**: a dotted-grid field, **service nodes drawn as boxes** with a runtime icon
+and a live status line (*"Backend (Worker) — Building…"*, *"Deployed just now"*), and **connector lines
+running between them**. A vertical rule runs down the page edge. Below it, a three-up feature row with
+small line icons over a hairline.
+
+**Box vocabulary, counted across the page:** 21 boxed elements, radii **8px ×12, 12px ×3, 10px ×1,
+16px ×5** — a deliberately small radius set, nothing over-rounded.
+
+**TECHNIQUE.** Static composition; the "canvas" is a designed mock, not a live widget.
+
+**DEGRADATION.** It is a picture of a system. Nothing to degrade.
+
+**VERDICT: TAKE the principle, wholesale — this is the strongest reference in the dissection for
+D27e.** Their background is legible **because it depicts the actual system**, and every line in it can
+state its purpose: this is a service, this is a dependency, this one is building. That is exactly the
+intentionality doctrine (D27h) rendered rather than argued.
+**What maps to us:** a **dispatch-network model** — trips, stops, providers, the claim path — is our
+equivalent of their deployment canvas, and it is honest content we already describe in words.
+**Collisions named:** (1) **text sovereignty** (`nexo-brand` §6.1) — a legible background is a *louder*
+background, and body text over it must still clear AA on **painted pixels**; **I22 does not exist**
+(registered W9 debt), so B4 owes a manual painted-pixel pass by Task #27's method; (2) the **copy gate**
+— a dispatch model must not depict live tracking, ETAs, or a driver app; (3) **NO REAL INSTITUTION
+NAMES** (§7) if the model labels places; (4) sample data must stay obviously fictional.
+
+---
+
+### 15d. PERFORMANCE — single run, 2026-08-20, not lab-grade
+
+| Metric | Railway (observed) | Our D20 ceiling | Ratio |
+|---|---|---|---|
+| DOMContentLoaded | **4,814 ms** | ≤1,200 ms | **4.0×** |
+| Requests | **299** | ≤60 | **5.0×** |
+| Transfer | **≥3,854 KB** (floor) | ≤600 KB | **≥6.4×** |
+| Scripts | **207** | — | — |
+| Images / fonts | 54 / 6 | — | — |
+
+*Transfer is a floor: it sums `content-length`, and compressed responses without that header count
+zero, so the true figure is higher.*
+
+**VERDICT: REJECT the budget, TAKE the patterns.** Everything worth stealing here — the black panel,
+the page-coloured cells, the 6px radii, the height morph, the product-canvas background — is **CSS and
+markup**, and costs approximately nothing. Railway's 4× DCL buys their app, their video, and 207
+scripts; **none of it buys the nav.** This is the same finding as GitLab's gradient in §14a: *the thing
+the owner loves is the cheapest thing on the page.* **D20 is not in tension with D27.**
+
+---
+
+### 15e. VERDICT TABLE
+
+| # | Element | Verdict | Maps to | Collision named |
+|---|---|---|---|---|
+| 1 | Bar surface (no boundary, ever) | **REJECT** | — | Directly contradicts D27a's "boundary at a glance" |
+| 2 | Trigger geometry (32px pill, 6px radius, open-fill) | **TAKE** | Nav triggers (B1) | None |
+| 3 | Panel: black fill darker than page | **TAKE** | Nav panel (B1) | New D23 pairing; must be measured |
+| 4 | Cells: page-coloured fill, 6px radius, **no border** | **TAKE** | Boxed destinations (B1) | Inverts our lighten-plus-edge ink convention |
+| 5 | Asymmetric featured-cell grid | **TAKE** | Platform menu (B1) | None |
+| 6 | Hover: +5/+5/+6 fill lift only | **ADAPT** | Cell hover (B1) | Needs a **focus twin** (`nexo-brand` §5) |
+| 7 | Featured artwork as a CSS `background-image` asset | **ADAPT** | Our line-art, **inline SVG** | D20: zero new assets |
+| 8 | Panel height morph, 200ms | **ADAPT** → `nexo-shape` | Panel motion (B1) | `height` is a layout property; `overflow:hidden` clips focus rings |
+| 9 | Product-canvas background | **TAKE (principle)** | Ambient meaning (B4) | Text sovereignty; copy gate; §7 names; I22 absent |
+| 10 | Small radius vocabulary (8/12/16) | **TAKE** | Global | Matches our existing ≤16px card rule |
+| 11 | 299 requests / 4.8s DCL | **REJECT** | — | D20a is a ceiling, not a target |
+
+---
+
+### 15f. GITLAB'S NAV, RE-READ THROUGH D27
+
+§14c dissected GitLab's nav for **colour**; D27 asks a different question of the same page, so here is
+the re-read. **GitLab's nav is the failure mode D27 is describing.** It is a light bar with
+text-label triggers whose panels open as **multi-column link lists** — exactly the "list-shaped
+navigation, newspaper feel" verdict, and the reason §14c's own W1 note already rejected
+33-links-per-panel density. Its one transferable lesson is negative and worth stating plainly: **a
+panel that is only text scales by adding columns, and a panel built from boxes scales by promoting one
+destination** — which is why Railway's asymmetric grid stays readable at four destinations while
+GitLab's needs a directory. **What §14d's dark-card system still gives us is the card register itself**
+— the surface treatment, radius and internal rhythm that B2's mobility cards will speak — and that
+part is unchanged by D27. Take GitLab's **card**, not GitLab's **menu**.
+
+---
+
+### 15g. REGISTERED FACT-CHECK — Railway is now drawn on TWICE
+
+§13's convergence receipt established that V1's design tokens were **already Railway-derived** before
+the owner ever named Railway on feel — the file said so in its own comments (`Design tokens — refined
+Railway-inspired universal LIGHT theme`, `Railway uses very subtle borders`, `Railway-informed
+micro-interactions`). **D27 now draws on the same studio a second time, for the panel pattern.**
+
+That is not a problem, but it is a fact that must be on the record, because two draws from one source
+is how a *reference* quietly becomes a *template*. **The credit-and-improve law (owner's own framing:
+"be creative, give credit, and improve it") therefore binds harder here than anywhere else in this
+document.** Concretely, for B1:
+
+- **Credit is given**, in this section, at CSS level.
+- **The improvement must be nameable.** Copying the black-panel/page-cell mechanic without adding
+  something of ours would be a template. Our additions are available and specific: **our own line-art
+  iconography** instead of an illustration asset, **the jade accent and D25 atmosphere** where Railway
+  is monochrome, **a boundary treatment Railway does not have** (D27a — the very thing they reject),
+  and **motion-safe architecture with a static-complete guarantee** they make no attempt at.
+- **The divergence is already larger than the convergence**: their nav has no surface, ours is
+  colour-cast liquid glass; their budget is 6× ours; their artwork is an asset, ours is inline.

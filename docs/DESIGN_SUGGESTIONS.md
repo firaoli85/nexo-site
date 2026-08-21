@@ -272,3 +272,211 @@ a **background-register** question, which leaves the alarms and the jade accent 
   separate question and should not ride along with a temperature pick.
 - **Nothing here is a site token.** These are candidates until the warm-atmosphere implementation task
   ships them with a full cube and AA re-verification.
+
+---
+
+## S-015 — Bold, unmistakable nav (D27a)
+
+- **Source:** **Owner**, the Boldness Ruling (D27) · **Date:** 2026-08-20 · **Disposition:** **OWNER-DIRECTIVE → TEST-FIRST via the Grand Bench (B1)**
+- **The ask:** the nav becomes **bold and unmistakable** — sleek but with **heavy presence**, liquid-glass
+  weight, its **boundary perceivable at a glance**, and **colour no longer restricted to black/ink**.
+- **Impact:**
+  - **Supersedes the FO-2 hairline question rather than reopening it.** The seam measures painted and I21
+    is green at a 1.5 floor; it simply reads invisible to the owner. That is the *subtle approach* failing
+    the owner's bar, not a defect. **I21 remains the floor** — a bold nav must still pass it, and may not
+    be used as an excuse to drop it.
+  - **Collides with the single-dark-register rule** (`nexo-brand` NAV V2 / §6.1), which deliberately
+    deleted theme-flipping. "Colour no longer restricted to ink" reopens that as an owner call; the bench
+    must show a non-ink direction against the **worst case the register was built for: dark glass over a
+    pure-white section**.
+  - **D23 floors bind**, and `--nav-glass` alpha 0.90 was calibrated for that worst case. Any lighter or
+    more transparent surface re-derives the on-nav text ratios from scratch.
+  - **I17 (magic-line tracking) and I21 must stay green** through whatever ships.
+
+---
+
+## S-016 — Boxed-destination nav panels (D27b)
+
+- **Source:** **Owner**, the Boldness Ruling (D27) · **Date:** 2026-08-20 · **Disposition:** **OWNER-DIRECTIVE → TEST-FIRST via the Grand Bench (B1)**
+- **The ask:** each destination becomes a **designed box with its own shape/representation** — **never a
+  text list**. Railway is the named reference.
+- **Impact:**
+  - **Dissected live in `DESIGN_RESEARCH` §15**, so the pattern is now measured rather than admired.
+  - **Folds `nexo-shape` in** (`nexo-motion` §3.2): Railway's panel **animates its height between
+    triggers** — measured 266px → 302px over ~120ms. Our candidate was speculative; it now has a
+    reference implementation.
+  - **Collides with the W1 "REJECT: 33-links-per-panel density" ruling only in appearance** — boxes are
+    *fewer, larger* destinations, which is the opposite of density. No collision in substance.
+  - **Iconography must come from our own line-art language**, not borrowed marks. Railway paints its
+    featured cell with a CSS `background-image` asset; **D20 prefers zero new assets**, so ours should be
+    inline SVG.
+
+---
+
+## S-017 — Hero: console demotes, signature animation leads (D27c)
+
+- **Source:** **Owner**, the Boldness Ruling (D27) · **Date:** 2026-08-20 · **Disposition:** **OWNER-DIRECTIVE → sequenced AFTER the Grand Bench (W2)**
+- **The ask:** the dispatch console **moves down-page**; a **big signature animation leads** the hero.
+  Activates D19/W2 with priority.
+- **Impact:**
+  - **Deliberately sequenced last.** The signature piece must speak the braid (D27f) and ambient (D27e)
+    language, and those are what the bench establishes. Building the hero first would freeze a vocabulary
+    that has not been chosen — the same mistake as picking a colour before the ink register was tested.
+  - **W2's constraints box binds unchanged**: perf bar, static-complete, decline-don't-degrade, and a
+    named art-directed static resting state. **Never put the gamble in a hero.**
+  - **Demoting the console is a real information-architecture change**, not a move: the console currently
+    carries the LCP content and four proof scenes. Where it lands, and what leads instead, is a
+    content decision as much as a visual one.
+
+---
+
+## S-018 — Mobility cards: the switching service-level card set (D27d)
+
+- **Source:** **Owner**, the Boldness Ruling (D27) · **Date:** 2026-08-20 · **Disposition:** **OWNER-DIRECTIVE → TEST-FIRST via the Grand Bench (B2)**
+- **The ask:** the three service levels rendered as **beautiful switching cards** in the GitLab dark-card
+  register. **This is S-001's concrete form** — the card-motion directive finally has a subject.
+- **Impact:**
+  - **THE LEVEL COUNT IS LAW AND DOES NOT MOVE.** `nexo-brand` §7.1: **three** service levels
+    (ambulatory / wheelchair / stretcher), and **bariatric & two-person assist is a MODIFIER, never a
+    fourth level.** A four-card set would be a copy-gate violation, not a design choice.
+  - **Never claim platform enforcement** of assist/bariatric; it is an operational offering.
+    **Dignity language is mandatory** — needs-based, never size-as-spectacle.
+  - **Status/alarm semantics are untouched**: jade owns interaction and status; the D25 warm palette is
+    atmosphere-only and **may not enter a card's status affordance**.
+  - **S-001's hard part carries over verbatim:** *"not noisy" is a design problem, not a volume knob* —
+    density of craft, not density of movement.
+  - **Zero CLS**: a switching card set must not resize its container between states.
+
+---
+
+## S-019 — Ambient meaning: the background must state its purpose (D27e)
+
+- **Source:** **Owner**, the Boldness Ruling (D27) · **Date:** 2026-08-20 · **Disposition:** **OWNER-DIRECTIVE → TEST-FIRST via the Grand Bench (B4)**
+- **The ask:** background lines must read as an **intentional system model** — aggressive, legible,
+  semantic — **never unexplained decoration**.
+- **Impact:**
+  - **This is a redesign of `AmbientMap`, not a tuning of it.** The current map is deliberately abstract:
+    a dot grid, three winding routes, node pins, two glyphs. It was built to be *atmosphere*, and the
+    ruling is that atmosphere without meaning is not enough.
+  - **Railway's answer is the strongest reference we have** (§15c): their section background **is the
+    product's own canvas** — dotted field, real service nodes, connectors, live status. Legible because
+    it depicts the actual system.
+  - **Text sovereignty is not negotiable** (`nexo-brand` §6.1): a more legible background is a *louder*
+    background, and body text over it must still clear AA on **painted pixels**. **I22 does not exist
+    yet** (registered W9 debt), so this needs a manual painted-pixel pass per Task #27's method.
+  - **S-008 small-text legibility binds** any labels the model introduces.
+  - **A map that names real places re-enters the NO-REAL-INSTITUTION-NAMES gate** (§7).
+
+---
+
+## S-020 — The braided route (D27f)
+
+- **Source:** **Owner**, the Boldness Ruling (D27) · **Date:** 2026-08-20 · **Disposition:** **OWNER-DIRECTIVE → TEST-FIRST via the Grand Bench (B3)**
+- **The ask:** evolve the single route line toward a **braided multi-strand motif**, weaving rose/violet
+  (D25) with the jade lead.
+- **Impact:**
+  - **The route is the most invariant-protected object on the site.** **I20** asserts the van rides the
+    line (line-claim + zoom + dpr legs, all three engines); **I15** asserts zero decorative overlap with
+    text and the footer. A braid changes the geometry both invariants measure.
+  - **The LUT architecture is the constraint that decides feasibility** (`nexo-motion` §2.2): the van is
+    positioned from a 256-point lookup table sampled off **one** path. A braid means either **one lead
+    strand stays canonical** (the van rides it, the others are decorative) or the LUT must be re-derived
+    — the first is far cheaper and is the recommended framing for the bench.
+  - **D25 binds the colour**: rose and violet are **atmosphere, semantically silent**. A strand that
+    *carries meaning* would give warmth a job, which D25 forbids. Strands must be visual, not semantic.
+  - **Perf**: N strands is N× the path length drawn per frame; `stroke-dashoffset` on several long paths
+    is not free.
+
+---
+
+## S-021 — Every page gets per-page atmosphere (D27g)
+
+- **Source:** **Owner**, the Boldness Ruling (D27) · **Date:** 2026-08-20 · **Disposition:** **OWNER-DIRECTIVE → LATER (P4 per-page work)**
+- **The ask:** **no page ships as bare paper.** Per-page atmosphere/background attention in P4.
+- **Impact:**
+  - **Already half-scheduled**: Task #27 shipped the D25/T2 atmosphere on exactly two surfaces and marked
+    **wider rollout as P4 per-page work** in both the CSS and the components. This directive raises that
+    from "rollout" to "every page owes a designed background."
+  - **Each page owes its own painted-pixel pass** before wearing the treatment — that is written into the
+    `.atmo-*` comments already.
+  - **Depends on B4** (ambient meaning): rolling the *current* ambient system to every page would
+    multiply exactly the decoration D27e rejects. **Order matters — meaning first, rollout second.**
+
+---
+
+## S-022 — The intentionality doctrine (D27h)
+
+- **Source:** **Owner**, the Boldness Ruling (D27) · **Date:** 2026-08-20 · **Disposition:** **OWNER-DIRECTIVE → ALREADY-LAW in spirit, now explicit**
+- **The ask:** every visual element must be able to **state its purpose**. *"Just a nice line"* is
+  **banned**.
+- **Impact:**
+  - **This is a review standard, not a build task** — which makes it the most far-reaching directive in
+    D27. It applies to every future bench candidate and every audit.
+  - **It is the general form of the rule the codebase already follows in comments**: nearly every rule in
+    `globals.css` says why it exists. D27h makes that obligation visual as well as textual.
+  - **Practical test at bench time:** for each element in a candidate, one sentence of purpose. If the
+    sentence is "it looks nice", the element is decoration and must earn its place or be cut.
+
+---
+
+## S-023 — "Liquid" as the nav's surface quality
+
+- **Source:** **Owner**, the Boldness Ruling (D27) · **Date:** 2026-08-20 · **Disposition:** **OWNER-DIRECTIVE (qualitative) → TEST-FIRST via B1**
+- **The ask:** the nav should have **liquid-glass weight** — a surface with body, not a flat film.
+- **Impact:**
+  - **We already ship colored liquid glass** (`--nav-glass`, jade-cast, alpha 0.90, `backdrop-filter:
+    blur(12px)`) — so this is a request for **more of a quality we have**, not a new material.
+  - **Opacity, not blur, guarantees contrast** (`nexo-brand` §4). "More liquid" must not become "more
+    transparent": blur stays < 20px and the alpha floor is a contrast decision.
+  - **Railway is NOT the reference for this one** — measured, their bar has **no backdrop-filter at all**
+    (§15a). Whatever "liquid" means here, it is ours to define.
+
+---
+
+## S-024 — Per-section animation on /platform (dispatch, claims, billing scenes)
+
+- **Source:** **Owner**, the Boldness Ruling (D27) · **Date:** 2026-08-20 · **Disposition:** **LATER — P4 per-page work, after the Grand Bench**
+- **The ask:** the platform page's sections each get their own animated scene — dispatch, claims,
+  billing.
+- **Impact:**
+  - **Right idea, wrong time.** It is three signature pieces, and the site does not yet have an agreed
+    motion vocabulary to build them in — that is what the bench and W2 settle.
+  - **The perf bar is the binding constraint**, not the design: three scene-scale animations on one route
+    must still land inside ≤150KB JS and ≤1200ms DCL, on the default profile.
+  - **`/platform` already reuses `ProductDemo` in its hero** (Stage 8) — a decision that must be
+    revisited alongside D27c, since the console is being demoted on the homepage.
+
+---
+
+## S-025 — Console glass-fill verdict: CLOSED
+
+- **Source:** **Owner**, reviewing the Task #27 measurement · **Date:** 2026-08-20 ·
+  **Disposition:** **ALREADY-LAW — the edge-carries-separation doctrine stands**
+- **The finding it closes:** Task #27 measured the hero console panel's **fill** separation from the
+  painted field falling **1.14 → 1.00** under the rose sun, because `--ink-glass` is a fixed alpha the
+  scoped compensation does not touch.
+- **The ruling:** **the owner reviewed it and the doctrine stands.** The panel's separation is carried by
+  its **EDGE** by design (4.40:1 vs the painted field, 3.13:1 vs the interior — both clear of the 3:1
+  WCAG 1.4.11 tier), and the hero's kin-to-kin relationship between console and field is deliberate.
+  **No compensation to `--ink-glass`.**
+- **Impact:** the pending-owner item opened in Task #28 is **closed by this entry**. Do not re-raise the
+  1.00 figure as a defect; it is a measured consequence of an intentional doctrine, on the record.
+
+---
+
+## S-026 — Remove the `framer-motion` package
+
+- **Source:** **Claude**, Task #28 conversion finding · **Date:** 2026-08-20 ·
+  **Disposition:** **ADOPTED — scheduled to ride with the first Grand-Bench implementation task**
+- **The finding:** `framer-motion` is a **dead dependency**. Task #28 deleted its only two consumers
+  (`Reveal.tsx`, `PageTransition.tsx`) — both unimported, one claiming in its own comment to be used by
+  a `(public)/template.tsx` that does not exist.
+- **Why it was not removed then:** nothing imports it, so it is tree-shaken and costs users **zero**;
+  and a dependency decision is the owner's, not a side effect of a motion refactor.
+- **Why it rides with the first implementation task rather than alone:** removing a package is a
+  `package.json` + lockfile change that wants a build and a cube to prove nothing regressed. Attaching
+  it to a task that is already paying that cost is free; a standalone task for it is not.
+- **Impact:** none at runtime. Install size and dependency-surface only. **If any bench candidate turns
+  out to want a real animation library, this entry is the place to reopen the question** — but note the
+  standing rule: **no new project dependencies without approval**, and the motion architecture is
+  currently CSS-first by design.
