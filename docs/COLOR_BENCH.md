@@ -728,3 +728,73 @@ fiber** on the companion cables — the cable catching light, in line art.
 >
 > **These three answers become the #37 implementation spec.** The **#35 ending question** (handoff vs
 > route-enters-card) is deliberately NOT here — it needs a full-scroll read, not a fragment.
+
+
+---
+
+## 13. SERPENT LIVE — the shipped values (Task #37, 2026-08-21)
+
+**D35's picks are implemented.** Nothing here is a candidate; these are the values on the site.
+
+### Geometry
+
+| | value |
+|---|---|
+| Coil swing (1440 / 1920) | **122 / 140px**, deadband to 0 below ~VW 1220 |
+| Coil wavelength | **270px** (was 450 all-weave) |
+| Staff swing | **26px**, capped at 22% of the coil |
+| Staff wavelength | **540px** (coil × 2) |
+| Coil centreline | `gutterX − 2.45` — pulled left by the bundle half-width |
+| Staff centre | `coilCx − coilSwing/2 + staffSwing/2` — centred **inside** the coil |
+
+### The cable
+
+| | fibers | width | spacing | bundle |
+|---|---|---|---|---|
+| Coil | 5 | 0.7px | 1.05px | 4.90px |
+| Staff | 4 | 0.85px | 0.84px | 3.37px |
+
+Fibers are offset along the **path normal**, so they stay parallel through every bend.
+
+### Clearance — re-measured, not inherited
+
+| profile | min strand→text | vs the #35 floor |
+|---|---|---|
+| 1024 | **28.40px** | held |
+| 1440 | **29.29px** | **improved** |
+| 1920 | **29.06px** | **improved** |
+| 390 / 768 / iPhone 14 / Pixel 7 | N/A — route not rendered below lg | — |
+
+**The coil is wider than #35's weave and the clearance went UP**, because the law measures the cable's
+painted edge and the centreline was moved to pay for it.
+
+### Livery — what the contact shadow buys
+
+| Spot | Ratio |
+|---|---|
+| White body vs the LIGHT field | **1.07:1** — a hole in the page on its own |
+| White body vs its own contact shadow (α.55) | **4.32:1** |
+| White body vs the INK field | **18.58:1** — direct, no rescue |
+| Dark keyline vs its own body | **18.58:1** |
+
+**The shadow IS the silhouette on light.** `feDropShadow` rather than a soft ellipse: it follows the
+outline exactly and cannot drift out of registration with the van.
+
+### Texture
+
+**Shipped: twill weave, subtle** — a 7px tile of two-direction chevrons, used as **pattern stroke paint**
+with the marks painted in the register-aware strand gradient, so the ink/paper flip happens inside the
+texture for free.
+
+**Two honest limits.** The pattern tiles in **user space**, so the mesh does not follow each strand's
+direction; at this scale that reads as grain. And on the **ink register the texture is effectively
+invisible at dpr 1** — the companions sit at N1-A's ruled 1.66:1 and there is almost nothing for a
+sub-pixel mesh to modulate. Raising ink recession would break N1-A, so **the texture is a light-register
+quality**.
+
+**Paint cost, interleaved:** texture **0.10ms/frame**, contact shadow **0.10ms/frame**, whole route
+**−0.10ms** — all inside the noise of a 16.7ms vsync floor.
+
+> **SWAP RIGHTS ARE THE OWNER'S.** `docs/serpent-bench/texture-strip.html` shows all six candidates plus
+> "none", numbered. Name a number: the pattern is a five-line change in `RouteOverlay.tsx` and its weight
+> is one token (`--route-tex-strength`) in `globals.css`.

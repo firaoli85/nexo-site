@@ -751,20 +751,33 @@ a **background-register** question, which leaves the alarms and the jade accent 
 - **Source:** **Owner**, AI-image concept studies · **Date:** 2026-08-21 · **Disposition:** **REGISTERED — DNA
   extracted, one element rejected for chrome, two questions benched**
 
-### ⚠ THE PROMPT TEXT IS NOT YET IN THIS FILE
+### THE PROMPTS, VERBATIM — **S-042 IS COMPLETE**
 
-**The two prompts were not supplied with the task, so there is nothing here to quote.** They are recorded as
-required-verbatim and the slot is left explicitly empty rather than filled with a paraphrase, because a
-paraphrase in a verbatim slot is worse than a gap — it looks like a record. **Paste them here and this entry is
-complete.**
+Supplied by the owner in Task #37 and reproduced **exactly**, typos and all. They are quoted in code
+fences rather than blockquotes so nothing — spacing, punctuation, the stray `using ,` — gets
+normalised by a markdown renderer.
 
-> **PROMPT 1 —** *(awaiting the owner's text)*
->
-> **PROMPT 2 —** *(awaiting the owner's text)*
+**PROMPT 1**
 
-What IS on record from the task brief, and is used throughout the bench: the **balance bar** verbatim
-(*"not supposed to be obvious as much and not supposed to be hidden — find the balance"*), the **Asclepius
-insight**, and the per-image DNA below.
+```text
+A tall, vertical schematic diagram presented on a clean, light-grey engineering grid paper canvas. Focus is on an intricate, braided double-helix path structure. Background: light-grey engineering grid. Colors: alternating thick clinical mint (cyan-green) and thick dark charcoal grey strands. The Skin Texture: BOTH the dark charcoal AND the clinical mint paths feature a parametric micro-mesh texture resembling abstract geometric snake scales, giving the green strands a premium tactile feel. Depth: Deep Z-axis layering with top/bottom gradient masking. Vehicle Element (Miniature & Interwoven): Place a very small, subtle miniature medical transport vehicle. To stand out against the green track, make the vehicle stark luminous white or brushed silver. It must be scaled down like a delicate UI element. Crucially, show it navigating THROUGH the Z-axis twists—partially occluded, passing UNDERNEATH a foreground dark strand while riding a mint strand. Annotations: Precision-engineered intersection paths, Parametric micro-mesh texture on all strands, Interwoven white miniature transport, Smooth spring-eased momentum curve.
+```
+
+**PROMPT 2**
+
+```text
+A tall, vertical schematic diagram on a light-grey engineering grid canvas. Focus is on an ENLARGED, intricate braided double-helix routing matrix. draw literal roads using , The 'Skin' Texture (Enhanced): The dark structural paths feature a pronounced, highly detailed parametric micro-mesh texture that distinctly resembles abstract geometric snake scales. This carbon-fiber hex-mesh 'skin' catches the light, giving the strands a premium, organic-yet-digital tactile feel.use the structural physics of a highway (clear underpasses and overpasses with deep drop shadows, no clipping) applied directly to elegant, intertwined cylindrical digital strands. Colors: Thick clinical mint (cyan-green) and thick dark charcoal grey strands. The Texture (Crucial): ALL strands feature a premium, photorealistic parametric micro-mesh texture (abstractly resembling geometric snake scales, but strictly synthetic and sleek). Vehicle Element: A sleek, stark white miniature van navigating deep THROUGH the matrix, visibly passing cleanly UNDER a structurally sound charcoal strand while riding a mint track. Annotations: Architectural path separation, Synthetic parametric mesh, Precision underpass clearance, Intentional transit routing.
+```
+
+**Two things in the prompts that the law overrides, recorded so the override is not mistaken for an
+oversight.** The prompts say **"cyan-green"** twice: **S-007/D29 keep cyan rejected**, and the shipped
+mint is 155°, twenty degrees clear of where cyan begins. The prompts also ask for a **"photorealistic"**
+mesh: **D34 rejected photoreal for chrome** on D19/D20 cost, medium collision and the impossibility of
+register-splitting a raster — it ships as a **line-art twill weave** instead.
+
+What was already on record from the task brief, and is used throughout the bench: the **balance bar**
+verbatim (*"not supposed to be obvious as much and not supposed to be hidden — find the balance"*), the
+**Asclepius insight**, and the per-image DNA below.
 
 ### Disposition per element
 

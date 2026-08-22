@@ -52,8 +52,8 @@ below would otherwise be built against a signature that is about to change.
 | Task | Rung | Why here |
 |---|---|---|
 | **#36 — DONE (2026-08-21)** | **The Serpent Bench** — cable strands, Asclepius variant, livery strip, balance dial | The owner invested hours in concept studies; the reply is a rendered bench, not prose. |
-| **#37 — NEXT** | **Serpent implementation** — whichever geometry, livery and balance the owner picks | Nothing below should be built against a signature that is still a question. |
-| **#38** | **Interaction grammar + premium forms** (S-039, S-040, S-041) | |
+| **#37 — DONE (2026-08-21)** | **Serpent implementation** — staff-and-coil, white-body van + contact shadow, composite cable texture | The signature is now built to the owner's picks; the remaining rungs can be built against it. |
+| **#38 — NEXT** | **Interaction grammar + premium forms** (S-039, S-040, S-041) | Gated behind the owner's full-scroll acceptance read, which also carries the open ending ruling (S-043). |
 | **#39** | **Ambient B4-d2** — the dispatch-network model | |
 | **#40** | **Mobility cards** — spring physics + charcoal elevation (N4-A reversed, S-037) | |
 | **#41** | **Homepage tonal map + mid-band re-cast** (D30) | |

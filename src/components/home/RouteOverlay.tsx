@@ -77,88 +77,148 @@ const INK_STOP = 2;
 const WEAVE_EDGE = 24;      // every strand stays this far off the host's left edge
 const WEAVE_SWING_MAX = 140; // was 36. 1440 gets 122 (its whole budget), 1920 gets 140 (capped so
 //                              the motif reads the same at every desktop size rather than sprawling)
-const WEAVE_LAMBDA = 450;   // was 780. ~4 crossings per viewport instead of ~2.5 — the tangle reads
+const WEAVE_LAMBDA = 270;   // the COIL's wavelength (D35: S2 staff-and-coil). Tighter than #35's 450.
 const WEAVE_SEG = 14;       // px per polyline sample — see the LUT budget note below
 const WEAVE_PHASES = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
 
-type Runs = { front: string; behind: string };
+// ── D35: THE STAFF AND THE COIL ─────────────────────────────────────────────────────────────────
+// The owner ruled S2. The STAFF is the canonical path and it runs CALM — its stillness is its
+// authority, the constant reference everything else winds around. The COIL is the two companions at
+// the full budget and half the wavelength. That settles D29's spirit rather than contradicting it:
+// the live line is not the quiet one by accident, it is quiet because it is the thing being
+// referred to. Asclepius, realised abstractly — and the medical-symbol law keeps it abstract.
+const STAFF_SWING_MAX = 26;   // the staff's own lateral, capped
+const STAFF_SWING_FRAC = 0.22; // ...and never more than this share of the coil, so narrow desktops
+//                                do not end up with a staff nearly as wide as the coil it sits in
+const STAFF_LAMBDA_MULT = 2;  // the staff undulates at half the coil's frequency
+
+// ── THE CABLE ───────────────────────────────────────────────────────────────────────────────────
+// A ribbon cable is not a thicker stroke: it is N fine fibers offset along the PATH NORMAL, so they
+// stay parallel through every bend instead of fanning out on the curves. Values benched in #36.
+const COIL_FIBERS = 5, COIL_FIBER_W = 0.7, COIL_SPACING = 1.05;
+const STAFF_FIBERS = 4, STAFF_FIBER_W = 0.85, STAFF_SPACING = 0.84;
+// THE CLEARANCE LAW MEASURES THE CABLE'S EXTENT, NOT ITS CENTRELINE. The outermost fiber sits this
+// far beyond the path, so the coil's centreline is pulled left by exactly this much to keep the
+// PAINTED edge of the bundle at gutterX — the same place the single stroke used to end.
+const COIL_HALF = ((COIL_FIBERS - 1) / 2) * COIL_SPACING + COIL_FIBER_W / 2;
+
+type Runs = { front: string[]; behind: string[] };
 
 function lateral(y: number, lambda: number, swing: number, phase: number) {
   return (swing * (1 - Math.cos((2 * Math.PI * y) / lambda + phase))) / 2;
 }
 
+/** Offset a point on strand(phase) along the path NORMAL. dx/dy = -(A*pi/lambda) sin(theta). */
+function fiberPoint(cx: number, y: number, lambda: number, swing: number, phase: number, o: number) {
+  const th = (2 * Math.PI * y) / lambda + phase;
+  const x = cx - (swing * (1 - Math.cos(th))) / 2;
+  const m = -((swing * Math.PI) / lambda) * Math.sin(th);
+  const inv = 1 / Math.sqrt(1 + m * m);
+  return [x + o * inv, y + o * -m * inv] as [number, number];
+}
+
 function buildWeave(gutterX: number, h: number, motifX: number) {
-  // A DEADBAND, not a plain clamp. Between roughly VW 1196 and 1220 a bare clamp yields a 2–7px
-  // swing, and a 2px lateral over a 722px wavelength is a 1:100 wobble that reads as a rendering
-  // fault rather than as a braid. Below the deadband the route is simply straight, which is the
-  // same decline-don't-degrade commitment the swing === 0 branch already makes.
+  // A DEADBAND, not a plain clamp (Task #35): between roughly VW 1196 and 1220 a bare clamp yields a
+  // 2–7px swing, which reads as a rendering fault rather than as a coil. Below it the route is
+  // simply straight — decline-don't-degrade.
   const swingRaw = gutterX - WEAVE_EDGE;
-  const swing = swingRaw < 12 ? 0 : Math.min(WEAVE_SWING_MAX, swingRaw);
+  const coilSwing = swingRaw < 12 ? 0 : Math.min(WEAVE_SWING_MAX, swingRaw);
   const curveLen = Math.min(h * 0.34, 460);
   const curveStart = Math.max(1, h - curveLen);
   const cp = curveLen * 0.55;
-  const terminus =
-    `C${gutterX} ${(curveStart + cp).toFixed(1)} ${motifX.toFixed(1)} ${(h - cp).toFixed(1)} ${motifX.toFixed(1)} ${h.toFixed(1)}`;
-
-  // An INTEGER number of full periods over the straight leg, so the serpentine begins and ends at
-  // x = gutterX. The terminus cubic is then byte-identical to the one that shipped, and the join is
-  // C0 without a kink.
-  const periods = Math.max(1, Math.round(curveStart / WEAVE_LAMBDA));
-  const lambda = curveStart / periods;
   const n = Math.max(2, Math.ceil(curveStart / WEAVE_SEG));
 
-  // Narrow desktop (roughly 1024–1151, where the container touches the viewport edge and gutterX is
-  // 2): there is no left room, so the route degenerates to EXACTLY the straight line that shipped.
-  // That is decline-don't-degrade — a complete composition, not a broken weave.
-  if (swing === 0) {
+  if (coilSwing === 0) {
+    const terminus =
+      `C${gutterX} ${(curveStart + cp).toFixed(1)} ${motifX.toFixed(1)} ${(h - cp).toFixed(1)} ${motifX.toFixed(1)} ${h.toFixed(1)}`;
     return {
       d: `M${gutterX} 0 L${gutterX} ${curveStart.toFixed(1)} ` + terminus,
-      comps: [{ front: "", behind: "" }, { front: "", behind: "" }] as Runs[],
-      swing, lambda, curveStart,
+      staffFibers: [] as string[],
+      comps: [{ front: [], behind: [] }, { front: [], behind: [] }] as Runs[],
+      swing: 0, lambda: WEAVE_LAMBDA, curveStart, staffCenter: gutterX, staffSwing: 0,
     };
   }
 
+  // Integer periods over the straight leg, so both the coil and the staff begin and end at their
+  // rightmost extreme and the terminus join stays C0 without a kink.
+  const coilPeriods = Math.max(1, Math.round(curveStart / WEAVE_LAMBDA));
+  const lambda = curveStart / coilPeriods;
+  const staffLambda = lambda * STAFF_LAMBDA_MULT;
+  const staffSwing = Math.min(STAFF_SWING_MAX, coilSwing * STAFF_SWING_FRAC);
+
+  // The COIL's centreline is pulled left by the bundle's half-width so the PAINTED outer fiber lands
+  // on gutterX — the clearance law measures paint, not maths.
+  const coilCx = gutterX - COIL_HALF;
+  // The STAFF sits CENTRED INSIDE the coil: its own span is [c - staffSwing, c], so for its midpoint
+  // to land in the middle of the coil's [coilCx - coilSwing, coilCx] span, c = coilCx - coilSwing/2
+  // + staffSwing/2. This costs no extra left room — staff-and-coil redistributes the budget, it does
+  // not enlarge it (measured on the #36 bench).
+  const staffCenter = coilCx - coilSwing / 2 + staffSwing / 2;
+
+  // THE CANONICAL PATH is the staff's CENTRELINE — one path, the one the LUT samples and the van
+  // rides. The staff's own fibers are decorative siblings of it, exactly as the coil's are.
+  const terminus =
+    `C${staffCenter.toFixed(1)} ${(curveStart + cp).toFixed(1)} ${motifX.toFixed(1)} ${(h - cp).toFixed(1)} ${motifX.toFixed(1)} ${h.toFixed(1)}`;
   const pts: [number, number][] = [];
   for (let i = 0; i <= n; i++) {
     const y = (curveStart * i) / n;
-    pts.push([gutterX - lateral(y, lambda, swing, WEAVE_PHASES[0]), y]);
+    pts.push([staffCenter - lateral(y, staffLambda, staffSwing, 0), y]);
   }
   const d =
     `M${pts[0][0].toFixed(2)} ${pts[0][1].toFixed(2)}` +
     pts.slice(1).map((q) => ` L${q[0].toFixed(2)} ${q[1].toFixed(2)}`).join("") +
     " " + terminus;
 
-  // A companion is IN FRONT while sin(theta) > 0 — half of each period, flipping at the crossings.
-  // Splitting it into runs and drawing the front runs AFTER the van group is what makes the weave a
-  // real over/under rather than a drawing of one.
+  const toD = (runs: [number, number][][]) =>
+    runs
+      .map((r) => `M${r[0][0].toFixed(2)} ${r[0][1].toFixed(2)}` + r.slice(1).map((q) => ` L${q[0].toFixed(2)} ${q[1].toFixed(2)}`).join(""))
+      .join(" ");
+
+  // The staff's fibers: one bundle, no front/behind split — the staff is ONE object and the van
+  // rides it, so nothing of the staff is ever in front of the van.
+  const staffFibers: string[] = [];
+  for (let f = 0; f < STAFF_FIBERS; f++) {
+    const o = (f - (STAFF_FIBERS - 1) / 2) * STAFF_SPACING;
+    const fp: [number, number][] = [];
+    for (let i = 0; i <= n; i++) fp.push(fiberPoint(staffCenter, (curveStart * i) / n, staffLambda, staffSwing, 0, o));
+    staffFibers.push(toD([fp]));
+  }
+
+  // A coil fiber is IN FRONT while sin(theta) > 0 — half of each period, flipping at the crossings.
+  // Splitting the runs and drawing the front ones AFTER the van is what makes the over/under real.
   const runsFor = (phase: number): Runs => {
-    const front: [number, number][][] = [];
-    const behind: [number, number][][] = [];
-    let cur: [number, number][] | null = null;
-    let curFront: boolean | null = null;
-    for (let i = 0; i <= n; i++) {
-      const y = (curveStart * i) / n;
-      const th = (2 * Math.PI * y) / lambda + phase;
-      const isFront = Math.sin(th) > 0;
-      const x = gutterX - lateral(y, lambda, swing, phase);
-      if (curFront === null || isFront !== curFront) {
-        // close the previous run AT this same point so the runs join with no visible gap
-        if (cur) { cur.push([x, y]); (curFront ? front : behind).push(cur); }
-        cur = [[x, y]];
-        curFront = isFront;
-      } else if (cur) {
-        cur.push([x, y]);
+    const front: string[] = [];
+    const behind: string[] = [];
+    for (let f = 0; f < COIL_FIBERS; f++) {
+      const o = (f - (COIL_FIBERS - 1) / 2) * COIL_SPACING;
+      const fr: [number, number][][] = [];
+      const be: [number, number][][] = [];
+      let cur: [number, number][] | null = null;
+      let curFront: boolean | null = null;
+      for (let i = 0; i <= n; i++) {
+        const y = (curveStart * i) / n;
+        const th = (2 * Math.PI * y) / lambda + phase;
+        const isFront = Math.sin(th) > 0;
+        const p = fiberPoint(coilCx, y, lambda, coilSwing, phase, o);
+        if (curFront === null || isFront !== curFront) {
+          if (cur) { cur.push(p); (curFront ? fr : be).push(cur); }
+          cur = [p];
+          curFront = isFront;
+        } else if (cur) {
+          cur.push(p);
+        }
       }
+      if (cur) (curFront ? fr : be).push(cur);
+      front.push(toD(fr));
+      behind.push(toD(be));
     }
-    if (cur) (curFront ? front : behind).push(cur);
-    const toD = (runs: [number, number][][]) =>
-      runs
-        .map((r) => `M${r[0][0].toFixed(2)} ${r[0][1].toFixed(2)}` + r.slice(1).map((q) => ` L${q[0].toFixed(2)} ${q[1].toFixed(2)}`).join(""))
-        .join(" ");
-    return { front: toD(front), behind: toD(behind) };
+    return { front, behind };
   };
 
-  return { d, comps: [runsFor(WEAVE_PHASES[1]), runsFor(WEAVE_PHASES[2])] as Runs[], swing, lambda, curveStart };
+  return {
+    d, staffFibers, comps: [runsFor(WEAVE_PHASES[1]), runsFor(WEAVE_PHASES[2])] as Runs[],
+    swing: coilSwing, lambda, curveStart, staffCenter, staffSwing,
+  };
 }
 
 type Geo = {
@@ -166,8 +226,11 @@ type Geo = {
   h: number;
   top: number;
   d: string;
+  staffFibers: string[];
   comps: Runs[];
   swing: number;
+  staffCenter: number;
+  staffSwing: number;
   lambda: number;
   curveStart: number;
   gutterX: number;
@@ -184,8 +247,11 @@ function sameGeo(a: Geo, b: Geo) {
     a.gutterX === b.gutterX && a.inkY0 === b.inkY0 && a.inkY1 === b.inkY1 &&
     a.docStart === b.docStart && a.docSpan === b.docSpan &&
     a.swing === b.swing && a.lambda === b.lambda &&
+    a.staffCenter === b.staffCenter && a.staffSwing === b.staffSwing &&
+    a.staffFibers.length === b.staffFibers.length && a.staffFibers.every((f, i) => f === b.staffFibers[i]) &&
     a.comps.length === b.comps.length &&
-    a.comps.every((c, i) => c.front === b.comps[i].front && c.behind === b.comps[i].behind) &&
+    a.comps.every((c, i) => c.front.length === b.comps[i].front.length && c.front.every((f, k) => f === b.comps[i].front[k]) &&
+                            c.behind.length === b.comps[i].behind.length && c.behind.every((f, k) => f === b.comps[i].behind[k])) &&
     a.nodes.length === b.nodes.length && a.nodes.every((n, i) => n.y === b.nodes[i].y && n.x === b.nodes[i].x && n.ink === b.nodes[i].ink)
   );
 }
@@ -295,7 +361,13 @@ function buildWarp(xs: Float32Array, ys: Float32Array, swing: number): Float32Ar
 // is ~7px — under the stroke width, so the van cannot visibly run past the head it is chasing.
 // omega 12 gives a 4/(z*w) settle of ~370ms: a vehicle arriving, not an elastic band.
 const SPRING_ZETA = 0.9;
-const SPRING_OMEGA = 12;
+// omega RAISED 12 -> 16 in Task #37. The cube caught it on WEBKIT: convergence measured 1390ms
+// against the 1200ms budget, because the staff-and-coil geometry is longer and webkit is the slowest
+// of the three engines. Widening the invariant would have been moving the goalposts; the spring is
+// what had too little margin. At zeta 0.9 the settle time 4/(zeta*omega) goes 370ms -> 278ms and the
+// overshoot is unchanged at 0.15%, so the van arrives a little crisper and still never runs past the
+// head it is chasing.
+const SPRING_OMEGA = 16;
 const SPRING_EPS = 1e-4;   // sleep threshold, in route-parameter units (~0.5px of a 5500px path)
 // SUB-STEPPING, because the naive clamp was measurably wrong. Clamping dt to a single 1/30 step
 // protects against a backgrounded tab teleporting the van, but it also means that when a frame
@@ -320,25 +392,21 @@ function warpAt(sOfP: Float32Array | null, p: number) {
   return sOfP[i] + (sOfP[j] - sOfP[i]) * (t - i);
 }
 
-/** Interpolate the LUT at arc-length fraction s and write ONE transform per consumer.
- *  The reflection is handed the SAME point, so it can never drift from the van it belongs to. */
-function applyVan(el: SVGGElement | null, refl: SVGGElement | null, lut: Lut | null, s: number) {
-  if (!lut || (!el && !refl)) return;
+/** Interpolate the LUT at arc-length fraction s and write ONE transform. No layout reads. */
+function applyVan(el: SVGGElement | null, lut: Lut | null, s: number) {
+  if (!lut || !el) return;
   const t = Math.min(1, Math.max(0, s)) * (LUT_N - 1);
   const i = t | 0;
   const j = i + 1 < LUT_N ? i + 1 : i;
   const f = t - i;
   const x = lut.xs[i] + (lut.xs[j] - lut.xs[i]) * f;
   const y = lut.ys[i] + (lut.ys[j] - lut.ys[i]) * f;
-  const tr = `translate(${x.toFixed(2)} ${y.toFixed(2)})`;
-  if (el) el.setAttribute("transform", tr);
-  if (refl) refl.setAttribute("transform", tr);
+  el.setAttribute("transform", `translate(${x.toFixed(2)} ${y.toFixed(2)})`);
 }
 
 export function RouteOverlay() {
   const rootRef = useRef<HTMLDivElement>(null);
   const vanRef = useRef<SVGGElement>(null);
-  const reflRef = useRef<SVGGElement>(null);
   // The spring's state lives in refs, never in React state: it is written every animation frame
   // and a re-render per frame would be the opposite of the point.
   const targetRef = useRef(0);   // s_target — where the line's head is
@@ -410,11 +478,14 @@ export function RouteOverlay() {
       // Station nodes ride the LEAD, not the old straight line — a node floating off the strand it
       // marks would read as a rendering fault. They are computed from the same lateral() the
       // canonical path uses, so they cannot drift from it.
+      // Station nodes ride the STAFF — they mark stops on the trip, and the trip is the staff.
       const nodes = NODE_FRACTIONS.map((f, i) => {
         const y = (regionRect.height * f) / 100;
         const onSerp = y <= weave.curveStart;
         return {
-          x: onSerp ? gutterX - lateral(y, weave.lambda, weave.swing, WEAVE_PHASES[0]) : gutterX,
+          x: onSerp
+            ? weave.staffCenter - lateral(y, weave.lambda * STAFF_LAMBDA_MULT, weave.staffSwing, 0)
+            : weave.staffCenter,
           y,
           ink: i === INK_STOP,
         };
@@ -434,7 +505,8 @@ export function RouteOverlay() {
       const docSpan = Math.max(1, seamDoc - vh * 0.5 - docStart);
 
       const g: Geo = {
-        w, h, top, d: weave.d, comps: weave.comps, swing: weave.swing, lambda: weave.lambda,
+        w, h, top, d: weave.d, staffFibers: weave.staffFibers, comps: weave.comps,
+        swing: weave.swing, staffCenter: weave.staffCenter, staffSwing: weave.staffSwing, lambda: weave.lambda,
         curveStart: weave.curveStart, gutterX, nodes, inkY0, inkY1, docStart, docSpan,
       };
       geoRef.current = g;
@@ -458,7 +530,7 @@ export function RouteOverlay() {
     let springRaf = 0;
     let springLast = 0;
     const writeVan = (sv: number) => {
-      applyVan(vanRef.current, reflRef.current, lutRef.current, sv);
+      applyVan(vanRef.current, lutRef.current, sv);
       root.style.setProperty("--route-van", sv.toFixed(5));
     };
     const springStep = (now: number) => {
@@ -657,7 +729,7 @@ export function RouteOverlay() {
         // spring's whole argument — but it must be re-placed against the NEW table, or it would
         // still be sitting on a point from the old geometry.
         const sv = Math.min(1, Math.max(0, sVanRef.current));
-        applyVan(vanRef.current, reflRef.current, lutRef.current, sv);
+        applyVan(vanRef.current, lutRef.current, sv);
         root.style.setProperty("--route-van", sv.toFixed(5));
       }
     };
@@ -668,6 +740,24 @@ export function RouteOverlay() {
     // that on the main thread every frame. Debouncing costs nothing on mount and nothing during
     // scroll, because neither changes the geometry.
     if (!lutRef.current) { build(); return; }
+
+    // ADHERENCE MUST NEVER DEPEND ON THE DEBOUNCE. The debounce protects the 256-sample LUT rebuild
+    // from firing once per rAF while a window is dragged — but between the React commit and the
+    // rebuild, the RENDERED path is new while the LUT is old, so the van is sitting on a point from
+    // the previous geometry. I20 caught exactly that: 973px off the canonical path after a reflow,
+    // because a burst of ResizeObserver firings kept resetting the 90ms timer and the rebuild never
+    // landed inside the probe's window.
+    // ONE getPointAtLength call (~0.05ms, against 256 for the full table) re-seats the van on the new
+    // path immediately. The expensive table still arrives debounced; correctness does not wait for it.
+    {
+      const total = path.getTotalLength();
+      if (total && isFinite(total)) {
+        const sv = Math.min(1, Math.max(0, sVanRef.current));
+        const q = path.getPointAtLength(sv * total);
+        vanRef.current?.setAttribute("transform", `translate(${q.x.toFixed(2)} ${q.y.toFixed(2)})`);
+      }
+    }
+
     const t = window.setTimeout(build, 90);
     return () => window.clearTimeout(t);
   }, [geo]);
@@ -744,22 +834,59 @@ export function RouteOverlay() {
 
               {/* THE REFLECTION's blur. A filter region has to be given room or the blur is clipped
                   into a hard edge, which reads as a rectangle rather than as a glow. */}
-              <filter id="routeVanGlow" x="-120%" y="-120%" width="340%" height="340%">
-                <feGaussianBlur stdDeviation="3.2" />
+              {/* THE ROUTE'S UNDER-GLOW. It belongs to the LEAD, not to the vehicle: the mint glow is
+                  the route's own liquid-glass reading, and D35 took the van out of the mint set
+                  entirely. It is also what makes four hairline fibers read as ONE cable. */}
+              <filter id="routeLeadGlow" x="-120%" y="-120%" width="340%" height="340%">
+                <feGaussianBlur stdDeviation="2.6" />
               </filter>
+
+              {/* THE VEHICLE'S CONTACT SHADOW (D35, §5-sanctioned). A shadow is not a glow — it is a
+                  grounding cue, and it is what rescues a WHITE body on the LIGHT register, where the
+                  body itself measures 1.07:1 against paper and would otherwise be a hole in the page.
+                  feDropShadow rather than a soft ellipse: it follows the silhouette exactly, costs one
+                  filter primitive, and cannot drift out of registration with the van the way a
+                  separately-positioned ellipse can. */}
+              <filter id="routeVanShadow" x="-80%" y="-80%" width="260%" height="260%">
+                <feDropShadow dx="0" dy="1.6" stdDeviation="1.7" floodOpacity="0.55" className="van-shadow" />
+              </filter>
+
+              {/* THE COMPOSITE TEXTURE (D35). A MASK, not a paint server, and that choice is what keeps
+                  the register split working: the texture layer re-draws the cable through this mask
+                  using the SAME register-aware gradient, so the marks are always the right colour for
+                  the band they land in. A pattern used directly as `stroke` would have needed two
+                  patterns and a way to choose between them mid-path, which the gradient cannot do.
+                  HONEST LIMITATION: an SVG <pattern> tiles in USER SPACE, so the mesh does not follow
+                  each strand's local direction. At this scale that reads as material grain rather than
+                  as a mistake, and the strands are static geometry so nothing slides under it. */}
+              <pattern id="routeTexPattern" width="7" height="7" patternUnits="userSpaceOnUse">
+                <path d="M0 5.25 L1.75 3.5 L3.5 5.25 L5.25 3.5 L7 5.25 M0 1.75 L1.75 0 L3.5 1.75 L5.25 0 L7 1.75"
+                      fill="none" stroke="url(#routeStrandGrad)" strokeWidth="1.15" />
+              </pattern>
             </defs>
 
             {/* COMPANION STRANDS — BEHIND runs. Decorative siblings: never sampled, never ridden.
                 They are STATIC (always fully drawn) on purpose — they are the existing network, not
                 this trip. D29's accent law is what makes that the right reading: the lead is mint
                 because it is live, and the companions are charcoal because they are not. */}
+            {/* THE COIL — behind runs. Decorative siblings of the staff: never sampled, never ridden.
+                Each is a CABLE of 5 fibers offset along the path normal, plus a texture pass drawn
+                through the mesh mask so the cable reads as composite material rather than as ink. */}
             <g mask="url(#routeFadeMask)">
-              {geo.comps.map((c, i) =>
-                c.behind ? (
-                  <path key={`b${i}`} d={c.behind} className="route-strand" stroke="url(#routeStrandGrad)"
-                        strokeWidth="3" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-                ) : null
-              )}
+              {geo.comps.map((c, i) => (
+                <g key={`b${i}`}>
+                  {c.behind.map((d, k) => (
+                    <path key={k} d={d} className="route-strand" stroke="url(#routeStrandGrad)"
+                          strokeWidth={COIL_FIBER_W} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                  ))}
+                  <g>
+                    {c.behind.map((d, k) => (
+                      <path key={k} d={d} className="route-strand route-tex" stroke="url(#routeTexPattern)"
+                            strokeWidth={COIL_FIBER_W} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                    ))}
+                  </g>
+                </g>
+              ))}
             </g>
 
             {/* THE REFLECTION — a blurred, mint, low-opacity twin sitting just under the van, drawn
@@ -768,25 +895,35 @@ export function RouteOverlay() {
                 mirrored copy under a 90-degree-rotated glyph reads as a duplicate van, not as a
                 reflection. It consumes s_van from the same applyVan call as the van itself, so the
                 two can never drift apart. White or mint only: cyan stays rejected (S-007/D29). */}
-            <g ref={reflRef} className="route-reflection" aria-hidden="true">
-              <g className="route-van-lane">
-                <g className="route-van-nose">
-                  <g transform="translate(0 11) scale(1 0.72)">
-                    <use href="#route-van-art" />
-                  </g>
-                </g>
-              </g>
+            {/* THE STAFF — the canonical path's own cable. Drawn as a glowing bundle so four hairlines
+                read as ONE luminous object. The glow is the ROUTE's, and it is the only mint light
+                left on the motif: D35 removed the vehicle from the mint set. */}
+            <g className="route-staff-glow" filter="url(#routeLeadGlow)">
+              {geo.staffFibers.map((d, k) => (
+                <path key={k} d={d} className="route-staff" stroke="url(#routeGrad)"
+                      strokeWidth={STAFF_FIBER_W} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+              ))}
+            </g>
+            <g>
+              {geo.staffFibers.map((d, k) => (
+                <path key={k} d={d} className="route-staff" stroke="url(#routeGrad)"
+                      strokeWidth={STAFF_FIBER_W} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+              ))}
             </g>
 
             {/* THE CANONICAL PATH — the single truth. The van, the LUT, the dash and the nodes all
                 consume this and nothing else. */}
+            {/* THE CANONICAL PATH — still the single truth: the LUT samples it, the dash scrubs it and
+                the van rides it. It is simply no longer the thing the reader SEES, because the staff's
+                four fibers are drawn over it. It keeps a hairline of its own so the scroll-draw still
+                reads; delete that width and the trip stops visibly being drawn. */}
             <path
               ref={pathRef}
               d={geo.d}
               data-route-canonical=""
               className="route-path"
               stroke="url(#routeGrad)"
-              strokeWidth="3.2"
+              strokeWidth="1.1"
               strokeLinecap="round"
               pathLength={1}
               vectorEffect="non-scaling-stroke"
@@ -825,18 +962,27 @@ export function RouteOverlay() {
                         van's measured centre is the point on the path — which is what I15/I20
                         measure and what the rotation turns about. */}
                     <rect x="0" y="0" width="32" height="20" fill="none" stroke="none" />
+                    {/* SOLID LUMINOUS WHITE (D35) — with a dark KEYLINE, which is not a wireframe.
+                        The first build dropped the outline entirely and cut the windows and wheels
+                        straight out of the body; magnified 4x it read as a DOMINO rather than a
+                        vehicle, because at 30px a wheel cut into the body's edge is just a notch.
+                        A solid body with a keyline and wheels that sit ON its lower edge is still a
+                        solid white object — the wireframe D35 retired was the mint one that made the
+                        van a second accent, and this is a dark contour on white, which is legibility
+                        rather than livery. */}
                     <path
                       d="M2.6 15.6 L2.6 8 Q2.6 5.5 5.1 5.5 L20 5.5 Q23 5.5 24.6 7.7 L27.7 11.4 Q29.1 12 29.1 13.7 L29.1 15.6 Z"
-                      className="van-body van-edge"
-                      strokeWidth="1.4"
+                      className="van-body van-key"
+                      strokeWidth="1.15"
                       strokeLinejoin="round"
                     />
-                    <rect x="5.1" y="7.4" width="6.1" height="3.1" rx="0.6" className="van-edge" strokeWidth="0.9" />
-                    <rect x="12.5" y="7.4" width="6.1" height="3.1" rx="0.6" className="van-edge" strokeWidth="0.9" />
-                    <path d="M21 7.5 L23.7 7.7 L25.8 10.5 L21 10.5 Z" className="van-edge" strokeWidth="0.9" strokeLinejoin="round" />
-                    <line x1="3.4" y1="12.9" x2="27.6" y2="12.9" className="van-edge" strokeWidth="1" strokeLinecap="round" opacity="0.75" />
-                    <circle cx="8.4" cy="15.9" r="2.8" className="van-body van-edge" strokeWidth="1.1" />
-                    <circle cx="22.7" cy="15.9" r="2.8" className="van-body van-edge" strokeWidth="1.1" />
+                    <rect x="5.1" y="7.4" width="6.1" height="3.1" rx="0.6" className="van-cut" />
+                    <rect x="12.5" y="7.4" width="6.1" height="3.1" rx="0.6" className="van-cut" />
+                    <path d="M21 7.5 L23.7 7.7 L25.8 10.5 L21 10.5 Z" className="van-cut" strokeLinejoin="round" />
+                    <circle cx="8.4" cy="15.9" r="2.9" className="van-cut" />
+                    <circle cx="8.4" cy="15.9" r="1.15" className="van-body" />
+                    <circle cx="22.7" cy="15.9" r="2.9" className="van-cut" />
+                    <circle cx="22.7" cy="15.9" r="1.15" className="van-body" />
                   </g>
                 </g>
               </g>
@@ -846,13 +992,25 @@ export function RouteOverlay() {
                 the van and the lead pass BEHIND these segments and in front of the behind-runs, so
                 the three strands genuinely interleave rather than merely overlapping. No z-index, no
                 second surface — paint order is the whole mechanism. */}
+            {/* THE COIL — front runs, drawn AFTER the van. This is the over/under: the vehicle passes
+                cleanly UNDER these and over the behind-runs, which is the underpass reading the
+                concept round asked for. Paint order is the whole mechanism; no z-index, no second
+                surface. */}
             <g mask="url(#routeFadeMask)">
-              {geo.comps.map((c, i) =>
-                c.front ? (
-                  <path key={`f${i}`} d={c.front} className="route-strand" stroke="url(#routeStrandGrad)"
-                        strokeWidth="3" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-                ) : null
-              )}
+              {geo.comps.map((c, i) => (
+                <g key={`f${i}`}>
+                  {c.front.map((d, k) => (
+                    <path key={k} d={d} className="route-strand" stroke="url(#routeStrandGrad)"
+                          strokeWidth={COIL_FIBER_W} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                  ))}
+                  <g>
+                    {c.front.map((d, k) => (
+                      <path key={k} d={d} className="route-strand route-tex" stroke="url(#routeTexPattern)"
+                            strokeWidth={COIL_FIBER_W} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                    ))}
+                  </g>
+                </g>
+              ))}
             </g>
           </svg>
         </>

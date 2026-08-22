@@ -247,8 +247,23 @@
      (D32): a 30px object changing colour mid-travel reads as a glitch rather than as design, and
      the two registers already carry the silhouette differently -- over paper it is the ink body
      against a light field, over ink it is the mint outline against a dark one. */
-  --van-body-fill:       var(--ink);
-  --van-outline:         #2fe89a;
+  /* THE VEHICLE (D35). The van LEFT the mint set: on the noir register mint is now exactly two
+     things, the active route and the primary CTA, and the vehicle is the white object riding the
+     mint rather than another mint object competing with it. Solid body, no wireframe. */
+  --van-body-fill:       #ffffff;
+  /* Window and wheel cuts are the ROUTE's own dark, so the glyph reads as one solid silhouette at
+     30px instead of dissolving into outlines. */
+  --van-cut:             #0b1512;
+  /* THE CONTACT SHADOW is what makes a white body legal on paper: white measures 1.07:1 against
+     --bg and would otherwise be a hole in the page. A shadow is not a glow (SS5) — it is a
+     grounding cue, and it is the ONLY sanctioned vehicle shadow. */
+  --van-shadow:          rgb(11 21 18 / 0.55);
+
+  /* COMPOSITE CABLE TEXTURE (D35). The owner ruled the micro-dash "too flat... loses the premium
+     infrastructure aesthetic" and asked for a tactile, high-end composite material. This is the
+     mark's own weight inside the mesh mask; the COLOUR comes from the register-aware strand
+     gradient, so the texture cannot break the ink/paper split. */
+  --route-tex-strength:  0.55;
 
 
   /* MOTION PRIMITIVES (D31 / G4) ------------------------------------------------------------
@@ -785,6 +800,16 @@ a:active {
    of any kind. That is why they need no motion scope and why a reduced-motion reader sees the
    complete braid -- all three strands, correct over/under -- with only the van absent. */
 .route-strand { fill: none; }
+/* The staff's own fibers. Same law as the coil: decorative siblings of the canonical path, which
+   still exists underneath as the hairline the dash actually scrubs. */
+.route-staff { fill: none; }
+/* The route's under-glow belongs to the LEAD. Kept low so the bundle reads as one lit cable rather
+   than as a halo — SS5 bans glow on OBJECTS, and this is a field under a line, not a bloom on one. */
+.route-staff-glow { opacity: 0.5; }
+/* The texture pass. It re-draws the cable through the mesh mask using the SAME gradient, so the
+   marks are always the right colour for the band they land in. */
+.route-tex { opacity: var(--route-tex-strength); }
+/* the pattern paints its own marks with the strand gradient — no separate mark colour needed */
 /* Mask stops. White passes, black cuts -- kept as classes so the literals stay inside the token
    block and the hex guard has nothing to find in a component. */
 .route-mask-on  { stop-color: #ffffff; }
@@ -793,14 +818,9 @@ a:active {
 /* THE REFLECTION (D33). Mint, blurred, low -- a glow twin on the surface the van glides over.
    It is HIDDEN unless the overlay is armed, exactly like the van: a reduced-motion reader gets a
    complete braid with no vehicle and therefore nothing for a vehicle to reflect in. */
-.route-reflection { display: none; }
-.route-overlay[data-direction] .route-reflection { display: block; }
-.route-reflection use {
-  fill: var(--route-active-ink);
-  stroke: var(--route-active-ink);
-  filter: url(#routeVanGlow);
-  opacity: 0.34;
-}
+/* THE VAN'S MINT REFLECTION IS RETIRED (D35). It was a mint object attached to the vehicle, and the
+   vehicle is no longer part of the mint set. The route keeps its under-glow (.route-staff-glow) —
+   that glow belongs to the line, not to the thing riding it. */
 .spine-node.spine-node-ink { fill: var(--accent-on-ink); }
 [data-spine-live] .spine-node.spine-node-ink { fill: var(--on-ink-border); }
 [data-spine-live] .spine-node.spine-node-ink.is-lit { fill: var(--accent-on-ink); }
@@ -840,9 +860,17 @@ a:active {
    same gate as before, minus the @supports wrapper it no longer needs. */
 /* LIVERY B -- the glowing wireframe. Fill and stroke are tokens so the hex guard stays green and
    so the livery is one edit, not fifteen attributes. */
-.van-body { fill: var(--van-body-fill); }
-.van-edge { stroke: var(--van-outline); fill: none; }
-.route-van .van-body.van-edge { fill: var(--van-body-fill); }
+.van-body { fill: var(--van-body-fill); stroke: none; }
+.van-cut  { fill: var(--van-cut); stroke: none; }
+/* A dark contour on a white body. This is legibility, not livery: D35 retired the MINT wireframe
+   because it made the van a second accent, and a keyline spends no accent at all. */
+.van-key  { stroke: var(--van-cut); }
+/* The shadow rides the LANE group, not the van root and not the nose. The van root's transform is
+   rewritten every animation frame, so filtering there would re-evaluate the filter per frame; the
+   nose ROTATES, which would swing a downward shadow sideways. The lane group changes only on a leg
+   flip and carries no rotation, so the shadow stays vertical in screen space and is rasterised once. */
+.route-van-lane { filter: url(#routeVanShadow); }
+.van-shadow { flood-color: var(--van-shadow); }
 
 .route-van { display: none; }
 .route-overlay[data-direction] .route-van { display: block; }
@@ -863,8 +891,10 @@ a:active {
 /* LANE by LEG (Stage 6.6 U-turn) — OUTBOUND rides the right lane (+12px), RETURN the left (-12px).
    The leg flip at the terminus crosses lanes over ~450ms (the U-turn); mid-page scroll reversals keep
    the lane (only the nose rotation follows direction). Interruptible (a plain transition). */
-.route-van-lane { transform: translateX(12px);  }
-[data-leg="return"] .route-van-lane { transform: translateX(-12px); }
+/* Lane narrowed from 12px to 7px in Task #37. With the calm STAFF the van no longer reads as
+   riding the line at 12px — it floats beside it. 7px still reads as a lane change at the U-turn. */
+.route-van-lane { transform: translateX(7px);  }
+[data-leg="return"] .route-van-lane { transform: translateX(-7px); }
 
 
 

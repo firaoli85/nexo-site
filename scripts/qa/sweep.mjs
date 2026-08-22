@@ -349,8 +349,32 @@ async function checkAnchors(browser, base) {
           const link = page.locator(`a[href*="/platform#${hash}"]`).first();
           if ((await link.count()) === 0) { out.push({ route: `#${hash}`, mode, pass: false, detail: "deep-link not found in dropdown" }); await ctx.close(); continue; }
           await link.click();
+          // ASSERT THE NAVIGATION BEFORE ASSERTING THE LANDING. Task #37 caught this on webkit: the
+          // click did not complete, the probe stayed on `/`, and it then reported `top=null vis=false`
+          // — which reads as an anchor defect when the truth is that the page was never reached. A
+          // probe that mis-describes its own failure sends the next reader to the wrong file.
+          try {
+            await page.waitForURL((u) => u.pathname.startsWith("/platform"), { timeout: 6000 });
+          } catch {
+            out.push({ route: `#${hash}`, mode, pass: false, detail: "client-nav never reached /platform (the dropdown deep-link click did not navigate) — this is a NAVIGATION failure, not an anchor one" });
+            await ctx.close();
+            continue;
+          }
         }
         await page.waitForTimeout(2000); // native jump + the capped re-scroll interval must settle
+        // ADDITIONAL patience, not a replacement for the settle above. An earlier version of this
+        // REPLACED the 2s wait with a poll that exited the moment the heading became visible — which
+        // is often DURING the capped re-scroll, so s1 was sampled mid-settle and the stability window
+        // then failed on three cells that had been green. The poll only runs on when the settle was
+        // not enough.
+        {
+          const deadline = Date.now() + 4000;
+          for (;;) {
+            const probe = await landingCheck(page, hash);
+            if (probe.visible || Date.now() > deadline) break;
+            await page.waitForTimeout(200);
+          }
+        }
         const s1 = await landingCheck(page, hash);
         await page.waitForTimeout(1500); // stability window (no yank)
         const s2 = await landingCheck(page, hash);
